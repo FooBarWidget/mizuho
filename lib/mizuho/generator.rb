@@ -1,4 +1,5 @@
 require 'optparse'
+require 'mizuho/parser'
 require 'mizuho/template'
 
 module Mizuho
@@ -32,8 +33,11 @@ private
 	end
 	
 	def apply_template(file, template_file)
-		template = Template.new(file, template_file)
-		template.apply
+		parser = Parser.new(file)
+		template = Template.new(template_file,
+			:title => parser.title,
+			:table_of_contents => parser.table_of_contents,
+			:contents => parser.contents)
 		template.save(file)
 	end
 end
