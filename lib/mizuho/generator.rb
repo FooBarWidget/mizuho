@@ -1,4 +1,5 @@
 require 'optparse'
+require 'digest/sha1'
 require 'mizuho/parser'
 require 'mizuho/template'
 
@@ -68,7 +69,9 @@ private
 			if chapter.is_preamble?
 				chapter.filename = File.basename("#{@output_name}.html")
 			else
-				chapter.filename = sprintf("%s-%02d.html", @output_name, i)
+				title_sha1 = Digest::SHA1.hexdigest(chapter.title_without_numbers)
+				chapter.filename = sprintf("%s-%s.html", @output_name,
+					title_sha1.slice(0..7))
 				chapter.heading.basename = File.basename(chapter.filename)
 				chapter.heading.each_descendant do |h|
 					h.basename = File.basename(chapter.filename)
