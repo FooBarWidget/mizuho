@@ -15,7 +15,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />    
-	<title><%- if !is_preamble? -%><%=h chapter_title_without_numbers %> :: <% end %><%=h title %>
+	<title><%- if multi_page? && !is_preamble? -%><%=h chapter_title_without_numbers %> :: <% end %><%=h title %>
 	</title>
 	<link href="http://manuals.rubyonrails.org/stylesheets/base.css" media="screen" rel="Stylesheet" type="text/css" />
 	<link href="http://manuals.rubyonrails.org/stylesheets/forms.css" media="screen" rel="Stylesheet" type="text/css" />
@@ -56,10 +56,36 @@
 			padding: 0;
 			border: 0;
 		}
+		
+		#logo {
+			position: absolute;
+			left: 10px;
+			top: 10px;
+			width: 110px;
+			height: 140px;
+		}
+		
+		ul#navMain {
+			position: absolute;
+			margin: 0;
+			padding: 0;
+			top: 97px;
+			left: 140px;
+		}
 	</style>
 </head>
 <body>
-	<iframe src="http://web.rubyonrails.com/includes/iframe_header.php?body_id=documentation" style="width: 100%; height: 155px; border: 0;" scrolling="no"></iframe>
+	<div id="header">			
+		<div id="logo">
+			<a href="http://www.rubyonrails.org/" title="Ruby on Rails"><img src="http://web.rubyonrails.com/images/rails_logo_remix.gif" alt="Rails" height="140" width="110" /></a>
+		</div>
+
+		<ul id="navMain">
+			<li class="first-child"><a href="http://www.rubyonrails.org/" title="Ruby on Rails" class="ruby_on_rails">Ruby on Rails</a></li>
+			<li><a class="manuals" href="http://manuals.rubyonrails.org/" title="Manuals Index">Manuals Index</a></li>
+		</ul>
+	</div>
+
 	<div id="container">
 		<div id="sidebar">
 			<h2>Chapters</h2>
