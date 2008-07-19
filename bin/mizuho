@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+$LOAD_PATH << File.expand_path(File.dirname(__FILE__) + "/../lib")
+require 'optparse'
+require 'mizuho/generator'
+
+options = {}
+parser = OptionParser.new do |opts|
+	opts.banner = "Usage: mizuho [options] INPUT"
+	opts.separator ""
+	
+	opts.separator "Options:"
+	opts.on("-t", "--template FILE", String, "Specify a template file to use.") do |value|
+		options[:template] = value
+	end
+end
+begin
+	parser.parse!
+rescue OptionParser::ParseError => e
+	puts e
+	puts
+	puts "Please see '--help' for valid options."
+	exit 1
+end
+
+begin
+	Mizuho::Generator.new(ARGV[0], nil, options[:template]).start
+rescue Mizuho::GenerationError
+	STDERR.puts "*** ERROR"
+	exit 2
+end
