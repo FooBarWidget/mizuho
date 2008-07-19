@@ -55,6 +55,18 @@
 				<h1><%=h title %></h1>
 			<%- end -%>
 			<%= contents %>
+			<div id="chapter_navigation">
+				<%- if prev_chapter -%>
+					<div class="left-floaty">
+					<a href="<%=h prev_chapter.basename %><%=h prev_chapter.anchor %>">&laquo; <%=h prev_chapter.title %></a>
+					</div>
+				<%- end -%>
+				<%- if next_chapter -%>
+					<div class="right-floaty">
+					<a href="<%=h next_chapter.basename %><%=h next_chapter.anchor %>"><%=h next_chapter.title %> &raquo;</a>
+					</div>
+				<%- end -%>
+			</div>
 		</div>
 	</div>
 </div>

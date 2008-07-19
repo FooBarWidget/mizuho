@@ -40,7 +40,7 @@ private
 		if multi_page
 			File.unlink(asciidoc_file)
 			assign_chapter_filenames_and_heading_basenames(parser.chapters)
-			parser.chapters.each do |chapter|
+			parser.chapters.each_with_index do |chapter, i|
 				template = Template.new(template_file,
 					:multi_page? => true,
 					:title => parser.title,
@@ -48,7 +48,9 @@ private
 					:contents => chapter.contents,
 					:is_preamble? => chapter.heading.nil?,
 					:chapters => parser.chapters,
-					:current_chapter => chapter)
+					:prev_chapter => (i <= 1) ? nil : parser.chapters[i - 1],
+					:current_chapter => chapter,
+					:next_chapter => parser.chapters[i + 1])
 				template.save(chapter.filename)
 			end
 		else

@@ -51,6 +51,10 @@ ul#navMain {
 	left: 140px;
 }
 
+.left-floaty, .right-floaty {
+	padding: 15px;
+}
+
 .admonitionblock .icon {
 	padding-right: 8px;
 }
