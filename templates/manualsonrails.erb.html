@@ -1,6 +1,6 @@
 <%
 	def visit_heading(heading, result = "")
-		result << %Q{<li><a href="#{h heading.basename}#{h heading.anchor}">#{h heading.title_without_numbers}</a></li>}
+		result << %Q{<li><a href="#{h heading.basename}#{h heading.anchor}">#{h heading.title_without_numbers}</a>}
 		if heading.level <= 2
 			result << "<ul>\n"
 			heading.children.each do |h|
@@ -8,6 +8,7 @@
 			end
 			result << "</ul>\n"
 		end
+		result << "</li>\n"
 		return result
 	end
 %>
@@ -69,4 +70,5 @@
 			</div>
 		</div>
 	</div>
-</div>
+</body>
+</html>
