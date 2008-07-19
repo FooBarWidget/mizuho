@@ -3,7 +3,7 @@ module Mizuho
 class Heading
 	attr_accessor :title
 	attr_accessor :level
-	attr_accessor :filename
+	attr_accessor :basename
 	attr_accessor :anchor
 	attr_accessor :parent
 	attr_accessor :children

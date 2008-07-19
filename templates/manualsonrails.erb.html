@@ -1,6 +1,6 @@
 <%
 	def visit_heading(heading, result = "")
-		result << %Q{<li><a href="#{h heading.filename}#{h heading.anchor}">#{h heading.title_without_numbers}</a></li>}
+		result << %Q{<li><a href="#{h heading.basename}#{h heading.anchor}">#{h heading.title_without_numbers}</a></li>}
 		if heading.level <= 2
 			result << "<ul>\n"
 			heading.children.each do |h|
@@ -15,7 +15,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />    
-	<title><%- if multi_page? && !is_preamble? -%><%=h chapter_title_without_numbers %> :: <% end %><%=h title %>
+	<title><%- if multi_page? && !is_preamble? -%><%=h current_chapter.title_without_numbers %> :: <% end %><%=h title %>
 	</title>
 	<link href="http://manuals.rubyonrails.org/stylesheets/base.css" media="screen" rel="Stylesheet" type="text/css" />
 	<link href="http://manuals.rubyonrails.org/stylesheets/forms.css" media="screen" rel="Stylesheet" type="text/css" />
@@ -40,7 +40,7 @@
 		<div id="sidebar">
 			<h2>Chapters</h2>
 			<%- if multi_page? -%>
-				<a href="<%=h preamble_anchor %>">Preamble</a>
+				<a href="<%=h chapters.first.basename %>">Preamble</a>
 			<%- end -%>
 			<ol>
 				<%- for heading in table_of_contents -%>
@@ -50,7 +50,7 @@
 		</div>
 		<div id="content">
 			<%- if multi_page? && !is_preamble? -%>
-				<h2 id="<%=h chapter_id %>"><%=h chapter_title %></h2>
+				<h2 id="<%=h current_chapter.anchor_id %>"><%=h current_chapter.title %></h2>
 			<%- else -%>
 				<h1><%=h title %></h1>
 			<%- end -%>

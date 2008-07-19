@@ -26,12 +26,20 @@ class Chapter
 		end
 	end
 	
+	def basename
+		return File.basename(filename)
+	end
+	
 	def anchor
 		if @heading
 			return @heading.anchor
 		else
 			return nil
 		end
+	end
+	
+	def anchor_id
+		return anchor.sub(/^#/, '')
 	end
 end
 

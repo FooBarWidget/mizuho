@@ -39,7 +39,7 @@ private
 		parser = Parser.new(asciidoc_file)
 		if multi_page
 			File.unlink(asciidoc_file)
-			determine_chapter_and_heading_filenames(parser.chapters)
+			assign_chapter_filenames_and_heading_basenames(parser.chapters)
 			parser.chapters.each do |chapter|
 				template = Template.new(template_file,
 					:multi_page? => true,
@@ -47,10 +47,8 @@ private
 					:table_of_contents => parser.table_of_contents,
 					:contents => chapter.contents,
 					:is_preamble? => chapter.heading.nil?,
-					:preamble_anchor => parser.chapters.first.filename,
-					:chapter_title => chapter.title,
-					:chapter_title_without_numbers => chapter.title_without_numbers,
-					:chapter_id => chapter.anchor ? chapter.anchor.sub(/^#/, '') : nil)
+					:chapters => parser.chapters,
+					:current_chapter => chapter)
 				template.save(chapter.filename)
 			end
 		else
@@ -63,15 +61,15 @@ private
 		end
 	end
 	
-	def determine_chapter_and_heading_filenames(chapters)
+	def assign_chapter_filenames_and_heading_basenames(chapters)
 		chapters.each_with_index do |chapter, i|
 			if chapter.is_preamble?
 				chapter.filename = File.basename("#{@output_name}.html")
 			else
 				chapter.filename = sprintf("%s-%02d.html", @output_name, i)
-				chapter.heading.filename = File.basename(chapter.filename)
+				chapter.heading.basename = File.basename(chapter.filename)
 				chapter.heading.each_descendant do |h|
-					h.filename = File.basename(chapter.filename)
+					h.basename = File.basename(chapter.filename)
 				end
 			end
 		end
