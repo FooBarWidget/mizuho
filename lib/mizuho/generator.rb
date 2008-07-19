@@ -63,12 +63,11 @@ private
 	end
 	
 	def determine_chapter_and_heading_filenames(chapters)
-		preamble_filename = "#{@output_name}.html"
 		chapters.each_with_index do |chapter, i|
 			if chapter.is_preamble?
-				chapter.filename = preamble_filename
+				chapter.filename = File.basename("#{@output_name}.html")
 			else
-				chapter.filename = "#{@output_name}-#{i}.html"
+				chapter.filename = sprintf("%s-%02d.html", @output_name, i)
 				chapter.heading.filename = File.basename(chapter.filename)
 				chapter.heading.each_descendant do |h|
 					h.filename = File.basename(chapter.filename)
