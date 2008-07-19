@@ -30,7 +30,7 @@ private
 	ASCIIDOC = File.expand_path(File.dirname(__FILE__) + "/../../asciidoc/asciidoc.py")
 
 	def run_asciidoc(input, output)
-		if !system("python", ASCIIDOC, "-a", "toc", "-n", "-o", output, input)
+		if !system("python", ASCIIDOC, "-a", "toc", "-a", "icons", "-n", "-o", output, input)
 			raise GenerationError, "Asciidoc failed."
 		end
 	end
