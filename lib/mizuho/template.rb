@@ -10,7 +10,7 @@ class Template
 		@options = options
 		options.each_key do |key|
 			raise "All option keys must be symbols." if !key.is_a?(Symbol)
-			raise "Invalid key name '#{key}'." if key.to_s !~ /\A[a-z0-9_]+\Z/i
+			raise "Invalid key name '#{key}'." if key.to_s !~ /\A[a-z0-9_]+\??\Z/i
 			eval %{
 				def #{key}
 					@options[:#{key}]
