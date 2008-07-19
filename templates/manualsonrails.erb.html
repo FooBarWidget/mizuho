@@ -1,0 +1,76 @@
+<%
+	def visit_heading(heading, result = "")
+		result << %Q{<li><a href="##{h heading.anchor}">#{h heading.title_without_numbers}</a></li>}
+		if heading.level <= 2
+			result << "<ul>\n"
+			heading.children.each do |h|
+				visit_heading(h, result)
+			end
+			result << "</ul>\n"
+		end
+		return result
+	end
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />    
+	<title><%=h title %></title>       
+	<link href="http://manuals.rubyonrails.org/stylesheets/base.css" media="screen" rel="Stylesheet" type="text/css" />
+	<link href="http://manuals.rubyonrails.org/stylesheets/forms.css" media="screen" rel="Stylesheet" type="text/css" />
+	<link href="http://manuals.rubyonrails.org/stylesheets/more.css" media="screen" rel="Stylesheet" type="text/css" />
+	<style type="text/css">
+		div#container {
+			max-width: 1000px;
+		}
+		
+		div#content {
+			margin-left: 200px;
+		}
+		
+		pre {
+			line-height: 1.4em;
+		}
+		
+		tt {
+			background: #eeeeee;
+			border: solid 1px #cccccc;
+			padding: 3px;
+		}
+		
+		dt {
+			font-weight: bold;
+		}
+		
+		dt tt {
+			font-size: 10pt;
+		}
+		
+		dd {
+			margin-left: 3em;
+		}
+		
+		dt tt, pre tt {
+			background: none;
+			padding: 0;
+			border: 0;
+		}
+	</style>
+</head>
+<body>
+	<iframe src="http://web.rubyonrails.com/includes/iframe_header.php?body_id=documentation" style="width: 100%; height: 155px; border: 0;" scrolling="no"></iframe>
+	<div id="container">
+		<div id="sidebar">
+			<h2>Chapters</h2>							
+			<ol>
+				<%- for heading in table_of_contents -%>
+					<%= visit_heading(heading) %>
+				<%- end -%>
+			</ol>
+		</div>
+		<div id="content">
+			<h1><%=h title %></h1>
+			<%= contents %>
+		</div>
+	</div>
+</div>

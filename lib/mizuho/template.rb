@@ -19,6 +19,9 @@ class Template
 		@contents.sub!(/\A.*?(<div id="preamble">)/m, '\1')
 		@contents.sub!(/<div id="footer">.*/m, '')
 		
+		# Get rid of some unwanted elements.
+		@contents.gsub!(%r{<div style="clear:left"></div>}, '')
+		
 		@table_of_contents = parse_table_of_contents(@contents)
 		
 		# Apply our own template on the "naked" contents.

@@ -18,6 +18,10 @@ class Heading
 		end
 		return h
 	end
+	
+	def title_without_numbers
+		return title.sub(/^(\d+\.)+ /, '')
+	end
 end
 
 end
