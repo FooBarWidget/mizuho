@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>LaTeX backend for Asciidoc</title><link rel="stylesheet" href="./docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /></head><body><div class="article" lang="en" xml:lang="en"><div class="titlepage"><div><div><h1 class="title"><a id="id2417888"></a>LaTeX backend for Asciidoc</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Benjamin</span> <span class="surname">Klum</span></h3><div class="affiliation"><div class="address"><p><code class="email">&lt;<a href="mailto:benjamin.klum@gmail.com">benjamin.klum@gmail.com</a>&gt;</code></p></div></div></div></div><div><div class="revhistory"><table border="1" width="100%" summary="Revision history"><tr><th align="left" valign="top" colspan="3"><b>Revision History</b></th></tr><tr><td align="left">Revision 1.0</td><td align="left">June 2006</td><td align="left">BK</td></tr></table></div></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#_introduction">1. Introduction</a></span></dt><dt><span class="section"><a href="#_tutorial">2. Tutorial</a></span></dt><dt><span class="section"><a href="#_general_notes">3. General notes</a></span></dt><dd><dl><dt><span class="section"><a href="#_quality_of_latex_output">3.1. Quality of LaTeX output</a></span></dt><dt><span class="section"><a href="#_configuration_file_customization">3.2. Configuration file customization</a></span></dt><dt><span class="section"><a href="#_output_optimization">3.3. Output optimization</a></span></dt><dt><span class="section"><a href="#unicodeSupport">3.4. Unicode support</a></span></dt></dl></dd><dt><span class="section"><a href="#_backend_specific_features">4. Backend specific features</a></span></dt><dd><dl><dt><span class="section"><a href="#_special_sections">4.1. Special sections</a></span></dt><dt><span class="section"><a href="#internalCrossReferences">4.2. Internal cross references</a></span></dt><dt><span class="section"><a href="#_options">4.3. Options</a></span></dt></dl></dd><dt><span class="section"><a href="#_requirements">5. Requirements</a></span></dt><dd><dl><dt><span class="section"><a href="#_general">5.1. General</a></span></dt><dt><span class="section"><a href="#packageRequirements">5.2. TeX/LaTeX Package requirements</a></span></dt></dl></dd><dt><span class="section"><a href="#configurationFile">6. About the LaTeX backend configuration file</a></span></dt><dt><span class="section"><a href="#_ideas">7. Ideas</a></span></dt><dd><dl><dt><span class="section"><a href="#_code_listing_block">7.1. Code listing block</a></span></dt></dl></dd><dt><span class="section"><a href="#_known_bugs">8. Known Bugs</a></span></dt><dt><span class="section"><a href="#_todo_list">9. Todo List</a></span></dt></dl></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_introduction"></a>1. Introduction</h2></div></div></div><p>LaTeX backend is a configuration file for Stuart Rackham's <a href="http://www.methods.co.nz/asciidoc/" target="_top">Asciidoc</a>. It generates high-level LaTeX markup from Asciidoc documents. LaTeX is a document preparation system for TeX which in turn is a popular typesetting system. It is well known for producing excellently typesetted high quality printouts, especially suited for scientific text.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_tutorial"></a>2. Tutorial</h2></div></div></div><p>Getting a ready-to-print document from an Asciidoc document using the LaTeX backend involves at least two steps:</p><div class="orderedlist"><ol type="1"><li>
+Conversion of the Asciidoc document into a LaTeX document (this is done by Asciidoc using the LaTeX backend)
+</li><li>
+Conversion of the LaTeX document into a PDF document (this is done by the TeX system)
+</li></ol></div><p>Try to create a PDF document from the Asciidoc document <code class="literal">article.txt</code> which resides in the <code class="literal">doc</code> directory of Asciidoc:</p><div class="orderedlist"><ol type="a"><li>
+Make a copy of <code class="literal">article.txt</code> in a directory of your choice, let's call it <code class="literal">latex-test</code>.
+</li><li>
+Make sure that all images referenced in <code class="literal">article.txt</code> exist in <code class="literal">latex-test</code>. Brute force approach: Copy the whole <code class="literal">images</code> directory from Asciidoc directory into <code class="literal">latex-test</code>.
+</li><li><p>
+Change directory to <code class="literal">latex-test</code> and type following commands:
+</p><pre class="literallayout">asciidoc --unsafe --backend=latex article.txt
+pdflatex article.tex</pre></li><li>
+Now there should be a file <code class="literal">article.pdf</code> in the <code class="literal">latex-test</code> directory.
+</li></ol></div><div class="important" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Important"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="./images/icons/important.png" /></td><th align="left"></th></tr><tr><td align="left" valign="top"><div class="itemizedlist"><ul type="disc"><li>
+Asciidoc has to be started in <span class="emphasis"><em>unsafe mode</em></span> when using LaTeX backend.
+</li><li>
+Note that some special LaTeX packages are necessary, see <a href="#packageRequirements" title="5.2.&#xA0;TeX/LaTeX Package requirements">here</a>.
+</li></ul></div></td></tr></table></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_general_notes"></a>3. General notes</h2></div></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_quality_of_latex_output"></a>3.1. Quality of LaTeX output</h3></div></div></div><p>High-level LaTeX is not very straightforward to generate. Therefore there's no guarantee that the generated output is valid and compiles successfully. At all, this backend should be considered as rather experimental.  You should have been already in touch with LaTeX in order to use the backend effectively because LaTeX compilation errors can be really nasty.</p><p>Nevertheless good results can be achieved by using LaTeX backend. Try for example to compile Stuart Rackham's Asciidoc documentation, a rather large document. It should compile without problems. However, the code filter might have to be reconfigured for the code filter example to work.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_configuration_file_customization"></a>3.2. Configuration file customization</h3></div></div></div><p>Like every other Asciidoc backend the LaTeX backend can be customized easily to fit the user's needs. Actually it is very important to have this option since LaTeX doesn't have a companion language like CSS which allows to put styling information in a separate file. Read more about the LaTeX backend configuration file <a href="#configurationFile" title="6.&#xA0;About the LaTeX backend configuration file">here</a>.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_output_optimization"></a>3.3. Output optimization</h3></div></div></div><p>The LaTeX output is optimized for creating PDF documents using <span class="emphasis"><em>pdflatex</em></span>.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="unicodeSupport"></a>3.4. Unicode support</h3></div></div></div><p>Unfortunately TeX/LaTeX does not have native unicode support. The package <span class="emphasis"><em>ucs</em></span> adds elementary unicode support by introducing UTF-8 input encoding recognition and by defining lookup tables which contain the corresponding LaTeX commands for unicode characters. But these lookup tables are far from being complete. When a unicode character is found which is not defined in the lookup tables an error is raised by the TeX/LaTeX compiler. Note that TeX/LaTeX compilation errors caused by missing unicode character definitions are not fatal, that means the result is probably readable but undefined unicode characters are replaced with <code class="literal">[U+…]</code>. You may (de)activate the recognition of escaped unicode characters. See the <a href="#latex-recognize-escaped-unicode">[latex-recognize-escaped-unicode]</a> backend option.</p></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_backend_specific_features"></a>4. Backend specific features</h2></div></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_special_sections"></a>4.1. Special sections</h3></div></div></div><p>LaTeX backend supports the following special sections and replaces them with corresponding LaTeX commands or environments:</p><div class="itemizedlist"><ul type="disc"><li>
+Abstract (only for document type <span class="emphasis"><em>article</em></span>)
+</li><li>
+Dedication (only for document type <span class="emphasis"><em>book</em></span>)
+</li><li>
+Index
+</li><li>
+Bibliography (only when the attribute <span class="emphasis"><em>latex-use-bibliography-environment</em></span> is set)
+</li><li>
+Appendix
+</li><li>
+Contents
+</li></ul></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="internalCrossReferences"></a>4.2. Internal cross references</h3></div></div></div><p>Macros for internal cross references have been extended by the attribute <span class="emphasis"><em>style</em></span>.</p><pre class="literallayout">xref:&lt;id&gt;[&lt;caption&gt;, style=&lt;style&gt;]</pre><p>or</p><pre class="literallayout">&lt;&lt;&lt;id&gt;,&lt;caption&gt;,&lt;style&gt;&gt;&gt;</pre><p>The additional attribute <span class="emphasis"><em>style</em></span> can have following values:</p><div class="variablelist"><dl><dt><span class="term">
+page
+</span></dt><dd>
+Let's LaTeX print the page number of the referenced anchor.
+</dd><dt><span class="term">
+ref
+</span></dt><dd>
+Let's LaTeX print the number of the section, subsection, figure, table or theorem the referenced anchor resides.
+</dd><dt><span class="term">
+autoref
+</span></dt><dd>
+Let's LaTeX print the number of the section, subsection, figure, table or theorem the referenced anchor resides preceded with a contextual label.
+</dd><dt><span class="term">
+cite
+</span></dt><dd>
+Let's LaTeX interprete this reference as a reference to a bibliography entry. If the attribute <span class="emphasis"><em>latex-use-bibliography-environment</em></span> is set, references with <span class="emphasis"><em>cite</em></span> style as well as their corresponding bibliography anchors are presented as automatically generated numbers.
+</dd></dl></div><p>If the <span class="emphasis"><em>style</em></span> attribute is not set the reference is printed the common way.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_options"></a>4.3. Options</h3></div></div></div><p>LaTeX document generation is influenced by the following attributes:</p><div class="variablelist"><dl><dt><span class="term">
+latex-table-rowlimit
+</span></dt><dd>
+The maximum number of rows for typesetting tables using the <span class="emphasis"><em>tabular</em></span> environment. If a table has more rows than <span class="emphasis"><em>latex-table-rowlimit</em></span>, <span class="emphasis"><em>longtable</em></span> environment is used instead of <span class="emphasis"><em>tabular</em></span> environment. <span class="emphasis"><em>longtable</em></span> environment supports tables spanning over several pages.
+</dd><dt><span class="term">
+latex-use-bibliography-environment
+</span></dt><dd>
+If <span class="emphasis"><em>latex-use-bibliography-environment</em></span> is defined, <span class="emphasis"><em>thebibliography</em></span> environment is used for the bibliography section. As a result bibliography entries are automatically numbered. Note that this works only if the bibliography section contains exclusively bibliography list items which start with a bibliography entry ([[[…]]]). Otherwise a TeX/LaTeX compilation error will occur. In order to display bibliography references correctly their <span class="emphasis"><em>style</em></span> attribute must be set to <span class="emphasis"><em>cite</em></span>. For more information see <a href="#internalCrossReferences" title="4.2.&#xA0;Internal cross references">Internal cross references</a>.
+</dd><dt><span class="term">
+latex-indent-paragraphs
+</span></dt><dd>
+If <span class="emphasis"><em>latex-indent-paragraphs</em></span> is defined, the first line of paragraphs will be indented. By default LaTeX backend prevents paragraph indentation and prints paragraphs with preceding vertical space.
+</dd><dt><span class="term">
+<a id="latex-recognize-escaped-unicode"></a> latex-recognize-escaped-unicode
+</span></dt><dd>
+If <span class="emphasis"><em>latex-recognize-escaped-unicode</em></span> is defined, escaped unicode characters (e.g. <code class="literal">{amp}#960;</code> or <code class="literal">{amp}#x3C0;</code>) will be recognized. This can lead to LaTeX compilation errors since LaTeX unicode support is only rudimentary. For more information see <a href="#unicodeSupport" title="3.4.&#xA0;Unicode support">Unicode support</a>.
+</dd><dt><span class="term">
+latex-use-custom-list-items
+</span></dt><dd>
+If <span class="emphasis"><em>latex-use-custom-list-items</em></span> is defined, lists will be bulleted or enumerated the way you have typed them in the original Asciidoc document. That means, <code class="literal">*</code> turns into a circle bullet, <code class="literal">-</code> turns into a dash, <code class="literal">.</code> turns into a number and <code class="literal">..</code> turns into a letter. Otherwise LaTeX will use different bullets and enumeration characters depending on the level of nesting.
+</dd><dt><span class="term">
+latex-use-colored-tables
+</span></dt><dd>
+If <span class="emphasis"><em>latex-use-colored-tables</em></span> is defined, tables will be printed colored.
+</dd><dt><span class="term">
+latex-use-running-title-headings
+</span></dt><dd>
+If <span class="emphasis"><em>latex-use-running-title-headings</em></span> is defined, <span class="emphasis"><em>pagestyle</em></span> will be set to <span class="emphasis"><em>headings</em></span> which results in running titles in the head.
+</dd><dt><span class="term">
+latex-use-colored-sidebar-blocks
+</span></dt><dd>
+If <span class="emphasis"><em>latex-use-colored-sidebar-blocks</em></span> is defined, sidebar block content will be put in a color box instead of being indented by a vertical bar.
+</dd><dt><span class="term">
+icons
+</span></dt><dd>
+Link admonition paragraph and admonition block icon images and badge images. By default icons is undefined and text is used in place of icon images.
+</dd><dt><span class="term">
+encoding
+</span></dt><dd>
+Set the input and output document character set encoding. Currently <code class="literal">ISO-8859-1</code> and <code class="literal">UTF-8</code> are supported.
+</dd></dl></div></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_requirements"></a>5. Requirements</h2></div></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_general"></a>5.1. General</h3></div></div></div><p>The following software is necessary for using the LaTeX backend:</p><div class="itemizedlist"><ul type="disc"><li>
+An up-to-date version of <a href="http://www.methods.co.nz/asciidoc/" target="_top">Asciidoc</a>
+</li><li><p>
+An up-to-date TeX distribution, e.g.:
+</p><div class="itemizedlist"><ul type="circle"><li>
+<a href="http://www.miktex.org/" target="_top">MiKTeX</a> for Windows
+</li><li>
+<a href="http://www.tug.org/tetex/" target="_top">teTeX</a> for Linux
+</li></ul></div></li></ul></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="packageRequirements"></a>5.2. TeX/LaTeX Package requirements</h3></div></div></div><p>LaTeX backend makes use of some LaTeX specialities which don't belong to a minimal TeX/LaTeX distribution. However, I took special care not to employ exotic packages. Hence the following packages should be available in most package repositories. The table is not complete yet because I don't know the package names for all TeX distributions.</p><div class="informaltable"><table cellpadding="4px" border="0" style="border-collapse: collapse;border-top: 2px solid #527bbd; border-bottom: 2px solid #527bbd; border-left: 2px solid #527bbd; border-right: 2px solid #527bbd; "><colgroup><col align="left" /><col align="left" /><col align="left" /><col align="left" /><col align="left" /></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    Speciality
+    </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    MiKTeX package name
+    </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    teTeX package name
+    </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    TeX Live package name
+    </th><th style="border-bottom: 1px solid ; " align="left">
+    Description
+    </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    KOMA-Script
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    koma-script
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-bottom: 1px solid ; " align="left">
+    LaTeX backend uses the document classes <span class="emphasis"><em>scrartcl</em></span> and <span class="emphasis"><em>scrbook</em></span> as well as some other specialities defined in the <span class="emphasis"><em>KOMA-Script</em></span> package, e.g. the commands <code class="literal">\addmargin{}</code> and <code class="literal">\minisec{}</code>.
+    </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    xcolor.sty
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    xcolor
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-bottom: 1px solid ; " align="left">
+    Used to produce colored boxes and tables.
+    </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    colortbl.sty
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    colortbl
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-bottom: 1px solid ; " align="left">
+    Used to produce colored tables.
+    </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    type1ec.sty
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    cm-super
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-bottom: 1px solid ; " align="left">
+    Enables high quality fonts for PDF output.
+    </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    hyperref.sty
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    hyperref
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-bottom: 1px solid ; " align="left">
+    Extensive support for hypertext in PDF documents.
+    </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    enumerate.sty
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    tools
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-bottom: 1px solid ; " align="left">
+    When <span class="emphasis"><em>latex-use-custom-list-items</em></span> is defined this package is used for determining the enumeration character.
+    </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    graphicx.sty
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    graphics
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-bottom: 1px solid ; " align="left">
+    Used for including images.
+    </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    longtable.sty
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    tools
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-bottom: 1px solid ; " align="left">
+    Enables page spanning tables.
+    </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    ucs.sty
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    unicode
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-bottom: 1px solid ; " align="left">
+    Enables support for unicode characters.
+    </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    textcomp
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    ltxbase
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-bottom: 1px solid ; " align="left">
+    Used for printing various symbols like arrows. Should be already installed.
+    </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    alltt
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    ltxbase
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left">
+    </td><td style="border-bottom: 1px solid ; " align="left">
+    Used in literal-like blocks for retaining line and whitespace formatting. Should be already installed.
+    </td></tr><tr><td style="border-right: 1px solid ; " align="left">
+    listings.sty
+    </td><td style="border-right: 1px solid ; " align="left">
+    listings
+    </td><td style="border-right: 1px solid ; " align="left">
+    </td><td style="border-right: 1px solid ; " align="left">
+    </td><td style="" align="left">
+    Used for listing blocks.
+    </td></tr></tbody></table></div></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="configurationFile"></a>6. About the LaTeX backend configuration file</h2></div></div></div><p>An important note for people who want to adapt the LaTeX backend configuration file to their own needs:</p><p>LaTeX markup has a lot of special characters, most importantly <code class="literal">\</code>, <code class="literal">{</code>, <code class="literal">}</code>. In order to make things less complicated, I changed the default substitution order (see entry <span class="emphasis"><em>subsnormal</em></span> in the <code class="literal">[miscellaneous]</code> section). In contrast to the backends <span class="emphasis"><em>docbook</em></span> and <span class="emphasis"><em>xhtml11</em></span>, the <span class="emphasis"><em>specialcharacters</em></span> substitution is applied very late. As a result all special characters produced by <span class="emphasis"><em>quotes</em></span>, <span class="emphasis"><em>specialwords</em></span>, <span class="emphasis"><em>replacements</em></span>, <span class="emphasis"><em>attributes</em></span> and <span class="emphasis"><em>macros</em></span> become escaped at the end. If you don't want special characters in the corresponding sections to get escaped, you've to use following symbols instead of the special characters.</p><div class="itemizedlist"><ul type="disc"><li>
+<code class="literal">!..backslash..!</code> instead of <code class="literal">\</code>
+</li><li>
+<code class="literal">!..braceleft..!</code> instead of <code class="literal">{</code>
+</li><li>
+<code class="literal">!..braceright..!</code> instead of <code class="literal">}</code>
+</li></ul></div><p>For more special characters take a look in the <code class="literal">[replacements2]</code> sections. <code class="literal">[replacements2]</code> section is responsible for replacing the symbols with their corresponding special characters.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_ideas"></a>7. Ideas</h2></div></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_code_listing_block"></a>7.1. Code listing block</h3></div></div></div><p>For creating highlighted code listings I suggest the use of <a href="http://www.andre-simon.de/" target="_top">Highlight</a> or <a href="http://www.gnu.org/software/src-highlite/" target="_top">GNU Source Highlight</a>. Both are suited for use as Asciidoc filters.</p></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_known_bugs"></a>8. Known Bugs</h2></div></div></div><div class="itemizedlist"><ul type="disc"><li>
+Sometimes LaTeX backend handles things differently from the default backends
+</li><li>
+A lot of little bugs
+</li></ul></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_todo_list"></a>9. Todo List</h2></div></div></div><div class="itemizedlist"><ul type="disc"><li>
+Remove bugs
+</li><li>
+Support for <span class="emphasis"><em>grid</em></span> attribute in tables
+</li><li>
+Better looking tables
+</li><li>
+Option for squeezing output (smaller lists)
+</li><li>
+Support for different languages (That would be a nice feature for Asciidoc in general)
+</li><li>
+Option for switching titlepage on and off
+</li></ul></div></div></div></body></html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.2.7" />
+<link rel="stylesheet" href="./xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="./xhtml11-manpage.css" type="text/css" />
+<link rel="stylesheet" href="./xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="./layout1.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){generateToc(1)}
+/*]]>*/
+</script>
+<script type="text/javascript" src="./toc.js"></script>
+<title>ASCIIDOC(1)</title>
+</head>
+<body>
+<div id="layout-banner">
+  <div id="layout-title">AsciiDoc</div>
+  <div id="layout-description">Text based document generation</div>
+</div>
+<table>
+<tr valign="top">
+<td id="layout-menu">
+  <div>&#187;<a href="index.html">Home</a></div>
+  <div>&#187;<a href="manpage.html">Man&nbsp;Page</a></div>
+  <div>&#187;<a href="userguide.html">User&nbsp;Guide</a></div>
+  <div>&#187;<a href="http://powerman.name/doc/asciidoc">Cheatsheet</a></div>
+  <div>&#187;<a href="a2x.1.html">a2x</a></div>
+  <div>&#187;<a href="README.html">README</a></div>
+  <div>&#187;<a href="CHANGELOG.html">ChangeLog</a></div>
+  <div>&#187;<a href="INSTALL.html">Installation</a></div>
+  <div>&#187;<a href="downloads.html">Downloads</a></div>
+  <div>&#187;<a href="faq.html">FAQ</a></div>
+  <div>&#187;<a href="support.html">Support</a></div>
+  <div id="page-source">&#187;<a href="manpage.txt">Page&nbsp;Source</a></div>
+</td>
+<td>
+<div id="layout-content">
+<div id="header">
+<h1>
+ASCIIDOC(1) Manual Page
+</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+<h2>NAME</h2>
+<div class="sectionbody">
+<p>asciidoc -
+   converts an AsciiDoc text file to DocBook, HTML or LinuxDoc
+</p>
+</div>
+</div>
+<h2>SYNOPSIS</h2>
+<div class="sectionbody">
+<div class="para"><p><strong>asciidoc</strong> [<em>OPTIONS</em>] <em>FILE</em></p></div>
+</div>
+<h2 id="_description">DESCRIPTION</h2>
+<div class="sectionbody">
+<div class="para"><p>The <tt>asciidoc(1)</tt> command translates the <em>AsciiDoc</em> text file <em>FILE</em> to a
+DocBook, HTML or LinuxDoc file.  If <em>FILE</em> is <em>-</em> then the standard
+input is used.</p></div>
+</div>
+<h2 id="_options">OPTIONS</h2>
+<div class="sectionbody">
+<div class="vlist"><dl>
+<dt>
+<strong>-a, --attribute</strong>=<em>ATTRIBUTE</em>
+</dt>
+<dd>
+<p>
+    Define or delete document attribute. <em>ATTRIBUTE</em> is formatted like
+    <em>NAME=VALUE</em>. Command-line attributes take precedence over
+    document and configuration file attributes.  Alternate acceptable
+    forms are <em>NAME</em> (the <em>VALUE</em> defaults to an empty string);
+    <em>NAME!</em> (delete the <em>NAME</em> attribute); <em>NAME@</em> (do not override
+    document or configuration file attributes).  Values containing
+    spaces should be enclosed in double-quote characters. This option
+    may be specified more than once.
+</p>
+</dd>
+<dt>
+<strong>-b, --backend</strong>=<em>BACKEND</em>
+</dt>
+<dd>
+<p>
+    Backend output file format: <em>docbook</em>, <em>xhtml11</em> or <em>html4</em>.
+    Defaults to <em>xhtml11</em>.
+</p>
+</dd>
+<dt>
+<strong>-f, --conf-file</strong>=<em>CONF_FILE</em>
+</dt>
+<dd>
+<p>
+    Use configuration file <em>CONF_FILE</em>.Configuration files processed
+    in command-line order (after implicit configuration files).  This
+    option may be specified more than once.
+</p>
+</dd>
+<dt>
+<strong>-d, --doctype</strong>=<em>DOCTYPE</em>
+</dt>
+<dd>
+<p>
+    Document type: <em>article</em>, <em>manpage</em> or <em>book</em>. The <em>book</em> document
+    type is only supported by the <em>docbook</em> backend.  Default document
+    type is <em>article</em>.
+</p>
+</dd>
+<dt>
+<strong>-c, --dump-conf</strong>
+</dt>
+<dd>
+<p>
+    Dump configuration to stdout.
+</p>
+</dd>
+<dt>
+<strong>-h, --help</strong>[=<em>TOPIC</em>]
+</dt>
+<dd>
+<p>
+    Print help TOPIC. <strong>--help</strong>=<em>topics</em> will print a list of help
+    topics, <strong>--help</strong>=<em>syntax</em> summarizes <em>AsciiDoc</em> syntax,
+    <strong>--help</strong>=<em>manpage</em> prints the <em>AsciiDoc</em> manpage.
+</p>
+</dd>
+<dt>
+<strong>-e, --no-conf</strong>
+</dt>
+<dd>
+<p>
+    Exclude implicitly loaded configuration files except for those
+    named like the input file (<em>infile.conf</em> and
+    <em>infile-backend.conf</em>).
+</p>
+</dd>
+<dt>
+<strong>-s, --no-header-footer</strong>
+</dt>
+<dd>
+<p>
+    Suppress document header and footer output.
+</p>
+</dd>
+<dt>
+<strong>-o, --out-file</strong>=<em>OUT_FILE</em>
+</dt>
+<dd>
+<p>
+    Write output to file <em>OUT_FILE</em>. Defaults to the base name of
+    input file with <em>backend</em> extension. If the input is stdin then
+    the outfile defaults to stdout. If <em>OUT_FILE</em> is <em>-</em> then the
+    standard output is used.
+</p>
+</dd>
+<dt>
+<strong>-n, --section-numbers</strong>
+</dt>
+<dd>
+<p>
+    Auto-number HTML article section titles.  Synonym for <strong>-a
+    numbered</strong>.
+</p>
+</dd>
+<dt>
+<strong>--unsafe</strong>
+</dt>
+<dd>
+<p>
+    Disable safe mode. Safe mode is enabled by default, disabling
+    it is potentially dangerous.
+</p>
+</dd>
+<dt>
+<strong>-v, --verbose</strong>
+</dt>
+<dd>
+<p>
+    Verbosely print processing information and configuration file
+    checks to stderr.
+</p>
+</dd>
+<dt>
+<strong>--version</strong>
+</dt>
+<dd>
+<p>
+    Print program version number.
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="_exit_status">EXIT STATUS</h2>
+<div class="sectionbody">
+<div class="vlist"><dl>
+<dt>
+<strong>0</strong>
+</dt>
+<dd>
+<p>
+    Success
+</p>
+</dd>
+<dt>
+<strong>1</strong>
+</dt>
+<dd>
+<p>
+    Failure (syntax or usage error; configuration error; document
+    processing failure; unexpected error).
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="_bugs">BUGS</h2>
+<div class="sectionbody">
+<div class="para"><p>See the <em>AsciiDoc</em> distribution BUGS file.</p></div>
+</div>
+<h2 id="_author">AUTHOR</h2>
+<div class="sectionbody">
+<div class="para"><p>Written by Stuart Rackham, &lt;<a href="mailto:srackham@gmail.com">srackham@gmail.com</a>&gt;</p></div>
+</div>
+<h2 id="_resources">RESOURCES</h2>
+<div class="sectionbody">
+<div class="para"><p>SourceForge: <a href="http://sourceforge.net/projects/asciidoc/">http://sourceforge.net/projects/asciidoc/</a></p></div>
+<div class="para"><p>Main web site: <a href="http://www.methods.co.nz/asciidoc/">http://www.methods.co.nz/asciidoc/</a></p></div>
+</div>
+<h2 id="_copying">COPYING</h2>
+<div class="sectionbody">
+<div class="para"><p>Copyright (C) 2002-2008 Stuart Rackham. Free use of this software is
+granted under the terms of the GNU General Public License (GPL).</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 8.2.7<br />
+Last updated 2008-07-04 23:29:29 NZDT
+</div>
+<div id="footer-badges">
+<a href="http://validator.w3.org/check?uri=referer">
+  <img style="border:none; width:88px; height:31px;"
+       src="http://www.w3.org/Icons/valid-xhtml11"
+       alt="Valid XHTML 1.1!" />
+</a>
+<a href="http://jigsaw.w3.org/css-validator/check/referer">
+  <img style="border:none; width:88px; height:31px;"
+       src="http://jigsaw.w3.org/css-validator/images/vcss"
+       alt="Valid CSS!" />
+</a>
+<a href="http://www.mozilla.org/products/firefox/">
+  <img style="border:none; width:110px; height:32px;"
+       src="http://www.spreadfirefox.com/community/images/affiliates/Buttons/110x32/safer.gif"
+       alt="Get Firefox!" />
+</a>
+</div>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+</html>

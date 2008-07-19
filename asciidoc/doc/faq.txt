@@ -1,0 +1,262 @@
+AsciiDoc Frequently Asked Questions
+===================================
+
+An embryonic AsciiDoc FAQ.
+
+
+== How can I preserve paragraph line boundaries?
+
+Apply the The 'verse' paragraph style, the rendered text preserves
+line boundaries and is useful for lyrics and poems.  For example:
+
+---------------------------------------------------------------------
+[verse]
+Consul *necessitatibus* per id,
+consetetur, eu pro everti postulant
+homero verear ea mea, qui.
+---------------------------------------------------------------------
+
+
+== How can I include non-breaking space characters?
+
+The predefined `\{nbsp}` attribute reference will be replaced by a
+non-breaking space character.
+
+
+== How do I include spaces in URL addresses?
+
+URL inline macro targets (addresses) cannot contain white space
+characters. If you need spaces encode them as `%20`. For example:
+
+  image:large%20image.png[]
+  http://www.foo.bar.com/an%20example%20document.html
+
+
+== How can I get AsciiDoc to assign the correct DocBook language attribute?
+
+Set the AsciiDoc 'lang' attribute to the appropriate language code.
+For example:
+
+  $ a2x -a lang=es doc/article.txt
+
+This will ensure that downstream DocBook processing will generate the
+correct language specific document headings (things like table of
+contents, revision history, figure and table captions, admonition
+captions).
+
+
+== Why does AsciiDoc give me a ``malformed author'' error?
+
+This is normally because there are more than three names (up to three
+are expected: first name, middle name and last name). For example,
+this author line would result in an error:
+
+  Vincent Willem van Gogh
+
+You can enter multi-word first, middle and last names in the author
+line using the underscore as a word separator. For example:
+
+  Vincent Willem van_Gogh
+
+You could also resolve the problem by replacing the author line with
+explicit attribute entries:
+
+  :First name:  Vincent
+  :Middle name: Willem
+  :Last name:   Van Gogh
+
+
+== How can I assign multiple author names?
+
+A quick way to do this is put both authors in a single first name, for 
+example:
+
+  My Document
+  ===========
+  :Author: Bill_and_Ben_the_Flowerpot_Men
+  :Author Initials: BB & BC
+
+asciidoc(1) replaces the underscores with spaces.
+
+The longer, but semantically correct way, is to override the
+`[header]` configuration file section in a document specific `.conf`
+file. For example if your document is `mydoc.txt` then a file called
+`mydoc.conf` in the document directory would be picked up
+automatically by asciidoc(1).  Copy and paste the default
+`docbook.conf` file `[header]` to `mydoc.conf` and modify the author
+related markup:
+
+  [header]
+    :
+  <authorgroup>...
+    :
+
+
+
+== How can I escape AsciiDoc markup?
+
+Most AsciiDoc inline elements can be suppressed by preceding them with
+a backslash character. These elements include:
+
+- Attribute references.
+- Text formatting.
+- Quoting,
+- 'URLs', 'image' and 'link' macros.
+- Replacements.
+- Special words.
+
+In some cases you may need to escape both left and right quotes (see
+the 'AsciiDoc User Guide').
+
+
+== How can I escape a labeled list entry?
+
+Two colons or semicolons in a paragraph may be confused with a labeled
+list entry. Use the predefined `\{two_colons}` and `\{two_semicolons}`
+to suppress this behavior, for example:
+
+  Qui in magna commodo{two_colons} est labitur dolorum an. Est ne
+  magna primis adolescens.
+
+Will be rendered as:
+
+Qui in magna commodo{two_colons} est labitur dolorum an. Est ne
+magna primis adolescens.
+
+
+== How can I disable a quoted text substitution?
+
+Omitting the tag will disable quoting. For example, if you don't want
+superscripts or subscripts then put the following in a custom
+configuration file or edit the global `asciidoc.conf` configuration
+file:
+
+---------------------------------------------------------------------
+[quotes]
+^=
+~=
+---------------------------------------------------------------------
+
+
+== I have a paragraph containing some funky URLs, is there a way to suppress AsciiDoc substitutions in the URL address?
+
+You can selectively choose which substitutions to perform by setting
+the 'subs' attribute at the start of a block. For example:
+
+---------------------------------------------------------------------
+[subs="macros"]
+~subscripts~ and ^superscripts^ quotes won't be substituted.
+Nor will the non-alphanumeric characters in the following URL:
+http://host/~user/file#_anchor_tag_str_
+---------------------------------------------------------------------
+
+
+== How can I customize the \{localdate} format?
+
+The default format for the `\{localdate}` attribute is the ISO 8601
+`yyyy-mm-dd` format. You can change this format by explicitly setting
+the `\{localdate}` attribute. For example by setting it using the
+asciidoc(1) `-a` command-line option:
+
+  $ asciidoc -a localdate=`date +%d-%d-%Y` mydoc.txt
+
+You could also set it by adding an Attribute Entry to your souce
+document, for example:
+
+  :localdate: {sys: date +%Y-%m-%d}
+
+Since it's set using an executable attribute you'll also need to
+include the `--unsafe` option when you run asciidoc).
+
+
+== Why doesn't AsciiDoc support strike through text?
+
+The reason it's not in the distribution is that DocBook does not have
+provision for strike through text and one of the AsciiDoc design goals
+is that AsciiDoc markup should be applicable to all output formats.
+
+Strike through is normally used to mark deleted text -- a more
+comprehensive way to manage document revisions is to use a version
+control system such as Subversion. You can also use the AsciiDoc
+'CommentLines' and 'CommentBlocks' to retain revised text in the
+source document.
+
+If you really need strike through text for (X)HTML outputs then adding
+the following to a configuration file will allow you to quote strike
+through text with hyphen characters:
+
+---------------------------------------------------------------------
+ ifdef::basebackend-html[]
+
+ [quotes]
+ -=strikethrough
+
+ [tags]
+ strikethrough=<span style="text-decoration: line-through;">|</span>
+
+ endif::basebackend-html[]
+---------------------------------------------------------------------
+
+
+== Where can I find examples of commands used to build output documents?
+
+The User Guide has some. You could also look at `./doc/main.aap` in
+the AsciiDoc distribution, it has all the commands used to build the
+AsciiDoc documentation (even if you don't use A-A-P you'll still find
+it useful).
+
+
+== How can I place a backslash character in front of an attribute reference without escaping the reference?
+
+Use the predefined `\{backslash}` attribute reference instead of an
+actual backslash, for example if the `\{projectname}` attribute has
+the value `foobar` then:
+
+  d:\data{backslash}{projectname}
+
+would be rendered as:
+
+  d:\data\foobar
+
+
+== Why have you used the DocBook <simpara> element instead of <para>?
+
+`<simpara>` is really the same as `<para>` except it can't contain
+block elements -- this matched, more closely, the AsciiDoc paragraph
+semantics.
+
+
+== How can I format text inside a listting block?
+
+By default only 'specialcharacters' and 'callouts' are substituted in
+listing blocks; you can add quotes substitutions by explicitly setting
+the block 'subs' attribute, for example:
+
+  [subs="specialcharacters,callouts,quotes"]
+  ------------------------------------------
+  $ ls *-al*
+  ------------------------------------------
+
+The `-al` will rendered bold. Note that:
+
+- You would need to explicitly escape text you didn't want quoted.
+- Don't do this in source code listing blocks because it modifies the
+  source code which confuses the syntax highlighter.
+- This only works if your DocBook processor recognizes DocBook
+  `<emphasis>` elements inside `<screen>` elements.
+
+
+== Why doesn't the \include1::[] macro work?
+
+Internally the `include1` macro is translated to the `include1` system
+attribute which means it must be evaluated in a region where attribute
+substitution is enabled. For example, if you want to evaluate it
+inside a listing block you will need to enable attribute substitution
+inside the block, for example:
+
+  [subs="attributes"]
+  -----------------------------------------
+  include1::blogpost_media_processing.txt[]
+  -----------------------------------------
+
+Or, preferably, use the `include` block macro instead.

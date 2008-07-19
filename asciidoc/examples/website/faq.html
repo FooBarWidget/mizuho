@@ -1,0 +1,372 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.2.7" />
+<link rel="stylesheet" href="./xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="./xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="./layout1.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){generateToc(2)}
+/*]]>*/
+</script>
+<script type="text/javascript" src="./toc.js"></script>
+<title>AsciiDoc Frequently Asked Questions</title>
+</head>
+<body>
+<div id="layout-banner">
+  <div id="layout-title">AsciiDoc</div>
+  <div id="layout-description">Text based document generation</div>
+</div>
+<table>
+<tr valign="top">
+<td id="layout-menu">
+  <div>&#187;<a href="index.html">Home</a></div>
+  <div>&#187;<a href="manpage.html">Man&nbsp;Page</a></div>
+  <div>&#187;<a href="userguide.html">User&nbsp;Guide</a></div>
+  <div>&#187;<a href="http://powerman.name/doc/asciidoc">Cheatsheet</a></div>
+  <div>&#187;<a href="a2x.1.html">a2x</a></div>
+  <div>&#187;<a href="README.html">README</a></div>
+  <div>&#187;<a href="CHANGELOG.html">ChangeLog</a></div>
+  <div>&#187;<a href="INSTALL.html">Installation</a></div>
+  <div>&#187;<a href="downloads.html">Downloads</a></div>
+  <div>&#187;<a href="faq.html">FAQ</a></div>
+  <div>&#187;<a href="support.html">Support</a></div>
+  <div id="page-source">&#187;<a href="faq.txt">Page&nbsp;Source</a></div>
+</td>
+<td>
+<div id="layout-content">
+<div id="header">
+<h1>AsciiDoc Frequently Asked Questions</h1>
+</div>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="para"><p>An embryonic <em>AsciiDoc</em> FAQ.</p></div>
+</div>
+</div>
+<h2 id="_how_can_i_preserve_paragraph_line_boundaries">1. How can I preserve paragraph line boundaries?</h2>
+<div class="sectionbody">
+<div class="para"><p>Apply the The <em>verse</em> paragraph style, the rendered text preserves
+line boundaries and is useful for lyrics and poems.  For example:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[verse]
+Consul *necessitatibus* per id,
+consetetur, eu pro everti postulant
+homero verear ea mea, qui.</tt></pre>
+</div></div>
+</div>
+<h2 id="_how_can_i_include_non_breaking_space_characters">2. How can I include non-breaking space characters?</h2>
+<div class="sectionbody">
+<div class="para"><p>The predefined <tt>{nbsp}</tt> attribute reference will be replaced by a
+non-breaking space character.</p></div>
+</div>
+<h2 id="_how_do_i_include_spaces_in_url_addresses">3. How do I include spaces in URL addresses?</h2>
+<div class="sectionbody">
+<div class="para"><p>URL inline macro targets (addresses) cannot contain white space
+characters. If you need spaces encode them as <tt>%20</tt>. For example:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>image:large%20image.png[]
+http://www.foo.bar.com/an%20example%20document.html</tt></pre>
+</div></div>
+</div>
+<h2 id="_how_can_i_get_asciidoc_to_assign_the_correct_docbook_language_attribute">4. How can I get AsciiDoc to assign the correct DocBook language attribute?</h2>
+<div class="sectionbody">
+<div class="para"><p>Set the <em>AsciiDoc</em> <em>lang</em> attribute to the appropriate language code.
+For example:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>$ a2x -a lang=es doc/article.txt</tt></pre>
+</div></div>
+<div class="para"><p>This will ensure that downstream DocBook processing will generate the
+correct language specific document headings (things like table of
+contents, revision history, figure and table captions, admonition
+captions).</p></div>
+</div>
+<h2 id="_why_does_asciidoc_give_me_a_8220_malformed_author_8221_error">5. Why does AsciiDoc give me a &#8220;malformed author&#8221; error?</h2>
+<div class="sectionbody">
+<div class="para"><p>This is normally because there are more than three names (up to three
+are expected: first name, middle name and last name). For example,
+this author line would result in an error:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Vincent Willem van Gogh</tt></pre>
+</div></div>
+<div class="para"><p>You can enter multi-word first, middle and last names in the author
+line using the underscore as a word separator. For example:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Vincent Willem van_Gogh</tt></pre>
+</div></div>
+<div class="para"><p>You could also resolve the problem by replacing the author line with
+explicit attribute entries:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>:First name:  Vincent
+:Middle name: Willem
+:Last name:   Van Gogh</tt></pre>
+</div></div>
+</div>
+<h2 id="_how_can_i_assign_multiple_author_names">6. How can I assign multiple author names?</h2>
+<div class="sectionbody">
+<div class="para"><p>A quick way to do this is put both authors in a single first name, for
+example:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>My Document
+===========
+:Author: Bill_and_Ben_the_Flowerpot_Men
+:Author Initials: BB &amp; BC</tt></pre>
+</div></div>
+<div class="para"><p><tt>asciidoc(1)</tt> replaces the underscores with spaces.</p></div>
+<div class="para"><p>The longer, but semantically correct way, is to override the
+<tt>[header]</tt> configuration file section in a document specific <tt>.conf</tt>
+file. For example if your document is <tt>mydoc.txt</tt> then a file called
+<tt>mydoc.conf</tt> in the document directory would be picked up
+automatically by <tt>asciidoc(1)</tt>.  Copy and paste the default
+<tt>docbook.conf</tt> file <tt>[header]</tt> to <tt>mydoc.conf</tt> and modify the author
+related markup:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>[header]
+  :
+&lt;authorgroup&gt;...
+  :</tt></pre>
+</div></div>
+</div>
+<h2 id="_how_can_i_escape_asciidoc_markup">7. How can I escape AsciiDoc markup?</h2>
+<div class="sectionbody">
+<div class="para"><p>Most <em>AsciiDoc</em> inline elements can be suppressed by preceding them with
+a backslash character. These elements include:</p></div>
+<div class="ilist"><ul>
+<li>
+<p>
+Attribute references.
+</p>
+</li>
+<li>
+<p>
+Text formatting.
+</p>
+</li>
+<li>
+<p>
+Quoting,
+</p>
+</li>
+<li>
+<p>
+<em>URLs</em>, <em>image</em> and <em>link</em> macros.
+</p>
+</li>
+<li>
+<p>
+Replacements.
+</p>
+</li>
+<li>
+<p>
+Special words.
+</p>
+</li>
+</ul></div>
+<div class="para"><p>In some cases you may need to escape both left and right quotes (see
+the <em><em>AsciiDoc</em> User Guide</em>).</p></div>
+</div>
+<h2 id="_how_can_i_escape_a_labeled_list_entry">8. How can I escape a labeled list entry?</h2>
+<div class="sectionbody">
+<div class="para"><p>Two colons or semicolons in a paragraph may be confused with a labeled
+list entry. Use the predefined <tt>{two_colons}</tt> and <tt>{two_semicolons}</tt>
+to suppress this behavior, for example:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Qui in magna commodo{two_colons} est labitur dolorum an. Est ne
+magna primis adolescens.</tt></pre>
+</div></div>
+<div class="para"><p>Will be rendered as:</p></div>
+<div class="para"><p>Qui in magna commodo:: est labitur dolorum an. Est ne
+magna primis adolescens.</p></div>
+</div>
+<h2 id="_how_can_i_disable_a_quoted_text_substitution">9. How can I disable a quoted text substitution?</h2>
+<div class="sectionbody">
+<div class="para"><p>Omitting the tag will disable quoting. For example, if you don't want
+superscripts or subscripts then put the following in a custom
+configuration file or edit the global <tt>asciidoc.conf</tt> configuration
+file:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[quotes]
+^=
+~=</tt></pre>
+</div></div>
+</div>
+<h2 id="_i_have_a_paragraph_containing_some_funky_urls_is_there_a_way_to_suppress_asciidoc_substitutions_in_the_url_address">10. I have a paragraph containing some funky URLs, is there a way to suppress AsciiDoc substitutions in the URL address?</h2>
+<div class="sectionbody">
+<div class="para"><p>You can selectively choose which substitutions to perform by setting
+the <em>subs</em> attribute at the start of a block. For example:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[subs="macros"]
+~subscripts~ and ^superscripts^ quotes won't be substituted.
+Nor will the non-alphanumeric characters in the following URL:
+http://host/~user/file#_anchor_tag_str_</tt></pre>
+</div></div>
+</div>
+<h2 id="_how_can_i_customize_the_localdate_format">11. How can I customize the {localdate} format?</h2>
+<div class="sectionbody">
+<div class="para"><p>The default format for the <tt>{localdate}</tt> attribute is the ISO 8601
+<tt>yyyy-mm-dd</tt> format. You can change this format by explicitly setting
+the <tt>{localdate}</tt> attribute. For example by setting it using the
+<tt>asciidoc(1)</tt> <tt>-a</tt> command-line option:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>$ asciidoc -a localdate=`date +%d-%d-%Y` mydoc.txt</tt></pre>
+</div></div>
+<div class="para"><p>You could also set it by adding an Attribute Entry to your souce
+document, for example:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>:localdate: {sys: date +%Y-%m-%d}</tt></pre>
+</div></div>
+<div class="para"><p>Since it's set using an executable attribute you'll also need to
+include the <tt>&#8212;unsafe</tt> option when you run asciidoc).</p></div>
+</div>
+<h2 id="_why_doesn_t_asciidoc_support_strike_through_text">12. Why doesn't AsciiDoc support strike through text?</h2>
+<div class="sectionbody">
+<div class="para"><p>The reason it's not in the distribution is that DocBook does not have
+provision for strike through text and one of the <em>AsciiDoc</em> design goals
+is that <em>AsciiDoc</em> markup should be applicable to all output formats.</p></div>
+<div class="para"><p>Strike through is normally used to mark deleted text &#8212; a more
+comprehensive way to manage document revisions is to use a version
+control system such as Subversion. You can also use the <em>AsciiDoc</em>
+<em>CommentLines</em> and <em>CommentBlocks</em> to retain revised text in the
+source document.</p></div>
+<div class="para"><p>If you really need strike through text for (X)HTML outputs then adding
+the following to a configuration file will allow you to quote strike
+through text with hyphen characters:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt> ifdef::basebackend-html[]
+
+ [quotes]
+ -=strikethrough
+
+ [tags]
+ strikethrough=&lt;span style="text-decoration: line-through;"&gt;|&lt;/span&gt;
+
+ endif::basebackend-html[]</tt></pre>
+</div></div>
+</div>
+<h2 id="_where_can_i_find_examples_of_commands_used_to_build_output_documents">13. Where can I find examples of commands used to build output documents?</h2>
+<div class="sectionbody">
+<div class="para"><p>The User Guide has some. You could also look at <tt>./doc/main.aap</tt> in
+the <em>AsciiDoc</em> distribution, it has all the commands used to build the
+<em>AsciiDoc</em> documentation (even if you don't use A-A-P you'll still find
+it useful).</p></div>
+</div>
+<h2 id="_how_can_i_place_a_backslash_character_in_front_of_an_attribute_reference_without_escaping_the_reference">14. How can I place a backslash character in front of an attribute reference without escaping the reference?</h2>
+<div class="sectionbody">
+<div class="para"><p>Use the predefined <tt>{backslash}</tt> attribute reference instead of an
+actual backslash, for example if the <tt>{projectname}</tt> attribute has
+the value <tt>foobar</tt> then:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>d:\data{backslash}{projectname}</tt></pre>
+</div></div>
+<div class="para"><p>would be rendered as:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>d:\data\foobar</tt></pre>
+</div></div>
+</div>
+<h2 id="_why_have_you_used_the_docbook_lt_simpara_gt_element_instead_of_lt_para_gt">15. Why have you used the DocBook &lt;simpara&gt; element instead of &lt;para&gt;?</h2>
+<div class="sectionbody">
+<div class="para"><p><tt>&lt;simpara&gt;</tt> is really the same as <tt>&lt;para&gt;</tt> except it can't contain
+block elements &#8212; this matched, more closely, the <em>AsciiDoc</em> paragraph
+semantics.</p></div>
+</div>
+<h2 id="_how_can_i_format_text_inside_a_listting_block">16. How can I format text inside a listting block?</h2>
+<div class="sectionbody">
+<div class="para"><p>By default only <em>specialcharacters</em> and <em>callouts</em> are substituted in
+listing blocks; you can add quotes substitutions by explicitly setting
+the block <em>subs</em> attribute, for example:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>[subs="specialcharacters,callouts,quotes"]
+------------------------------------------
+$ ls *-al*
+------------------------------------------</tt></pre>
+</div></div>
+<div class="para"><p>The <tt>-al</tt> will rendered bold. Note that:</p></div>
+<div class="ilist"><ul>
+<li>
+<p>
+You would need to explicitly escape text you didn't want quoted.
+</p>
+</li>
+<li>
+<p>
+Don't do this in source code listing blocks because it modifies the
+  source code which confuses the syntax highlighter.
+</p>
+</li>
+<li>
+<p>
+This only works if your DocBook processor recognizes DocBook
+  <tt>&lt;emphasis&gt;</tt> elements inside <tt>&lt;screen&gt;</tt> elements.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_why_doesn_t_the_include1_macro_work">17. Why doesn't the include1::[] macro work?</h2>
+<div class="sectionbody">
+<div class="para"><p>Internally the <tt>include1</tt> macro is translated to the <tt>include1</tt> system
+attribute which means it must be evaluated in a region where attribute
+substitution is enabled. For example, if you want to evaluate it
+inside a listing block you will need to enable attribute substitution
+inside the block, for example:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>[subs="attributes"]
+-----------------------------------------
+include1::blogpost_media_processing.txt[]
+-----------------------------------------</tt></pre>
+</div></div>
+<div class="para"><p>Or, preferably, use the <tt>include</tt> block macro instead.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 8.2.7<br />
+Last updated 2008-07-04 23:29:23 NZDT
+</div>
+<div id="footer-badges">
+<a href="http://validator.w3.org/check?uri=referer">
+  <img style="border:none; width:88px; height:31px;"
+       src="http://www.w3.org/Icons/valid-xhtml11"
+       alt="Valid XHTML 1.1!" />
+</a>
+<a href="http://jigsaw.w3.org/css-validator/check/referer">
+  <img style="border:none; width:88px; height:31px;"
+       src="http://jigsaw.w3.org/css-validator/images/vcss"
+       alt="Valid CSS!" />
+</a>
+<a href="http://www.mozilla.org/products/firefox/">
+  <img style="border:none; width:110px; height:32px;"
+       src="http://www.spreadfirefox.com/community/images/affiliates/Buttons/110x32/safer.gif"
+       alt="Get Firefox!" />
+</a>
+</div>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.2.7" />
+<link rel="stylesheet" href="./xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="./xhtml11-manpage.css" type="text/css" />
+<link rel="stylesheet" href="./xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="./layout1.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){generateToc(1)}
+/*]]>*/
+</script>
+<script type="text/javascript" src="./toc.js"></script>
+<title>A2X(1)</title>
+</head>
+<body>
+<div id="layout-banner">
+  <div id="layout-title">AsciiDoc</div>
+  <div id="layout-description">Text based document generation</div>
+</div>
+<table>
+<tr valign="top">
+<td id="layout-menu">
+  <div>&#187;<a href="index.html">Home</a></div>
+  <div>&#187;<a href="manpage.html">Man&nbsp;Page</a></div>
+  <div>&#187;<a href="userguide.html">User&nbsp;Guide</a></div>
+  <div>&#187;<a href="http://powerman.name/doc/asciidoc">Cheatsheet</a></div>
+  <div>&#187;<a href="a2x.1.html">a2x</a></div>
+  <div>&#187;<a href="README.html">README</a></div>
+  <div>&#187;<a href="CHANGELOG.html">ChangeLog</a></div>
+  <div>&#187;<a href="INSTALL.html">Installation</a></div>
+  <div>&#187;<a href="downloads.html">Downloads</a></div>
+  <div>&#187;<a href="faq.html">FAQ</a></div>
+  <div>&#187;<a href="support.html">Support</a></div>
+  <div id="page-source">&#187;<a href="a2x.1.txt">Page&nbsp;Source</a></div>
+</td>
+<td>
+<div id="layout-content">
+<div id="header">
+<h1>
+A2X(1) Manual Page
+</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+<h2>NAME</h2>
+<div class="sectionbody">
+<p>a2x -
+   convert Asciidoc text file to PDF, XHTML, HTML Help, manpage or plain text
+</p>
+</div>
+</div>
+<h2>SYNOPSIS</h2>
+<div class="sectionbody">
+<div class="para"><p><strong>a2x</strong> [<em>OPTIONS</em>] <em>FILE</em></p></div>
+</div>
+<h2 id="_description">DESCRIPTION</h2>
+<div class="sectionbody">
+<div class="para"><p>A DocBook toolchain wrapper script that translates an <em>AsciiDoc</em> text
+file <em>FILE</em> to PDF, DVI, PS, LaTeX, XHTML (single page or chunked),
+man page, HTML Help or plain text formats. PDF, XHTML, man page and
+HTML Help formats are are generated using the <tt>asciidoc(1)</tt>,
+xsltproc(1), DocBook XSL Stylesheets, dblatex (or FOP) toolchain.
+Plain text is produced by passing <tt>asciidoc(1)</tt> generated HTML through
+lynx(1). The htmlhelp format option generates .hhp, .hhc and .html
+files suitable for compilation to an HTML Help .chm file.</p></div>
+</div>
+<h2 id="_options">OPTIONS</h2>
+<div class="sectionbody">
+<div class="vlist"><dl>
+<dt>
+<strong>-a, --attribute</strong>=<em>ATTRIBUTE</em>
+</dt>
+<dd>
+<p>
+  Set <tt>asciidoc(1)</tt> attribute value (shortcut for <strong>--asciidoc-opts</strong>=<em>"-a
+  ATTRIBUTE"</em> option).  This option may be specified more than once.
+</p>
+</dd>
+<dt>
+<strong>--asciidoc-opts</strong>=<em>ASCIIDOC_OPTS</em>
+</dt>
+<dd>
+<p>
+  Additional <tt>asciidoc(1)</tt> options.  This option may be specified more
+  than once.
+</p>
+</dd>
+<dt>
+<strong>--copy</strong>
+</dt>
+<dd>
+<p>
+  Copy distributed docbook-xsl CSS stylesheet admonition and
+  navigation icons to their respective destinations. Applies to
+  <em>xhtml</em>, <em>chunked</em>, <em>htmlhelp</em> formats. The default behavior is to
+  suppress copying.
+</p>
+</dd>
+<dt>
+<strong>-D, --destination-dir</strong>=<em>PATH</em>
+</dt>
+<dd>
+<p>
+  Output directory. Defaults to source <em>FILE</em> directory.
+</p>
+</dd>
+<dt>
+<strong>-d, --doctype</strong>=<em>DOCTYPE</em>
+</dt>
+<dd>
+<p>
+  DocBook document type: <em>article</em>, <em>manpage</em> or <em>book</em>.  Default
+  document type is <em>article</em> unless the format is <em>manpage</em> (in which
+  case it defaults to <em>manpage</em>).
+</p>
+</dd>
+<dt>
+<strong>-f, --format</strong>=<em>FORMAT</em>
+</dt>
+<dd>
+<p>
+  Output format: <em>chunked</em>, <em>dvi</em>, <em>htmlhelp</em>, <em>manpage</em>, <em>pdf</em>, <em>ps</em>,
+  <em>tex</em>, <em>text</em> or <em>xhtml</em>.
+</p>
+</dd>
+<dt>
+<strong>-h, --help</strong>
+</dt>
+<dd>
+<p>
+  Print command-line syntax and program options to stdout.
+</p>
+</dd>
+<dt>
+<strong>--icons</strong>
+</dt>
+<dd>
+<p>
+  Use admonition or navigation icon images in output documents. The
+  default behavior is to use text in place of icons.
+</p>
+</dd>
+<dt>
+<strong>--icons-dir</strong>=<em>PATH</em>
+</dt>
+<dd>
+<p>
+  A path (relative to destination HTML files) containing admonition
+  and navigation icons. Defaults to <em>./images/icons/</em>.
+  Applies to <em>xhtml</em>, <em>chunked</em>, <em>htmlhelp</em> formats.
+</p>
+</dd>
+<dt>
+<strong>-n, --dry-run</strong>
+</dt>
+<dd>
+<p>
+  Don't do anything just print what would have been done.
+</p>
+</dd>
+<dt>
+<strong>-s, --skip-asciidoc</strong>
+</dt>
+<dd>
+<p>
+  Skip asciidoc execution. This is useful for converting DocBook XML
+  files not derived from <em>AsciiDoc</em> sources. Ignored if --format*=<em>text</em>.
+</p>
+</dd>
+<dt>
+<strong>--stylesheet</strong>=<em>PATH</em>
+</dt>
+<dd>
+<p>
+  A path (relative to destination HTML files) specifying the
+  docbook-xsl CSS stylesheet file. Defaults to <em>./docbook-xsl.css</em>.
+  Applies to <em>xhtml</em>, <em>chunked</em>, <em>htmlhelp</em> formats.
+</p>
+</dd>
+<dt>
+<strong>-v, --verbose</strong>
+</dt>
+<dd>
+<p>
+  Print operational details to stderr.
+  A second <strong>-v</strong> option applies the verbose option to toolchain commands.
+</p>
+</dd>
+<dt>
+<strong>--version</strong>
+</dt>
+<dd>
+<p>
+  Print program version to stdout.
+</p>
+</dd>
+<dt>
+<strong>--xsltproc-opts</strong>=<em>XSLTPROC_OPTS</em>
+</dt>
+<dd>
+<p>
+  Additional xsltproc(1) options.  This option may be specified more
+  than once.
+</p>
+</dd>
+<dt>
+<strong>--fop-opts</strong>=<em>FOP_OPTS</em>
+</dt>
+<dd>
+<p>
+  Additional fop options.  This option may be specified more than
+  once. If this option is specified fop is used to generate PDFs.
+</p>
+</dd>
+<dt>
+<strong>--dblatex-opts</strong>=<em>DBLATEX_OPTS</em>
+</dt>
+<dd>
+<p>
+  Additional dblatex options.  This option may be specified more than once.
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="_output_files">OUTPUT FILES</h2>
+<div class="sectionbody">
+<div class="para"><p>Output files are written to the directory specified by the
+<strong>--destination-dir</strong> option. If no <strong>--destination-dir</strong> option is set
+output files are written to the source FILE directory.</p></div>
+<div class="para"><p>Output files have the same name as the source <em>FILE</em> but with an
+appropriate file name extension: .html for <em>xhtml</em>; .hhp for
+<em>htmlhelp</em>; .pdf for <em>pdf</em>; .text for <em>text</em>. By convention manpages
+have no .man extension (man page section number only). Chunked HTML
+directory names have a .chunked extension; chunked HTML Help directory
+names have a .htmlhelp extension.</p></div>
+<div class="para"><p>Same named existing files are overwritten.</p></div>
+<div class="para"><p>Intermediate output files are written to the source <em>FILE</em> directory
+and are not automatically deleted.</p></div>
+<div class="para"><p>Intermediate DocBook XML files generated by <em>AsciiDoc</em> are only
+regenerated if out of date with respect to the <em>AsciiDoc</em> source <em>FILE</em>.</p></div>
+<div class="para"><p>In addition to generating HTML files the <em>xhtml</em>, <em>chunked</em> and
+<em>htmlhelp</em> formats copy the DocBook XSL stylesheet plus admonition and
+navigation icons distributed with <em>AsciiDoc</em> to their respective
+destination locations. Existing stylesheets and icons are only copied
+if they are newer than the destination files or if the destination
+files are missing.</p></div>
+<div class="para"><p>The <em>xhtml</em> format generates a single XHTML output page.  The
+<em>chunked</em> format writes multiple per-section HTML pages to a chunked
+directory in the destination directory. The chunked directory has the
+same name as the source <em>FILE</em> name plus a .chunked extension.</p></div>
+</div>
+<h2 id="_examples">EXAMPLES</h2>
+<div class="sectionbody">
+<div class="vlist"><dl>
+<dt>
+<tt>a2x -f pdf doc/source-highlight-filter.txt</tt>
+</dt>
+<dd>
+<p>
+  Generates doc/source-highlight-filter.pdf file.
+</p>
+</dd>
+<dt>
+<tt>a2x -f chunked -D ../webpages guide.txt</tt>
+</dt>
+<dd>
+<p>
+  Creates chunked directory <tt>../webpages/guide.chunked</tt> containing
+  chunked HTML files. Also copies <tt>docbook-xsl.css</tt> stylesheet to the
+  <tt>../webpages/guide.chunked</tt> directory plus admonition and navigation
+  icons to the <tt>../webpages/guide.chunked/images/icons</tt> directory.
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="_requisites">REQUISITES</h2>
+<div class="sectionbody">
+<div class="para"><p>This script runs under the bash(1) shell and requires the following
+programs (which may or may not be prepackaged with your Linux
+distribution):</p></div>
+<div class="vlist"><dl>
+<dt>
+Asciidoc
+</dt>
+<dd>
+<p>
+  <a href="http://www.methods.co.nz/asciidoc/">http://www.methods.co.nz/asciidoc/</a>
+</p>
+</dd>
+<dt>
+xsltproc
+</dt>
+<dd>
+<p>
+  <a href="http://xmlsoft.org/XSLT/">http://xmlsoft.org/XSLT/</a>
+</p>
+</dd>
+<dt>
+DocBook XSL Stylesheets
+</dt>
+<dd>
+<p>
+  <a href="http://docbook.sourceforge.net/projects/xsl/">http://docbook.sourceforge.net/projects/xsl/</a>
+</p>
+</dd>
+<dt>
+dblatex (for PDF, DVI, PostScript and LaTeX file generation)
+</dt>
+<dd>
+<p>
+  <a href="http://dblatex.sourceforge.net/">http://dblatex.sourceforge.net/</a>
+</p>
+</dd>
+<dt>
+FOP (alternative PDF file generation)
+</dt>
+<dd>
+<p>
+  <a href="http://xmlgraphics.apache.org/fop/">http://xmlgraphics.apache.org/fop/</a>
+</p>
+</dd>
+<dt>
+Lynx (for text file generation)
+</dt>
+<dd>
+<p>
+  <a href="http://lynx.isc.org/">http://lynx.isc.org/</a>
+</p>
+</dd>
+</dl></div>
+<div class="para"><p>See also the latest README file.</p></div>
+</div>
+<h2 id="_bugs">BUGS</h2>
+<div class="sectionbody">
+<div class="ilist"><ul>
+<li>
+<p>
+The odt output format is undocumented and experimental.
+</p>
+</li>
+<li>
+<p>
+See also the <em>AsciiDoc</em> distribution BUGS file.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_author">AUTHOR</h2>
+<div class="sectionbody">
+<div class="para"><p>Written by Stuart Rackham, &lt;<a href="mailto:srackham@gmail.com">srackham@gmail.com</a>&gt;</p></div>
+</div>
+<h2 id="_resources">RESOURCES</h2>
+<div class="sectionbody">
+<div class="para"><p>SourceForge: <a href="http://sourceforge.net/projects/asciidoc/">http://sourceforge.net/projects/asciidoc/</a></p></div>
+<div class="para"><p>Main web site: <a href="http://www.methods.co.nz/asciidoc/">http://www.methods.co.nz/asciidoc/</a></p></div>
+</div>
+<h2 id="_copying">COPYING</h2>
+<div class="sectionbody">
+<div class="para"><p>Copyright (C) 2002-2008 Stuart Rackham. Free use of this software is
+granted under the terms of the GNU General Public License (GPL).</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 8.2.7<br />
+Last updated 2008-07-04 23:48:05 NZDT
+</div>
+<div id="footer-badges">
+<a href="http://validator.w3.org/check?uri=referer">
+  <img style="border:none; width:88px; height:31px;"
+       src="http://www.w3.org/Icons/valid-xhtml11"
+       alt="Valid XHTML 1.1!" />
+</a>
+<a href="http://jigsaw.w3.org/css-validator/check/referer">
+  <img style="border:none; width:88px; height:31px;"
+       src="http://jigsaw.w3.org/css-validator/images/vcss"
+       alt="Valid CSS!" />
+</a>
+<a href="http://www.mozilla.org/products/firefox/">
+  <img style="border:none; width:110px; height:32px;"
+       src="http://www.spreadfirefox.com/community/images/affiliates/Buttons/110x32/safer.gif"
+       alt="Get Firefox!" />
+</a>
+</div>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+</html>

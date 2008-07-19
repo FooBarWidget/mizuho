@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="AsciiDoc 8.2.7">
+<title>Source Code Highlight Filter</title>
+</head>
+<body>
+<h1>Source Code Highlight Filter</h1>
+<p>
+</p>
+<p>The <em>AsciiDoc</em> distribution includes a source code syntax highlight
+filter (<tt>source-highlight-filter.conf</tt>). It uses
+<a href="http://www.gnu.org/software/src-highlite/">GNU source-highlight</a> to
+highlight HTML outputs; DocBook outputs are highlighted by toolchains
+that have <tt>programlisting</tt> element highlight support, for example
+<em>dblatex</em>.</p>
+<p><b>Tip:</b> If the source <em>language</em> attribute has been set (using an
+<em>AttributeEntry</em> or from the command-line) you don't have to specify
+it in each source code block.</p>
+<hr />
+<h2><a name="_examples"></a>Examples</h2>
+<h3><a name="_source_code_paragraphs"></a>Source code paragraphs</h3>
+<p>The <tt>source</tt> paragraph style will highlight a paragraph of source
+code. These three code paragraphs:</p>
+<table border="0" bgcolor="#e8e8e8" width="100%" cellpadding="10"><tr><td>
+<pre>[source,python]
+if n &lt; 0: print 'Hello World!'
+
+:language: python
+
+[source]
+if n &lt; 0: print 'Hello World!'
+
+[source,ruby,numbered]
+[true, false].cycle([0, 1, 2, 3, 4]) do |a, b|
+    puts "#{a.inspect} =&gt; #{b.inspect}"</pre>
+</td></tr></table>
+<p>Render this highlighted source code:</p>
+<!-- Generator: GNU source-highlight 2.4
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><b><font color="#0000FF">if</font></b> n <font color="#990000">&lt;</font> <font color="#993399">0</font><font color="#990000">:</font> <b><font color="#0000FF">print</font></b> <font color="#FF0000">'Hello World!'</font>
+</tt></pre>
+<!-- Generator: GNU source-highlight 2.4
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><b><font color="#0000FF">if</font></b> n <font color="#990000">&lt;</font> <font color="#993399">0</font><font color="#990000">:</font> <b><font color="#0000FF">print</font></b> <font color="#FF0000">'Hello World!'</font>
+</tt></pre>
+<!-- Generator: GNU source-highlight 2.4
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><font color="#000000">00001:</font> <font color="#990000">[</font><b><font color="#0000FF">true</font></b><font color="#990000">,</font> <b><font color="#0000FF">false</font></b><font color="#990000">].</font><b><font color="#000000">cycle</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">2</font><font color="#990000">,</font> <font color="#993399">3</font><font color="#990000">,</font> <font color="#993399">4</font><font color="#990000">])</font> <b><font color="#0000FF">do</font></b> <font color="#990000">|</font>a<font color="#990000">,</font> b<font color="#990000">|</font>
+<font color="#000000">00002:</font>     puts <font color="#FF0000">"#{a.inspect} =&gt; #{b.inspect}"</font>
+</tt></pre>
+<h3><a name="_unnumbered_source_code_listing"></a>Unnumbered source code listing</h3>
+<p>This source-highlight filtered block:</p>
+<table border="0" bgcolor="#e8e8e8" width="100%" cellpadding="10"><tr><td>
+<pre> [source,python]
+ ---------------------------------------------------------------------
+ ''' A multi-line
+     comment.'''
+ def sub_word(mo):
+     ''' Single line comment.'''
+     word = mo.group('word')   # Inline comment
+     if word in keywords[language]:
+         return quote + word + quote
+     else:
+         return word
+ ---------------------------------------------------------------------</pre>
+</td></tr></table>
+<p>Renders this highlighted source code:</p>
+<table border="0" bgcolor="#e8e8e8" width="100%" cellpadding="10"><tr><td>
+<pre><!-- Generator: GNU source-highlight 2.4
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><i><font color="#9A1900">''' A multi-line</font></i>
+<i><font color="#9A1900">    comment.'''</font></i>
+<b><font color="#0000FF">def</font></b> <b><font color="#000000">sub_word</font></b><font color="#990000">(</font>mo<font color="#990000">):</font>
+<i><font color="#9A1900">    ''' Single line comment.'''</font></i>
+    word <font color="#990000">=</font> mo<font color="#990000">.</font><b><font color="#000000">group</font></b><font color="#990000">(</font><font color="#FF0000">'word'</font><font color="#990000">)</font>     <i><font color="#9A1900"># Inline comment</font></i>
+    <b><font color="#0000FF">if</font></b> word <b><font color="#0000FF">in</font></b> keywords<font color="#990000">[</font>language<font color="#990000">]:</font>
+        <b><font color="#0000FF">return</font></b> quote <font color="#990000">+</font> word <font color="#990000">+</font> quote
+    <b><font color="#0000FF">else</font></b><font color="#990000">:</font>
+        <b><font color="#0000FF">return</font></b> word
+</tt></pre></pre>
+</td></tr></table>
+<h3><a name="_numbered_source_code_listing"></a>Numbered source code listing</h3>
+<p>This source-highlight filtered block:</p>
+<table border="0" bgcolor="#e8e8e8" width="100%" cellpadding="10"><tr><td>
+<pre> [source,ruby,numbered]
+ ---------------------------------------------------------------------
+ #
+ # Useful Ruby base class extensions.
+ #
+
+ class Array
+
+   # Execute a block passing it corresponding items in
+   # +self+ and +other_array+.
+   # If self has less items than other_array it is repeated.
+
+   def cycle(other_array)  # :yields: item, other_item
+     other_array.each_with_index do |item, index|
+       yield(self[index % self.length], item)
+     end
+   end
+
+ end
+
+ if $0 == __FILE__
+   # Array#cycle test
+   # true =&gt; 0
+   # false =&gt; 1
+   # true =&gt; 2
+   # false =&gt; 3
+   # true =&gt; 4
+   puts 'Array#cycle test'
+   [true, false].cycle([0, 1, 2, 3, 4]) do |a, b|
+     puts "#{a.inspect} =&gt; #{b.inspect}"
+   end
+ end
+ ---------------------------------------------------------------------</pre>
+</td></tr></table>
+<p>Renders this highlighted source code:</p>
+<table border="0" bgcolor="#e8e8e8" width="100%" cellpadding="10"><tr><td>
+<pre><!-- Generator: GNU source-highlight 2.4
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><font color="#000000">00001:</font> <i><font color="#9A1900">#</font></i>
+<font color="#000000">00002:</font> <i><font color="#9A1900"># Useful Ruby base class extensions.</font></i>
+<font color="#000000">00003:</font> <i><font color="#9A1900">#</font></i>
+<font color="#000000">00004:</font>
+<font color="#000000">00005:</font> <b><font color="#0000FF">class</font></b> Array
+<font color="#000000">00006:</font>
+<font color="#000000">00007:</font>   <i><font color="#9A1900"># Execute a block passing it corresponding items in</font></i>
+<font color="#000000">00008:</font>   <i><font color="#9A1900"># +self+ and +other_array+.</font></i>
+<font color="#000000">00009:</font>   <i><font color="#9A1900"># If self has less items than other_array it is repeated.</font></i>
+<font color="#000000">00010:</font>
+<font color="#000000">00011:</font>   <b><font color="#0000FF">def</font></b> <b><font color="#000000">cycle</font></b><font color="#990000">(</font>other_array<font color="#990000">)</font>  <i><font color="#9A1900"># :yields: item, other_item</font></i>
+<font color="#000000">00012:</font>     other_array<font color="#990000">.</font>each_with_index <b><font color="#0000FF">do</font></b> <font color="#990000">|</font>item<font color="#990000">,</font> index<font color="#990000">|</font>
+<font color="#000000">00013:</font>       <b><font color="#0000FF">yield</font></b><font color="#990000">(</font><b><font color="#0000FF">self</font></b><font color="#990000">[</font>index <font color="#990000">%</font> <b><font color="#0000FF">self</font></b><font color="#990000">.</font>length<font color="#990000">],</font> item<font color="#990000">)</font>
+<font color="#000000">00014:</font>     <b><font color="#0000FF">end</font></b>
+<font color="#000000">00015:</font>   <b><font color="#0000FF">end</font></b>
+<font color="#000000">00016:</font>
+<font color="#000000">00017:</font> <b><font color="#0000FF">end</font></b>
+<font color="#000000">00018:</font>
+<font color="#000000">00019:</font> <b><font color="#0000FF">if</font></b> <font color="#009900">$0</font> <font color="#990000">==</font> <b><font color="#0000FF">__FILE__</font></b>
+<font color="#000000">00020:</font>   <i><font color="#9A1900"># Array#cycle test</font></i>
+<font color="#000000">00021:</font>   <i><font color="#9A1900"># true =&gt; 0</font></i>
+<font color="#000000">00022:</font>   <i><font color="#9A1900"># false =&gt; 1</font></i>
+<font color="#000000">00023:</font>   <i><font color="#9A1900"># true =&gt; 2</font></i>
+<font color="#000000">00024:</font>   <i><font color="#9A1900"># false =&gt; 3</font></i>
+<font color="#000000">00025:</font>   <i><font color="#9A1900"># true =&gt; 4</font></i>
+<font color="#000000">00026:</font>   puts <font color="#FF0000">'Array#cycle test'</font>
+<font color="#000000">00027:</font>   <font color="#990000">[</font><b><font color="#0000FF">true</font></b><font color="#990000">,</font> <b><font color="#0000FF">false</font></b><font color="#990000">].</font><b><font color="#000000">cycle</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">2</font><font color="#990000">,</font> <font color="#993399">3</font><font color="#990000">,</font> <font color="#993399">4</font><font color="#990000">])</font> <b><font color="#0000FF">do</font></b> <font color="#990000">|</font>a<font color="#990000">,</font> b<font color="#990000">|</font>
+<font color="#000000">00028:</font>     puts <font color="#FF0000">"#{a.inspect} =&gt; #{b.inspect}"</font>
+<font color="#000000">00029:</font>   <b><font color="#0000FF">end</font></b>
+<font color="#000000">00030:</font> <b><font color="#0000FF">end</font></b>
+</tt></pre></pre>
+</td></tr></table>
+<hr />
+<h2><a name="_installation"></a>Installation</h2>
+<p>If you want to syntax highlight <em>AsciiDoc</em> HTML outputs you need to
+install <a href="http://www.gnu.org/software/src-highlite/">GNU
+source-highlight</a> (most distributions have this package). It's not
+required if you are generating DocBook output (DocBook syntax
+highlighting is handled by the DocBook toolchain).</p>
+<p>Test the filter by converting the test file to HTML with <em>AsciiDoc</em>:</p>
+<pre>$ asciidoc -v ./filters/source-highlight-filter-test.txt
+$ firefox ./filters/source-highlight-filter-test.html &amp;</pre>
+<p></p>
+<p></p>
+<hr /><p><small>
+Last updated 2008-07-02 23:02:19 NZDT
+</small></p>
+</body>
+</html>
