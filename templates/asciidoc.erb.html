@@ -1,4 +1,20 @@
-<%# Asciidoc default template. %>
+<%
+	# Asciidoc default template.
+	
+	def visit_heading(heading, result = "")
+		result << %Q{
+			<div class="toclevel#{heading.level - 1}">
+				<a href="##{h heading.anchor}">#{h heading.title}</a>
+			</div>
+		}.strip
+		if heading.level <= 2
+			heading.children.each do |h|
+				visit_heading(h, result)
+			end
+		end
+		return result
+	end
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -12,6 +28,11 @@
 </head>
 <body>
 	<h1><%=h title %></h1>
+	<div id="toc">
+		<%- for heading in table_of_contents -%>
+			<%= visit_heading(heading) %>
+		<%- end -%>
+	</div>
 	<%= contents %>
 </body>
 </html>

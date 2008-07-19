@@ -3,6 +3,7 @@ $LOAD_PATH << File.expand_path(File.dirname(__FILE__) + "/../lib")
 require 'optparse'
 require 'mizuho/generator'
 
+$KCODE = 'UTF-8'
 options = {}
 parser = OptionParser.new do |opts|
 	opts.banner = "Usage: mizuho [options] INPUT"
