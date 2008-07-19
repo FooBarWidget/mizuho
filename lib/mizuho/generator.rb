@@ -49,7 +49,8 @@ private
 					:is_preamble? => chapter.heading.nil?,
 					:preamble_anchor => parser.chapters.first.filename,
 					:chapter_title => chapter.title,
-					:chapter_title_without_numbers => chapter.title_without_numbers)
+					:chapter_title_without_numbers => chapter.title_without_numbers,
+					:chapter_id => chapter.anchor ? chapter.anchor.sub(/^#/, '') : nil)
 				template.save(chapter.filename)
 			end
 		else

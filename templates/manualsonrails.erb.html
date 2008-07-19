@@ -100,7 +100,7 @@
 		</div>
 		<div id="content">
 			<%- if multi_page? && !is_preamble? -%>
-				<h2><%=h chapter_title %></h2>
+				<h2 id="<%=h chapter_id %>"><%=h chapter_title %></h2>
 			<%- else -%>
 				<h1><%=h title %></h1>
 			<%- end -%>
