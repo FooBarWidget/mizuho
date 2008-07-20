@@ -18,12 +18,12 @@ multi-page XHTML output support and support for multiple templates.
 
 == Features and highlights
 
- * You can output the documentation in a single XHTML file, or in multiple
-   XHTML files (one per chapter).
- * Output is fully customizable via ERB templates.
- * Based on Asciidoc and supports all Asciidoc formatting commands.
- * Comes bundled with Asciidoc so you don't have to install it yourself. Mizuho
-   Just Works(tm) out-of-the-box.
+* You can output the documentation in a single XHTML file, or in multiple
+  XHTML files (one per chapter).
+* Output is fully customizable via ERB templates.
+* Based on Asciidoc and supports all Asciidoc formatting commands.
+* Comes bundled with Asciidoc so you don't have to install it yourself. Mizuho
+  Just Works(tm) out-of-the-box.
 
 == Usage
 
