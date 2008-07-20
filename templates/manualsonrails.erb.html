@@ -1,17 +1,3 @@
-<%
-	def visit_heading(heading, result = "")
-		result << %Q{<li><a href="#{h heading.basename}#{h heading.anchor}">#{h heading.title_without_numbers}</a>}
-		if heading.level <= 2
-			result << "<ul>\n"
-			heading.children.each do |h|
-				visit_heading(h, result)
-			end
-			result << "</ul>\n"
-		end
-		result << "</li>\n"
-		return result
-	end
-%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
@@ -44,9 +30,18 @@
 				<a href="<%=h chapters.first.basename %>">Preamble</a>
 			<%- end -%>
 			<ol>
-				<%- for heading in table_of_contents -%>
-					<%= visit_heading(heading) %>
+			<%- for heading in table_of_contents -%>
+				<li>
+				<a href="<%=h heading.basename %>"><%=h heading.title_without_numbers %></a>
+				<%- if !heading.children.empty? -%>
+					<ul>
+					<% for h in heading.children %>
+						<li><a href="<%=h h.basename %><%=h h.anchor %>"><%=h h.title_without_numbers %></a></li>
+					<% end %>
+					</ul>
 				<%- end -%>
+				</li>
+			<%- end -%>
 			</ol>
 		</div>
 		<div id="content">
@@ -59,12 +54,12 @@
 			<div id="chapter_navigation">
 				<%- if prev_chapter -%>
 					<div class="left-floaty">
-					<a href="<%=h prev_chapter.basename %><%=h prev_chapter.anchor %>">&laquo; <%=h prev_chapter.title %></a>
+					<a href="<%=h prev_chapter.basename %>">&laquo; <%=h prev_chapter.title %></a>
 					</div>
 				<%- end -%>
 				<%- if next_chapter -%>
 					<div class="right-floaty">
-					<a href="<%=h next_chapter.basename %><%=h next_chapter.anchor %>"><%=h next_chapter.title %> &raquo;</a>
+					<a href="<%=h next_chapter.basename %>"><%=h next_chapter.title %> &raquo;</a>
 					</div>
 				<%- end -%>
 			</div>
