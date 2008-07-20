@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.add_dependency("hpricot")
   
   s.files = [
-      "README.rdoc", "mizuho.gemspec",
+      "README.rdoc", "LICENSE.txt", "mizuho.gemspec",
       "bin/mizuho",
       "lib/mizuho/chapter.rb",
       "lib/mizuho/generator.rb",
