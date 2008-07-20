@@ -9,14 +9,14 @@ class GenerationError < StandardError
 end
 
 class Generator
-	def initialize(input, output = nil, template = nil, multi_page = false)
+	def initialize(input, output = nil, template_name = nil, multi_page = false)
 		@input = input
 		if output
 			@output_name = output
 		else
 			@output_name = File.expand_path(input.sub(/(.*)\..*$/, '\1'))
 		end
-		@template = template
+		@template = locate_template_file(template_name)
 		@multi_page = multi_page
 	end
 	
@@ -28,8 +28,18 @@ class Generator
 	end
 
 private
-	ASCIIDOC = File.expand_path(File.dirname(__FILE__) + "/../../asciidoc/asciidoc.py")
+	ROOT = File.expand_path(File.dirname(__FILE__) + "/../..")
+	ASCIIDOC = "#{ROOT}/asciidoc/asciidoc.py"
 
+	def locate_template_file(template_name)
+		if template_name =~ %r{[/.]}
+			# Looks like a filename.
+			return template_name
+		else
+			return "#{ROOT}/templates/#{template_name}.erb.html"
+		end
+	end
+	
 	def run_asciidoc(input, output)
 		if !system("python", ASCIIDOC, "-a", "toc", "-a", "icons", "-n", "-o", output, input)
 			raise GenerationError, "Asciidoc failed."
@@ -67,7 +77,7 @@ private
 	def assign_chapter_filenames_and_heading_basenames(chapters)
 		chapters.each_with_index do |chapter, i|
 			if chapter.is_preamble?
-				chapter.filename = File.basename("#{@output_name}.html")
+				chapter.filename = "#{@output_name}.html"
 			else
 				title_sha1 = Digest::SHA1.hexdigest(chapter.title_without_numbers)
 				chapter.filename = sprintf("%s-%s.html", @output_name,
