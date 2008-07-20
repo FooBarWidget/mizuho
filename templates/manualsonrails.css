@@ -11,7 +11,7 @@ pre {
 	line-height: 1.4em;
 }
 
-tt {
+#content p tt {
 	background: #eeeeee;
 	border: solid 1px #cccccc;
 	padding: 3px;
@@ -21,7 +21,7 @@ dt {
 	font-weight: bold;
 }
 
-dt tt {
+#content dt tt {
 	font-size: 10pt;
 }
 
@@ -29,10 +29,14 @@ dd {
 	margin-left: 3em;
 }
 
-dt tt, pre tt {
+#content dt tt, #content pre tt {
 	background: none;
 	padding: 0;
 	border: 0;
+}
+
+#content .olist ol {
+	margin-left: 2em;
 }
 
 #logo {

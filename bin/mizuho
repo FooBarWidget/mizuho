@@ -13,8 +13,13 @@ parser = OptionParser.new do |opts|
 	opts.on("-t", "--template FILE", String, "Specify a template file to use.") do |value|
 		options[:template] = value
 	end
-	opts.on("-m", "--multi", "Generate one file per chapter.") do |value|
+	opts.on("-m", "--multi-page", "Generate one file per chapter.") do |value|
 		options[:multi_page] = value
+	end
+	opts.on("--icons-dir DIR", "Specify the directory in which icons\n" <<
+		"#{' ' * 37}should be searched. Defaults to\n" <<
+		"#{' ' * 37}'images/icons'.") do |value|
+		options[:icons_dir] = value
 	end
 end
 begin
@@ -27,7 +32,8 @@ rescue OptionParser::ParseError => e
 end
 
 begin
-	Mizuho::Generator.new(ARGV[0], nil, options[:template], options[:multi_page]).start
+	Mizuho::Generator.new(ARGV[0], nil, options[:template],
+		options[:multi_page], options[:icons_dir]).start
 rescue Mizuho::GenerationError
 	STDERR.puts "*** ERROR"
 	exit 2

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />    
-	<title><%- if multi_page? && !is_preamble? -%><%=h current_chapter.title_without_numbers %> :: <% end %><%=h title %>
+	<title><%- if multi_page? && !is_preamble? -%><%=h current_chapter.plain_title %> :: <% end %><%=h title %>
 	</title>
 	<link href="http://manuals.rubyonrails.org/stylesheets/base.css" media="screen" rel="Stylesheet" type="text/css" />
 	<link href="http://manuals.rubyonrails.org/stylesheets/forms.css" media="screen" rel="Stylesheet" type="text/css" />
@@ -32,11 +32,11 @@
 			<ol>
 			<%- for heading in table_of_contents -%>
 				<li>
-				<a href="<%=h heading.basename %>"><%=h heading.title_without_numbers %></a>
+				<a href="<%=h heading.basename %>"><%= heading.title_without_numbers %></a>
 				<%- if !heading.children.empty? -%>
 					<ul>
 					<% for h in heading.children %>
-						<li><a href="<%=h h.basename %><%=h h.anchor %>"><%=h h.title_without_numbers %></a></li>
+						<li><a href="<%=h h.basename %><%=h h.anchor %>"><%= h.title_without_numbers %></a></li>
 					<% end %>
 					</ul>
 				<%- end -%>
@@ -46,7 +46,7 @@
 		</div>
 		<div id="content">
 			<%- if multi_page? && !is_preamble? -%>
-				<h2 id="<%=h current_chapter.anchor_id %>"><%=h current_chapter.title %></h2>
+				<h2 id="<%=h current_chapter.anchor_id %>"><%= current_chapter.title %></h2>
 			<%- else -%>
 				<h1><%=h title %></h1>
 			<%- end -%>
@@ -54,12 +54,12 @@
 			<div id="chapter_navigation">
 				<%- if prev_chapter -%>
 					<div class="left-floaty">
-					<a href="<%=h prev_chapter.basename %>">&laquo; <%=h prev_chapter.title %></a>
+					<a href="<%=h prev_chapter.basename %>">&laquo; <%= prev_chapter.title %></a>
 					</div>
 				<%- end -%>
 				<%- if next_chapter -%>
 					<div class="right-floaty">
-					<a href="<%=h next_chapter.basename %>"><%=h next_chapter.title %> &raquo;</a>
+					<a href="<%=h next_chapter.basename %>"><%= next_chapter.title %> &raquo;</a>
 					</div>
 				<%- end -%>
 			</div>

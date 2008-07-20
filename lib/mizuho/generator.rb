@@ -9,7 +9,7 @@ class GenerationError < StandardError
 end
 
 class Generator
-	def initialize(input, output = nil, template_name = nil, multi_page = false)
+	def initialize(input, output = nil, template_name = nil, multi_page = false, icons_dir = nil)
 		@input = input
 		if output
 			@output_name = output
@@ -18,10 +18,11 @@ class Generator
 		end
 		@template = locate_template_file(template_name)
 		@multi_page = multi_page
+		@icons_dir = icons_dir
 	end
 	
 	def start
-		run_asciidoc(@input, "#{@output_name}.html")
+		run_asciidoc(@input, "#{@output_name}.html", @icons_dir)
 		if @template
 			apply_template("#{@output_name}.html", @template, @multi_page)
 		end
@@ -40,8 +41,14 @@ private
 		end
 	end
 	
-	def run_asciidoc(input, output)
-		if !system("python", ASCIIDOC, "-a", "toc", "-a", "icons", "-n", "-o", output, input)
+	def run_asciidoc(input, output, icons_dir = nil)
+		args = ["python", ASCIIDOC, "-a", "toc", "-a", "icons"]
+		if icons_dir
+			args << "-a"
+			args << "iconsdir=#{icons_dir}"
+		end
+		args += ["-n", "-o", output, input]
+		if !system(*args)
 			raise GenerationError, "Asciidoc failed."
 		end
 	end

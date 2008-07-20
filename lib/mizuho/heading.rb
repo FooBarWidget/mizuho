@@ -1,6 +1,9 @@
+require 'cgi'
+
 module Mizuho
 
 class Heading
+	# The heading title, as HTML. Non-HTML special characters are already escaped.
 	attr_accessor :title
 	attr_accessor :level
 	attr_accessor :basename
@@ -20,8 +23,16 @@ class Heading
 		return h
 	end
 	
+	# The heading title without section number, as HTML. Non-HTML special characters
+	# are already escaped.
 	def title_without_numbers
 		return title.sub(/^(\d+\.)+ /, '')
+	end
+	
+	# The heading title without section number, as plain text. Contains no HTML
+	# elements. Non-HTML special characters are not escaped.
+	def plain_title
+		return CGI::unescapeHTML(title_without_numbers.gsub(%r{</?[a-z]+>}i, ''))
 	end
 	
 	def each_descendant(&block)

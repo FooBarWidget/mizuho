@@ -26,6 +26,14 @@ class Chapter
 		end
 	end
 	
+	def plain_title
+		if @heading
+			return @heading.plain_title
+		else
+			return nil
+		end
+	end
+	
 	def basename
 		return File.basename(filename)
 	end

@@ -49,9 +49,9 @@ private
 			offset = html.index(%r{<h(\d) id="(.*?)">(.*?)</h\d>}, offset)
 			break if offset.nil?
 			offset = $~.end(0)
-			level = $1.to_i
+			level  = $1.to_i
 			anchor = CGI::unescapeHTML($2)
-			title = CGI::unescapeHTML($3)
+			title  = $3
 			
 			new_heading = Heading.new
 			new_heading.title = title
