@@ -32,6 +32,10 @@ multi-page XHTML output support and support for multiple templates.
 * GNU Source-highlight, if you want syntax highlighting support:
   http://www.gnu.org/software/src-highlite/
 
+== Installation
+
+ gem install --source http://gems.github.com FooBarWidget-mizuho
+
 == Usage
 
 First, read the Asciidoc manual to learn the input file format:
