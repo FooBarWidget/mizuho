@@ -49,6 +49,8 @@ that also have a different look:
 
   mizuho input.txt --template manualsonrails --multi-page
 
+Take a look at the 'templates' directory for available templates.
+
 == Credits
 
 This tool is named after Kazami Mizuho from the 2003 anime 'Onegai Teacher'.
