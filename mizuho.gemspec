@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "mizuho"
-  s.version = "1.0.0"
+  s.version = "0.9.0"
   s.date = "2008-07-21"
   s.summary = "Mizuho documentation formatting tool"
   s.email = "hongli@phusion.nl"
