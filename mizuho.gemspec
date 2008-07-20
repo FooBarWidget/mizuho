@@ -7,6 +7,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/FooBarWidget/mizuho/tree/master"
   s.description = "A documentation formatting tool. Mizuho converts Asciidoc input files into nicely outputted HTML, possibly one file per chapter. Multiple templates are supported, so you can write your own."
   s.has_rdoc = false
+  s.executables = ["mizuho"]
   s.authors = ["Hongli Lai"]
   s.add_dependency("hpricot")
   
