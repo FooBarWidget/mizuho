@@ -25,6 +25,13 @@ multi-page XHTML output support and support for multiple templates.
 * Comes bundled with Asciidoc so you don't have to install it yourself. Mizuho
   Just Works(tm) out-of-the-box.
 
+== Requirements
+
+* hpricot
+* Python (because Asciidoc is written in Python)
+* GNU Source-highlight, if you want syntax highlighting support:
+  http://www.gnu.org/software/src-highlite/
+
 == Usage
 
 First, read the Asciidoc manual to learn the input file format:
@@ -32,7 +39,8 @@ http://www.methods.co.nz/asciidoc/userguide.html
 
 Next, write an input file and save it in a .txt file.
 
-Finally, convert the .txt file to a single XHTML file with Mizuho:
+Finally, convert the .txt file to a single XHTML file with Mizuho, with the
+default template:
 
   mizuho input.txt
 
