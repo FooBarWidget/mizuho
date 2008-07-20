@@ -1,5 +1,10 @@
 <%
-	# Asciidoc default template.
+	# Template based on Asciidoc's default layout. This isn't
+	# actually used by default: it's just a template example.
+	
+	if multi_page?
+		raise "This template doesn't support multi-page (yet?)"
+	end
 	
 	def visit_heading(heading, result = "")
 		result << %Q{
