@@ -51,6 +51,7 @@
 				<h1><%=h title %></h1>
 			<%- end -%>
 			<%= contents %>
+			<%- if multi_page? -%>
 			<div id="chapter_navigation">
 				<%- if prev_chapter -%>
 					<div class="left-floaty">
@@ -63,6 +64,7 @@
 					</div>
 				<%- end -%>
 			</div>
+			<%- end -%>
 		</div>
 	</div>
 </body>
