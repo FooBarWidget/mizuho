@@ -4,6 +4,9 @@ require 'mizuho/parser'
 module Mizuho
 
 class Template
+	class Error < StandardError
+	end
+	
 	def initialize(template_file, options)
 		@template_file = template_file
 		@base_dir = File.expand_path(File.dirname(@template_file))

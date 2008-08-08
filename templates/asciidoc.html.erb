@@ -3,7 +3,7 @@
 	# actually used by default: it's just a template example.
 	
 	if multi_page?
-		raise "This template doesn't support multi-page (yet?)"
+		raise Error, "This template doesn't support multi-page (yet?)"
 	end
 	
 	def visit_heading(heading, result = "")

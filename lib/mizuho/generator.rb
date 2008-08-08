@@ -33,11 +33,13 @@ private
 	ASCIIDOC = "#{ROOT}/asciidoc/asciidoc.py"
 
 	def locate_template_file(template_name)
-		if template_name =~ %r{[/.]}
+		if template_name.nil?
+			return "#{ROOT}/templates/asciidoc.html.erb"
+		elsif template_name =~ %r{[/.]}
 			# Looks like a filename.
 			return template_name
 		else
-			return "#{ROOT}/templates/#{template_name}.erb.html"
+			return "#{ROOT}/templates/#{template_name}.html.erb"
 		end
 	end
 	
@@ -79,6 +81,9 @@ private
 				:contents => parser.contents)
 			template.save(asciidoc_file)
 		end
+	rescue Template::Error => e
+		STDERR.puts("*** #{template_file}:\n#{e}")
+		exit 1
 	end
 	
 	def assign_chapter_filenames_and_heading_basenames(chapters)
