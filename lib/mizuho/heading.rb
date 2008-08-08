@@ -30,7 +30,7 @@ class Heading
 	end
 	
 	# The heading title without section number, as plain text. Contains no HTML
-	# elements. Non-HTML special characters are not escaped.
+	# elements. Non-HTML special characters are NOT escaped.
 	def plain_title
 		return CGI::unescapeHTML(title_without_numbers.gsub(%r{</?[a-z]+>}i, ''))
 	end
