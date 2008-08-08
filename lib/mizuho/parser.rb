@@ -72,6 +72,7 @@ private
 		end
 		doc = Hpricot(contents)
 		result = []
+		# TODO: fix cross-references
 		(doc / 'div.sectionbody').each_with_index do |elem, i|
 			chapter = Chapter.new
 			if i > 0
