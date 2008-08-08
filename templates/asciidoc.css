@@ -284,6 +284,9 @@ div.toclevel4 {
   margin-left: 6em;
   font-size: 0.9em;
 }
+div.toclevel1.return_to_table_of_contents {
+  margin-bottom: 0.5em;
+}
 /* Workarounds for IE6's broken and incomplete CSS2. */
 
 div.sidebar-content {
@@ -332,4 +335,22 @@ div.olist2 ol {
 }
 div.olist2 div.olist ol {
   list-style-type: decimal;
+}
+
+#chapter_navigation {
+  border-top: solid 1px #9999cc;
+  width: 100%;
+  margin-top: 1.5em;
+  margin-bottom: 1em;
+}
+#chapter_navigation td {
+  padding-top: 1.5em;
+  width: 33%;
+  vertical-align: top;
+}
+#chapter_navigation .center {
+  text-align: center;
+}
+#chapter_navigation .right-floaty {
+  text-align: right;
 }

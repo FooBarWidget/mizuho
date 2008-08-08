@@ -1,23 +1,23 @@
 <%
 	# Template based on Asciidoc's default layout. This isn't
-	# actually used by default: it's just a template example.
-	
-	if multi_page?
-		raise Error, "This template doesn't support multi-page (yet?)"
-	end
-	
-	def visit_heading(heading, result = "")
+	def visit_heading(heading, max_levels = 2, result = "")
 		result << %Q{
 			<div class="toclevel#{heading.level - 1}">
-				<a href="##{h heading.anchor}">#{h heading.title}</a>
+				<a href="#{h heading.basename}#{h heading.anchor}">#{heading.title}</a>
 			</div>
 		}.strip
-		if heading.level <= 2
+		if heading.level <= max_levels
 			heading.children.each do |h|
-				visit_heading(h, result)
+				visit_heading(h, max_levels, result)
 			end
 		end
 		return result
+	end
+	
+	def current_heading
+		return table_of_contents.find do |h|
+			h.title == current_chapter.title
+		end
 	end
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
@@ -29,15 +29,50 @@
 	<style type="text/css">
 		<%= include_file('asciidoc.css') %>
 	</style>
-	<title><%=h title %></title>
+	<title><% if multi_page? && !is_preamble? %><%=h current_chapter.title_without_numbers %> :: <% end %><%=h title %></title>
 </head>
 <body>
 	<h1><%=h title %></h1>
+	<% if is_preamble? %>
+		<%= contents %>
+	<% end %>
 	<div id="toc">
-		<%- for heading in table_of_contents -%>
-			<%= visit_heading(heading) %>
-		<%- end -%>
+		<% if is_preamble? %>
+			<h2>Table of contents</h2>
+			<%- for heading in table_of_contents -%>
+				<%= visit_heading(heading) %>
+			<%- end -%>
+		<% else %>
+			<div class="toclevel1 return_to_table_of_contents">
+				<a href="<%=h chapters.first.basename %>">Return to table of contents</a>
+			</div>
+			<%= visit_heading(current_heading, 3) %>
+		<% end %>
 	</div>
-	<%= contents %>
+	<% if !is_preamble? %>
+		<% if multi_page? %><h2><%=h current_chapter.title %></h2><% end %>
+		<%= contents %>
+	<% end %>
+	<%- if multi_page? -%>
+	<table id="chapter_navigation">
+	<tr>
+		<td class="left-floaty">
+			<% if prev_chapter %>
+			<a href="<%=h prev_chapter.basename %>">&laquo; <%= prev_chapter.title %></a>
+			<% end %>
+		</td>
+		<td class="center">
+			<% if !is_preamble? %>
+			<a href="<%=h chapters.first.basename %>">Table of contents</a>
+			<% end %>
+		</td>
+		<td class="right-floaty">
+			<% if next_chapter %>
+			<a href="<%=h next_chapter.basename %>"><%= next_chapter.title %> &raquo;</a>
+			<% end %>
+		</td>
+	</tr>
+	</table>
+	<%- end -%>
 </body>
 </html>
