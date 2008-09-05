@@ -59,6 +59,14 @@ ul#navMain {
 	padding: 15px;
 }
 
+.admonitionblock,
+.tableblock {
+	margin-left: 1em;
+	margin-right: 1em;
+	margin-top: 0.25em;
+	margin-bottom: 1em;
+}
+
 .admonitionblock .icon {
 	padding-right: 8px;
 }
@@ -66,10 +74,28 @@ ul#navMain {
 .admonitionblock .content {
 	border: solid 1px #ffda78;
 	background: #fffebd;
-	padding: 12px;
+	padding: 10px;
+	padding-top: 8px;
+	padding-bottom: 8px;
 }
 
 .admonitionblock .title {
 	font-size: 140%;
 	margin-bottom: 0.5em;
+}
+
+.tableblock table {
+	border: solid 1px #aaaaff;
+	background: #f0f0ff;
+}
+
+.tableblock th {
+	background: #e0e0e0;
+}
+
+.tableblock th,
+.tableblock td {
+	padding: 3px;
+	padding-left: 5px;
+	padding-right: 5px;
 }
