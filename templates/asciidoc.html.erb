@@ -1,11 +1,19 @@
 <%
 	# Template based on Asciidoc's default layout. This isn't
 	def visit_heading(heading, max_levels = 2, result = "")
-		result << %Q{
-			<div class="toclevel#{heading.level - 1}">
-				<a href="#{h heading.basename}#{h heading.anchor}">#{heading.title}</a>
-			</div>
-		}.strip
+		if multi_page?
+			result << %Q{
+				<div class="toclevel#{heading.level - 1}">
+					<a href="#{h heading.basename}#{h heading.anchor}">#{heading.title}</a>
+				</div>
+			}.strip
+		else
+			result << %Q{
+				<div class="toclevel#{heading.level - 1}">
+					<a href="#{h heading.anchor}">#{heading.title}</a>
+				</div>
+			}.strip
+		end
 		if heading.level <= max_levels
 			heading.children.each do |h|
 				visit_heading(h, max_levels, result)
@@ -33,23 +41,23 @@
 </head>
 <body>
 	<h1><%=h title %></h1>
-	<% if is_preamble? %>
+	<% if multi_page? && is_preamble? %>
 		<%= contents %>
 	<% end %>
 	<div id="toc">
-		<% if is_preamble? %>
-			<h2>Table of contents</h2>
-			<%- for heading in table_of_contents -%>
-				<%= visit_heading(heading) %>
-			<%- end -%>
-		<% else %>
-			<div class="toclevel1 return_to_table_of_contents">
-				<a href="<%=h chapters.first.basename %>">Return to table of contents</a>
-			</div>
-			<%= visit_heading(current_heading, 3) %>
-		<% end %>
+			<% if !multi_page? || is_preamble? %>
+				<h2>Table of contents</h2>
+				<%- for heading in table_of_contents -%>
+					<%= visit_heading(heading) %>
+				<%- end -%>
+			<% else %>
+				<div class="toclevel1 return_to_table_of_contents">
+					<a href="<%=h chapters.first.basename %>">&laquo; Return to table of contents</a>
+				</div>
+				<%= visit_heading(current_heading, 3) %>
+			<% end %>
 	</div>
-	<% if !is_preamble? %>
+	<% if !multi_page? || !is_preamble? %>
 		<% if multi_page? %><h2><%=h current_chapter.title %></h2><% end %>
 		<%= contents %>
 	<% end %>

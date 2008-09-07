@@ -30,17 +30,32 @@
 				<a href="<%=h chapters.first.basename %>">Preamble</a>
 			<%- end -%>
 			<ol>
-			<%- for heading in table_of_contents -%>
-				<li>
-				<a href="<%=h heading.basename %>"><%= heading.title_without_numbers %></a>
-				<%- if !heading.children.empty? -%>
-					<ul>
-					<% for h in heading.children %>
-						<li><a href="<%=h h.basename %><%=h h.anchor %>"><%= h.title_without_numbers %></a></li>
-					<% end %>
-					</ul>
+			<%- if multi_page? -%>
+				<%- for heading in table_of_contents -%>
+					<li>
+					<a href="<%=h heading.basename %>"><%= heading.title_without_numbers %></a>
+					<%- if !heading.children.empty? -%>
+						<ul>
+						<% for h in heading.children %>
+							<li><a href="<%=h h.basename %><%=h h.anchor %>"><%= h.title_without_numbers %></a></li>
+						<% end %>
+						</ul>
+					<%- end -%>
+					</li>
 				<%- end -%>
-				</li>
+			<%- else -%>
+				<%- for heading in table_of_contents -%>
+					<li>
+					<a href="<%=h heading.anchor %>"><%= heading.title_without_numbers %></a>
+					<%- if !heading.children.empty? -%>
+						<ul>
+						<% for h in heading.children %>
+							<li><a href="<%=h h.anchor %>"><%= h.title_without_numbers %></a></li>
+						<% end %>
+						</ul>
+					<%- end -%>
+					</li>
+				<%- end -%>
 			<%- end -%>
 			</ol>
 		</div>

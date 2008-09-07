@@ -306,6 +306,8 @@ div.listingblock div.content {
   border: 1px solid silver;
   background: #f4f4f4;
   padding: 0.5em;
+  overflow: auto;
+  overflow-x: auto;
 }
 
 div.quoteblock-attribution {
