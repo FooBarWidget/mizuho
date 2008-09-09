@@ -1,5 +1,5 @@
 div#container {
-	max-width: 1000px;
+	max-width: 900px;
 	padding-bottom: 3em;
 }
 
@@ -39,6 +39,13 @@ dd {
 	margin-left: 2em;
 }
 
+#header {
+	position: relative;
+	max-width: 900px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 #logo {
 	position: absolute;
 	left: 10px;
@@ -47,12 +54,31 @@ dd {
 	height: 140px;
 }
 
+div#header h1#site_title {
+	background: url('http://web.rubyonrails.com/images/ruby_on_rails_by_mike_rundle2.gif') top left no-repeat;
+	position: absolute;
+	width: 392px;
+	height: 55px;
+	left: 145px;
+	top: 20px;
+	margin: 0;
+	padding: 0;
+}
+
+#site_title span {
+	display: none;
+}
+
+#site_title_tagline {
+	display: none;
+}
+
 ul#navMain {
 	position: absolute;
 	margin: 0;
 	padding: 0;
 	top: 97px;
-	left: 140px;
+	left: 145px;
 }
 
 .left-floaty, .right-floaty {

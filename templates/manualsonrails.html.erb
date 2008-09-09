@@ -1,9 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />    
-	<title><%- if multi_page? && !is_preamble? -%><%=h current_chapter.plain_title %> :: <% end %><%=h title %>
-	</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title><%- if multi_page? && !is_preamble? -%><%=h current_chapter.plain_title %> :: <% end %><%=h title %></title>
+	<!--[if lt IE 8]>
+	<script src="http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE8.js" type="text/javascript"></script>
+	<![endif]-->
 	<link href="http://manuals.rubyonrails.org/stylesheets/base.css" media="screen" rel="Stylesheet" type="text/css" />
 	<link href="http://manuals.rubyonrails.org/stylesheets/forms.css" media="screen" rel="Stylesheet" type="text/css" />
 	<link href="http://manuals.rubyonrails.org/stylesheets/more.css" media="screen" rel="Stylesheet" type="text/css" />
@@ -16,6 +18,9 @@
 		<div id="logo">
 			<a href="http://www.rubyonrails.org/" title="Ruby on Rails"><img src="http://web.rubyonrails.com/images/rails_logo_remix.gif" alt="Rails" height="140" width="110" /></a>
 		</div>
+		
+		<h1 id="site_title"><span>Ruby on Rails</span></h1>
+		<h2 id="site_title_tagline">Sustainable productivity for web-application development</h2>
 
 		<ul id="navMain">
 			<li class="first-child"><a href="http://www.rubyonrails.org/" title="Ruby on Rails" class="ruby_on_rails">Ruby on Rails</a></li>
