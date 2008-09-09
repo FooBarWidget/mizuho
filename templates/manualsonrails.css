@@ -7,6 +7,14 @@ div#content {
 	margin-left: 200px;
 }
 
+div#container.notoc {
+	max-width: 600px;
+}
+
+.notoc div#content {
+	margin-left: 0;
+}
+
 pre {
 	line-height: 1.4em;
 }
@@ -41,9 +49,13 @@ dd {
 
 #header {
 	position: relative;
-	max-width: 900px;
+	max-width: 840px;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+#header.notoc {
+	max-width: 580px;
 }
 
 #logo {

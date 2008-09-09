@@ -1,3 +1,7 @@
+<%-
+	manuals_index_url = ENV['MANUALSONRAILS_INDEX_URL'] || "http://manuals.rubyonrails.org/"
+	show_toc = ENV['MANUALSONRAILS_TOC'] != 'no'
+-%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
@@ -14,7 +18,7 @@
 	</style>
 </head>
 <body>
-	<div id="header">			
+	<div id="header" <% if !show_toc %> class="notoc"<% end %>>
 		<div id="logo">
 			<a href="http://www.rubyonrails.org/" title="Ruby on Rails"><img src="http://web.rubyonrails.com/images/rails_logo_remix.gif" alt="Rails" height="140" width="110" /></a>
 		</div>
@@ -24,11 +28,12 @@
 
 		<ul id="navMain">
 			<li class="first-child"><a href="http://www.rubyonrails.org/" title="Ruby on Rails" class="ruby_on_rails">Ruby on Rails</a></li>
-			<li><a class="manuals" href="http://manuals.rubyonrails.org/" title="Manuals Index">Manuals Index</a></li>
+			<li><a class="manuals" href="<%=h manuals_index_url %>" title="Manuals Index">Manuals Index</a></li>
 		</ul>
 	</div>
 
-	<div id="container">
+	<div id="container"<% if !show_toc %> class="notoc"<% end %>>
+		<% if show_toc %>
 		<div id="sidebar">
 			<h2>Chapters</h2>
 			<%- if multi_page? -%>
@@ -64,6 +69,7 @@
 			<%- end -%>
 			</ol>
 		</div>
+		<% end %>
 		<div id="content">
 			<%- if multi_page? && !is_preamble? -%>
 				<h2 id="<%=h current_chapter.anchor_id %>"><%= current_chapter.title %></h2>
