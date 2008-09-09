@@ -137,3 +137,29 @@ ul#navMain {
 	padding-left: 5px;
 	padding-right: 5px;
 }
+
+.sidebarblock {
+	margin-top: 0.25em;
+	margin: 1em;
+	border: solid 1px #ccccbb;
+	padding: 8px;
+	background: #ffffe0;
+}
+
+.sidebarblock .sidebar-title {
+	font-size: 140%;
+	font-weight: 600;
+	margin-bottom: 0.3em;
+}
+
+.sidebarblock .sidebar-content > .para:last-child > p {
+	margin-bottom: 0;
+}
+
+.sidebarblock .sidebar-title a {
+	text-decoration: none;
+}
+
+.sidebarblock .sidebar-title a:hover {
+	text-decoration: underline;
+}
