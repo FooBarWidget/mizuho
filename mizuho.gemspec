@@ -19,6 +19,8 @@ Gem::Specification.new do |s|
       "lib/mizuho/heading.rb",
       "lib/mizuho/parser.rb",
       "lib/mizuho/template.rb",
+      "test/parser_spec.rb",
+      "test/spec_helper.rb",
       "templates/asciidoc.css",
       "templates/asciidoc.html.erb",
       "templates/manualsonrails.css",

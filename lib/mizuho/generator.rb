@@ -22,9 +22,21 @@ class Generator
 	end
 	
 	def start
-		run_asciidoc(@input, "#{@output_name}.html", @icons_dir)
+		self.class.run_asciidoc(@input, "#{@output_name}.html", @icons_dir)
 		if @template
 			apply_template("#{@output_name}.html", @template, @multi_page)
+		end
+	end
+	
+	def self.run_asciidoc(input, output, icons_dir = nil)
+		args = ["python", ASCIIDOC, "-a", "toc", "-a", "icons"]
+		if icons_dir
+			args << "-a"
+			args << "iconsdir=#{icons_dir}"
+		end
+		args += ["-n", "-o", output, input]
+		if !system(*args)
+			raise GenerationError, "Asciidoc failed."
 		end
 	end
 
@@ -40,18 +52,6 @@ private
 			return template_name
 		else
 			return "#{ROOT}/templates/#{template_name}.html.erb"
-		end
-	end
-	
-	def run_asciidoc(input, output, icons_dir = nil)
-		args = ["python", ASCIIDOC, "-a", "toc", "-a", "icons"]
-		if icons_dir
-			args << "-a"
-			args << "iconsdir=#{icons_dir}"
-		end
-		args += ["-n", "-o", output, input]
-		if !system(*args)
-			raise GenerationError, "Asciidoc failed."
 		end
 	end
 	

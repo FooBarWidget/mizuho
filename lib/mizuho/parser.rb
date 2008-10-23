@@ -7,6 +7,8 @@ module Mizuho
 # This class can parse the raw Asciidoc XHTML output, and extract the title, raw
 # contents (without layout) and other information from it.
 class Parser
+	attr_reader :filename
+	
 	# The document's title.
 	attr_reader :title
 	# The document's table of contents, represented in a tree structure
@@ -17,6 +19,8 @@ class Parser
 
 	# Parse the given file.
 	def initialize(filename)
+		@filename = filename
+		
 		@contents = File.read(filename)
 		
 		# Extract the title.
@@ -35,7 +39,7 @@ class Parser
 	# Returns the individual chapters as an array of Chapter objects. The
 	# first Chapter object represents the preamble.
 	def chapters
-		@@chapters ||= parse_chapters(@contents)
+		@chapters ||= parse_chapters(@contents)
 	end
 
 private
@@ -72,11 +76,18 @@ private
 		end
 		doc = Hpricot(contents)
 		result = []
+		
+		has_preamble = !(doc / '#preamble').empty?
+		
 		# TODO: fix cross-references
 		(doc / 'div.sectionbody').each_with_index do |elem, i|
 			chapter = Chapter.new
-			if i > 0
-				chapter.heading = @table_of_contents[i - 1]
+			if has_preamble
+				if i > 0
+					chapter.heading = @table_of_contents[i - 1]
+				end
+			else
+				chapter.heading = @table_of_contents[i]
 			end
 			chapter.contents = elem.inner_html
 			result << chapter
