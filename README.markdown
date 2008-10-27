@@ -35,7 +35,7 @@ multi-page XHTML output support and support for multiple templates.
 
 Run the following command as root:
 
-  gem install FooBarWidget-mizuho
+    gem install FooBarWidget-mizuho
 
 ## Usage
 
