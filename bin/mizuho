@@ -32,8 +32,12 @@ rescue OptionParser::ParseError => e
 end
 
 begin
-	Mizuho::Generator.new(ARGV[0], nil, options[:template],
-		options[:multi_page], options[:icons_dir]).start
+	if ARGV.empty?
+		puts parser
+	else
+		Mizuho::Generator.new(ARGV[0], nil, options[:template],
+			options[:multi_page], options[:icons_dir]).start
+	end
 rescue Mizuho::GenerationError
 	STDERR.puts "*** ERROR"
 	exit 2
