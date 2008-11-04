@@ -21,6 +21,9 @@ parser = OptionParser.new do |opts|
 		"#{' ' * 37}'images/icons'.") do |value|
 		options[:icons_dir] = value
 	end
+	opts.on("-o", "--output FILE", String, "Specify the output filename.") do |value|
+		options[:output] = value
+	end
 end
 begin
 	parser.parse!
@@ -34,9 +37,9 @@ end
 begin
 	if ARGV.empty?
 		puts parser
+		exit 1
 	else
-		Mizuho::Generator.new(ARGV[0], nil, options[:template],
-			options[:multi_page], options[:icons_dir]).start
+		Mizuho::Generator.new(ARGV[0], options).start
 	end
 rescue Mizuho::GenerationError
 	STDERR.puts "*** ERROR"

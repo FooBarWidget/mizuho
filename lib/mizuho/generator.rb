@@ -9,22 +9,19 @@ class GenerationError < StandardError
 end
 
 class Generator
-	def initialize(input, output = nil, template_name = nil, multi_page = false, icons_dir = nil)
-		@input = input
-		if output
-			@output_name = output
-		else
-			@output_name = File.expand_path(input.sub(/(.*)\..*$/, '\1'))
-		end
-		@template = locate_template_file(template_name)
-		@multi_page = multi_page
-		@icons_dir = icons_dir
+	def initialize(input, options = {})
+		@input_file = input
+		@output_name = options[:output]
+		@template = locate_template_file(options[:template])
+		@multi_page = options[:multi_page]
+		@icons_dir = options[:icons_dir]
 	end
 	
 	def start
-		self.class.run_asciidoc(@input, "#{@output_name}.html", @icons_dir)
+		output_filename = determine_output_filename(@input_file, @output_name)
+		self.class.run_asciidoc(@input_file, output_filename, @icons_dir)
 		if @template
-			apply_template("#{@output_name}.html", @template, @multi_page)
+			apply_template(output_filename, @input_file, @output_name, @template, @multi_page)
 		end
 	end
 	
@@ -55,11 +52,35 @@ private
 		end
 	end
 	
-	def apply_template(asciidoc_file, template_file, multi_page)
+	def determine_output_filename(input, output = nil, chapter_id = nil)
+		if chapter_id
+			if output
+				dirname = File.dirname(output)
+				extname = File.extname(output)
+				basename = File.basename(output, extname)
+				filename = File.join(dirname, "#{basename}-#{chapter_id}#{extname}")
+			else
+				dirname = File.dirname(input)
+				basename = File.basename(input, File.extname(input))
+				filename = File.join(dirname, "#{basename}-#{chapter_id}.html")
+			end
+		else
+			if output
+				filename = output
+			else
+				dirname = File.dirname(input)
+				basename = File.basename(input, File.extname(input))
+				filename = File.join(dirname, "#{basename}.html")
+			end
+		end
+		return File.expand_path(filename)
+	end
+	
+	def apply_template(asciidoc_file, input_file, output_name, template_file, multi_page)
 		parser = Parser.new(asciidoc_file)
 		if multi_page
 			File.unlink(asciidoc_file)
-			assign_chapter_filenames_and_heading_basenames(parser.chapters)
+			assign_chapter_filenames_and_heading_basenames(parser.chapters, input_file, output_name)
 			parser.chapters.each_with_index do |chapter, i|
 				template = Template.new(template_file,
 					:multi_page? => true,
@@ -86,14 +107,14 @@ private
 		exit 1
 	end
 	
-	def assign_chapter_filenames_and_heading_basenames(chapters)
+	def assign_chapter_filenames_and_heading_basenames(chapters, input_file, output_name)
 		chapters.each_with_index do |chapter, i|
 			if chapter.is_preamble?
-				chapter.filename = "#{@output_name}.html"
+				chapter.filename = determine_output_filename(input_file, output_name)
 			else
 				title_sha1 = Digest::SHA1.hexdigest(chapter.title_without_numbers)
-				chapter.filename = sprintf("%s-%s.html", @output_name,
-					title_sha1.slice(0..7))
+				chapter.filename = determine_output_filename(input_file,
+					output_name, title_sha1.slice(0..7))
 				chapter.heading.basename = File.basename(chapter.filename)
 				chapter.heading.each_descendant do |h|
 					h.basename = File.basename(chapter.filename)
