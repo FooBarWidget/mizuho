@@ -33,12 +33,12 @@ class Generator
 			args << "iconsdir=#{icons_dir}"
 		end
 		if conf_file
-		  # With the splat operator we support a string an array of strings.
-		  [*conf_file].each do |cf|
-		    args << "-f"
-		    args << cf
-	    end
-	  end
+			# With the splat operator we support a string an array of strings.
+			[*conf_file].each do |cf|
+				args << "-f"
+				args << cf
+			end
+		end
 		args += ["-n", "-o", output, input]
 		if !system(*args)
 			raise GenerationError, "Asciidoc failed."
