@@ -33,7 +33,7 @@ class Generator
 			args << "iconsdir=#{icons_dir}"
 		end
 		if conf_file
-			# With the splat operator we support a string an array of strings.
+			# With the splat operator we support a string and an array of strings.
 			[*conf_file].each do |cf|
 				args << "-f"
 				args << cf
