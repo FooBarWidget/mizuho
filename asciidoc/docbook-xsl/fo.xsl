@@ -10,7 +10,9 @@
   stylesheets. This means you don't need to edit the <xsl:import> elements on
   a machine by machine basis.
 -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fo="http://www.w3.org/1999/XSL/Format">
 <xsl:import href="http://docbook.sourceforge.net/release/xsl/current/fo/docbook.xsl"/>
 <xsl:import href="common.xsl"/>
 
@@ -37,6 +39,23 @@
 
 <!-- Default fetches image from Internet (long timeouts) -->
 <xsl:param name="draft.watermark.image" select="''"/>
+
+<!-- Line break -->
+<xsl:template match="processing-instruction('asciidoc-br')">
+  <fo:block/>
+</xsl:template>
+
+<!-- Horizontal ruler -->
+<xsl:template match="processing-instruction('asciidoc-hr')">
+  <fo:block space-after="1em">
+    <fo:leader leader-pattern="rule" rule-thickness="0.5pt"  rule-style="solid" leader-length.minimum="100%"/>
+  </fo:block>
+</xsl:template>
+
+<!-- Hard page break -->
+<xsl:template match="processing-instruction('asciidoc-pagebreak')">
+   <fo:block break-after='page'/>
+</xsl:template>
 
 <!-- Sets title to body text indent -->
 <xsl:param name="body.start.indent">
@@ -108,10 +127,23 @@
 
 <xsl:param name="callout.graphics" select="'1'"/>
 
-<xsl:param name="shade.literallayout" select="0"/>
+<!-- Only shade programlisting and screen verbatim elements -->
 <xsl:param name="shade.verbatim" select="1"/>
 <xsl:attribute-set name="shade.verbatim.style">
-  <xsl:attribute name="background-color">#F0F0F0</xsl:attribute>
+  <xsl:attribute name="background-color">
+    <xsl:choose>
+      <xsl:when test="self::programlisting|self::screen">#E0E0E0</xsl:when>
+      <xsl:otherwise>inherit</xsl:otherwise>
+    </xsl:choose>
+  </xsl:attribute>
+</xsl:attribute-set>
+
+<!--
+  Force XSL Stylesheets 1.72 default table breaks to be the same as the current
+  version (1.74) default which (for tables) is keep-together="auto".
+-->
+<xsl:attribute-set name="table.properties">
+  <xsl:attribute name="keep-together.within-column">auto</xsl:attribute>
 </xsl:attribute-set>
 
 </xsl:stylesheet>

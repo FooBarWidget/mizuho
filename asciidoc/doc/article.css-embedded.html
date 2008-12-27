@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.2.7" />
+<meta name="generator" content="AsciiDoc 8.3.1" />
+<title>The Article Title</title>
 <style type="text/css">
 /* Debug borders */
 p, li, dt, dd, div, pre, h1, h2, h3, h4, h5, h6 {
@@ -218,6 +219,7 @@ dt {
   margin-top: 0.5em;
   margin-bottom: 0;
   font-style: normal;
+  color: navy;
 }
 dd > *:first-child {
   margin-top: 0.1em;
@@ -233,6 +235,13 @@ div.olist2 > ol {
   list-style-type: lower-alpha;
 }
 
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
 div.tableblock > table {
   border: 3px solid #527bbd;
 }
@@ -243,21 +252,48 @@ thead {
 tfoot {
   font-weight: bold;
 }
+td > div.verse {
+  white-space: pre;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
 
-div.hlist {
+
+div.hdlist {
   margin-top: 0.8em;
   margin-bottom: 0.8em;
 }
-div.hlist td {
+div.hdlist tr {
   padding-bottom: 15px;
 }
-td.hlist1 {
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
   vertical-align: top;
   font-style: normal;
   padding-right: 0.8em;
+  color: navy;
 }
-td.hlist2 {
+td.hdlist2 {
   vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
 }
 
 @media print {
@@ -413,7 +449,6 @@ function generateToc(toclevels) {
 }
 /*]]>*/
 </script>
-<title>The Article Title</title>
 </head>
 <body>
 <div id="header">
@@ -429,31 +464,31 @@ Dec 2003
 </div>
 <div id="preamble">
 <div class="sectionbody">
-<div class="para"><p>This is the optional preamble (an untitled section body). Useful for
+<div class="paragraph"><p>This is the optional preamble (an untitled section body). Useful for
 writing simple sectionless documents consisting only of a preamble.</p></div>
 </div>
 </div>
 <h2 id="_abstract">1. Abstract</h2>
 <div class="sectionbody">
-<div class="para"><p>The optional abstract (one or more paragraphs) goes here.</p></div>
-<div class="para"><p>This document is an <em>AsciiDoc</em> article skeleton containing briefly
+<div class="paragraph"><p>The optional abstract (one or more paragraphs) goes here.</p></div>
+<div class="paragraph"><p>This document is an <em>AsciiDoc</em> article skeleton containing briefly
 annotated element placeholders plus a couple of example index entries
 and footnotes. The preface, appendix, bibliography, glossary and index
 section titles are significant (<em>specialsections</em>).</p></div>
 </div>
 <h2 id="_the_first_section">2. The First Section</h2>
 <div class="sectionbody">
-<div class="para"><p>Article sections start at level 1 and can be nested up to four levels
+<div class="paragraph"><p>Article sections start at level 1 and can be nested up to four levels
 deep.
 <br />[An example footnote.]<br /></p></div>
-<div class="para"><p>And now for something completely different: monkeys, lions and
+<div class="paragraph"><p>And now for something completely different: monkeys, lions and
 tigers (Bengal and Siberian) using the alternative syntax index
 entries.
 
 
 
 Note that multi-entry terms generate separate index entries.</p></div>
-<div class="para"><p>Here are a couple of image examples: an <span class="image">
+<div class="paragraph"><p>Here are a couple of image examples: an <span class="image">
 <img src="images/smallnew.png" alt="images/smallnew.png" />
 </span>
 example inline image followed by an example block image:</p></div>
@@ -461,75 +496,63 @@ example inline image followed by an example block image:</p></div>
 <div class="content">
 <img src="images/tiger.png" alt="Tiger image" title="Tiger image"/>
 </div>
-<div class="image-title">Figure: Tiger block image</div>
+<div class="image-title">Tiger block image</div>
 </div>
-<div class="para"><p>Followed by an example table:</p></div>
+<div class="paragraph"><p>Followed by an example table:</p></div>
 <div class="tableblock">
-<table rules="none"
-frame="hsides"
+<table rules="all"
+width="60%"
+frame="border"
 cellspacing="0" cellpadding="4">
-<caption class="title">Table: An example table</caption>
-<col width="205" />
-<col width="308" />
-<thead>
-  <tr>
-    <th align="left">
-    Option
-    </th>
-    <th align="left">
-    Description
-    </th>
-  </tr>
+<caption class="title">An example table</caption>
+<col width="50%" />
+<col width="50%" />
+<thead valign="top">
+<tr>
+<th align="left"> Option          </th>
+<th align="left"> Description</th>
+</tr>
 </thead>
 <tbody valign="top">
-  <tr>
-    <td align="left">
-    -a <em>USER GROUP</em>
-    </td>
-    <td align="left">
-    Add <em>USER</em> to <em>GROUP</em>.
-    </td>
-  </tr>
-  <tr>
-    <td align="left">
-    -R <em>GROUP</em>
-    </td>
-    <td align="left">
-    Disables access to <em>GROUP</em>.
-    </td>
-  </tr>
+<tr>
+<td align="left"><p class="table">-a <em>USER GROUP</em></p></td>
+<td align="left"><p class="table">Add <em>USER</em> to <em>GROUP</em>.</p></td>
+</tr>
+<tr>
+<td align="left"><p class="table">-R <em>GROUP</em></p></td>
+<td align="left"><p class="table">Disables access to <em>GROUP</em>.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
 <h3 id="X1">2.1. Sub-section with Anchor</h3><div style="clear:left"></div>
-<div class="para"><p>Sub-section at level 2.</p></div>
+<div class="paragraph"><p>Sub-section at level 2.</p></div>
 <h4 id="_a_nested_sub_section">2.1.1. A Nested Sub-section</h4>
-<div class="para"><p>Sub-section at level 3.</p></div>
+<div class="paragraph"><p>Sub-section at level 3.</p></div>
 <h5 id="_yet_another_nested_sub_section">Yet another nested Sub-section</h5>
-<div class="para"><p>Sub-section at level 4.</p></div>
-<div class="para"><p>This is the maximum sub-section depth supported by the distributed
+<div class="paragraph"><p>Sub-section at level 4.</p></div>
+<div class="paragraph"><p>This is the maximum sub-section depth supported by the distributed
 <em>AsciiDoc</em> configuration.
 <br />[A second example footnote.]<br /></p></div>
 </div>
 <h2 id="_the_second_section">3. The Second Section</h2>
 <div class="sectionbody">
-<div class="para"><p>Article sections are at level 1 and can contain sub-sections nested up
+<div class="paragraph"><p>Article sections are at level 1 and can contain sub-sections nested up
 to four deep.</p></div>
-<div class="para"><p>An example link to anchor at start of the <a href="#X1">first sub-section</a>.</p></div>
-<div class="para"><p>An example link to a bibliography entry <a href="#taoup">[taoup]</a>.</p></div>
+<div class="paragraph"><p>An example link to anchor at start of the <a href="#X1">first sub-section</a>.</p></div>
+<div class="paragraph"><p>An example link to a bibliography entry <a href="#taoup">[taoup]</a>.</p></div>
 </div>
 <h2 id="_appendix_a_example_appendix">4. Appendix A: Example Appendix</h2>
 <div class="sectionbody">
-<div class="para"><p><em>AsciiDoc</em> article appendices are just just article sections with
+<div class="paragraph"><p><em>AsciiDoc</em> article appendices are just just article sections with
 <em>specialsection</em> titles.</p></div>
 <h3 id="_appendix_sub_section">4.1. Appendix Sub-section</h3><div style="clear:left"></div>
-<div class="para"><p>Appendix sub-section at level 2.</p></div>
+<div class="paragraph"><p>Appendix sub-section at level 2.</p></div>
 </div>
 <h2 id="_bibliography">5. Bibliography</h2>
 <div class="sectionbody">
-<div class="para"><p>The bibliography list is an example of an <em>AsciiDoc</em> SimpleList, the
-<em>AsciiDoc</em> source list items are bulleted with a <tt>+</tt> character.</p></div>
-<div class="olist"><ol>
+<div class="paragraph"><p>The bibliography list is a style of <em>AsciiDoc</em> bulleted list.</p></div>
+<div class="ulist bibliography"><ul>
 <li>
 <p>
 <a id="taoup"></a>[taoup] Eric Steven Raymond. <em>The Art of Unix
@@ -539,18 +562,17 @@ to four deep.</p></div>
 <li>
 <p>
 <a id="walsh-muellner"></a>[walsh-muellner] Norman Walsh &amp; Leonard Muellner.
-  <em>DocBook - The Definitive Guide</em>. O'Reilly &amp; Associates. 1999.
+  <em>DocBook - The Definitive Guide</em>. O&#8217;Reilly &amp; Associates. 1999.
   ISBN 1-56592-580-7.
 </p>
 </li>
-</ol></div>
+</ul></div>
 </div>
 <h2 id="_glossary">6. Glossary</h2>
 <div class="sectionbody">
-<div class="para"><p>Glossaries are optional. Glossaries entries are an example of <em>AsciiDoc</em>
-VariableList entries, the <em>AsciiDoc</em> source entry terms are terminated
-by the ":-" characters.</p></div>
-<div class="vlist"><dl>
+<div class="paragraph"><p>Glossaries are optional. Glossaries entries are an example of a style
+of <em>AsciiDoc</em> labeled lists.</p></div>
+<div class="dlist glossary"><dl>
 <dt>
 A glossary term
 </dt>
@@ -572,7 +594,7 @@ A second glossary term
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br />
-Last updated 2008-07-03 13:38:33 NZDT
+Last updated 2008-12-13 09:56:49 NZDT
 </div>
 </div>
 </body>

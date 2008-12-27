@@ -1,22 +1,22 @@
 .\"     Title: a2x
 .\"    Author: 
-.\" Generator: DocBook XSL Stylesheets v1.72.0 <http://docbook.sf.net/>
-.\"      Date: 07/04/2008
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\"      Date: 12/13/2008
 .\"    Manual: 
 .\"    Source: 
 .\"
-.TH "A2X" "1" "07/04/2008" "" ""
+.TH "A2X" "1" "12/13/2008" "" ""
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-a2x \- convert Asciidoc text file to PDF, XHTML, HTML Help, manpage or plain text
+a2x - convert Asciidoc text file to PDF, XHTML, HTML Help, manpage or plain text
 .SH "SYNOPSIS"
 \fBa2x\fR [\fIOPTIONS\fR] \fIFILE\fR
 .sp
 .SH "DESCRIPTION"
-A DocBook toolchain wrapper script that translates an AsciiDoc text file \fIFILE\fR to PDF, DVI, PS, LaTeX, XHTML (single page or chunked), man page, HTML Help or plain text formats. PDF, XHTML, man page and HTML Help formats are are generated using the asciidoc(1), xsltproc(1), DocBook XSL Stylesheets, dblatex (or FOP) toolchain. Plain text is produced by passing asciidoc(1) generated HTML through lynx(1). The htmlhelp format option generates .hhp, .hhc and .html files suitable for compilation to an HTML Help .chm file.
+A DocBook toolchain wrapper script that translates an AsciiDoc text file \fIFILE\fR to PDF, DVI, PS, LaTeX, XHTML (single page or chunked), man page, HTML Help or plain text formats\. PDF, XHTML, man page and HTML Help formats are are generated using the asciidoc(1), xsltproc(1), DocBook XSL Stylesheets, dblatex (or FOP) toolchain\. Plain text is produced by passing asciidoc(1) generated HTML through lynx(1)\. The htmlhelp format option generates \.hhp, \.hhc and \.html files suitable for compilation to an HTML Help \.chm file\.
 .sp
 .SH "OPTIONS"
 .PP
@@ -24,28 +24,28 @@ A DocBook toolchain wrapper script that translates an AsciiDoc text file \fIFILE
 .RS 4
 Set asciidoc(1) attribute value (shortcut for
 \fB\-\-asciidoc\-opts\fR=\fI"\-a ATTRIBUTE"\fR
-option). This option may be specified more than once.
+option)\. This option may be specified more than once\.
 .RE
 .PP
 \fB\-\-asciidoc\-opts\fR=\fIASCIIDOC_OPTS\fR
 .RS 4
-Additional asciidoc(1) options. This option may be specified more than once.
+Additional asciidoc(1) options\. This option may be specified more than once\.
 .RE
 .PP
 \fB\-\-copy\fR
 .RS 4
-Copy distributed docbook\-xsl CSS stylesheet admonition and navigation icons to their respective destinations. Applies to
+Copy distributed docbook\-xsl CSS stylesheet admonition and navigation icons to their respective destinations\. Applies to
 \fIxhtml\fR,
 \fIchunked\fR,
 \fIhtmlhelp\fR
-formats. The default behavior is to suppress copying.
+formats\. The default behavior is to suppress copying\.
 .RE
 .PP
 \fB\-D, \-\-destination\-dir\fR=\fIPATH\fR
 .RS 4
-Output directory. Defaults to source
+Output directory\. Defaults to source
 \fIFILE\fR
-directory.
+directory\.
 .RE
 .PP
 \fB\-d, \-\-doctype\fR=\fIDOCTYPE\fR
@@ -54,12 +54,12 @@ DocBook document type:
 \fIarticle\fR,
 \fImanpage\fR
 or
-\fIbook\fR. Default document type is
+\fIbook\fR\. Default document type is
 \fIarticle\fR
 unless the format is
 \fImanpage\fR
 (in which case it defaults to
-\fImanpage\fR).
+\fImanpage\fR)\.
 .RE
 .PP
 \fB\-f, \-\-format\fR=\fIFORMAT\fR
@@ -74,173 +74,183 @@ Output format:
 \fItex\fR,
 \fItext\fR
 or
-\fIxhtml\fR.
+\fIxhtml\fR\.
 .RE
 .PP
 \fB\-h, \-\-help\fR
 .RS 4
-Print command\-line syntax and program options to stdout.
+Print command\-line syntax and program options to stdout\.
 .RE
 .PP
 \fB\-\-icons\fR
 .RS 4
-Use admonition or navigation icon images in output documents. The default behavior is to use text in place of icons.
+Use admonition or navigation icon images in output documents\. The default behavior is to use text in place of icons\.
 .RE
 .PP
 \fB\-\-icons\-dir\fR=\fIPATH\fR
 .RS 4
-A path (relative to destination HTML files) containing admonition and navigation icons. Defaults to
-\fI./images/icons/\fR. Applies to
+A path (relative to destination HTML files) containing admonition and navigation icons\. Defaults to
+\fI\./images/icons/\fR\. Applies to
 \fIxhtml\fR,
 \fIchunked\fR,
 \fIhtmlhelp\fR
-formats.
+formats\.
+.RE
+.PP
+\fB\-L, \-\-no\-xmllint\fR
+.RS 4
+Don\(cqt check asciidoc output with
+\fIxmllint(1)\fR\.
 .RE
 .PP
 \fB\-n, \-\-dry\-run\fR
 .RS 4
-Don't do anything just print what would have been done.
+Don\(cqt do anything just print what would have been done\.
 .RE
 .PP
 \fB\-s, \-\-skip\-asciidoc\fR
 .RS 4
-Skip asciidoc execution. This is useful for converting DocBook XML files not derived from AsciiDoc sources. Ignored if \-\-format*=\fItext\fR.
+Skip asciidoc execution\. This is useful for converting DocBook XML files not derived from AsciiDoc sources\. Ignored if \-\-format*=\fItext\fR\.
 .RE
 .PP
 \fB\-\-stylesheet\fR=\fIPATH\fR
 .RS 4
-A path (relative to destination HTML files) specifying the docbook\-xsl CSS stylesheet file. Defaults to
-\fI./docbook\-xsl.css\fR. Applies to
+A path (relative to destination HTML files) specifying the docbook\-xsl CSS stylesheet file\. Defaults to
+\fI\./docbook\-xsl\.css\fR\. Applies to
 \fIxhtml\fR,
 \fIchunked\fR,
 \fIhtmlhelp\fR
-formats.
+formats\.
 .RE
 .PP
 \fB\-v, \-\-verbose\fR
 .RS 4
-Print operational details to stderr. A second
+Print operational details to stderr\. A second
 \fB\-v\fR
-option applies the verbose option to toolchain commands.
+option applies the verbose option to toolchain commands\.
 .RE
 .PP
 \fB\-\-version\fR
 .RS 4
-Print program version to stdout.
+Print program version to stdout\.
 .RE
 .PP
 \fB\-\-xsltproc\-opts\fR=\fIXSLTPROC_OPTS\fR
 .RS 4
-Additional xsltproc(1) options. This option may be specified more than once.
+Additional xsltproc(1) options\. This option may be specified more than once\.
+.RE
+.PP
+\fB\-\-fop\fR
+.RS 4
+Use FOP to generate PDFs\.
 .RE
 .PP
 \fB\-\-fop\-opts\fR=\fIFOP_OPTS\fR
 .RS 4
-Additional fop options. This option may be specified more than once. If this option is specified fop is used to generate PDFs.
+Additional fop options\. This option may be specified more than once\. If this option is specified FOP is used to generate PDFs\.
 .RE
 .PP
 \fB\-\-dblatex\-opts\fR=\fIDBLATEX_OPTS\fR
 .RS 4
-Additional dblatex options. This option may be specified more than once.
+Additional dblatex options\. This option may be specified more than once\.
 .RE
 .SH "OUTPUT FILES"
-Output files are written to the directory specified by the \fB\-\-destination\-dir\fR option. If no \fB\-\-destination\-dir\fR option is set output files are written to the source FILE directory.
+Output files are written to the directory specified by the \fB\-\-destination\-dir\fR option\. If no \fB\-\-destination\-dir\fR option is set output files are written to the source FILE directory\.
 .sp
-Output files have the same name as the source \fIFILE\fR but with an appropriate file name extension: .html for \fIxhtml\fR; .hhp for \fIhtmlhelp\fR; .pdf for \fIpdf\fR; .text for \fItext\fR. By convention manpages have no .man extension (man page section number only). Chunked HTML directory names have a .chunked extension; chunked HTML Help directory names have a .htmlhelp extension.
+Output files have the same name as the source \fIFILE\fR but with an appropriate file name extension: \.html for \fIxhtml\fR; \.hhp for \fIhtmlhelp\fR; \.pdf for \fIpdf\fR; \.text for \fItext\fR\. By convention manpages have no \.man extension (man page section number only)\. Chunked HTML directory names have a \.chunked extension; chunked HTML Help directory names have a \.htmlhelp extension\.
 .sp
-Same named existing files are overwritten.
+Same named existing files are overwritten\.
 .sp
-Intermediate output files are written to the source \fIFILE\fR directory and are not automatically deleted.
+Intermediate output files are written to the source \fIFILE\fR directory and are not automatically deleted\.
 .sp
-Intermediate DocBook XML files generated by AsciiDoc are only regenerated if out of date with respect to the AsciiDoc source \fIFILE\fR.
+Intermediate DocBook XML files generated by AsciiDoc are only regenerated if out of date with respect to the AsciiDoc source \fIFILE\fR\.
 .sp
-In addition to generating HTML files the \fIxhtml\fR, \fIchunked\fR and \fIhtmlhelp\fR formats copy the DocBook XSL stylesheet plus admonition and navigation icons distributed with AsciiDoc to their respective destination locations. Existing stylesheets and icons are only copied if they are newer than the destination files or if the destination files are missing.
+In addition to generating HTML files the \fIxhtml\fR, \fIchunked\fR and \fIhtmlhelp\fR formats copy the DocBook XSL stylesheet plus admonition and navigation icons distributed with AsciiDoc to their respective destination locations\. Existing stylesheets and icons are only copied if they are newer than the destination files or if the destination files are missing\.
 .sp
-The \fIxhtml\fR format generates a single XHTML output page. The \fIchunked\fR format writes multiple per\-section HTML pages to a chunked directory in the destination directory. The chunked directory has the same name as the source \fIFILE\fR name plus a .chunked extension.
+The \fIxhtml\fR format generates a single XHTML output page\. The \fIchunked\fR format writes multiple per\-section HTML pages to a chunked directory in the destination directory\. The chunked directory has the same name as the source \fIFILE\fR name plus a \.chunked extension\.
 .sp
 .SH "EXAMPLES"
 .PP
-a2x \-f pdf doc/source\-highlight\-filter.txt
+a2x \-f pdf doc/source\-highlight\-filter\.txt
 .RS 4
-Generates doc/source\-highlight\-filter.pdf file.
+Generates doc/source\-highlight\-filter\.pdf file\.
 .RE
 .PP
-a2x \-f chunked \-D ../webpages guide.txt
+a2x \-f chunked \-D \.\./webpages guide\.txt
 .RS 4
 Creates chunked directory
-\&../webpages/guide.chunked
-containing chunked HTML files. Also copies
-docbook\-xsl.css
+\.\./webpages/guide\.chunked
+containing chunked HTML files\. Also copies
+docbook\-xsl\.css
 stylesheet to the
-\&../webpages/guide.chunked
+\.\./webpages/guide\.chunked
 directory plus admonition and navigation icons to the
-\&../webpages/guide.chunked/images/icons
-directory.
+\.\./webpages/guide\.chunked/images/icons
+directory\.
 .RE
 .SH "REQUISITES"
 This script runs under the bash(1) shell and requires the following programs (which may or may not be prepackaged with your Linux distribution):
-.sp
 .PP
 Asciidoc
 .RS 4
 
-http://www.methods.co.nz/asciidoc/
+http://www\.methods\.co\.nz/asciidoc/
 .RE
 .PP
 xsltproc
 .RS 4
 
-http://xmlsoft.org/XSLT/
+http://xmlsoft\.org/XSLT/
 .RE
 .PP
 DocBook XSL Stylesheets
 .RS 4
 
-http://docbook.sourceforge.net/projects/xsl/
+http://docbook\.sourceforge\.net/projects/xsl/
 .RE
 .PP
 dblatex (for PDF, DVI, PostScript and LaTeX file generation)
 .RS 4
 
-http://dblatex.sourceforge.net/
+http://dblatex\.sourceforge\.net/
 .RE
 .PP
 FOP (alternative PDF file generation)
 .RS 4
 
-http://xmlgraphics.apache.org/fop/
+http://xmlgraphics\.apache\.org/fop/
 .RE
 .PP
-Lynx (for text file generation)
+w3m (text file generation)
 .RS 4
 
-http://lynx.isc.org/
+http://w3m\.sourceforge\.net/index\.en\.html
 .RE
-See also the latest README file.
+.PP
+Lynx (used for text file generation if w3m(1) not installed)
+.RS 4
+
+http://lynx\.isc\.org/
+.RE
+See also the latest README file\.
 .sp
 .SH "BUGS"
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'The odt output format is undocumented and experimental.
+\h'-04'\(bu\h'+03'The odt output format is undocumented and experimental\.
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'See also the AsciiDoc distribution BUGS file.
+\h'-04'\(bu\h'+03'See also the AsciiDoc distribution BUGS file\.
 .RE
 .SH "AUTHOR"
-Written by Stuart Rackham, <srackham@gmail.com>
+Written by Stuart Rackham, <srackham@gmail\.com>
 .sp
 .SH "RESOURCES"
-SourceForge: http://sourceforge.net/projects/asciidoc/
+SourceForge: http://sourceforge\.net/projects/asciidoc/
 .sp
-Main web site: http://www.methods.co.nz/asciidoc/
+Main web site: http://www\.methods\.co\.nz/asciidoc/
 .sp
 .SH "COPYING"
-Copyright (C) 2002\-2008 Stuart Rackham. Free use of this software is granted under the terms of the GNU General Public License (GPL).
+Copyright (C) 2002\-2008 Stuart Rackham\. Free use of this software is granted under the terms of the GNU General Public License (GPL)\.
 .sp
-.SH "REFERENCES"
-.IP " 1." 4
-srackham@gmail.com
-.RS 4
-\%mailto:srackham@gmail.com
-.RE

@@ -1,20 +1,18 @@
                             Bugs and Known Problems
 
-   version 8.2.7, 4 July 2008
+   version 8.3.1, 14 December 2008
      __________________________________________________________________
 
 1. AsciiDoc
 
      * A benign warning with will become a reserved keyword in Python 2.6
-       sometimes occurs when using Python 2.5-- it's harmless and will
+       sometimes occurs when using Python 2.5 -- it's harmless and will
        disappear with Python 3.
      * The toc attribute will be ignored if it's set in a custom user or
        document configuration file. This is because the default
        configuration file containing the document [header] is sourced
        before custom configuration files and the toc attribute is
        processed using conditional inclusion macros.
-     * The include1::[] block macro does not work inside ListingBlocks or
-       FilterBlocks. Use include::[] instead.
      * Reported line numbers in diagnostic messages are sometimes wrong.
      * Embedding open brace characters { in argument values can cause
        incorrect argument substitution.
@@ -28,7 +26,14 @@
      * Multiple comma separated command names in the manpage NAME section
        translate to a single DocBook refname instead of multiple refname
        elements.
+     * Escaping quoted text and macros is sometimes tricky owing to some
+       macro and quoting ambiguities.
      __________________________________________________________________
 
-   Version 8.2.7
-   Last updated 2008-07-04 23:26:21 NZDT
+2. dblatex
+
+   See ./dblatex/dblatex-readme.txt.
+     __________________________________________________________________
+
+   Version 8.3.1
+   Last updated 2008-12-13 09:58:28 NZDT

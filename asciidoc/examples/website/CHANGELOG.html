@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.2.7" />
+<meta name="generator" content="AsciiDoc 8.3.1" />
 <link rel="stylesheet" href="./xhtml11.css" type="text/css" />
 <link rel="stylesheet" href="./xhtml11-quirks.css" type="text/css" />
 <link rel="stylesheet" href="./layout1.css" type="text/css" />
@@ -35,11 +35,450 @@
 <div id="header">
 <h1>AsciiDoc ChangeLog</h1>
 </div>
+<div id="preamble">
+<div class="sectionbody">
+</div>
+</div>
+<h2 id="_version_8_3_1_2008_12_14">Version 8.3.1 (2008-12-14)</h2>
+<div class="sectionbody">
+<div class="ulist"><div class="title">Additions and changes</div><ul>
+<li>
+<p>
+Replaced the <tt>install.sh</tt> script with Ben Walton&#8217;s updated autoconf
+  scripts&#8201;&#8212;&#8201;see <a href="http://www.methods.co.nz/asciidoc/INSTALL.html">INSTALL</a> for details.
+</p>
+</li>
+<li>
+<p>
+Added a generalized <em>AttributeEntry</em> syntax to allow arbitrary
+  configuration file entries to be set from within an <em>AsciiDoc</em>
+  document (suggested by Henrik Maier).
+</p>
+</li>
+<li>
+<p>
+Listing delimited blocks in DocBook outputs now support IDs; IDs of
+  titled Listing and Literal delimited blocks have been moved to the
+  enclosing DocBook example tag (thanks to Vijay Kumar for this
+  patch).
+</p>
+</li>
+<li>
+<p>
+Replaced vertical typewriter apostrophe with punctuation apostrophe
+  (thanks to Noah Slater).
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
+<li>
+<p>
+Regression: Excluding double-quotes from unquoted attribute values
+  resulted in backward incompatibility, double-quotes in unquoted
+  attribute values has been reinstated.
+</p>
+</li>
+<li>
+<p>
+Regression: Text like <tt>&amp;&#8230;;</tt> was sometimes mistaken for an entity
+  reference&#8201;&#8212;&#8201;tightened up entity reference matching.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_version_8_3_0_2008_11_29">Version 8.3.0 (2008-11-29)</h2>
+<div class="sectionbody">
+<div class="ulist"><div class="title">Additions and changes</div><ul>
+<li>
+<p>
+<a href="http://www.methods.co.nz/asciidoc/newtables.html"><em>AsciiDoc</em> new tables</a> is a complete redesign of
+  the tables syntax and generation. The new syntax and features are a
+  huge improvement over the old tables. The old tables syntax has been
+  deprecated but is currently still processed.
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.methods.co.nz/asciidoc/newlists.html">Lists can now be styled</a> like other block
+  elements. This allows a single list syntax for <em>glossary</em>, <em>qanda</em>
+  (Question and Answer) and <em>bibliography</em> lists instead of having to
+  remember a different syntax for each type.
+</p>
+</li>
+<li>
+<p>
+Inline passthroughs macros have been improved and block passthrough
+  macros added. Attribute substitution can be optionally specified
+  when the macro is called.
+</p>
+</li>
+<li>
+<p>
+The passthrough block has a fully transparent passthrough delimited
+  block block style called <em>pass</em>.
+</p>
+</li>
+<li>
+<p>
+The <em>asciimath</em> and <em>latexmath</em> <a href="http://www.methods.co.nz/asciidoc/userguide.html#X77">passthrough
+  macros</a> along with <em>asciimath</em> and <em>latexmath</em>
+  <a href="http://www.methods.co.nz/asciidoc/userguide.html#X76">passthrough blocks</a> provide a (backend
+  dependent) mechanism for rendering mathematical formulas. There are
+  <a href="http://www.methods.co.nz/asciidoc/latexmath.pdf">LaTeX Math</a>, <a href="http://www.methods.co.nz/asciidoc/asciimathml.html">AsciiMathML</a> and
+  <a href="http://www.methods.co.nz/asciidoc/latexmathml.html">LaTeXMathML</a> examples on the <em>AsciiDoc</em> website.
+</p>
+</li>
+<li>
+<p>
+Reimplemented and cleaned up filter processing based on a patch
+  submitted by Kelly Anderson.  Uses the newer subprocess module
+  instead of the deprecated popen2 module.  Now works in Win32 command
+  shell.
+</p>
+</li>
+<li>
+<p>
+Addition FAQs, more documentation updates.
+</p>
+</li>
+<li>
+<p>
+Arbitrary HTML/XML entities can be entered in <em>AsciiDoc</em> source.
+</p>
+</li>
+<li>
+<p>
+Did away with the need for the <tt>shaded-literallayout.patch</tt> (thanks
+  to Henrik Maier for this patch).
+</p>
+</li>
+<li>
+<p>
+Implemented <em>page break</em> block macro.
+</p>
+</li>
+<li>
+<p>
+Added <em>line breaks</em> and <em>ruler</em> processing instructions to DocBook
+  outputs  (thanks to Henrik Maier for this patch).
+</p>
+</li>
+<li>
+<p>
+Added <em>deg</em> (degree) and <em>wj</em> (word joiner) entity attributes
+  (thanks to Henrik Maier).
+</p>
+</li>
+<li>
+<p>
+Tweaked DocBook <em>indexterm2</em> macro to avoid white space preceding
+  the term when used in table cells (thanks to Henrik Maier for this
+  patch).
+</p>
+</li>
+<li>
+<p>
+Title elements now process the <em>options</em> attribute like other block
+  elements.
+</p>
+</li>
+<li>
+<p>
+Added &#8216;single quoted&#8217; element.
+</p>
+</li>
+<li>
+<p>
+Spaces on both sides of a&#8201;&#8212;&#8201;em-dash are translated to thin space
+  characters.
+</p>
+</li>
+<li>
+<p>
+Improved detection and reporting of malformed attribute lists.
+</p>
+</li>
+<li>
+<p>
+The list <em>compact</em> style is now a list option.
+</p>
+</li>
+<li>
+<p>
+Added <em>strong</em> labeled list option which makes the labels bold (HTML
+  outputs only).
+</p>
+</li>
+<li>
+<p>
+Dropped unsupported <em>linuxdoc</em> backend.
+</p>
+</li>
+<li>
+<p>
+Dropped deprecated <em>xhtml-deprecated</em> (version 6) backend.
+</p>
+</li>
+<li>
+<p>
+Added <em>breakable</em> and <em>unbreakable</em> attribute options to tables to
+  control table breaking across page boundaries (DocBook XSL/FO
+  outputs). By and in collaboration with Henrik Maier.
+</p>
+</li>
+<li>
+<p>
+Added <em>pgwide</em> attribute option to tables to table, block image,
+  horizontal labeled lists.  Specifies that the element should be
+  rendered across the full text width of the page irrespective of the
+  current indentation (DocBook XSL/FO outputs). Thanks to Henrik Maier
+  for this patch.
+</p>
+</li>
+<li>
+<p>
+Vim syntax highlighter: spaces before/after bullets no longer
+  highlighted (which is ugly if using a theme that highlights with
+  underlines).  Thanks to Donald Chai for this patch.
+</p>
+</li>
+<li>
+<p>
+Added <tt><tt>a2x(1)</tt></tt> <tt>--fop</tt> option.
+</p>
+</li>
+<li>
+<p>
+Added <tt><tt>a2x(1)</tt></tt> <tt>--no-xmllint</tt> option.
+</p>
+</li>
+<li>
+<p>
+Highlighted labelled list terms with the navy color in XHTML
+  outputs.
+</p>
+</li>
+<li>
+<p>
+Use <tt>w3m(1)</tt> as default <tt><tt>a2x(1)</tt></tt> text format generator (fallback to
+  <tt>lynx(1)</tt>).
+</p>
+</li>
+<li>
+<p>
+Changed callout formats in html4 and xhtml11 outputs to angle
+  brackets to match source highlighter rendering.
+</p>
+</li>
+<li>
+<p>
+Macros now inject user defined <tt>&lt;optionname&gt;-option</tt> attributes into
+  markup.
+</p>
+</li>
+<li>
+<p>
+Added IRC URLs to <em>AsciiDoc</em> inline macros.
+</p>
+</li>
+<li>
+<p>
+Added <tt>depth</tt> attribute to <tt>include::[]</tt> system macro.
+</p>
+</li>
+<li>
+<p>
+Added <em>footnoteref</em> inline macro.
+</p>
+</li>
+<li>
+<p>
+Added <em>stylesheet</em> XHTML attribute to specify additional custom CSS
+  stylesheet.
+</p>
+</li>
+<li>
+<p>
+If a paragraph style is specified it will be added to the XHTML
+  <em>class</em> attribute and DocBook <em>role</em> attribute.
+</p>
+</li>
+<li>
+<p>
+Replacements can be set in a document using the reserved
+  AttributeEntry name <em>replacement</em>.
+</p>
+</li>
+<li>
+<p>
+The prefix for auto-generated section name IDs can be set with the
+  <em>idprefix</em> attribute.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
+<li>
+<p>
+Escaped quote skipped over leading and trailing quote instead of
+  just the leading quote.
+</p>
+</li>
+<li>
+<p>
+Fixed bug that was causing false negative safe mode warnings (patch
+  submitted by Julien Palmas).
+</p>
+</li>
+<li>
+<p>
+Placed priority of AttributeEntry, AttributeList and BlockTitle
+  above Title.  This ensures an  AttributeEntry, AttributeList or
+  BlockTitle followed by a same length leading ListingBlock delimiter
+  is not mistaken for a two-line title.
+</p>
+</li>
+<li>
+<p>
+Vim syntax highlighter: fixed multi-line quoted text.
+</p>
+</li>
+<li>
+<p>
+Contstrained quote termination after non-space character enforced.
+</p>
+</li>
+<li>
+<p>
+Vim syntax highlighter: unterminated quoted text is no longer
+  highlighted.
+</p>
+</li>
+<li>
+<p>
+Vim syntax highlighter: passthroughs now exactly match <em>AsciiDoc</em>
+  semantics.
+</p>
+</li>
+<li>
+<p>
+Vim syntax highlighter: escaped quoted text, attribute references
+  and inline macros are not highlighted.
+</p>
+</li>
+<li>
+<p>
+Vim syntax highlighter: TODO&#8217;s highlighted in CommentBlocks (thanks
+  to Scott Wall); non-greedy $$...$$.
+</p>
+</li>
+<li>
+<p>
+Vim syntax highlighter: Comment lines mistaken for vertical list
+  labels (thanks to Scott Wall).
+</p>
+</li>
+<li>
+<p>
+Vim syntax highlighter: Single unmatched $$ mistakenly highlighted
+  remaining text (patch contributed by Scott Wall).
+</p>
+</li>
+<li>
+<p>
+Callouts now work in source highlighted listing generated by
+  dblatex.
+</p>
+</li>
+<li>
+<p>
+Fixed exception that occured if undefined attribute was present in
+  filter command.
+</p>
+</li>
+<li>
+<p>
+AttributeList block can now follow a paragraph without intervening
+  blank line.
+</p>
+</li>
+<li>
+<p>
+The include macro tabsize attribute is no longer propagated to
+  nested includes.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><div class="title">Omissions</div><p>The following features were implemented but then but removed from this
+release:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>pi</em>, <em>cdata</em> and <em>comment</em> passthrough macros and passthrough block
+  styles (creeping featurism, use <em>pass</em> macros instead).
+</p>
+</li>
+<li>
+<p>
+Generic <em>tag</em> inline macro (creeping featurism, use <em>pass</em> macros
+  instead).
+</p>
+</li>
+</ul></div>
+<h3 id="X1">Compatibility issues</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Version 8.3.0 has a number of backward incompatibilities with respect
+to the previous 8.2.7 release:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+The old table syntax is still processed but a <em>DEPRECATED</em> warning
+  is issued.
+</p>
+</li>
+<li>
+<p>
+Entity references have to be escaped with a backslash.
+</p>
+</li>
+<li>
+<p>
+You have to explicitly precede horizontal style labeled lists with
+  the <tt>[horizontal]</tt> style attribute&#8201;&#8212;&#8201;by default all labeled lists
+  are rendered vertically.
+</p>
+</li>
+<li>
+<p>
+The list <em>compact</em> style has been dropped and is now a list option
+  (use <tt>options="compact"</tt> in attribute lists).
+</p>
+</li>
+<li>
+<p>
+<em>AsciiDoc</em> version 6 sytnax no longer supported.
+</p>
+</li>
+<li>
+<p>
+Linuxdoc been removed from the distribution.
+</p>
+</li>
+<li>
+<p>
+The unsupported experimental <em>latex</em> backend has not been tested on
+  this release.
+</p>
+</li>
+<li>
+<p>
+The introduction of single-quote quoting requires that double-quote
+  quoting is escaped with two backslashes.
+</p>
+</li>
+</ul></div>
+</div>
 <h2 id="_version_8_2_7_2008_07_04">Version 8.2.7 (2008-07-04)</h2>
 <div class="sectionbody">
-<div class="para"><p>See the <a href="http://hg.sharesource.org/asciidoc/shortlog"><em>AsciiDoc</em> Mercurial
-repository</a> for a full list of changes.</p></div>
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
 Added <tt>dvi</tt>, <tt>ps</tt> and <tt>tex</tt> output format options to <tt>a2x(1)</tt>.
@@ -47,14 +486,14 @@ Added <tt>dvi</tt>, <tt>ps</tt> and <tt>tex</tt> output format options to <tt>a2
 </li>
 <li>
 <p>
-Added <tt>&#8212;dblatex</tt> option to <tt>a2x(1)</tt> so <tt>dblatex(1)</tt> can be used to
+Added <tt>--dblatex</tt> option to <tt>a2x(1)</tt> so <tt>dblatex(1)</tt> can be used to
   generate PDFs.
 </p>
 </li>
 <li>
 <p>
 Added custom <tt>dblatex(1)</tt> configuration files (in distribution
-  <tt>./dblatex</tt> directory) which are used by <tt>a2x(1)</tt>.
+  <tt>./dblatex</tt> directory) that are used by <tt>a2x(1)</tt>.
 </p>
 </li>
 <li>
@@ -65,9 +504,9 @@ Added custom <tt>dblatex(1)</tt> configuration files (in distribution
 </li>
 <li>
 <p>
-If you don't need a customized the link caption you can enter the
+If you don&#8217;t need a customized the link caption you can enter the
   <em>http</em>, <em>https</em>, <em>ftp</em>, <em>file</em> URLs and email addresses without any
-  special macro syntax &#8212; you get the links by just cutting and
+  special macro syntax&#8201;&#8212;&#8201;you get the links by just cutting and
   pasting URLs and emails addresses. This also makes it easier to open
   links directly form <em>AsciiDoc</em> source ( most editors allow you to open
   URLs directly).  The Vim syntax highlighter has been updated to
@@ -76,7 +515,7 @@ If you don't need a customized the link caption you can enter the
 </li>
 <li>
 <p>
-Highlighted source code paragraphs have been implemented &#8212; it's a
+Highlighted source code paragraphs have been implemented&#8201;&#8212;&#8201;it&#8217;s a
   much more convenient way to enter short code examples (see
   <a href="http://www.methods.co.nz/asciidoc/source-highlight-filter.html">the
   online docs</a>).
@@ -84,7 +523,7 @@ Highlighted source code paragraphs have been implemented &#8212; it's a
 </li>
 <li>
 <p>
-The source highlighter and music filter syntax has changed &#8212; they
+The source highlighter and music filter syntax has changed&#8201;&#8212;&#8201;they
   now used the ListingBlock syntax customized with <em>source</em> and
   <em>music</em> style attribute values. This follows the Paragraph styling
   convention introduced by the source paragraph (previous item) and is
@@ -93,18 +532,18 @@ The source highlighter and music filter syntax has changed &#8212; they
 </li>
 <li>
 <p>
-QuoteBlocks now have a <em>verse</em> style &#8212; you no longer have to nest a
+QuoteBlocks now have a <em>verse</em> style&#8201;&#8212;&#8201;you no longer have to nest a
   <em>verse</em> LiteralBlock inside a QuoteBlock for verses.  The <em>verse</em>
   style on the LiteralBlock has been deprecated (still works though)
   and the <em>style</em> attribute is positional attribute 1, pushing
-  <em>attribution</em> and <em>citetitle</em> attributes to the right (you'll need
+  <em>attribution</em> and <em>citetitle</em> attributes to the right (you&#8217;ll need
   to insert a <em>quote</em> attribute into your existing QuoteBlocks).
 </p>
 </li>
 <li>
 <p>
 It is no up to the DocBook processor to highlight source code syntax
-  in <tt>&lt;programlisting&gt;</tt> elements rather than GNU Highlighter &#8212; this
+  in <tt>&lt;programlisting&gt;</tt> elements rather than GNU Highlighter&#8201;&#8212;&#8201;this
   is the correct way to handle it, plus <tt>dblatex(1)</tt> makes a much
   better job.
 </p>
@@ -120,19 +559,19 @@ It is no up to the DocBook processor to highlight source code syntax
 </li>
 <li>
 <p>
-Added <tt>a2x(1)</tt> <tt>&#8212;fop-opts=FOP_OPTS</tt> option (patch submitted by Miklos
+Added <tt>a2x(1)</tt> <tt>--fop-opts=FOP_OPTS</tt> option (patch submitted by Miklos
   Vajna).
 </p>
 </li>
 <li>
 <p>
-Added <tt>a2x(1)</tt> <tt>&#8212;dblatex-opts=DBLATEX_OPTS</tt> option.
+Added <tt>a2x(1)</tt> <tt>--dblatex-opts=DBLATEX_OPTS</tt> option.
 </p>
 </li>
 <li>
 <p>
-Added Mikhail Yakshin's FOP 0.95 patch which fixes a long-standing
-  <tt>fo.xsl</tt> problem and allows PDF's to be generated with FOP 0.95
+Added Mikhail Yakshin&#8217;s FOP 0.95 patch which fixes a long-standing
+  <tt>fo.xsl</tt> problem and allows PDF&#8217;s to be generated with FOP 0.95
   (previously had to use FOP 0.20.5).
 </p>
 </li>
@@ -143,7 +582,7 @@ The User Guide has been updated and outdated FOP configuration and
 </p>
 </li>
 </ul></div>
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 Fixed <tt>stylesheets/xhtml11-manpage.css</tt> not being included when
@@ -161,14 +600,12 @@ Fixed <em>FAILED: malformed section entry</em> LaTeX backend error.
 </p>
 </li>
 </ul></div>
-<div class="para"><p>See the also the <a href="https://sharesource.org/hg/asciidoc/"><em>AsciiDoc</em>
+<div class="paragraph"><p>See the also the <a href="https://sharesource.org/hg/asciidoc/"><em>AsciiDoc</em>
 repository changelog</a>.</p></div>
 </div>
 <h2 id="_version_8_2_6_2008_04_29">Version 8.2.6 (2008-04-29)</h2>
 <div class="sectionbody">
-<div class="para"><p>See the <a href="http://hg.sharesource.org/asciidoc/shortlog"><em>AsciiDoc</em> Mercurial
-repository</a> for a full list of changes.</p></div>
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
 Enhancements to the Vim <em>AsciiDoc</em> syntax highlighter, for example,
@@ -192,7 +629,7 @@ Added <tt>toc-title</tt> attribute to allow custom table of contents
 </li>
 <li>
 <p>
-Added references to Alex Efros's <em>AsciiDoc</em> Cheatsheet to <em>AsciiDoc</em>
+Added references to Alex Efros&#8217;s <em>AsciiDoc</em> Cheatsheet to <em>AsciiDoc</em>
   website.
 </p>
 </li>
@@ -217,7 +654,7 @@ Added &#8594; &#8592; &#8658; &#8656; arrow replacements from the Arrows block o
 </li>
 <li>
 <p>
-Added DocBook refentry lang attribute &#8212; patch contributed by
+Added DocBook refentry lang attribute&#8201;&#8212;&#8201;patch contributed by
   VMiklos.
 </p>
 </li>
@@ -228,7 +665,7 @@ AttributeEntry names can now be numeric (&#8220;named macro targets&#8221;).
 </li>
 <li>
 <p>
-Hide Table of Contents title if Table of Contents empty &#8212; patch
+Hide Table of Contents title if Table of Contents empty&#8201;&#8212;&#8201;patch
   contributed by Alex Efros.
 </p>
 </li>
@@ -241,7 +678,7 @@ Various XHTML CSS tweaks.
 <p>
 Code cleanup:
 </p>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Replaced <tt>realpath()</tt> with Python 2.2 <tt>os.path.realpath()</tt> library
@@ -276,7 +713,7 @@ Dropped <tt>readlines()</tt> function.
 </ul></div>
 </li>
 </ul></div>
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 Fixed broken CSS for decimal ordered lists nested in alpha ordered
@@ -292,7 +729,7 @@ A missing closing block delimiter now reports the opening delimiter
 <li>
 <p>
 Fixed an error generated by the asciidoc <tt>-e</tt> option when there are
-  no block definitions &#8212; patch contributed by Alejandro Mery.
+  no block definitions&#8201;&#8212;&#8201;patch contributed by Alejandro Mery.
 </p>
 </li>
 <li>
@@ -311,7 +748,7 @@ Numbered attribute names no longer interfere with positional
 </div>
 <h2 id="_version_8_2_5_2007_11_18">Version 8.2.5 (2007-11-18)</h2>
 <div class="sectionbody">
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 Fixed exception thrown by illegal command-line arguments.
@@ -319,7 +756,7 @@ Fixed exception thrown by illegal command-line arguments.
 </li>
 <li>
 <p>
-Rolled back the <em>with</em> warning bug fix introduced in 8.2.4 &#8212; it was
+Rolled back the <em>with</em> warning bug fix introduced in 8.2.4&#8201;&#8212;&#8201;it was
   incompatible with Python &lt;2.5.
 </p>
 </li>
@@ -327,7 +764,7 @@ Rolled back the <em>with</em> warning bug fix introduced in 8.2.4 &#8212; it was
 </div>
 <h2 id="_version_8_2_4_2007_11_10">Version 8.2.4 (2007-11-10)</h2>
 <div class="sectionbody">
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
 You can now use the <tt>lang</tt> attribute to set the DocBook language
@@ -366,7 +803,7 @@ Dropped platform dependent <tt>doc/asciidoc.chm</tt> file from
 </p>
 </li>
 </ul></div>
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 The spurious warning <em>with will become a reserved keyword
@@ -377,10 +814,10 @@ The spurious warning <em>with will become a reserved keyword
 </div>
 <h2 id="_version_8_2_3_2007_09_12">Version 8.2.3 (2007-09-12)</h2>
 <div class="sectionbody">
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
-Added VMiklos's <em>permalink</em> patch for auto-generated section IDs
+Added VMiklos&#8217;s <em>permalink</em> patch for auto-generated section IDs
   (enabled by default by the <tt>sectids</tt> attribute).
 </p>
 </li>
@@ -396,8 +833,8 @@ Changed format of {localdate} attribute to ISO 8601 (<tt>%Y-%m-%d</tt>).
 </li>
 <li>
 <p>
-Added <tt>abc2ly &#8212;beams=None</tt> option to make <tt>music2png.py</tt> conform to
-  ABC's notion of beams.
+Added <tt>abc2ly --beams=None</tt> option to make <tt>music2png.py</tt> conform to
+  ABC&#8217;s notion of beams.
 </p>
 </li>
 <li>
@@ -446,7 +883,7 @@ If quirks mode is disabled the XHTML Mime Type is set to the
 </p>
 </li>
 </ul></div>
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 Author information is now correctly set when using attribute entries
@@ -459,7 +896,7 @@ Author information is now correctly set when using attribute entries
 </div>
 <h2 id="_version_8_2_2_2007_07_22">Version 8.2.2 (2007-07-22)</h2>
 <div class="sectionbody">
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
 <a href="http://www.maths.nottingham.ac.uk/personal/drw/lm.html">LaTeXMathML</a>
@@ -477,8 +914,8 @@ The <em>source highlight</em> and <em>code</em> filters now process embedded
 </li>
 <li>
 <p>
-Added an <tt>&#8212;attribute=ATTRIBUTE</tt> option to <tt><tt>a2x(1)</tt></tt> for passing
-  attribute values to <tt>asciidoc(1)</tt> (a shortcut for <tt>&#8212;asciidoc-opts="-a
+Added an <tt>--attribute=ATTRIBUTE</tt> option to <tt><tt>a2x(1)</tt></tt> for passing
+  attribute values to <tt>asciidoc(1)</tt> (a shortcut for <tt>--asciidoc-opts="-a
   ATTRIBUTE"</tt>).
 </p>
 </li>
@@ -489,27 +926,27 @@ Image block and inline macros prepend optional <tt>{imagesdir}</tt>
 </p>
 </li>
 </ul></div>
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 Fixed an assertion error that occurred when a configuration file
-  containing an <tt>include::[]</tt> macro was loaded using the
+  containing an <tt>\include::[]</tt> macro was loaded using the
   <tt>--conf-file</tt> option and the configuration file name did not
-  include an explicit directory path &#8212; patch submitted by Dmitry
+  include an explicit directory path&#8201;&#8212;&#8201;patch submitted by Dmitry
   Potapov.
 </p>
 </li>
 <li>
 <p>
 Asciidoc titles are only converted to lower case if all characters
-  are upper case otherwise case is left unchanged &#8212; patch submitted
+  are upper case otherwise case is left unchanged&#8201;&#8212;&#8201;patch submitted
   by Dmitry Potapov.
 </p>
 </li>
 <li>
 <p>
 Added a missing check that input is not stdin before loading
-  configuration files from the document directory &#8212; patch submitted
+  configuration files from the document directory&#8201;&#8212;&#8201;patch submitted
   by Dmitry Potapov.
 </p>
 </li>
@@ -523,7 +960,7 @@ Attribute list items must evaluate to strings, numbers or None
 <li>
 <p>
 If an <em>AsciiDoc</em> document has no title an empty XHTML 1.1 <em>title</em>
-  element is created &#8212; previously the <em>title</em> element was dropped
+  element is created&#8201;&#8212;&#8201;previously the <em>title</em> element was dropped
   which resulted in invalid XHTML 1.1.
 </p>
 </li>
@@ -543,7 +980,7 @@ The Vim syntax highlighter now correctly highlights Double-dollar
 </div>
 <h2 id="_version_8_2_1_2007_04_06">Version 8.2.1 (2007-04-06)</h2>
 <div class="sectionbody">
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
 A number of improvements have been made to the Vim syntax
@@ -553,7 +990,7 @@ A number of improvements have been made to the Vim syntax
 </li>
 <li>
 <p>
-Labeled list definitions have been tightened &#8212; a list label can no
+Labeled list definitions have been tightened&#8201;&#8212;&#8201;a list label can no
   longer containing trailing spaces. The following example is no
   longer recognized as a valid list label:
 </p>
@@ -561,7 +998,7 @@ Labeled list definitions have been tightened &#8212; a list label can no
 <div class="content">
 <pre><tt>Lorum ipsum ::</tt></pre>
 </div></div>
-<div class="para"><p>This change implements the originally intended behavior (as per the
+<div class="paragraph"><p>This change implements the originally intended behavior (as per the
 <em>AsciiDoc</em> documentation and examples) so there should be very few
 compatibility issues.</p></div>
 </li>
@@ -569,11 +1006,11 @@ compatibility issues.</p></div>
 </div>
 <h2 id="_version_8_2_0_2007_04_04">Version 8.2.0 (2007-04-04)</h2>
 <div class="sectionbody">
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
 A Vim syntax file is now included in the <em>AsciiDoc</em> distribution
-  (inspired by Felix Obenhuber's <tt>asciidoc.vim</tt> script). You can find
+  (inspired by Felix Obenhuber&#8217;s <tt>asciidoc.vim</tt> script). You can find
   it (along with a Vim filetype detection script in the distribution
   <tt>./vim/</tt> directory (the scripts are installed automatically by the
   <em>AsciiDoc</em> installer <tt>./install.sh</tt>). See <em>Appendix J</em> of the
@@ -600,7 +1037,7 @@ Added a <tt>listindex</tt> attribute which is the current list item index
 </li>
 <li>
 <p>
-The single line titles syntax now accepts trailing suffixes &#8212; this
+The single line titles syntax now accepts trailing suffixes&#8201;&#8212;&#8201;this
   syntax matches the title line syntax of a number of popular Wiki
   markups.
 </p>
@@ -633,15 +1070,15 @@ The Revision line now accommodates Subversion <tt>$Id</tt> markers (in
 </li>
 <li>
 <p>
-Implemented <tt><tt>a2x(1)</tt></tt> option <tt>&#8212;skip-asciidoc</tt> which allows <tt><tt>a2x(1)</tt></tt>
+Implemented <tt><tt>a2x(1)</tt></tt> option <tt>--skip-asciidoc</tt> which allows <tt><tt>a2x(1)</tt></tt>
   to convert DocBook XML files not derived from <em>AsciiDoc</em> sources.
 </p>
 </li>
 <li>
 <p>
-If <tt><tt>a2x(1)</tt> &#8212;doctype</tt> option is not specified it defaults to
-  <tt>manpage</tt> if <tt>&#8212;format=manpage</tt> else defaults to <tt>article</tt>
-  (previously <tt>&#8212;doctype</tt> always defaulted to <tt>article</tt>).
+If <tt><tt>a2x(1)</tt> --doctype</tt> option is not specified it defaults to
+  <tt>manpage</tt> if <tt>--format=manpage</tt> else defaults to <tt>article</tt>
+  (previously <tt>--doctype</tt> always defaulted to <tt>article</tt>).
 </p>
 </li>
 <li>
@@ -654,14 +1091,14 @@ Added an <em>External Resources</em> section to the
 </div>
 <h2 id="_version_8_1_0_2006_10_22">Version 8.1.0 (2006-10-22)</h2>
 <div class="sectionbody">
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
 <em>AsciiDoc</em> generated XHTML documents now display a table of contents
   if the <em>toc</em> attribute is defined (JavaScript needs to be enabled
   for this to work).  Thanks to Troy Hanson who contributed this
-  feature based on a JavaScript by Mihai Bazon. I've simplified things
-  somewhat to match Docbook XSL Stylesheets style, see Troy's
+  feature based on a JavaScript by Mihai Bazon. I&#8217;ve simplified things
+  somewhat to match Docbook XSL Stylesheets style, see Troy&#8217;s
   <a href="http://tpl.sourceforge.net/userguide.html">tpl User Guide</a> for a
   fancier layout. Use the <tt>-a toc -a numbered</tt> command-line options to
   produce a number table of contents.
@@ -679,7 +1116,7 @@ A <a href="http://www.methods.co.nz/asciidoc/music-filter.html">music filter</a>
 </li>
 <li>
 <p>
-Incorporated Paul Melis's Win32 filter patch.  This workaround
+Incorporated Paul Melis&#8217;s Win32 filter patch.  This workaround
   allows <em>AsciiDoc</em> to run filters under Windows.
 </p>
 </li>
@@ -698,7 +1135,7 @@ Rather than proliferate a confusing number of filter block
   changing existing filter delimiters (the old delimiters still work
   but may be deprecated in future versions):
 </p>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 The example code filter block delimiter is now the word <tt>code</tt>
@@ -755,13 +1192,13 @@ If <tt><tt>asciidoc(1)</tt></tt> outputs to stdout then intrinsic attribute
 <div class="sectionbody">
 <div class="sidebarblock">
 <div class="sidebar-content">
-<div class="para"><p>This is a major release because changes to quoting and index entry
+<div class="paragraph"><p>This is a major release because changes to quoting and index entry
 handling may break existing documents (see <em>Additions and changes</em>
 below and <em>Appendix A: Migration Notes</em> in the <em>AsciiDoc</em> User Guide).</p></div>
-<div class="para"><p>Please report any problems you encounter.</p></div>
-<div class="para"><p><a href="mailto:srackham@gmail.com"><em>Stuart Rackham</em></a></p></div>
+<div class="paragraph"><p>Please report any problems you encounter.</p></div>
+<div class="paragraph"><p><a href="mailto:srackham@gmail.com"><em>Stuart Rackham</em></a></p></div>
 </div></div>
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
 Quoting can can occur within words (based on patch submitted by
@@ -783,7 +1220,7 @@ The syntax for index entry macros have have been deprecated from
   <tt>+&#8230;+</tt> and <tt><tt>+&#8230;</tt>+</tt> to <tt>((&#8230;))</tt> and <tt>(((&#8230;)))</tt> respectively.
   Rationale:
 </p>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Bracketing is consistent other with <tt>[[&#8230;]]</tt> and <tt>&lt;&lt;&#8230;&gt;&gt;</tt>
@@ -865,7 +1302,7 @@ Added INSTALL documentation file.
 </li>
 <li>
 <p>
-Added <em>replacements2</em> substitution options &#8212; a second replacements
+Added <em>replacements2</em> substitution options&#8201;&#8212;&#8201;a second replacements
   section.
 </p>
 </li>
@@ -893,7 +1330,7 @@ The <tt>name</tt> in <tt>name=value</tt> configuration file entries can now end
 <div class="content">
 <pre><tt>abc\\=xyz</tt></pre>
 </div></div>
-<div class="para"><p>Results in <tt>name=abc\</tt> and <tt>value=xyz</tt> &#8212;  previously this would have
+<div class="paragraph"><p>Results in <tt>name=abc\</tt> and <tt>value=xyz</tt>&#8201;&#8212;&#8201; previously this would have
 escaped the <tt>=</tt> character.</p></div>
 </li>
 <li>
@@ -914,10 +1351,10 @@ A command-line attribute value with a <tt>@</tt> suffix does not override
 <p>
 <tt>localtime</tt> attribute is now encoded from the native system encoding
   to the output encoding. Patch submitted by
-  <a href="mailto:m_pupil@yahoo.com.cn">FKtPp</a> &#8212; here's his description of the
+  <a href="mailto:m_pupil@yahoo.com.cn">FKtPp</a>&#8201;&#8212;&#8201;here&#8217;s his description of the
   problem:
 </p>
-<div class="para"><p>&#8220;I am a Chinese user of <em>AsciiDoc</em> and I find that when I use UTF-8
+<div class="paragraph"><p>&#8220;I am a Chinese user of <em>AsciiDoc</em> and I find that when I use UTF-8
 (the default encoding) to write asciidoc documents in Windows platform
 the resulting html footer line will get screwed. It was caused by a
 localized tzname that was always encoded in the windows native
@@ -950,7 +1387,7 @@ Replaced <tt>a2x(1)</tt> <tt>--no-icons</tt> and <tt>--no-copy</tt> options with
   default behavior has also changed: copying and use of icons is
   disabled by default. Rationale:
 </p>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 To make the default behavior more consistent since use of icons
@@ -971,7 +1408,7 @@ To make the default behavior less surprising (the creation of icon
 </p>
 </li>
 </ul></div>
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 Removed duplicate <tt>./doc/a2x.1.txt</tt> from distribution tarball.
@@ -1000,7 +1437,7 @@ Attribute replacement is no longer performed twice in Titles and
 </div>
 <h2 id="_version_7_1_2_2006_03_07">Version 7.1.2 (2006-03-07)</h2>
 <div class="sectionbody">
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
 Support for
@@ -1018,7 +1455,7 @@ You can now prefix quoted text with inline attributes lists.  You
 </li>
 <li>
 <p>
-Added <tt>#&#8230;#</tt> quoting &#8212; it does nothing &#8212; it's purpose is to
+Added <tt>#&#8230;\#</tt> quoting&#8201;&#8212;&#8201;it does nothing&#8201;&#8212;&#8201;it&#8217;s purpose is to
   allow inline attributes to be applied to normal text.
 </p>
 </li>
@@ -1030,8 +1467,7 @@ An <a href="userguide.html#X50">inline passthrough</a> mechanism has been
 </li>
 <li>
 <p>
-Configuration file comment lines can be escaped with a backslash &#8212;
-  this is to allows the inclusion of configuration lines that start
+Configuration file comment lines can be escaped with a backslash&#8201;&#8212;&#8201;  this is to allows the inclusion of configuration lines that start
   with a hash character.
 </p>
 </li>
@@ -1056,7 +1492,7 @@ The BackendBlock has been renamed PassthroughBlock for consistency
 </li>
 <li>
 <p>
-Content included by the <tt>include1::[]</tt> system macro is no longer
+Content included by the <tt>\include1::[]</tt> system macro is no longer
   subject to attribute substitution so that ambiguities no longer
   arise when used to include CSS or JavaScript files.
 </p>
@@ -1065,7 +1501,7 @@ Content included by the <tt>include1::[]</tt> system macro is no longer
 </div>
 <h2 id="_version_7_1_1_2006_02_24">Version 7.1.1 (2006-02-24)</h2>
 <div class="sectionbody">
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
 The <tt>caption</tt> attribute can be used to customize admonition captions
@@ -1099,11 +1535,11 @@ Added <em>Admonition Icons and Captions</em> subsection to the User Guide
 </p>
 </li>
 </ul></div>
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 <tt><tt>a2x(1)</tt></tt> failed when configuration files were installed in the
-  global <tt>/etc/asciidoc/</tt> directory &#8212; it was only searching the
+  global <tt>/etc/asciidoc/</tt> directory&#8201;&#8212;&#8201;it was only searching the
   directory containing the asciidoc executable (thanks to Christian
   Wiese for finding and submitting a patch this bug).
 </p>
@@ -1119,7 +1555,7 @@ The html4 backend admonition caption now correctly displays the
 </div>
 <h2 id="_version_7_1_0_2006_01_13">Version 7.1.0 (2006-01-13)</h2>
 <div class="sectionbody">
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
 <tt><tt>a2x(1)</tt></tt> toolchain wrapper utility.  This overcomes the biggest
@@ -1182,14 +1618,14 @@ Packager notes (appendix B) have been updated to reflect the needs
 <img src="./images/icons/important.png" alt="Important" />
 </td>
 <td class="content">The renaming of the xhtml11 backend <tt>imagesdir</tt> intrinsic
-attribute and it's new default value introduces a backward
+attribute and it&#8217;s new default value introduces a backward
 compatibility issue: if you use the <tt>icons</tt> attribute you will need to
 either move your icons to the new default <tt>./images/icons</tt> location or
-include an <tt>&#8212;attribute&#160;iconsdir="your_icons_path"</tt> option in
+include an <tt>--attribute&#160;iconsdir="your_icons_path"</tt> option in
 your asciidoc commands.</td>
 </tr></table>
 </div>
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 Backslash line continuation is now observed in verbatim paragraphs.
@@ -1205,7 +1641,7 @@ Fixed errors generated by example
 </div>
 <h2 id="_version_7_0_4_2005_12_08">Version 7.0.4 (2005-12-08)</h2>
 <div class="sectionbody">
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
 Added ternary conditional attributes
@@ -1222,9 +1658,9 @@ Safety violations now generate errors (they previously generated
 <li>
 <p>
 <tt>asciidoc(1)</tt> now defaults to safe mode, consequently the
-  <tt>[miscellaneous]</tt> safe mode entry and <tt>&#8212;safe</tt> command-line option
+  <tt>[miscellaneous]</tt> safe mode entry and <tt>--safe</tt> command-line option
   are no longer necessary (though for backward compatibility
-  <tt>asciidoc(1)</tt> still accepts the <tt>&#8212;safe</tt> option).
+  <tt>asciidoc(1)</tt> still accepts the <tt>--safe</tt> option).
 </p>
 </li>
 <li>
@@ -1235,19 +1671,19 @@ Backend Blocks are now flagged unsafe (they could be used to include
 </li>
 <li>
 <p>
-Filters are no longer considered unsafe. There's not much point in
+Filters are no longer considered unsafe. There&#8217;s not much point in
   insisting on filter safety since the installation of an unsafe
   filter would require the introduction of new or modified
-  configuration files &#8212; if your application configurations can be
-  compromised you're in all sorts of trouble (safe mode protects
+  configuration files&#8201;&#8212;&#8201;if your application configurations can be
+  compromised you&#8217;re in all sorts of trouble (safe mode protects
   against unsafe input files not unsafe configuration).  As with all
-  filters, before installing, you should verify that they can't be
+  filters, before installing, you should verify that they can&#8217;t be
   coerced into generating malicious output or exposing sensitive
   information.
 </p>
 </li>
 </ul></div>
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 Fixed a lot of glaring grammatical and factual errors in the User
@@ -1258,10 +1694,10 @@ Fixed a lot of glaring grammatical and factual errors in the User
 </div>
 <h2 id="_version_7_0_3_2005_12_01">Version 7.0.3 (2005-12-01)</h2>
 <div class="sectionbody">
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
-Added <tt>&#8212;safe</tt> and <tt>&#8212;unsafe</tt> command-line options &#8212; <em>AsciiDoc</em> can
+Added <tt>--safe</tt> and <tt>--unsafe</tt> command-line options&#8201;&#8212;&#8201;<em>AsciiDoc</em> can
   now be executed in a <em>safe mode</em> which disallows the execution of
   arbitrary code or the inclusion of arbitrary files (see
   <a href="userguide.html#X39">Appendix C in the <em>AsciiDoc</em> User Guide</a>).
@@ -1296,7 +1732,7 @@ Modified <tt>./doc/manpages.xsl</tt> so only URL content is displayed in
 </p>
 </li>
 </ul></div>
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 Explicitly set table CSS border style (<tt>xhtml11</tt> backend) to <tt>solid</tt>
@@ -1307,7 +1743,7 @@ Explicitly set table CSS border style (<tt>xhtml11</tt> backend) to <tt>solid</t
 </div>
 <h2 id="_version_7_0_2_2005_08_28">Version 7.0.2 (2005-08-28)</h2>
 <div class="sectionbody">
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
 There are now long versions of all <em>AsciiDoc</em> options.
@@ -1315,7 +1751,7 @@ There are now long versions of all <em>AsciiDoc</em> options.
 </li>
 <li>
 <p>
-If the <tt>&#8212;backend</tt> is not specified it defaults to <tt>xhtml11</tt>.
+If the <tt>--backend</tt> is not specified it defaults to <tt>xhtml11</tt>.
 </p>
 </li>
 <li>
@@ -1332,7 +1768,7 @@ Support page added to <em>AsciiDoc</em> website.
 </p>
 </li>
 </ul></div>
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 Invalid options are now trapped gracefully.
@@ -1347,10 +1783,10 @@ Documentation errata.
 </div>
 <h2 id="_version_7_0_1_2005_06_24">Version 7.0.1 (2005-06-24)</h2>
 <div class="sectionbody">
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
-Reverted to use of <tt>strong</tt>, <tt>em</tt>, <tt>tt</tt> XHTML tags &#8212; they're more
+Reverted to use of <tt>strong</tt>, <tt>em</tt>, <tt>tt</tt> XHTML tags&#8201;&#8212;&#8201;they&#8217;re more
   obvious and no less correct than <tt>span</tt> tags, besides, the generated
   file sizes are smaller (the <em>User Guide</em> was 11% smaller).
 </p>
@@ -1370,13 +1806,13 @@ The <em>AsciiDoc</em> <em>stylesdir</em> attribute (if specified) is now recogni
 </li>
 <li>
 <p>
-Default charset encoding changed from ISO-8859-1 to UTF-8 &#8212; it's
+Default charset encoding changed from ISO-8859-1 to UTF-8&#8201;&#8212;&#8201;it&#8217;s
   less language specific and displays most common languages.
 </p>
 </li>
 <li>
 <p>
-<tt>template::[]</tt> macros now expand in all configuration file sections
+<tt>\template::[]</tt> macros now expand in all configuration file sections
   previously only in markup template sections.
 </p>
 </li>
@@ -1408,7 +1844,7 @@ White space is now stripped from DSV formatted table cell data.
 </p>
 </li>
 </ul></div>
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 Illegal character set encoder (specified by the <em>AsciiDoc</em> <tt>encoding</tt>
@@ -1424,7 +1860,7 @@ Illegal character set encoder (specified by the <em>AsciiDoc</em> <tt>encoding</
 <li>
 <p>
 The nested horizontal labeled list example in the <em><em>AsciiDoc</em> User
-  Guide</em> has been dropped &#8212; it generated invalid DocBook markup.
+  Guide</em> has been dropped&#8201;&#8212;&#8201;it generated invalid DocBook markup.
 </p>
 </li>
 </ul></div>
@@ -1433,12 +1869,12 @@ The nested horizontal labeled list example in the <em><em>AsciiDoc</em> User
 <div class="sectionbody">
 <div class="sidebarblock">
 <div class="sidebar-content">
-<div class="para"><p>This is a major release with many code and
+<div class="paragraph"><p>This is a major release with many code and
 documentation changes.
 Please report any problems you encounter.</p></div>
-<div class="para"><p><a href="mailto:srackham@gmail.com"><em>Stuart Rackham</em></a></p></div>
+<div class="paragraph"><p><a href="mailto:srackham@gmail.com"><em>Stuart Rackham</em></a></p></div>
 </div></div>
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
 A new <em>xhtml11</em> backend generates XHTML 1.1 with integrated CSS2
@@ -1580,7 +2016,7 @@ Rewrote Paragraph and DelimitedBlock handlers adding a
 </p>
 </li>
 </ul></div>
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 Included files are no longer read inside conditionally excluded
@@ -1604,7 +2040,7 @@ Unexpected error following malformed author line error.
 </div>
 <h2 id="_version_6_0_3_2005_04_20">Version 6.0.3 (2005-04-20)</h2>
 <div class="sectionbody">
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
 Special characters are now substituted in AttributeEntry element
@@ -1638,12 +2074,12 @@ Single lines starting with two forward slashes hard up against the
 <li>
 <p>
 Renamed <em>section</em> delimited block option to <em>sectionbody</em> to more
-  accurately reflect it's role.
+  accurately reflect it&#8217;s role.
 </p>
 </li>
 <li>
 <p>
-Added a List Continuation block &#8212; a specialized delimited block
+Added a List Continuation block&#8201;&#8212;&#8201;a specialized delimited block
   that is functionally equivalent to the List Item Continuation
   feature except that the list contained within the block does not
   require explicit <em>+</em> list item continuation lines.
@@ -1661,7 +2097,7 @@ Literal Block delimiters must now consist of at least four points
 </p>
 </li>
 </ul></div>
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 Some system attribute evaluation failures caused unexpected
@@ -1672,10 +2108,10 @@ Some system attribute evaluation failures caused unexpected
 </div>
 <h2 id="_version_6_0_2_2005_03_30">Version 6.0.2 (2005-03-30)</h2>
 <div class="sectionbody">
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
-Three new <em>system</em> block macros have been added &#8212; <tt>eval</tt>, <tt>sys</tt> and
+Three new <em>system</em> block macros have been added&#8201;&#8212;&#8201;<tt>eval</tt>, <tt>sys</tt> and
   <tt>sys2</tt> which are the block macro equivalents to the same named
   system attributes.
 </p>
@@ -1685,7 +2121,7 @@ Three new <em>system</em> block macros have been added &#8212; <tt>eval</tt>, <t
 <em>Intrinsic</em> macros have been renamed <em>system</em> macros along with
   <em>action</em> attributes which have been renamed <em>system</em> attributes:
 </p>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 To reflect their common (though contextually different) behavior.
@@ -1699,7 +2135,7 @@ To avoid confusion with <em>intrinsic attributes</em>.
 </ul></div>
 </li>
 </ul></div>
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 Asciidoc now searches in <tt>/etc/asciidoc/filters</tt> for filters.
@@ -1709,7 +2145,7 @@ Asciidoc now searches in <tt>/etc/asciidoc/filters</tt> for filters.
 </div>
 <h2 id="_version_6_0_1_2005_03_06">Version 6.0.1 (2005-03-06)</h2>
 <div class="sectionbody">
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
 A global configuration file location <tt>/etc/asciidoc</tt> has been added
@@ -1730,7 +2166,7 @@ Added BUGS file to the distribution.
 </p>
 </li>
 </ul></div>
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 Illegal comment syntax in <tt>css-embedded-stylesheet.conf</tt> resulted in
@@ -1743,21 +2179,21 @@ Illegal comment syntax in <tt>css-embedded-stylesheet.conf</tt> resulted in
 <div class="sectionbody">
 <div class="sidebarblock">
 <div class="sidebar-content">
-<div class="para"><p>This release has had some fairly major code and
+<div class="paragraph"><p>This release has had some fairly major code and
 documentation changes. Please report any problems
 you encounter.</p></div>
-<div class="para"><p><a href="mailto:srackham@gmail.com"><em>Stuart Rackham</em></a></p></div>
+<div class="paragraph"><p><a href="mailto:srackham@gmail.com"><em>Stuart Rackham</em></a></p></div>
 </div></div>
-<div class="para"><p>A lot of new stuff. A new major version number &#8212; some regression
+<div class="paragraph"><p>A lot of new stuff. A new major version number&#8201;&#8212;&#8201;some regression
 incompatibility (hopefully mitigated by <em>deprecated</em> warnings).</p></div>
-<div class="para"><p>Went mad trying to rein in the current feature anarchy &#8212; established
+<div class="paragraph"><p>Went mad trying to rein in the current feature anarchy&#8201;&#8212;&#8201;established
 a unified notion of document attributes. Attempted to introduce a
-consistent vocabulary &#8212; renamed many poorly or inconsistently named
+consistent vocabulary&#8201;&#8212;&#8201;renamed many poorly or inconsistently named
 entities.</p></div>
-<div class="para"><p>Actually, deprecated syntax is still processed correctly in almost all
+<div class="paragraph"><p>Actually, deprecated syntax is still processed correctly in almost all
 cases. One source of incompatibility that may arise if you have
 customized CSS stylesheets is the change of <em>AsciiDoc</em> CSS class names
-(see below). I guess the moral is if you've done a lot of
+(see below). I guess the moral is if you&#8217;ve done a lot of
 configuration file customization and are happy with version 5 then you
 may want to stay put.</p></div>
 <div class="admonitionblock">
@@ -1768,7 +2204,7 @@ may want to stay put.</p></div>
 <td class="content">This version requires Python 2.3 or better to run.</td>
 </tr></table>
 </div>
-<div class="ilist"><div class="title">Additions and changes</div><ul>
+<div class="ulist"><div class="title">Additions and changes</div><ul>
 <li>
 <p>
 <em>Glossary entries</em> have been renamed <em>attributes</em>. This eliminates
@@ -1806,7 +2242,7 @@ Inline macros can now span multiple lines.
 </li>
 <li>
 <p>
-``double backtick / apostrophe'' quotes generate &#8220;curly quotes&#8221;.
+&#8216;`double backtick / apostrophe&#8217;' quotes generate &#8220;curly quotes&#8221;.
 </p>
 </li>
 <li>
@@ -1870,14 +2306,14 @@ To better reflect their purpose the following block elements have
 </li>
 <li>
 <p>
-Swapped plain DocBook admonition icons for Jimmac's DocBook icons
+Swapped plain DocBook admonition icons for Jimmac&#8217;s DocBook icons
   (<a href="http://jimmac.musichall.cz/ikony.php3">http://jimmac.musichall.cz/ikony.php3</a>). The original plain icons
   have been moved to <tt>./images/plain</tt>.
 </p>
 </li>
 <li>
 <p>
-Renamed <tt>html</tt> backend to <tt>xhtml</tt> to better reflect it's function
+Renamed <tt>html</tt> backend to <tt>xhtml</tt> to better reflect it&#8217;s function
   (former <tt>html-4</tt> backend renamed to <tt>html</tt>).
 </p>
 </li>
@@ -1910,14 +2346,14 @@ Tweaks to distributed CSS stylesheets and FOP <tt>fo.xsl</tt> customization
 <li>
 <p>
 A new <em>Horizontal Labeled List</em> list type has been added. Generates
-  two column list &#8212; the first column contains the list element
+  two column list&#8201;&#8212;&#8201;the first column contains the list element
   labels, the second contains the element text. Same syntax as
   <tt>Vertical Labeled Lists</tt> except the double colon label suffix is
   followed by the start of the list item text.
 </p>
 </li>
 </ul></div>
-<div class="ilist"><div class="title">Bug fixes</div><ul>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
 <li>
 <p>
 Fixed broken backslash line continuation.
@@ -1947,9 +2383,9 @@ Multiple spaces in filter command arguments were replaced by a
 </div>
 <h2 id="_version_5_1_1_2004_10_10">Version 5.1.1 (2004-10-10)</h2>
 <div class="sectionbody">
-<div class="para"><p><strong>15-December-2004: Interim update:</strong> Updated <tt>asciidoc.py</tt> to fix
-broken <tt>join_lines</tt> function &#8212; no other changes.</p></div>
-<div class="ilist"><ul>
+<div class="paragraph"><p><strong>15-December-2004: Interim update:</strong> Updated <tt>asciidoc.py</tt> to fix
+broken <tt>join_lines</tt> function&#8201;&#8212;&#8201;no other changes.</p></div>
+<div class="ulist"><ul>
 <li>
 <p>
 PDF documentation is now produced from DocBook XML using XSLTLib and
@@ -1999,7 +2435,7 @@ Admonitions (Note, Tip, Important, Warning, Caution) include icons
 </div>
 <h2 id="_version_5_1_0_2004_09_18">Version 5.1.0 (2004-09-18)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Callouts have been implemented (see the <em>Callouts</em> section of the
@@ -2021,7 +2457,7 @@ Added CSS stylesheet for HTML generated from DocBook XML using XSL
 <li>
 <p>
 Distribution contains HTML Help formatted User Guide
-  (<tt>./doc/asciidoc.chm</tt>), the User Guide tells you how it's generated.
+  (<tt>./doc/asciidoc.chm</tt>), the User Guide tells you how it&#8217;s generated.
 </p>
 </li>
 <li>
@@ -2045,15 +2481,15 @@ The usual documentation and examples additions, updates and
 </div>
 <h2 id="_version_5_0_9_2004_09_09">Version 5.0.9 (2004-09-09)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 The convention of using a <tt>.asc</tt> file extension for <em>AsciiDoc</em> files
   has been dropped in favor of the familiar <tt>.txt</tt> extension. It makes
   more sense in that <em>AsciiDoc</em> is a text presentation format and
   because <tt>.asc</tt> clashed with the same extension used by other
-  applications.  It's only a naming convention &#8212; you don't have to
-  switch if you don't want to.
+  applications.  It&#8217;s only a naming convention&#8201;&#8212;&#8201;you don&#8217;t have to
+  switch if you don&#8217;t want to.
 </p>
 </li>
 <li>
@@ -2103,7 +2539,7 @@ Python version compatibility is checked at startup.
 <li>
 <p>
 Preface and appendix section titles in multi-part Book documents are
-  meant to be out of sequence &#8212; warnings are no longer emitted when
+  meant to be out of sequence&#8201;&#8212;&#8201;warnings are no longer emitted when
   outputting HTML.
 </p>
 </li>
@@ -2154,7 +2590,7 @@ Documentation additions and corrections.
 </div>
 <h2 id="_version_5_0_8_2004_05_15">Version 5.0.8 (2004-05-15)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Spurious <em>out of sequence</em> level 2 warnings no longer appear when
@@ -2188,7 +2624,7 @@ Added superscripts and subscripts to the standard PRS configuration
 </li>
 <li>
 <p>
-Adjusted CSS stylesheets so list titles don't have so much space
+Adjusted CSS stylesheets so list titles don&#8217;t have so much space
   between title and first list item (broken in IE6 due to poor CSS
   compliance). Lessened sidebar title top margin.
 </p>
@@ -2197,7 +2633,7 @@ Adjusted CSS stylesheets so list titles don't have so much space
 </div>
 <h2 id="_version_5_0_7_2004_04_22">Version 5.0.7 (2004-04-22)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 The version 5.0.6 README incorrectly stated that <em>AsciiDoc</em> would run
@@ -2247,7 +2683,7 @@ Fixed a quoting anomaly: quoted text can no longer begin or end with
 </div>
 <h2 id="_version_5_0_6_2004_03_07">Version 5.0.6 (2004-03-07)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 New <em>image</em> macro implements optional image scaling and linking and
@@ -2314,20 +2750,20 @@ Section titles can be optionally suffixed with title arguments
 <li>
 <p>
 A replacement has been added to <tt>asciidoc.conf</tt> to replace inline
-  double dashes with the <tt>&amp;mdash;</tt> entity.
+  double dashes with the <tt>&mdash;</tt> entity.
 </p>
 </li>
 <li>
 <p>
 Changed the <tt>.UNDER-CONSTRUCTION.</tt> macro syntax to
-  <tt>#UNDER-CONSTRUCTION#</tt> so it is not mistaken for a BlockTitle.
+  <tt>UNDER-CONSTRUCTION</tt> so it is not mistaken for a BlockTitle.
   Similarly changed the <tt>.NEW.</tt> replacement with
   <tt>&#35;NEW&#35;</tt>.
 </p>
 </li>
 <li>
 <p>
-<tt>&#35;NEW&#35;</tt> and <tt>#UNDER-CONSTRUCTION#</tt> macros are now
+<tt>&amp;35;NEW&#35;</tt> and <tt>#UNDER-CONSTRUCTION</tt> macros are now
   included in the DocBook backend.
 </p>
 </li>
@@ -2345,7 +2781,7 @@ Documentation tidy ups.
 </div>
 <h2 id="_version_5_0_5_2004_02_25">Version 5.0.5 (2004-02-25)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Fixed the disappearing paragraph titles problem that was caused by
@@ -2363,7 +2799,7 @@ Tightened AuthorLine validation.  Previously invalid email addresses
 </div>
 <h2 id="_version_5_0_4_2004_02_09">Version 5.0.4 (2004-02-09)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Reinstated missing <tt>infile</tt>, <tt>outfile</tt>, <tt>filetype</tt> and
@@ -2380,7 +2816,7 @@ As of version 5.0.3 <tt>asciidoc(1)</tt> now requires Python 2.0 or greater,
 </div>
 <h2 id="_version_5_0_3_2004_01_23">Version 5.0.3 (2004-01-23)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Fixed problem that caused any filters directory file containing
@@ -2419,7 +2855,7 @@ An <tt>{empty}</tt> glossary entry has been added to the default
 </div>
 <h2 id="_version_5_0_2_2003_12_18">Version 5.0.2 (2003-12-18)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 New (alternative) <em>anchor</em> and <em>xref</em> macro syntax (old syntax still
@@ -2450,7 +2886,7 @@ Documentation updates and corrections.
 </div>
 <h2 id="_version_5_0_1_2003_12_09">Version 5.0.1 (2003-12-09)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Fixed problem with anchor tag when generating CSS styled HTML.
@@ -2462,12 +2898,12 @@ Fixed problem with anchor tag when generating CSS styled HTML.
 <div class="sectionbody">
 <div class="sidebarblock">
 <div class="sidebar-content">
-<div class="para"><p>This release has had some fairly major code and
+<div class="paragraph"><p>This release has had some fairly major code and
 documentation changes. Please report any problems
 you encounter.</p></div>
-<div class="para"><p><a href="mailto:srackham@gmail.com"><em>Stuart Rackham</em></a></p></div>
+<div class="paragraph"><p><a href="mailto:srackham@gmail.com"><em>Stuart Rackham</em></a></p></div>
 </div></div>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 <em>AsciiDoc</em> can now produce a full-blown multi-part DocBook book
@@ -2598,7 +3034,7 @@ The default DocBook backend file extension has been changed from
 </div>
 <h2 id="_version_4_2_2003_11_26">Version 4.2 (2003-11-26)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 The default HTML output is now XHTML 1.0 markup. To output the
@@ -2632,7 +3068,7 @@ DelimitedBlock arguments can now be specified in a separate arguments
   line immediately following the leading delimiter line, This is in
   preference to the existing delimiter embedded arguments. Reasons:
 </p>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 The syntax is in keeping with the Tables arguments syntax.
@@ -2640,7 +3076,7 @@ The syntax is in keeping with the Tables arguments syntax.
 </li>
 <li>
 <p>
-It's easier to enter and implements line continuation.
+It&#8217;s easier to enter and implements line continuation.
 </p>
 </li>
 </ul></div>
@@ -2672,7 +3108,7 @@ Double-quote characters can now appear in unquoted positional
 </div>
 <h2 id="_version_4_1_2003_11_13">Version 4.1 (2003-11-13)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Added DSV (Delimiter Separated Values) tables format.
@@ -2739,12 +3175,12 @@ Fixed: Glossary references like <tt>{x={y}}</tt> were one character off
 <div class="sectionbody">
 <div class="sidebarblock">
 <div class="sidebar-content">
-<div class="para"><p>This release has had some fairly major code and
+<div class="paragraph"><p>This release has had some fairly major code and
 documentation changes. Please report any problems
 you encounter.</p></div>
-<div class="para"><p><em>Stuart Rackham</em></p></div>
+<div class="paragraph"><p><em>Stuart Rackham</em></p></div>
 </div></div>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Added tables to <em>AsciiDoc</em>.
@@ -2873,7 +3309,7 @@ Many documentation changes/additions/corrections.
 </div>
 <h2 id="_version_3_2_2_2003_10_26">Version 3.2.2 (2003-10-26)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Added <tt>-n</tt> option (synonym for <tt>-g section-numbers</tt>).
@@ -2970,7 +3406,7 @@ Documentation changes/additions/corrections.
 </div>
 <h2 id="_version_3_2_2003_05_26">Version 3.2 (2003-05-26)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Added a <tt>-s</tt> command-line option to suppress the output of
@@ -3050,7 +3486,7 @@ Internal code tidy up.
 </div>
 <h2 id="_version_3_1_2003_05_18">Version 3.1 (2003-05-18)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 In version 3.0 a <tt>[macros]</tt> section entry of the form <em>name</em> was
@@ -3121,9 +3557,9 @@ As a consequence of the previous change the caret prefix is no
 </div>
 <h2 id="_version_3_0_2003_05_13">Version 3.0 (2003-05-13)</h2>
 <div class="sectionbody">
-<div class="para"><p>This version is the culmination of work begun in the 2.x releases
+<div class="paragraph"><p>This version is the culmination of work begun in the 2.x releases
 whereby fixed policy has been replaced by extensible mechanisms.</p></div>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Added <tt>-c</tt> command-line option to dump a composite <tt>asciidoc(1)</tt>
@@ -3205,7 +3641,7 @@ Inline <em>icon</em> macro for inline images has been added to default
 </div>
 <h2 id="_version_2_2_2003_04_07">Version 2.2 (2003-04-07)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 The <tt>master.conf</tt> configuration file name has been deprecated in
@@ -3217,7 +3653,7 @@ The <tt>master.conf</tt> configuration file name has been deprecated in
 The standard configuration files set is now loaded from the
   <tt>.asciidoc</tt> folder in the users home directory (if it exists) and
   then from the source document directory. Configuration files that
-  don't exist are silently skipped.
+  don&#8217;t exist are silently skipped.
 </p>
 </li>
 <li>
@@ -3303,7 +3739,7 @@ File inclusion is now limited to a depth of 5 to catch recursion
 </li>
 <li>
 <p>
-Inline tags have been deprecated, they're not necessary and they
+Inline tags have been deprecated, they&#8217;re not necessary and they
   immediately make the source document backend specific. Use
   CustomBlocks or Substitutions instead.
 </p>
@@ -3312,7 +3748,7 @@ Inline tags have been deprecated, they're not necessary and they
 </div>
 <h2 id="_version_2_1_2003_03_17">Version 2.1 (2003-03-17)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Added section auto numbering <tt>{sectnum}</tt> glossary entry
@@ -3335,7 +3771,7 @@ An <em>AsciiDoc</em> example website has been included in the <em>AsciiDoc</em>
 <li>
 <p>
 NOTE: The <tt>asciidoc</tt> wrapper script included in the 2.0 distribution
-  has been dropped, if you've symlinked or aliased to <tt>asciidoc</tt> you'll
+  has been dropped, if you&#8217;ve symlinked or aliased to <tt>asciidoc</tt> you&#8217;ll
   need to change them to point directly to <tt>asciidoc.py</tt> instead.
 </p>
 </li>
@@ -3388,7 +3824,7 @@ Deprecated <tt>{asciidoc_version}</tt> glossary entry in favor of
 </div>
 <h2 id="_version_2_0_2003_02_24">Version 2.0 (2003-02-24)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 The emphasized, strong and monospaced words options have been
@@ -3548,7 +3984,7 @@ Added <em>author</em> and <em>author-mail</em> meta tags to HTML configuration
 </div>
 <h2 id="_version_1_5_2003_01_08">Version 1.5 (2003-01-08)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Implemented sidebar document elements.
@@ -3564,7 +4000,7 @@ Explicit checks for user specified configuration files and input
 </div>
 <h2 id="_version_1_4_2003_01_04">Version 1.4 (2003-01-04)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 New configuration file options <em>emphasizedwords</em> and <em>strongwords</em>.
@@ -3621,7 +4057,7 @@ More documentation additions and tidy ups.
 </div>
 <h2 id="_version_1_3_2003_01_01">Version 1.3 (2003-01-01)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 A new <em>strong</em> text formatting convention has been implemented:
@@ -3676,7 +4112,7 @@ Restored file name and line number error message information.
 </li>
 <li>
 <p>
-Changed deprecated -t option to -d in asciidoc &#8212;help and usage
+Changed deprecated -t option to -d in asciidoc --help and usage
   command output.
 </p>
 </li>
@@ -3694,7 +4130,7 @@ Code, configuration file and documentation tidy ups.
 </div>
 <h2 id="_version_1_2_2002_12_28">Version 1.2 (2002-12-28)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Implemented <em>include</em> URL to allow file inclusion.
@@ -3734,7 +4170,7 @@ Bug fixes.
 </div>
 <h2 id="_version_1_1_2002_12_03">Version 1.1 (2002-12-03)</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Added css (cascading style sheets) backend
@@ -3793,14 +4229,14 @@ Fixed error that occurred when <em>==</em> title underline was
 </div>
 <h2 id="_version_1_0_2002_11_25">Version 1.0 (2002-11-25)</h2>
 <div class="sectionbody">
-<div class="para"><p>First <em>AsciiDoc</em> public release along with <em>AsciiDoc</em> web site
+<div class="paragraph"><p>First <em>AsciiDoc</em> public release along with <em>AsciiDoc</em> web site
 (<a href="http://www.methods.co.nz/asciidoc/">http://www.methods.co.nz/asciidoc/</a>) and SourceForge.net project registration
 (<a href="https://sourceforge.net/projects/asciidoc/">https://sourceforge.net/projects/asciidoc/</a>).</p></div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 8.2.7<br />
-Last updated 2008-07-04 23:29:18 NZDT
+Version 8.3.1<br />
+Last updated 2008-12-13 09:59:39 NZDT
 </div>
 <div id="footer-badges">
 <a href="http://validator.w3.org/check?uri=referer">

@@ -4,6 +4,214 @@ AsciiDoc Frequently Asked Questions
 An embryonic AsciiDoc FAQ.
 
 
+== How can I render indented paragraphs?
+
+To unconditionally indent all paragraphs add the following line to the
+`xhtml11.css` stylesheet (or a custom stylesheet).
+
+---------------------------------------------------------------------
+div.paragraph p {text-indent: 3em;}
+---------------------------------------------------------------------
+
+This will restyle the entire document by indenting all paragraphs
+which is normally what you want to do (mixed paragraph styles produce
+ugly documents).
+
+To selectively indent paragraphs with the 'indented' style add the
+following line to the `xhtml11.css` stylesheet (or a custom
+stylesheet).
+
+---------------------------------------------------------------------
+div.paragraph.indented p {text-indent: 3em;}
+---------------------------------------------------------------------
+
+Then apply the 'indented' style to normal paragraphs, for example:
+
+---------------------------------------------------------------------
+[indented]
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas
+ultrices justo porttitor augue. Vestibulum pretium. Donec porta
+vestibulum mi. Aliquam pede. Aenean lobortis lorem et lacus. Sed
+lacinia. Vivamus at lectus.
+---------------------------------------------------------------------
+
+NOTE: This FAQ applies to XHTML output not DocBook. To achieve the
+same results with DocBook you would need to customize the DocBook XSL
+stylesheets to indent paragraphs with the `simpara` element
+`role="indented"` attribute.
+
+
+== Is there a way to set default image height and width attributes?
+
+You can set the 'height' and 'width' attributes globally in your
+document with Attribute Entries or from the command-line using the
+`--attribute` option. In the following example images that don't
+explicitly set the 'height' and 'width' values will be 350 by 250
+pixels.
+
+---------------------------------------------------------------------
+:height: 250
+:width: 350
+
+image:images/tiger.png[]
+---------------------------------------------------------------------
+
+
+== How can I place a backslash character in front of an attribute reference without escaping the reference?
+
+Use the predefined `\{backslash}` attribute reference instead of an
+actual backslash, for example if the `\{projectname}` attribute has
+the value `foobar` then:
+
+  d:\data{backslash}{projectname}
+
+would be rendered as:
+
+  d:\data\foobar
+
+== How can I escape AsciiDoc markup?
+
+Most AsciiDoc inline elements can be suppressed by preceding them with
+a backslash character. These elements include:
+
+- Attribute references.
+- Text formatting.
+- Quoting,
+- 'URLs', 'image' and 'link' macros.
+- Replacements.
+- Special words.
+- Table cell separators.
+
+But there are exceptions -- see the next question.
+
+
+== Some elements can't be escaped with a single backslash
+
+There are a number of  exceptions to the usual single backslash rule
+-- mostly relating to URL macros that  have two syntaxes or quoting
+ambiguity.  Here are some non-standard escape examples:
+
+[cols="1default,4literal",width="70%",grid="none",frame="none"]
+|====================================================================
+|Mailto URLs |
+\srackham@methods.co.nz
+<\srackham@methods.co.nz>
+\mailto:[\srackham@methods.co.nz]
+
+|Web URLs |
+\http://www.foo1.co.nz
+\\http://www.foobar.com[]
+\\http://www.foobar.com[Foobar Limited]
+
+|Other |
+A C+\+ Library for C++
+A C+\+ Library for C+\+ \+++
+\\``double-quotes''
+\*\*F**ile Open...
+|====================================================================
+
+The source of this problem is ambiguity across substitution types --
+the first match unescapes allowing the second to substitute. A
+work-around for difficult cases is to side-step the problem using the
+`\pass:[]` passthrough inline macro.
+
+NOTE: System macros cannot be escaped.
+
+
+== How can I set default list and tables styles?
+
+You can set the element's 'style' entry in a global or custom
+configuration file.
+
+This example this will horizontally style all labeled lists that don't
+have an explicit style attribute:
+
+----------------------------------
+[listdef-labeled]
+style=horizontal
+
+[listdef-labeled2]
+style=horizontal
+----------------------------------
+
+This example will put a top and bottom border on all tables that don't
+already have an explicit style attribute:
+
+----------------------------------
+[tabledef-default]
+style=topbot
+topbot-style=frame="topbot"
+----------------------------------
+
+Alternatively you can set the configuration entries from inside your
+document, the above examples are equivalent to:
+
+----------------------------------
+:listdef-labeled.style: horizontal
+:listdef-labeled2.style: horizontal
+
+:tabledef-default.topbot-style: frame="topbot"
+:tabledef-default.style: topbot
+----------------------------------
+
+
+== Why do I get a filter non-zero exit code error?
+
+An error was returned when AsciiDoc tried to execute an external
+filter command. The most common reason for this is that the filter
+command could not be found by the command shell. To figure out what
+the problem is run AsciiDoc with the `--verbose` option to determine
+the command that is failing and then try to run the command manually
+from the command-line.
+
+
+== Are there any DocBook viewers?
+
+http://live.gnome.org/Yelp[Yelp], the GNOME help viewer, does a
+creditable job of displaying DocBook files XML files directly. Just
+run it from the command-line, for example:
+
+  $ yelp file://home/srackham/tmp/book.xml
+
+Note that you have to supply the full path name in URI format, this
+shell script makes interactive use easier:
+
+-------------------------------
+#!/bin/sh
+if [ -z "$1" ]; then
+    echo "usage: dbkview FILE"
+    exit 1
+fi
+yelp "file://$(pwd)/$1"
+-------------------------------
+
+This tip was submitted by Lionel Orry.
+
+
+== Can you create ODF documents using AsciiDoc?
+
+The easiest and highest fidelity methods I've seen is to generate
+HTML from AsciiDoc then paste it from your browser (we use Firefox)
+into OpenOffice Writer.
+
+- I found that that there is better fidelity pasting HTML generated by
+  the 'html4' backend instead of the default 'xhtml11' backend.
+- Don't paste AsciiDoc tables of contents, OpenOffice Writer (I was
+  using version 2.3) hangs when saving. This may be something to do
+  with the embedded JavaScript but I haven't looked closely at it, I
+  may even be wrong about this.
+
+This tip was contributed by Bernard Amade.
+
+
+== How can I supress cell separators in included table data files?
+
+Use the `\{include:}` system attribute instead of the `\include::[]`
+macro (the former is not expanded until after the table data has been
+parsed into cells, whereas the latter is included before the table is
+processed.
+
+
 == How can I preserve paragraph line boundaries?
 
 Apply the The 'verse' paragraph style, the rendered text preserves
@@ -16,14 +224,31 @@ consetetur, eu pro everti postulant
 homero verear ea mea, qui.
 ---------------------------------------------------------------------
 
+If you are generating PDF files (using FOP) or HTML files then you can
+use line breaks. For example:
+
+---------------------------------------------------------------------
+Consul *necessitatibus* per id, +
+consetetur, eu pro everti postulant +
+homero verear ea mea, qui.
+---------------------------------------------------------------------
+
 
 == How can I include non-breaking space characters?
 
 The predefined `\{nbsp}` attribute reference will be replaced by a
-non-breaking space character.
+non-breaking space character. You could also use the non-breaking
+space character entity reference `\&#160;` (see the next question).
 
 
-== How do I include spaces in URL addresses?
+== Can I include HTML and XML character entity references in my document?
+
+Yes, just enter the reference in your document. For example `\&#946;`
+will print a Greek small beta character &#946;
+
+
+[[X1]]
+== How do I include spaces in URLs?
 
 URL inline macro targets (addresses) cannot contain white space
 characters. If you need spaces encode them as `%20`. For example:
@@ -78,7 +303,7 @@ example:
 
 asciidoc(1) replaces the underscores with spaces.
 
-The longer, but semantically correct way, is to override the
+The longer, semantically correct, way is to override the
 `[header]` configuration file section in a document specific `.conf`
 file. For example if your document is `mydoc.txt` then a file called
 `mydoc.conf` in the document directory would be picked up
@@ -90,23 +315,6 @@ related markup:
     :
   <authorgroup>...
     :
-
-
-
-== How can I escape AsciiDoc markup?
-
-Most AsciiDoc inline elements can be suppressed by preceding them with
-a backslash character. These elements include:
-
-- Attribute references.
-- Text formatting.
-- Quoting,
-- 'URLs', 'image' and 'link' macros.
-- Replacements.
-- Special words.
-
-In some cases you may need to escape both left and right quotes (see
-the 'AsciiDoc User Guide').
 
 
 == How can I escape a labeled list entry?
@@ -124,31 +332,26 @@ Qui in magna commodo{two_colons} est labitur dolorum an. Est ne
 magna primis adolescens.
 
 
-== How can I disable a quoted text substitution?
+== How can I selectively disable a quoted text substitution?
 
-Omitting the tag will disable quoting. For example, if you don't want
-superscripts or subscripts then put the following in a custom
+Omitting the tag name will disable quoting. For example, if you don't
+want superscripts or subscripts then put the following in a custom
 configuration file or edit the global `asciidoc.conf` configuration
 file:
 
----------------------------------------------------------------------
+-------------------
 [quotes]
 ^=
 ~=
----------------------------------------------------------------------
+-------------------
 
+Alternatively you can set the configuration entries from within your
+document, the above examples are equivalent to:
 
-== I have a paragraph containing some funky URLs, is there a way to suppress AsciiDoc substitutions in the URL address?
-
-You can selectively choose which substitutions to perform by setting
-the 'subs' attribute at the start of a block. For example:
-
----------------------------------------------------------------------
-[subs="macros"]
-~subscripts~ and ^superscripts^ quotes won't be substituted.
-Nor will the non-alphanumeric characters in the following URL:
-http://host/~user/file#_anchor_tag_str_
----------------------------------------------------------------------
+-------------------
+:quotes.^:
+:quotes.~:
+-------------------
 
 
 == How can I customize the \{localdate} format?
@@ -206,19 +409,6 @@ AsciiDoc documentation (even if you don't use A-A-P you'll still find
 it useful).
 
 
-== How can I place a backslash character in front of an attribute reference without escaping the reference?
-
-Use the predefined `\{backslash}` attribute reference instead of an
-actual backslash, for example if the `\{projectname}` attribute has
-the value `foobar` then:
-
-  d:\data{backslash}{projectname}
-
-would be rendered as:
-
-  d:\data\foobar
-
-
 == Why have you used the DocBook <simpara> element instead of <para>?
 
 `<simpara>` is really the same as `<para>` except it can't contain
@@ -226,13 +416,13 @@ block elements -- this matched, more closely, the AsciiDoc paragraph
 semantics.
 
 
-== How can I format text inside a listting block?
+== How can I format text inside a listing block?
 
 By default only 'specialcharacters' and 'callouts' are substituted in
 listing blocks; you can add quotes substitutions by explicitly setting
 the block 'subs' attribute, for example:
 
-  [subs="specialcharacters,callouts,quotes"]
+  [subs="quotes"]
   ------------------------------------------
   $ ls *-al*
   ------------------------------------------
@@ -246,17 +436,55 @@ The `-al` will rendered bold. Note that:
   `<emphasis>` elements inside `<screen>` elements.
 
 
-== Why doesn't the \include1::[] macro work?
+== Why doesn't the include1::[] macro work?
 
 Internally the `include1` macro is translated to the `include1` system
 attribute which means it must be evaluated in a region where attribute
-substitution is enabled. For example, if you want to evaluate it
-inside a listing block you will need to enable attribute substitution
-inside the block, for example:
+substitution is enabled. `include1` won't work, for example, in a
+ListingBlock (unless attribute substitution is enabled).  `include1`
+is intended for use in configuration files, use the `include` macro
+and set the attribute `depth=1` instead, for example:
 
-  [subs="attributes"]
-  -----------------------------------------
-  include1::blogpost_media_processing.txt[]
-  -----------------------------------------
+  -----------------------------------------------
+  include::blogpost_media_processing.txt[depth=1]
+  -----------------------------------------------
 
-Or, preferably, use the `include` block macro instead.
+== How can I customize PDF files generated by dblatex?
+
+There are a number of dblatex XSL parameters that can be used to
+customize PDF output. You can set them globally in the AsciiDoc
+`./dblatex/asciidoc-dblatex.xsl` configuration file or you can also
+pass them on the a2x(1) command-line, for example:
+
+  a2x -f pdf --dblatex-opts "-P latex.output.revhistory=0" doc/article.txt
+
+See also the http://dblatex.sourceforge.net/[dblatex] documentation.
+
+
+== How can I make the mailto macro work with multiple email addresses?
+
+For the AsciiDoc 'mailto' macro to work with multiple email addresses
+(as per RFC2368) you need to URL encode the '@' characters (replace
+them with '%40'), if you don't the individual addresses will be
+rendered as separate links. You also need to <<X1,replace spaces with
+'%20'>>.
+
+For example, the following call won't work:
+
+  mailto:jb@foobar.com,jd@acme.co.nz?subject=New foofoo release[New foofoo release]
+
+Use this instead:
+
+  mailto:jb%40foobar.com,jd%40acme.co.nz?subject=New%20foofoo%20release[New foofoo release]
+
+
+== How can a replacement have a trailing backslash?
+Quote the entry name -- this nonsensical example replaces `x\` with
+`y`:
+
+  "x\\"=y
+
+If quoting were omitted the equals character (separating the
+entry name `x` from the value `y`) would be escaped.
+
+

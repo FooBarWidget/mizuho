@@ -60,13 +60,15 @@ OUTFILES = $*(ROOT).html $*(ROOT).css.html $*(ROOT).css-embedded.html \
         ${HTMLHELP_FILE}.chm \
         $CHUNK_DIR/index.html \
         article.pdf \
+        latexmath.pdf \
         source-highlight-filter.pdf \
         music-filter.pdf
 
 TEST_FILES = $*(ROOT).css-embedded.html 
         article.css-embedded.html book.css-embedded.html \
         article.xml book.xml book-multi.xml asciidoc.xml asciidoc.1.xml \
-        asciidoc.1.html a2x.1.xml music-filter.xml
+        asciidoc.1.html a2x.1.xml music-filter.xml \
+        ../examples/oldtables.xml ../examples/oldtables.html
 
 
 #####################################################################
@@ -168,10 +170,12 @@ TEST_FILES = $*(ROOT).css-embedded.html
 :rule %.fo: %.xml
     :sys $XSLTPROC --nonet --stringparam admon.textlabel 0 ../docbook-xsl/fo.xsl $source >$target
 
-# This kludge forces the User Guide PDF to be generated using dblatex
-# so we include a dblatex example in the distribution.
+# This kludge forces the User Guide and LaTeX Math PDFs to be generated using
+# dblatex so we include a dblatex example in the distribution.
 @if _no.DBLATEX:
     asciidoc.pdf: asciidoc.xml
+        :sys $DBLATEX -p ../dblatex/asciidoc-dblatex.xsl -s ../dblatex/asciidoc-dblatex.sty -o $target $source
+    latexmath.pdf: latexmath.xml
         :sys $DBLATEX -p ../dblatex/asciidoc-dblatex.xsl -s ../dblatex/asciidoc-dblatex.sty -o $target $source
 
 # Force the Source Highlighter PDF to be generated using dblatex
@@ -260,11 +264,11 @@ book-multi.xml: book-multi.txt
     # Make INSTALL.text and copy to INSTALL.
     :copy ../INSTALL.text ../INSTALL
 
-asciimath.html: asciimath.txt
+asciimathml.html: asciimathml.txt
     :sys $ASCIIDOC -a asciimath $source
     # No xmllint(1) checking -- fails on embedded JavaScript.
 
-latexmath.html: latexmath.txt
+latexmathml.html: latexmathml.txt
     :sys $ASCIIDOC -a latexmath $source
     # No xmllint(1) checking -- fails on embedded JavaScript.
 

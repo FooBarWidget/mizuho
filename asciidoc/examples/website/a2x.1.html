@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.2.7" />
+<meta name="generator" content="AsciiDoc 8.3.1" />
 <link rel="stylesheet" href="./xhtml11.css" type="text/css" />
 <link rel="stylesheet" href="./xhtml11-manpage.css" type="text/css" />
 <link rel="stylesheet" href="./xhtml11-quirks.css" type="text/css" />
@@ -56,11 +56,11 @@ A2X(1) Manual Page
 </div>
 <h2>SYNOPSIS</h2>
 <div class="sectionbody">
-<div class="para"><p><strong>a2x</strong> [<em>OPTIONS</em>] <em>FILE</em></p></div>
+<div class="paragraph"><p><strong>a2x</strong> [<em>OPTIONS</em>] <em>FILE</em></p></div>
 </div>
 <h2 id="_description">DESCRIPTION</h2>
 <div class="sectionbody">
-<div class="para"><p>A DocBook toolchain wrapper script that translates an <em>AsciiDoc</em> text
+<div class="paragraph"><p>A DocBook toolchain wrapper script that translates an <em>AsciiDoc</em> text
 file <em>FILE</em> to PDF, DVI, PS, LaTeX, XHTML (single page or chunked),
 man page, HTML Help or plain text formats. PDF, XHTML, man page and
 HTML Help formats are are generated using the <tt>asciidoc(1)</tt>,
@@ -71,8 +71,8 @@ files suitable for compilation to an HTML Help .chm file.</p></div>
 </div>
 <h2 id="_options">OPTIONS</h2>
 <div class="sectionbody">
-<div class="vlist"><dl>
-<dt>
+<div class="dlist"><dl>
+<dt class="hdlist1">
 <strong>-a, --attribute</strong>=<em>ATTRIBUTE</em>
 </dt>
 <dd>
@@ -81,7 +81,7 @@ files suitable for compilation to an HTML Help .chm file.</p></div>
   ATTRIBUTE"</em> option).  This option may be specified more than once.
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 <strong>--asciidoc-opts</strong>=<em>ASCIIDOC_OPTS</em>
 </dt>
 <dd>
@@ -90,7 +90,7 @@ files suitable for compilation to an HTML Help .chm file.</p></div>
   than once.
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 <strong>--copy</strong>
 </dt>
 <dd>
@@ -101,7 +101,7 @@ files suitable for compilation to an HTML Help .chm file.</p></div>
   suppress copying.
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 <strong>-D, --destination-dir</strong>=<em>PATH</em>
 </dt>
 <dd>
@@ -109,7 +109,7 @@ files suitable for compilation to an HTML Help .chm file.</p></div>
   Output directory. Defaults to source <em>FILE</em> directory.
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 <strong>-d, --doctype</strong>=<em>DOCTYPE</em>
 </dt>
 <dd>
@@ -119,7 +119,7 @@ files suitable for compilation to an HTML Help .chm file.</p></div>
   case it defaults to <em>manpage</em>).
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 <strong>-f, --format</strong>=<em>FORMAT</em>
 </dt>
 <dd>
@@ -128,7 +128,7 @@ files suitable for compilation to an HTML Help .chm file.</p></div>
   <em>tex</em>, <em>text</em> or <em>xhtml</em>.
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 <strong>-h, --help</strong>
 </dt>
 <dd>
@@ -136,7 +136,7 @@ files suitable for compilation to an HTML Help .chm file.</p></div>
   Print command-line syntax and program options to stdout.
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 <strong>--icons</strong>
 </dt>
 <dd>
@@ -145,7 +145,7 @@ files suitable for compilation to an HTML Help .chm file.</p></div>
   default behavior is to use text in place of icons.
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 <strong>--icons-dir</strong>=<em>PATH</em>
 </dt>
 <dd>
@@ -155,15 +155,23 @@ files suitable for compilation to an HTML Help .chm file.</p></div>
   Applies to <em>xhtml</em>, <em>chunked</em>, <em>htmlhelp</em> formats.
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
+<strong>-L, --no-xmllint</strong>
+</dt>
+<dd>
+<p>
+  Don&#8217;t check asciidoc output with <em>xmllint(1)</em>.
+</p>
+</dd>
+<dt class="hdlist1">
 <strong>-n, --dry-run</strong>
 </dt>
 <dd>
 <p>
-  Don't do anything just print what would have been done.
+  Don&#8217;t do anything just print what would have been done.
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 <strong>-s, --skip-asciidoc</strong>
 </dt>
 <dd>
@@ -172,7 +180,7 @@ files suitable for compilation to an HTML Help .chm file.</p></div>
   files not derived from <em>AsciiDoc</em> sources. Ignored if --format*=<em>text</em>.
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 <strong>--stylesheet</strong>=<em>PATH</em>
 </dt>
 <dd>
@@ -182,7 +190,7 @@ files suitable for compilation to an HTML Help .chm file.</p></div>
   Applies to <em>xhtml</em>, <em>chunked</em>, <em>htmlhelp</em> formats.
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 <strong>-v, --verbose</strong>
 </dt>
 <dd>
@@ -191,7 +199,7 @@ files suitable for compilation to an HTML Help .chm file.</p></div>
   A second <strong>-v</strong> option applies the verbose option to toolchain commands.
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 <strong>--version</strong>
 </dt>
 <dd>
@@ -199,7 +207,7 @@ files suitable for compilation to an HTML Help .chm file.</p></div>
   Print program version to stdout.
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 <strong>--xsltproc-opts</strong>=<em>XSLTPROC_OPTS</em>
 </dt>
 <dd>
@@ -208,16 +216,24 @@ files suitable for compilation to an HTML Help .chm file.</p></div>
   than once.
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
+<strong>--fop</strong>
+</dt>
+<dd>
+<p>
+  Use FOP to generate PDFs.
+</p>
+</dd>
+<dt class="hdlist1">
 <strong>--fop-opts</strong>=<em>FOP_OPTS</em>
 </dt>
 <dd>
 <p>
   Additional fop options.  This option may be specified more than
-  once. If this option is specified fop is used to generate PDFs.
+  once. If this option is specified FOP is used to generate PDFs.
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 <strong>--dblatex-opts</strong>=<em>DBLATEX_OPTS</em>
 </dt>
 <dd>
@@ -229,35 +245,35 @@ files suitable for compilation to an HTML Help .chm file.</p></div>
 </div>
 <h2 id="_output_files">OUTPUT FILES</h2>
 <div class="sectionbody">
-<div class="para"><p>Output files are written to the directory specified by the
+<div class="paragraph"><p>Output files are written to the directory specified by the
 <strong>--destination-dir</strong> option. If no <strong>--destination-dir</strong> option is set
 output files are written to the source FILE directory.</p></div>
-<div class="para"><p>Output files have the same name as the source <em>FILE</em> but with an
+<div class="paragraph"><p>Output files have the same name as the source <em>FILE</em> but with an
 appropriate file name extension: .html for <em>xhtml</em>; .hhp for
 <em>htmlhelp</em>; .pdf for <em>pdf</em>; .text for <em>text</em>. By convention manpages
 have no .man extension (man page section number only). Chunked HTML
 directory names have a .chunked extension; chunked HTML Help directory
 names have a .htmlhelp extension.</p></div>
-<div class="para"><p>Same named existing files are overwritten.</p></div>
-<div class="para"><p>Intermediate output files are written to the source <em>FILE</em> directory
+<div class="paragraph"><p>Same named existing files are overwritten.</p></div>
+<div class="paragraph"><p>Intermediate output files are written to the source <em>FILE</em> directory
 and are not automatically deleted.</p></div>
-<div class="para"><p>Intermediate DocBook XML files generated by <em>AsciiDoc</em> are only
+<div class="paragraph"><p>Intermediate DocBook XML files generated by <em>AsciiDoc</em> are only
 regenerated if out of date with respect to the <em>AsciiDoc</em> source <em>FILE</em>.</p></div>
-<div class="para"><p>In addition to generating HTML files the <em>xhtml</em>, <em>chunked</em> and
+<div class="paragraph"><p>In addition to generating HTML files the <em>xhtml</em>, <em>chunked</em> and
 <em>htmlhelp</em> formats copy the DocBook XSL stylesheet plus admonition and
 navigation icons distributed with <em>AsciiDoc</em> to their respective
 destination locations. Existing stylesheets and icons are only copied
 if they are newer than the destination files or if the destination
 files are missing.</p></div>
-<div class="para"><p>The <em>xhtml</em> format generates a single XHTML output page.  The
+<div class="paragraph"><p>The <em>xhtml</em> format generates a single XHTML output page.  The
 <em>chunked</em> format writes multiple per-section HTML pages to a chunked
 directory in the destination directory. The chunked directory has the
 same name as the source <em>FILE</em> name plus a .chunked extension.</p></div>
 </div>
 <h2 id="_examples">EXAMPLES</h2>
 <div class="sectionbody">
-<div class="vlist"><dl>
-<dt>
+<div class="dlist"><dl>
+<dt class="hdlist1">
 <tt>a2x -f pdf doc/source-highlight-filter.txt</tt>
 </dt>
 <dd>
@@ -265,7 +281,7 @@ same name as the source <em>FILE</em> name plus a .chunked extension.</p></div>
   Generates doc/source-highlight-filter.pdf file.
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 <tt>a2x -f chunked -D ../webpages guide.txt</tt>
 </dt>
 <dd>
@@ -280,11 +296,11 @@ same name as the source <em>FILE</em> name plus a .chunked extension.</p></div>
 </div>
 <h2 id="_requisites">REQUISITES</h2>
 <div class="sectionbody">
-<div class="para"><p>This script runs under the bash(1) shell and requires the following
+<div class="paragraph"><p>This script runs under the bash(1) shell and requires the following
 programs (which may or may not be prepackaged with your Linux
 distribution):</p></div>
-<div class="vlist"><dl>
-<dt>
+<div class="dlist"><dl>
+<dt class="hdlist1">
 Asciidoc
 </dt>
 <dd>
@@ -292,7 +308,7 @@ Asciidoc
   <a href="http://www.methods.co.nz/asciidoc/">http://www.methods.co.nz/asciidoc/</a>
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 xsltproc
 </dt>
 <dd>
@@ -300,7 +316,7 @@ xsltproc
   <a href="http://xmlsoft.org/XSLT/">http://xmlsoft.org/XSLT/</a>
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 DocBook XSL Stylesheets
 </dt>
 <dd>
@@ -308,7 +324,7 @@ DocBook XSL Stylesheets
   <a href="http://docbook.sourceforge.net/projects/xsl/">http://docbook.sourceforge.net/projects/xsl/</a>
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 dblatex (for PDF, DVI, PostScript and LaTeX file generation)
 </dt>
 <dd>
@@ -316,7 +332,7 @@ dblatex (for PDF, DVI, PostScript and LaTeX file generation)
   <a href="http://dblatex.sourceforge.net/">http://dblatex.sourceforge.net/</a>
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 FOP (alternative PDF file generation)
 </dt>
 <dd>
@@ -324,8 +340,16 @@ FOP (alternative PDF file generation)
   <a href="http://xmlgraphics.apache.org/fop/">http://xmlgraphics.apache.org/fop/</a>
 </p>
 </dd>
-<dt>
-Lynx (for text file generation)
+<dt class="hdlist1">
+w3m (text file generation)
+</dt>
+<dd>
+<p>
+  <a href="http://w3m.sourceforge.net/index.en.html">http://w3m.sourceforge.net/index.en.html</a>
+</p>
+</dd>
+<dt class="hdlist1">
+Lynx (used for text file generation if <tt>w3m(1)</tt> not installed)
 </dt>
 <dd>
 <p>
@@ -333,11 +357,11 @@ Lynx (for text file generation)
 </p>
 </dd>
 </dl></div>
-<div class="para"><p>See also the latest README file.</p></div>
+<div class="paragraph"><p>See also the latest README file.</p></div>
 </div>
 <h2 id="_bugs">BUGS</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 The odt output format is undocumented and experimental.
@@ -352,22 +376,22 @@ See also the <em>AsciiDoc</em> distribution BUGS file.
 </div>
 <h2 id="_author">AUTHOR</h2>
 <div class="sectionbody">
-<div class="para"><p>Written by Stuart Rackham, &lt;<a href="mailto:srackham@gmail.com">srackham@gmail.com</a>&gt;</p></div>
+<div class="paragraph"><p>Written by Stuart Rackham, &lt;<a href="mailto:srackham@gmail.com">srackham@gmail.com</a>&gt;</p></div>
 </div>
 <h2 id="_resources">RESOURCES</h2>
 <div class="sectionbody">
-<div class="para"><p>SourceForge: <a href="http://sourceforge.net/projects/asciidoc/">http://sourceforge.net/projects/asciidoc/</a></p></div>
-<div class="para"><p>Main web site: <a href="http://www.methods.co.nz/asciidoc/">http://www.methods.co.nz/asciidoc/</a></p></div>
+<div class="paragraph"><p>SourceForge: <a href="http://sourceforge.net/projects/asciidoc/">http://sourceforge.net/projects/asciidoc/</a></p></div>
+<div class="paragraph"><p>Main web site: <a href="http://www.methods.co.nz/asciidoc/">http://www.methods.co.nz/asciidoc/</a></p></div>
 </div>
 <h2 id="_copying">COPYING</h2>
 <div class="sectionbody">
-<div class="para"><p>Copyright (C) 2002-2008 Stuart Rackham. Free use of this software is
+<div class="paragraph"><p>Copyright (C) 2002-2008 Stuart Rackham. Free use of this software is
 granted under the terms of the GNU General Public License (GPL).</p></div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 8.2.7<br />
-Last updated 2008-07-04 23:48:05 NZDT
+Version 8.3.1<br />
+Last updated 2008-12-13 09:59:38 NZDT
 </div>
 <div id="footer-badges">
 <a href="http://validator.w3.org/check?uri=referer">

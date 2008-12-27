@@ -1,31 +1,31 @@
 .\"     Title: asciidoc
 .\"    Author: 
-.\" Generator: DocBook XSL Stylesheets v1.72.0 <http://docbook.sf.net/>
-.\"      Date: 07/04/2008
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\"      Date: 12/13/2008
 .\"    Manual: 
 .\"    Source: 
 .\"
-.TH "ASCIIDOC" "1" "07/04/2008" "" ""
+.TH "ASCIIDOC" "1" "12/13/2008" "" ""
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-asciidoc \- converts an AsciiDoc text file to DocBook, HTML or LinuxDoc
+asciidoc - converts an AsciiDoc text file to DocBook, HTML or LinuxDoc
 .SH "SYNOPSIS"
 \fBasciidoc\fR [\fIOPTIONS\fR] \fIFILE\fR
 .sp
 .SH "DESCRIPTION"
-The asciidoc(1) command translates the AsciiDoc text file \fIFILE\fR to a DocBook, HTML or LinuxDoc file. If \fIFILE\fR is \fI\-\fR then the standard input is used.
+The asciidoc(1) command translates the AsciiDoc text file \fIFILE\fR to a DocBook, HTML or LinuxDoc file\. If \fIFILE\fR is \fI\-\fR then the standard input is used\.
 .sp
 .SH "OPTIONS"
 .PP
 \fB\-a, \-\-attribute\fR=\fIATTRIBUTE\fR
 .RS 4
-Define or delete document attribute.
+Define or delete document attribute\.
 \fIATTRIBUTE\fR
 is formatted like
-\fINAME=VALUE\fR. Command\-line attributes take precedence over document and configuration file attributes. Alternate acceptable forms are
+\fINAME=VALUE\fR\. Command\-line attributes take precedence over document and configuration file attributes\. Alternate acceptable forms are
 \fINAME\fR
 (the
 \fIVALUE\fR
@@ -35,7 +35,7 @@ defaults to an empty string);
 \fINAME\fR
 attribute);
 \fINAME@\fR
-(do not override document or configuration file attributes). Values containing spaces should be enclosed in double\-quote characters. This option may be specified more than once.
+(do not override document or configuration file attributes)\. Values containing spaces should be enclosed in double\-quote characters\. This option may be specified more than once\.
 .RE
 .PP
 \fB\-b, \-\-backend\fR=\fIBACKEND\fR
@@ -44,14 +44,14 @@ Backend output file format:
 \fIdocbook\fR,
 \fIxhtml11\fR
 or
-\fIhtml4\fR. Defaults to
-\fIxhtml11\fR.
+\fIhtml4\fR\. Defaults to
+\fIxhtml11\fR\.
 .RE
 .PP
 \fB\-f, \-\-conf\-file\fR=\fICONF_FILE\fR
 .RS 4
 Use configuration file
-\fICONF_FILE\fR.Configuration files processed in command\-line order (after implicit configuration files). This option may be specified more than once.
+\fICONF_FILE\fR\.Configuration files processed in command\-line order (after implicit configuration files)\. This option may be specified more than once\.
 .RE
 .PP
 \fB\-d, \-\-doctype\fR=\fIDOCTYPE\fR
@@ -60,73 +60,73 @@ Document type:
 \fIarticle\fR,
 \fImanpage\fR
 or
-\fIbook\fR. The
+\fIbook\fR\. The
 \fIbook\fR
 document type is only supported by the
 \fIdocbook\fR
-backend. Default document type is
-\fIarticle\fR.
+backend\. Default document type is
+\fIarticle\fR\.
 .RE
 .PP
 \fB\-c, \-\-dump\-conf\fR
 .RS 4
-Dump configuration to stdout.
+Dump configuration to stdout\.
 .RE
 .PP
 \fB\-h, \-\-help\fR[=\fITOPIC\fR]
 .RS 4
-Print help TOPIC.
+Print help TOPIC\.
 \fB\-\-help\fR=\fItopics\fR
 will print a list of help topics,
 \fB\-\-help\fR=\fIsyntax\fR
 summarizes AsciiDoc syntax,
 \fB\-\-help\fR=\fImanpage\fR
-prints the AsciiDoc manpage.
+prints the AsciiDoc manpage\.
 .RE
 .PP
 \fB\-e, \-\-no\-conf\fR
 .RS 4
-Exclude implicitly loaded configuration files except for those named like the input file (\fIinfile.conf\fR
+Exclude implicitly loaded configuration files except for those named like the input file (\fIinfile\.conf\fR
 and
-\fIinfile\-backend.conf\fR).
+\fIinfile\-backend\.conf\fR)\.
 .RE
 .PP
 \fB\-s, \-\-no\-header\-footer\fR
 .RS 4
-Suppress document header and footer output.
+Suppress document header and footer output\.
 .RE
 .PP
 \fB\-o, \-\-out\-file\fR=\fIOUT_FILE\fR
 .RS 4
 Write output to file
-\fIOUT_FILE\fR. Defaults to the base name of input file with
+\fIOUT_FILE\fR\. Defaults to the base name of input file with
 \fIbackend\fR
-extension. If the input is stdin then the outfile defaults to stdout. If
+extension\. If the input is stdin then the outfile defaults to stdout\. If
 \fIOUT_FILE\fR
 is
 \fI\-\fR
-then the standard output is used.
+then the standard output is used\.
 .RE
 .PP
 \fB\-n, \-\-section\-numbers\fR
 .RS 4
-Auto\-number HTML article section titles. Synonym for
-\fB\-a numbered\fR.
+Auto\-number HTML article section titles\. Synonym for
+\fB\-a numbered\fR\.
 .RE
 .PP
 \fB\-\-unsafe\fR
 .RS 4
-Disable safe mode. Safe mode is enabled by default, disabling it is potentially dangerous.
+Disable safe mode\. Safe mode is enabled by default, disabling it is potentially dangerous\.
 .RE
 .PP
 \fB\-v, \-\-verbose\fR
 .RS 4
-Verbosely print processing information and configuration file checks to stderr.
+Verbosely print processing information and configuration file checks to stderr\.
 .RE
 .PP
 \fB\-\-version\fR
 .RS 4
-Print program version number.
+Print program version number\.
 .RE
 .SH "EXIT STATUS"
 .PP
@@ -137,25 +137,19 @@ Success
 .PP
 \fB1\fR
 .RS 4
-Failure (syntax or usage error; configuration error; document processing failure; unexpected error).
+Failure (syntax or usage error; configuration error; document processing failure; unexpected error)\.
 .RE
 .SH "BUGS"
-See the AsciiDoc distribution BUGS file.
+See the AsciiDoc distribution BUGS file\.
 .sp
 .SH "AUTHOR"
-Written by Stuart Rackham, <srackham@gmail.com>
+Written by Stuart Rackham, <srackham@gmail\.com>
 .sp
 .SH "RESOURCES"
-SourceForge: http://sourceforge.net/projects/asciidoc/
+SourceForge: http://sourceforge\.net/projects/asciidoc/
 .sp
-Main web site: http://www.methods.co.nz/asciidoc/
+Main web site: http://www\.methods\.co\.nz/asciidoc/
 .sp
 .SH "COPYING"
-Copyright (C) 2002\-2008 Stuart Rackham. Free use of this software is granted under the terms of the GNU General Public License (GPL).
+Copyright (C) 2002\-2008 Stuart Rackham\. Free use of this software is granted under the terms of the GNU General Public License (GPL)\.
 .sp
-.SH "REFERENCES"
-.IP " 1." 4
-srackham@gmail.com
-.RS 4
-\%mailto:srackham@gmail.com
-.RE

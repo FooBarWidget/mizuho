@@ -1,18 +1,180 @@
                                AsciiDoc ChangeLog
 
-   version 8.2.7, 4 July 2008
+   version 8.3.1, 14 December 2008
      __________________________________________________________________
 
-1. Version 8.2.7 (2008-07-04)
+1. Version 8.3.1 (2008-12-14)
 
-   See the [1]AsciiDoc Mercurial repository for a full list of changes.
+   Additions and changes
+     * Replaced the install.sh script with Ben Walton's updated autoconf
+       scripts -- see [1]INSTALL for details.
+     * Added a generalized AttributeEntry syntax to allow arbitrary
+       configuration file entries to be set from within an AsciiDoc
+       document (suggested by Henrik Maier).
+     * Listing delimited blocks in DocBook outputs now support IDs; IDs of
+       titled Listing and Literal delimited blocks have been moved to the
+       enclosing DocBook example tag (thanks to Vijay Kumar for this
+       patch).
+     * Replaced vertical typewriter apostrophe with punctuation apostrophe
+       (thanks to Noah Slater).
+
+   Bug fixes
+     * Regression: Excluding double-quotes from unquoted attribute values
+       resulted in backward incompatibility, double-quotes in unquoted
+       attribute values has been reinstated.
+     * Regression: Text like &...; was sometimes mistaken for an entity
+       reference -- tightened up entity reference matching.
+     __________________________________________________________________
+
+2. Version 8.3.0 (2008-11-29)
+
+   Additions and changes
+     * [2]AsciiDoc new tables is a complete redesign of the tables syntax
+       and generation. The new syntax and features are a huge improvement
+       over the old tables. The old tables syntax has been deprecated but
+       is currently still processed.
+     * [3]Lists can now be styled like other block elements. This allows a
+       single list syntax for glossary, qanda (Question and Answer) and
+       bibliography lists instead of having to remember a different syntax
+       for each type.
+     * Inline passthroughs macros have been improved and block passthrough
+       macros added. Attribute substitution can be optionally specified
+       when the macro is called.
+     * The passthrough block has a fully transparent passthrough delimited
+       block block style called pass.
+     * The asciimath and latexmath [4]passthrough macros along with
+       asciimath and latexmath [5]passthrough blocks provide a (backend
+       dependent) mechanism for rendering mathematical formulas. There are
+       [6]LaTeX Math, [7]AsciiMathML and [8]LaTeXMathML examples on the
+       AsciiDoc website.
+     * Reimplemented and cleaned up filter processing based on a patch
+       submitted by Kelly Anderson. Uses the newer subprocess module
+       instead of the deprecated popen2 module. Now works in Win32 command
+       shell.
+     * Addition FAQs, more documentation updates.
+     * Arbitrary HTML/XML entities can be entered in AsciiDoc source.
+     * Did away with the need for the shaded-literallayout.patch (thanks
+       to Henrik Maier for this patch).
+     * Implemented page break block macro.
+     * Added line breaks and ruler processing instructions to DocBook
+       outputs (thanks to Henrik Maier for this patch).
+     * Added deg (degree) and wj (word joiner) entity attributes (thanks
+       to Henrik Maier).
+     * Tweaked DocBook indexterm2 macro to avoid white space preceding the
+       term when used in table cells (thanks to Henrik Maier for this
+       patch).
+     * Title elements now process the options attribute like other block
+       elements.
+     * Added `single quoted' element.
+     * Spaces on both sides of a -- em-dash are translated to thin space
+       characters.
+     * Improved detection and reporting of malformed attribute lists.
+     * The list compact style is now a list option.
+     * Added strong labeled list option which makes the labels bold (HTML
+       outputs only).
+     * Dropped unsupported linuxdoc backend.
+     * Dropped deprecated xhtml-deprecated (version 6) backend.
+     * Added breakable and unbreakable attribute options to tables to
+       control table breaking across page boundaries (DocBook XSL/FO
+       outputs). By and in collaboration with Henrik Maier.
+     * Added pgwide attribute option to tables to table, block image,
+       horizontal labeled lists. Specifies that the element should be
+       rendered across the full text width of the page irrespective of the
+       current indentation (DocBook XSL/FO outputs). Thanks to Henrik
+       Maier for this patch.
+     * Vim syntax highlighter: spaces before/after bullets no longer
+       highlighted (which is ugly if using a theme that highlights with
+       underlines). Thanks to Donald Chai for this patch.
+     * Added a2x(1) --fop option.
+     * Added a2x(1) --no-xmllint option.
+     * Highlighted labelled list terms with the navy color in XHTML
+       outputs.
+     * Use w3m(1) as default a2x(1) text format generator (fallback to
+       lynx(1)).
+     * Changed callout formats in html4 and xhtml11 outputs to angle
+       brackets to match source highlighter rendering.
+     * Macros now inject user defined <optionname>-option attributes into
+       markup.
+     * Added IRC URLs to AsciiDoc inline macros.
+     * Added depth attribute to include::[] system macro.
+     * Added footnoteref inline macro.
+     * Added stylesheet XHTML attribute to specify additional custom CSS
+       stylesheet.
+     * If a paragraph style is specified it will be added to the XHTML
+       class attribute and DocBook role attribute.
+     * Replacements can be set in a document using the reserved
+       AttributeEntry name replacement.
+     * The prefix for auto-generated section name IDs can be set with the
+       idprefix attribute.
+
+   Bug fixes
+     * Escaped quote skipped over leading and trailing quote instead of
+       just the leading quote.
+     * Fixed bug that was causing false negative safe mode warnings (patch
+       submitted by Julien Palmas).
+     * Placed priority of AttributeEntry, AttributeList and BlockTitle
+       above Title. This ensures an AttributeEntry, AttributeList or
+       BlockTitle followed by a same length leading ListingBlock delimiter
+       is not mistaken for a two-line title.
+     * Vim syntax highlighter: fixed multi-line quoted text.
+     * Contstrained quote termination after non-space character enforced.
+     * Vim syntax highlighter: unterminated quoted text is no longer
+       highlighted.
+     * Vim syntax highlighter: passthroughs now exactly match AsciiDoc
+       semantics.
+     * Vim syntax highlighter: escaped quoted text, attribute references
+       and inline macros are not highlighted.
+     * Vim syntax highlighter: TODO's highlighted in CommentBlocks (thanks
+       to Scott Wall); non-greedy $$...$$.
+     * Vim syntax highlighter: Comment lines mistaken for vertical list
+       labels (thanks to Scott Wall).
+     * Vim syntax highlighter: Single unmatched $$ mistakenly highlighted
+       remaining text (patch contributed by Scott Wall).
+     * Callouts now work in source highlighted listing generated by
+       dblatex.
+     * Fixed exception that occured if undefined attribute was present in
+       filter command.
+     * AttributeList block can now follow a paragraph without intervening
+       blank line.
+     * The include macro tabsize attribute is no longer propagated to
+       nested includes.
+
+   Omissions
+   The following features were implemented but then but removed from this
+   release:
+     * pi, cdata and comment passthrough macros and passthrough block
+       styles (creeping featurism, use pass macros instead).
+     * Generic tag inline macro (creeping featurism, use pass macros
+       instead).
+
+  2.1. Compatibility issues
+
+   Version 8.3.0 has a number of backward incompatibilities with respect
+   to the previous 8.2.7 release:
+     * The old table syntax is still processed but a DEPRECATED warning is
+       issued.
+     * Entity references have to be escaped with a backslash.
+     * You have to explicitly precede horizontal style labeled lists with
+       the [horizontal] style attribute -- by default all labeled lists
+       are rendered vertically.
+     * The list compact style has been dropped and is now a list option
+       (use options="compact" in attribute lists).
+     * AsciiDoc version 6 sytnax no longer supported.
+     * Linuxdoc been removed from the distribution.
+     * The unsupported experimental latex backend has not been tested on
+       this release.
+     * The introduction of single-quote quoting requires that double-quote
+       quoting is escaped with two backslashes.
+     __________________________________________________________________
+
+3. Version 8.2.7 (2008-07-04)
 
    Additions and changes
      * Added dvi, ps and tex output format options to a2x(1).
      * Added --dblatex option to a2x(1) so dblatex(1) can be used to
        generate PDFs.
      * Added custom dblatex(1) configuration files (in distribution
-       ./dblatex directory) which are used by a2x(1).
+       ./dblatex directory) that are used by a2x(1).
      * dblatex(1) is now used to generate the distributed PDF version of
        the AsciiDoc User Guide.
      * If you don't need a customized the link caption you can enter the
@@ -23,7 +185,7 @@
        directly). The Vim syntax highlighter has been updated to reflect
        these changes.
      * Highlighted source code paragraphs have been implemented -- it's a
-       much more convenient way to enter short code examples (see [2]the
+       much more convenient way to enter short code examples (see [9]the
        online docs).
      * The source highlighter and music filter syntax has changed -- they
        now used the ListingBlock syntax customized with source and music
@@ -61,18 +223,16 @@
      * Configuration file *-style attributes are now dumped correctly.
      * Fixed FAILED: malformed section entry LaTeX backend error.
 
-   See the also the [3]AsciiDoc repository changelog.
+   See the also the [10]AsciiDoc repository changelog.
      __________________________________________________________________
 
-2. Version 8.2.6 (2008-04-29)
-
-   See the [4]AsciiDoc Mercurial repository for a full list of changes.
+4. Version 8.2.6 (2008-04-29)
 
    Additions and changes
      * Enhancements to the Vim AsciiDoc syntax highlighter, for example,
        quoted text is now highlighted in titles and macro captions.
      * If you define the data-uri intrinsic attribute images referenced by
-       image macros will be embedded in XHTML using the [5]data: URI
+       image macros will be embedded in XHTML using the [11]data: URI
        scheme. NOTE: Microsoft browser support for the data: URI scheme is
        currently limited to MSIE 8 beta 1.
      * Added toc-title attribute to allow custom table of contents titles.
@@ -113,7 +273,7 @@
        attribute list values.
      __________________________________________________________________
 
-3. Version 8.2.5 (2007-11-18)
+5. Version 8.2.5 (2007-11-18)
 
    Bug fixes
      * Fixed exception thrown by illegal command-line arguments.
@@ -121,7 +281,7 @@
        incompatible with Python <2.5.
      __________________________________________________________________
 
-4. Version 8.2.4 (2007-11-10)
+6. Version 8.2.4 (2007-11-10)
 
    Additions and changes
      * You can now use the lang attribute to set the DocBook language
@@ -143,12 +303,12 @@
        2.6 has been suppressed.
      __________________________________________________________________
 
-5. Version 8.2.3 (2007-09-12)
+7. Version 8.2.3 (2007-09-12)
 
    Additions and changes
      * Added VMiklos's permalink patch for auto-generated section IDs
        (enabled by default by the sectids attribute).
-     * Added [6]FAQ to website.
+     * Added [12]FAQ to website.
      * Changed format of {localdate} attribute to ISO 8601 (%Y-%m-%d).
      * Added abc2ly --beams=None option to make music2png.py conform to
        ABC's notion of beams.
@@ -177,11 +337,11 @@
        attribute substitution problems).
      __________________________________________________________________
 
-6. Version 8.2.2 (2007-07-22)
+8. Version 8.2.2 (2007-07-22)
 
    Additions and changes
-     * [7]LaTeXMathML capability has been added for users who are more
-       familiar with or prefer LaTeX math formulas to the [8]ASCIIMathML
+     * [13]LaTeXMathML capability has been added for users who are more
+       familiar with or prefer LaTeX math formulas to the [14]ASCIIMathML
        notation (thanks to Arthur Sakellariou for the patch).
      * The source highlight and code filters now process embedded
        callouts.
@@ -193,7 +353,7 @@
 
    Bug fixes
      * Fixed an assertion error that occurred when a configuration file
-       containing an include::[] macro was loaded using the --conf-file
+       containing an \include::[] macro was loaded using the --conf-file
        option and the configuration file name did not include an explicit
        directory path -- patch submitted by Dmitry Potapov.
      * Asciidoc titles are only converted to lower case if all characters
@@ -214,7 +374,7 @@
        LaTeXMathML formulas.
      __________________________________________________________________
 
-7. Version 8.2.1 (2007-04-06)
+9. Version 8.2.1 (2007-04-06)
 
    Additions and changes
      * A number of improvements have been made to the Vim syntax
@@ -223,14 +383,13 @@
      * Labeled list definitions have been tightened -- a list label can no
        longer containing trailing spaces. The following example is no
        longer recognized as a valid list label:
-
-     Lorum ipsum ::
+  Lorum ipsum ::
        This change implements the originally intended behavior (as per the
        AsciiDoc documentation and examples) so there should be very few
        compatibility issues.
      __________________________________________________________________
 
-8. Version 8.2.0 (2007-04-04)
+10. Version 8.2.0 (2007-04-04)
 
    Additions and changes
      * A Vim syntax file is now included in the AsciiDoc distribution
@@ -242,8 +401,7 @@
      * Added toclevel attribute (1..4) which sets the number of title
        levels reported in the table of contents. Defaults to 2 and must be
        used with the toc attribute. Example usage:
-
-     $ asciidoc -a toc -a toclevels=3 doc/asciidoc.txt
+  $ asciidoc -a toc -a toclevels=3 doc/asciidoc.txt
      * Added a listindex attribute which is the current list item index
        (1..). If this attribute appears outside a list its value is the
        number of items in the most recently closed list.
@@ -265,21 +423,21 @@
      * If a2x(1) --doctype option is not specified it defaults to manpage
        if --format=manpage else defaults to article (previously --doctype
        always defaulted to article).
-     * Added an External Resources section to the [9]AsciiDoc home page.
+     * Added an External Resources section to the [15]AsciiDoc home page.
      __________________________________________________________________
 
-9. Version 8.1.0 (2006-10-22)
+11. Version 8.1.0 (2006-10-22)
 
    Additions and changes
      * AsciiDoc generated XHTML documents now display a table of contents
        if the toc attribute is defined (JavaScript needs to be enabled for
        this to work). Thanks to Troy Hanson who contributed this feature
        based on a JavaScript by Mihai Bazon. I've simplified things
-       somewhat to match Docbook XSL Stylesheets style, see Troy's [10]tpl
+       somewhat to match Docbook XSL Stylesheets style, see Troy's [16]tpl
        User Guide for a fancier layout. Use the -a toc -a numbered
        command-line options to produce a number table of contents.
-     * A [11]music filter is included in the distribution ./filters/
-       directory. It translates music in [12]LilyPond or [13]ABC notation
+     * A [17]music filter is included in the distribution ./filters/
+       directory. It translates music in [18]LilyPond or [19]ABC notation
        to standard classical notation in the form of a trimmed PNG image
        which is inserted into the AsciiDoc output document.
      * Incorporated Paul Melis's Win32 filter patch. This workaround
@@ -310,7 +468,7 @@
        is extracted from the input file name.
      __________________________________________________________________
 
-10. Version 8.0.0 (2006-08-27)
+12. Version 8.0.0 (2006-08-27)
 
    This is a major release because changes to quoting and index entry
    handling may break existing documents (see Additions and changes below
@@ -318,7 +476,7 @@
 
    Please report any problems you encounter.
 
-   [14]Stuart Rackham
+   [20]Stuart Rackham
 
    Additions and changes
      * Quoting can can occur within words (based on patch submitted by
@@ -352,7 +510,7 @@
      * Experimental rows attribute (number of source lines in table)
        available in table markup templates (used by experimental LaTeX
        backend).
-     * Included install shell script written by [15]Jacob Mandelson for
+     * Included install shell script written by [21]Jacob Mandelson for
        installing the tarball distribution.
      * Added INSTALL documentation file.
      * Added replacements2 substitution options -- a second replacements
@@ -366,9 +524,8 @@
      * The name in name=value configuration file entries can now end with
        a backslash, just escape the trailing backslash with a backslash.
        For example:
-
-     abc\\=xyz
-       Results in name=abc\ and value=xyz -- previously this would have
+  abc\\=xyz
+       Results in name=abc\ and value=xyz --  previously this would have
        escaped the = character.
      * A blank configuration file section deletes any preceding section
        with the same name (applies to non-markup template sections).
@@ -377,14 +534,14 @@
        command-line attributes have precedence over document and
        configuration file attributes).
      * localtime attribute is now encoded from the native system encoding
-       to the output encoding. Patch submitted by [16]FKtPp -- here's his
+       to the output encoding. Patch submitted by [22]FKtPp -- here's his
        description of the problem:
        "I am a Chinese user of AsciiDoc and I find that when I use UTF-8
        (the default encoding) to write asciidoc documents in Windows
        platform the resulting html footer line will get screwed. It was
        caused by a localized tzname that was always encoded in the windows
        native encoding, which in my case is cp936."
-     * a2x(1) can generate Open Document Text files using [17]docbook2odf.
+     * a2x(1) can generate Open Document Text files using [23]docbook2odf.
        Currently docbook2odf(1) only processes a subset of DocBook,
        unimplemented elements are skipped.
      * The a2x(1) format option defaults to xhtml (previously a format had
@@ -412,33 +569,33 @@
        output file was missing or older than the source file.
      __________________________________________________________________
 
-11. Version 7.1.2 (2006-03-07)
+13. Version 7.1.2 (2006-03-07)
 
    Additions and changes
-     * Support for [18]ASCIIMathML has been added. See Appendix I:
+     * Support for [24]ASCIIMathML has been added. See Appendix I:
        ASCIIMathML Support in the User Guide and the examples at
-       [19]http://www.methods.co.nz/asciidoc/asciimath.html.
+       [25]http://www.methods.co.nz/asciidoc/asciimath.html.
      * You can now prefix quoted text with inline attributes lists. You
        can use this to set font size and color (XHTML and HTML outputs).
-     * Added #...# quoting -- it does nothing -- it's purpose is to allow
+     * Added #...\# quoting -- it does nothing -- it's purpose is to allow
        inline attributes to be applied to normal text.
-     * An [20]inline passthrough mechanism has been implemented.
+     * An [26]inline passthrough mechanism has been implemented.
      * Configuration file comment lines can be escaped with a backslash --
-       this is to allows the inclusion of configuration lines that start
+        this is to allows the inclusion of configuration lines that start
        with a hash character.
      * The scriptsdir attribute can be used to specify the name of the
-       directory containing linked JavaScripts (see the [21]User Guide for
+       directory containing linked JavaScripts (see the [27]User Guide for
        details.
      * The BackendBlock has been renamed PassthroughBlock for consistency
        with the new inline passthrough naming.
      * a2x(1) now works with the older bash(1) version 2.05b. Patch
-       submitted by [22]Francis Daly.
-     * Content included by the include1::[] system macro is no longer
+       submitted by [28]Francis Daly.
+     * Content included by the \include1::[] system macro is no longer
        subject to attribute substitution so that ambiguities no longer
        arise when used to include CSS or JavaScript files.
      __________________________________________________________________
 
-12. Version 7.1.1 (2006-02-24)
+14. Version 7.1.1 (2006-02-24)
 
    Additions and changes
      * The caption attribute can be used to customize admonition captions
@@ -464,7 +621,7 @@
        attribute).
      __________________________________________________________________
 
-13. Version 7.1.0 (2006-01-13)
+15. Version 7.1.0 (2006-01-13)
 
    Additions and changes
      * a2x(1) toolchain wrapper utility. This overcomes the biggest hurdle
@@ -504,7 +661,7 @@
        ./examples/website/build-website.sh script.
      __________________________________________________________________
 
-14. Version 7.0.4 (2005-12-08)
+16. Version 7.0.4 (2005-12-08)
 
    Additions and changes
      * Added ternary conditional attributes
@@ -533,16 +690,16 @@
        Guide.
      __________________________________________________________________
 
-15. Version 7.0.3 (2005-12-01)
+17. Version 7.0.3 (2005-12-01)
 
    Additions and changes
      * Added --safe and --unsafe command-line options -- AsciiDoc can now
        be executed in a safe mode which disallows the execution of
        arbitrary code or the inclusion of arbitrary files (see
-       [23]Appendix C in the AsciiDoc User Guide).
-     * Included [24]source-highlight filter in the distribution
+       [29]Appendix C in the AsciiDoc User Guide).
+     * Included [30]source-highlight filter in the distribution
        ./examples/source-highlight-filter/ directory (based on filter
-       submitted by [25]Ryan Phillips).
+       submitted by [31]Ryan Phillips).
      * Included the DocBook XSL Stylesheets 1.69.1 customizations used to
        generate the distributed AsciiDoc documentation (read the
        asciidoc-docbook-xsl.txt file in the distribution ./docbook-xsl/
@@ -557,7 +714,7 @@
        because default border styles vary from browser to browser.
      __________________________________________________________________
 
-16. Version 7.0.2 (2005-08-28)
+18. Version 7.0.2 (2005-08-28)
 
    Additions and changes
      * There are now long versions of all AsciiDoc options.
@@ -573,7 +730,7 @@
      * Documentation errata.
      __________________________________________________________________
 
-17. Version 7.0.1 (2005-06-24)
+19. Version 7.0.1 (2005-06-24)
 
    Additions and changes
      * Reverted to use of strong, em, tt XHTML tags -- they're more
@@ -585,7 +742,7 @@
        default ./stylesheets directory).
      * Default charset encoding changed from ISO-8859-1 to UTF-8 -- it's
        less language specific and displays most common languages.
-     * template::[] macros now expand in all configuration file sections
+     * \template::[] macros now expand in all configuration file sections
        previously only in markup template sections.
      * Cleaned up example website layout CSS and configuration
        (presentation has not been changed).
@@ -604,29 +761,29 @@
        Guide has been dropped -- it generated invalid DocBook markup.
      __________________________________________________________________
 
-18. Version 7.0.0 (2005-06-06)
+20. Version 7.0.0 (2005-06-06)
 
    This is a major release with many code and documentation changes.
    Please report any problems you encounter.
 
-   [26]Stuart Rackham
+   [32]Stuart Rackham
 
    Additions and changes
      * A new xhtml11 backend generates XHTML 1.1 with integrated CSS2
        replacing the previous xhtml, css, and css-embedded backends.
      * The CSS stylesheets have finally been rewritten.
-     * The asciidoc(1) command help now includes user [27]customizable
+     * The asciidoc(1) command help now includes user [33]customizable
        help topics. When asciidoc is invoked with the --help option the
        command argument is interpreted as a help topic.
      * The previous example website has been replaced by the actual
        AsciiDoc website (see ./examples/website/.
      * XHTML generation options now controlled by the following
        attributes: badges, linkcss, icons, numbered, quirks, theme,
-       stylesdir, imagesdir (see the [28]User Guide for details.
+       stylesdir, imagesdir (see the [34]User Guide for details.
      * By default HTML and XHTML are output as stand-alone documents (no
        embedded CSS and no linked admonition icon images).
      * Documents encoded with the UTF-8 Unicode character set are now
-       processed thanks to a patch supplied by [29]Viktor Vasilev.
+       processed thanks to a patch supplied by [35]Viktor Vasilev.
      * The -a ^name command-line syntax to undefine an attribute has been
        deprecated in favor of the -a name! syntax.
      * AttributeEntry syntax addition: :name!: to undefine name attribute.
@@ -655,7 +812,7 @@
      * The section-numbers section numbering attribute has be renamed
        numbered.
      * Dropped the #UNDER CONSTRUCTION# block macro.
-     * Rewrote Paragraph and DelimitedBlock handlers adding a [30]styles
+     * Rewrote Paragraph and DelimitedBlock handlers adding a [36]styles
        configuration entry.
 
    Bug fixes
@@ -663,12 +820,12 @@
        content.
      * Manpage command names containing dashes (in the manpage NAME
        section) were misinterpreted as the spaced dash command
-       name/purpose separator. Bug report and patch supplied by [31]David
+       name/purpose separator. Bug report and patch supplied by [37]David
        Greaves.
      * Unexpected error following malformed author line error.
      __________________________________________________________________
 
-19. Version 6.0.3 (2005-04-20)
+21. Version 6.0.3 (2005-04-20)
 
    Additions and changes
      * Special characters are now substituted in AttributeEntry element
@@ -696,7 +853,7 @@
        exceptions to occur.
      __________________________________________________________________
 
-20. Version 6.0.2 (2005-03-30)
+22. Version 6.0.2 (2005-03-30)
 
    Additions and changes
      * Three new system block macros have been added -- eval, sys and sys2
@@ -712,14 +869,14 @@
      * Asciidoc now searches in /etc/asciidoc/filters for filters.
      __________________________________________________________________
 
-21. Version 6.0.1 (2005-03-06)
+23. Version 6.0.1 (2005-03-06)
 
    Additions and changes
      * A global configuration file location /etc/asciidoc has been added
        and is now processed before all other locations (patch supplied by
-       [32]Fredrik Steen).
+       [38]Fredrik Steen).
      * Recoded tempfile.mktemp() and other artifacts that are no longer
-       necessary or desirable (patches supplied by [33]Fredrik Steen).
+       necessary or desirable (patches supplied by [39]Fredrik Steen).
      * Added BUGS file to the distribution.
 
    Bug fixes
@@ -727,12 +884,12 @@
        illegal CSS in files generated by the css-embedded backend.
      __________________________________________________________________
 
-22. Version 6.0.0 (2005-01-28)
+24. Version 6.0.0 (2005-01-28)
 
    This release has had some fairly major code and documentation changes.
    Please report any problems you encounter.
 
-   [34]Stuart Rackham
+   [40]Stuart Rackham
 
    A lot of new stuff. A new major version number -- some regression
    incompatibility (hopefully mitigated by deprecated warnings).
@@ -789,7 +946,7 @@
        class names have also been changed which could result in backward
        incompatibility in customized stylesheets.
      * Swapped plain DocBook admonition icons for Jimmac's DocBook icons
-       ([35]http://jimmac.musichall.cz/ikony.php3). The original plain
+       ([41]http://jimmac.musichall.cz/ikony.php3). The original plain
        icons have been moved to ./images/plain.
      * Renamed html backend to xhtml to better reflect it's function
        (former html-4 backend renamed to html).
@@ -821,7 +978,7 @@
        now indents text correctly.
      __________________________________________________________________
 
-23. Version 5.1.1 (2004-10-10)
+25. Version 5.1.1 (2004-10-10)
 
    15-December-2004: Interim update: Updated asciidoc.py to fix broken
    join_lines function -- no other changes.
@@ -844,7 +1001,7 @@
        when generating css output.
      __________________________________________________________________
 
-24. Version 5.1.0 (2004-09-18)
+26. Version 5.1.0 (2004-09-18)
 
      * Callouts have been implemented (see the Callouts section of the
        AsciiDoc User Guide for details).
@@ -861,7 +1018,7 @@
        polishing.
      __________________________________________________________________
 
-25. Version 5.0.9 (2004-09-09)
+27. Version 5.0.9 (2004-09-09)
 
      * The convention of using a .asc file extension for AsciiDoc files
        has been dropped in favor of the familiar .txt extension. It makes
@@ -905,7 +1062,7 @@
      * Documentation additions and corrections.
      __________________________________________________________________
 
-26. Version 5.0.8 (2004-05-15)
+28. Version 5.0.8 (2004-05-15)
 
      * Spurious out of sequence level 2 warnings no longer appear when
        processing book document multi-part book top level Preface and
@@ -923,7 +1080,7 @@
        compliance). Lessened sidebar title top margin.
      __________________________________________________________________
 
-27. Version 5.0.7 (2004-04-22)
+29. Version 5.0.7 (2004-04-22)
 
      * The version 5.0.6 README incorrectly stated that AsciiDoc would run
        under Python 2.0, in fact it requires Python 2.1 or better. The
@@ -944,7 +1101,7 @@
        with with white space.
      __________________________________________________________________
 
-28. Version 5.0.6 (2004-03-07)
+30. Version 5.0.6 (2004-03-07)
 
      * New image macro implements optional image scaling and linking and
        works in both inline and block contexts. The image macro obsolesces
@@ -970,17 +1127,17 @@
      * Section titles can be optionally suffixed with title arguments
        enclosed in double square brackets.
      * A replacement has been added to asciidoc.conf to replace inline
-       double dashes with the &mdash; entity.
-     * Changed the .UNDER-CONSTRUCTION. macro syntax to
-       #UNDER-CONSTRUCTION# so it is not mistaken for a BlockTitle.
-       Similarly changed the .NEW. replacement with #NEW#.
-     * #NEW# and #UNDER-CONSTRUCTION# macros are now included in the
+       double dashes with the -- entity.
+     * Changed the .UNDER-CONSTRUCTION. macro syntax to UNDER-CONSTRUCTION
+       so it is not mistaken for a BlockTitle. Similarly changed the .NEW.
+       replacement with #NEW#.
+     * &35;NEW# and #UNDER-CONSTRUCTION macros are now included in the
        DocBook backend.
      * Replaced shipped smallnew.gif with smallnew.png.
      * Documentation tidy ups.
      __________________________________________________________________
 
-29. Version 5.0.5 (2004-02-25)
+31. Version 5.0.5 (2004-02-25)
 
      * Fixed the disappearing paragraph titles problem that was caused by
        Inline macros (incorrectly) processing BlockTitles.
@@ -989,7 +1146,7 @@
        invalid output markup.
      __________________________________________________________________
 
-30. Version 5.0.4 (2004-02-09)
+32. Version 5.0.4 (2004-02-09)
 
      * Reinstated missing infile, outfile, filetype and
        filetype-<filetype> glossary entries.
@@ -997,7 +1154,7 @@
        this has now been documented.
      __________________________________________________________________
 
-31. Version 5.0.3 (2004-01-23)
+33. Version 5.0.3 (2004-01-23)
 
      * Fixed problem that caused any filters directory file containing
        .conf (not just those with the .conf extension) from being loaded.
@@ -1014,7 +1171,7 @@
        from configuration file substitution sections.
      __________________________________________________________________
 
-32. Version 5.0.2 (2003-12-18)
+34. Version 5.0.2 (2003-12-18)
 
      * New (alternative) anchor and xref macro syntax (old syntax still
        valid).
@@ -1028,17 +1185,17 @@
      * Documentation updates and corrections.
      __________________________________________________________________
 
-33. Version 5.0.1 (2003-12-09)
+35. Version 5.0.1 (2003-12-09)
 
      * Fixed problem with anchor tag when generating CSS styled HTML.
      __________________________________________________________________
 
-34. Version 5.0 (2003-12-08)
+36. Version 5.0 (2003-12-08)
 
    This release has had some fairly major code and documentation changes.
    Please report any problems you encounter.
 
-   [36]Stuart Rackham
+   [42]Stuart Rackham
 
      * AsciiDoc can now produce a full-blown multi-part DocBook book
        including dedication, abstract, preface, colophon, glossary,
@@ -1088,7 +1245,7 @@
        .docbook to .xml (.sgml for the docbook-sgml backend).
      __________________________________________________________________
 
-35. Version 4.2 (2003-11-26)
+37. Version 4.2 (2003-11-26)
 
      * The default HTML output is now XHTML 1.0 markup. To output the
        former HTML 4 markup specify the html-4 backend.
@@ -1116,7 +1273,7 @@
        arguments.
      __________________________________________________________________
 
-36. Version 4.1 (2003-11-13)
+38. Version 4.1 (2003-11-13)
 
      * Added DSV (Delimiter Separated Values) tables format.
      * {eval:<expr>} glossary references drop the containing line if
@@ -1140,7 +1297,7 @@
        {x] was defined and {y} was not.
      __________________________________________________________________
 
-37. Version 4.0 (2003-11-08)
+39. Version 4.0 (2003-11-08)
 
    This release has had some fairly major code and documentation changes.
    Please report any problems you encounter.
@@ -1188,7 +1345,7 @@
      * Many documentation changes/additions/corrections.
      __________________________________________________________________
 
-38. Version 3.2.2 (2003-10-26)
+40. Version 3.2.2 (2003-10-26)
 
      * Added -n option (synonym for -g section-numbers).
      * Dropped the processing commentary (hey, this is Unix).
@@ -1217,12 +1374,11 @@
      * Glossary entries are now allowed in Author and Revision lines.
      * Default List subs options and Paragraph presubs options are
        assigned the following default value if not specified:
-
-     specialcharacters,quotes,specialwords,replacements,glossary,macros
+  specialcharacters,quotes,specialwords,replacements,glossary,macros
      * Documentation changes/additions/corrections.
      __________________________________________________________________
 
-39. Version 3.2 (2003-05-26)
+41. Version 3.2 (2003-05-26)
 
      * Added a -s command-line option to suppress the output of [header]
        and [footer] sections.
@@ -1252,7 +1408,7 @@
      * Internal code tidy up.
      __________________________________________________________________
 
-40. Version 3.1 (2003-05-18)
+42. Version 3.1 (2003-05-18)
 
      * In version 3.0 a [macros] section entry of the form name was
        equivalent to name=. An entry of the form name now undefines the
@@ -1282,7 +1438,7 @@
        option).
      __________________________________________________________________
 
-41. Version 3.0 (2003-05-13)
+43. Version 3.0 (2003-05-13)
 
    This version is the culmination of work begun in the 2.x releases
    whereby fixed policy has been replaced by extensible mechanisms.
@@ -1318,7 +1474,7 @@
        configuration files.
      __________________________________________________________________
 
-42. Version 2.2 (2003-04-07)
+44. Version 2.2 (2003-04-07)
 
      * The master.conf configuration file name has been deprecated in
        favor of asciidoc.conf.
@@ -1360,7 +1516,7 @@
        CustomBlocks or Substitutions instead.
      __________________________________________________________________
 
-43. Version 2.1 (2003-03-17)
+45. Version 2.1 (2003-03-17)
 
      * Added section auto numbering {sectnum} glossary entry
        (auto-numbering function contributed by Ludovico Magnocavallo).
@@ -1368,7 +1524,7 @@
        occurs.
      * An AsciiDoc example website has been included in the AsciiDoc
        distribution examples/website directory (also online at
-       [37]http://www.methods.co.nz/asciidoc/examples/website/).
+       [43]http://www.methods.co.nz/asciidoc/examples/website/).
      * NOTE: The asciidoc wrapper script included in the 2.0 distribution
        has been dropped, if you've symlinked or aliased to asciidoc you'll
        need to change them to point directly to asciidoc.py instead.
@@ -1390,7 +1546,7 @@
        {asciidoc-version} (to it consistent with other entries).
      __________________________________________________________________
 
-44. Version 2.0 (2003-02-24)
+46. Version 2.0 (2003-02-24)
 
      * The emphasized, strong and monospaced words options have been
        generalized with the introduction of macro based special words
@@ -1444,14 +1600,14 @@
      * Added author and author-mail meta tags to HTML configuration files.
      __________________________________________________________________
 
-45. Version 1.5 (2003-01-08)
+47. Version 1.5 (2003-01-08)
 
      * Implemented sidebar document elements.
      * Explicit checks for user specified configuration files and input
        file (rather than throwing exception).
      __________________________________________________________________
 
-46. Version 1.4 (2003-01-04)
+48. Version 1.4 (2003-01-04)
 
      * New configuration file options emphasizedwords and strongwords.
        These allow the definition of words that will always be emphasized
@@ -1471,7 +1627,7 @@
      * More documentation additions and tidy ups.
      __________________________________________________________________
 
-47. Version 1.3 (2003-01-01)
+49. Version 1.3 (2003-01-01)
 
      * A new strong text formatting convention has been implemented: Word
        phrases enclosed in pairs of single quote characters (acute
@@ -1500,7 +1656,7 @@
      * Code, configuration file and documentation tidy ups.
      __________________________________________________________________
 
-48. Version 1.2 (2002-12-28)
+50. Version 1.2 (2002-12-28)
 
      * Implemented include URL to allow file inclusion.
      * fileextension configuration file [option] renamed to more sensible
@@ -1515,7 +1671,7 @@
      * Bug fixes.
      __________________________________________________________________
 
-49. Version 1.1 (2002-12-03)
+51. Version 1.1 (2002-12-03)
 
      * Added css (cascading style sheets) backend
      * Implemented IndentedBlock document element.
@@ -1532,54 +1688,60 @@
      * Fixed error that occurred when == title underline was used.
      __________________________________________________________________
 
-50. Version 1.0 (2002-11-25)
+52. Version 1.0 (2002-11-25)
 
    First AsciiDoc public release along with AsciiDoc web site
-   ([38]http://www.methods.co.nz/asciidoc/) and SourceForge.net project
-   registration ([39]https://sourceforge.net/projects/asciidoc/).
+   ([44]http://www.methods.co.nz/asciidoc/) and SourceForge.net project
+   registration ([45]https://sourceforge.net/projects/asciidoc/).
      __________________________________________________________________
 
-   Version 8.2.7
-   Last updated 2008-07-04 23:26:22 NZDT
+   Version 8.3.1
+   Last updated 2008-12-13 09:58:29 NZDT
 
 References
 
-   1. http://hg.sharesource.org/asciidoc/shortlog
-   2. http://www.methods.co.nz/asciidoc/source-highlight-filter.html
-   3. https://sharesource.org/hg/asciidoc/
-   4. http://hg.sharesource.org/asciidoc/shortlog
-   5. http://en.wikipedia.org/wiki/Data:_URI_scheme
-   6. http://www.methods.co.nz/asciidoc/faq.html
-   7. http://www.maths.nottingham.ac.uk/personal/drw/lm.html
-   8. http://www.methods.co.nz/asciidoc/asciimath.html
-   9. http://www.methods.co.nz/asciidoc/index.html
-  10. http://tpl.sourceforge.net/userguide.html
-  11. http://www.methods.co.nz/asciidoc/music-filter.html
-  12. http://lilypond.org/
-  13. http://abcnotation.org.uk/
-  14. mailto:srackham@gmail.com
-  15. mailto:jlm@ofb.net
-  16. mailto:m_pupil@yahoo.com.cn
-  17. http://open.comsultia.com/docbook2odf/
-  18. http://www1.chapman.edu/~jipsen/mathml/asciimath.html
-  19. http://www.methods.co.nz/asciidoc/asciimath.html
-  20. file://localhost/tmp/lynxXXXXPMZJe0/userguide.html#X50
-  21. file://localhost/tmp/lynxXXXXPMZJe0/userguide.html#X33
-  22. mailto:francis@daoine.org
-  23. file://localhost/tmp/lynxXXXXPMZJe0/userguide.html#X39
-  24. file://localhost/tmp/lynxXXXXPMZJe0/source-highlight-filter.html
-  25. mailto:trolocsis@gmail.com
-  26. mailto:srackham@gmail.com
-  27. file://localhost/tmp/lynxXXXXPMZJe0/userguide.html#X36
-  28. file://localhost/tmp/lynxXXXXPMZJe0/userguide.html#X33
-  29. mailto:viktor@rbg.informatik.tu-darmstadt.de
-  30. file://localhost/tmp/lynxXXXXPMZJe0/userguide.html#X23
-  31. mailto:david@dgreaves.com
-  32. mailto:stone@debian.org
-  33. mailto:stone@debian.org
-  34. mailto:srackham@gmail.com
-  35. http://jimmac.musichall.cz/ikony.php3
-  36. mailto:srackham@gmail.com
-  37. http://www.methods.co.nz/asciidoc/examples/website/
-  38. http://www.methods.co.nz/asciidoc/
-  39. https://sourceforge.net/projects/asciidoc/
+   1. http://www.methods.co.nz/asciidoc/INSTALL.html
+   2. http://www.methods.co.nz/asciidoc/newtables.html
+   3. http://www.methods.co.nz/asciidoc/newlists.html
+   4. http://www.methods.co.nz/asciidoc/userguide.html#X77
+   5. http://www.methods.co.nz/asciidoc/userguide.html#X76
+   6. http://www.methods.co.nz/asciidoc/latexmath.pdf
+   7. http://www.methods.co.nz/asciidoc/asciimathml.html
+   8. http://www.methods.co.nz/asciidoc/latexmathml.html
+   9. http://www.methods.co.nz/asciidoc/source-highlight-filter.html
+  10. https://sharesource.org/hg/asciidoc/
+  11. http://en.wikipedia.org/wiki/Data:_URI_scheme
+  12. http://www.methods.co.nz/asciidoc/faq.html
+  13. http://www.maths.nottingham.ac.uk/personal/drw/lm.html
+  14. http://www.methods.co.nz/asciidoc/asciimath.html
+  15. http://www.methods.co.nz/asciidoc/index.html
+  16. http://tpl.sourceforge.net/userguide.html
+  17. http://www.methods.co.nz/asciidoc/music-filter.html
+  18. http://lilypond.org/
+  19. http://abcnotation.org.uk/
+  20. mailto:srackham@gmail.com
+  21. mailto:jlm@ofb.net
+  22. mailto:m_pupil@yahoo.com.cn
+  23. http://open.comsultia.com/docbook2odf/
+  24. http://www1.chapman.edu/~jipsen/mathml/asciimath.html
+  25. http://www.methods.co.nz/asciidoc/asciimath.html
+  26. file://localhost/tmp/lynxXXXXsJ1nk8/userguide.html#X50
+  27. file://localhost/tmp/lynxXXXXsJ1nk8/userguide.html#X33
+  28. mailto:francis@daoine.org
+  29. file://localhost/tmp/lynxXXXXsJ1nk8/userguide.html#X39
+  30. file://localhost/tmp/lynxXXXXsJ1nk8/source-highlight-filter.html
+  31. mailto:trolocsis@gmail.com
+  32. mailto:srackham@gmail.com
+  33. file://localhost/tmp/lynxXXXXsJ1nk8/userguide.html#X36
+  34. file://localhost/tmp/lynxXXXXsJ1nk8/userguide.html#X33
+  35. mailto:viktor@rbg.informatik.tu-darmstadt.de
+  36. file://localhost/tmp/lynxXXXXsJ1nk8/userguide.html#X23
+  37. mailto:david@dgreaves.com
+  38. mailto:stone@debian.org
+  39. mailto:stone@debian.org
+  40. mailto:srackham@gmail.com
+  41. http://jimmac.musichall.cz/ikony.php3
+  42. mailto:srackham@gmail.com
+  43. http://www.methods.co.nz/asciidoc/examples/website/
+  44. http://www.methods.co.nz/asciidoc/
+  45. https://sourceforge.net/projects/asciidoc/

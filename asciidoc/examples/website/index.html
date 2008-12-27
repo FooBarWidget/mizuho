@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.2.7" />
+<meta name="generator" content="AsciiDoc 8.3.1" />
 <meta name="description" content="Text based document generation" />
 <meta name="keywords" content="text to HTML, text to DocBook, text to XML, AsciiDoc" />
 <link rel="stylesheet" href="./xhtml11.css" type="text/css" />
@@ -51,46 +51,26 @@ window.onload = function(){generateToc(1)}
 <div class="sectionbody">
 <div class="sidebarblock">
 <div class="sidebar-content">
-<div class="sidebar-title">4 July 2008: AsciiDoc 8.2.7 Released</div>
-<div class="para"><p>Useful additions include:</p></div>
-<div class="ilist"><ul>
-<li>
-<p>
-<a href="http://dblatex.sourceforge.net/">dblatex</a> is now fully supported by
-  <tt>a2x(1)</tt> and is the default <tt>a2x(1)</tt> PDF generator.
-</p>
-</li>
-<li>
-<p>
-Added <tt>dvi</tt>, <tt>ps</tt> and <tt>tex</tt> output format options to <tt>a2x(1)</tt>
-  (courtesy of <tt>dblatex(1)</tt>).
-</p>
-</li>
-<li>
-<p>
-URLs and email addresses are recognized without having to use the
-  macro syntax.
-</p>
-</li>
-<li>
-<p>
-<a href="source-highlight-filter.html">Source code paragraphs</a> make small
-  code examples easier to enter.
-</p>
-</li>
-</ul></div>
-<div class="para"><p>Read the <a href="CHANGELOG.html">CHANGELOG</a> for a full description of all
-the other additions and changes.</p></div>
-<div class="para"><p><a href="mailto:srackham@gmail.com"><em>Stuart Rackham</em></a></p></div>
+<div class="sidebar-title">14 December 2008: AsciiDoc 8.3.1 Released</div>
+<div class="paragraph"><p>This release fixes a couple of regression bugs in the initial
+<a href="version83.html">version 8.3</a> release along with some minor
+additions.
+The platform dependent <tt>install.sh</tt> script has been replaced with an
+<a href="INSTALL.html#_distribution_tarball_installation">autoconf make
+file</a> (this change didn&#8217;t make it into the 8.3.0 release because of
+time constraints).
+Read the <a href="CHANGELOG.html">CHANGELOG</a> for a full list of all
+additions and changes.</p></div>
+<div class="paragraph"><p><a href="mailto:srackham@gmail.com"><em>Stuart Rackham</em></a></p></div>
 </div></div>
 </div>
 </div>
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
-<div class="para"><p><em>AsciiDoc</em> is a text document format for writing short documents,
+<div class="paragraph"><p><em>AsciiDoc</em> is a text document format for writing short documents,
 articles, books and UNIX man pages. <em>AsciiDoc</em> files can be translated
 to HTML and DocBook markups using the <tt>asciidoc(1)</tt> command.</p></div>
-<div class="para"><p><em>AsciiDoc</em> is highly configurable: both the <em>AsciiDoc</em> source file syntax
+<div class="paragraph"><p><em>AsciiDoc</em> is highly configurable: both the <em>AsciiDoc</em> source file syntax
 and the backend output markups (which can be almost any type of
 SGML/XML markup) can be customized and extended by the user.</p></div>
 <div class="admonitionblock">
@@ -106,17 +86,17 @@ in the left hand margin.</td>
 </div>
 <h2 id="_overview_and_examples">Overview and Examples</h2>
 <div class="sectionbody">
-<div class="para"><p>You write an <em>AsciiDoc</em> document the same way you would write a
+<div class="paragraph"><p>You write an <em>AsciiDoc</em> document the same way you would write a
 normal text document, there are no markup tags or weird format
 notations. <em>AsciiDoc</em> files are designed to be viewed, edited and
 printed directly or translated to other presentation formats using
 the <tt>asciidoc(1)</tt> command.</p></div>
-<div class="para"><p>The <tt>asciidoc(1)</tt> command translates <em>AsciiDoc</em> files to HTML, XHTML and
+<div class="paragraph"><p>The <tt>asciidoc(1)</tt> command translates <em>AsciiDoc</em> files to HTML, XHTML and
 DocBook markups.  DocBook can be post-processed to presentation
 formats such as HTML, PDF, DVI, LaTeX, roff, and Postscript using
 readily available Open Source tools.</p></div>
 <h3 id="_example_articles">Example Articles</h3><div style="clear:left"></div>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 This version of the
@@ -127,7 +107,7 @@ This version of the
 </li>
 <li>
 <p>
-Here's the <a href="asciidoc.html">same document</a> created by first
+Here&#8217;s the <a href="asciidoc.html">same document</a> created by first
   generating DocBook markup using <em>AsciiDoc</em> and then converting the
   DocBook markup to HTML using <em>DocBook XSL Stylesheets</em>.
 </p>
@@ -153,65 +133,67 @@ This <a href="asciidoc.pdf">PDF formatted User Guide</a> was generated from
 </li>
 </ul></div>
 <h3 id="_example_books">Example Books</h3><div style="clear:left"></div>
-<div class="para"><p><em>AsciiDoc</em> markup supports all the standard DocBook frontmatter and
+<div class="paragraph"><p><em>AsciiDoc</em> markup supports all the standard DocBook frontmatter and
 backmatter sections (dedication, preface, bibliography, glossary,
 index, colophon) plus footnotes and index entries.</p></div>
-<div class="vlist"><dl>
-<dt>
+<div class="dlist"><dl>
+<dt class="hdlist1">
 Book
 </dt>
 <dd>
 <p>
-    This <a href="book.txt"><em>AsciiDoc</em> book's</a> DocBook output
+    This <a href="book.txt"><em>AsciiDoc</em> book&#8217;s</a> DocBook output
     produced <a href="book.html">this HTML file</a> using the
     <em>DocBook XSL Stylesheets</em>.
 </p>
 </dd>
-<dt>
+<dt class="hdlist1">
 Multi-part book
 </dt>
 <dd>
 <p>
-    This <a href="book-multi.txt">multi-part <em>AsciiDoc</em> book's</a>
+    This <a href="book-multi.txt">multi-part <em>AsciiDoc</em> book&#8217;s</a>
     DocBook output produced <a href="book-multi.html">this HTML file</a>
     using the <em>DocBook XSL Stylesheets</em>.
 </p>
 </dd>
 </dl></div>
 <h3 id="_example_unix_man_pages">Example UNIX Man Pages</h3><div style="clear:left"></div>
-<div class="para"><p>HTML formatted <em>AsciiDoc</em> man pages
+<div class="paragraph"><p>HTML formatted <em>AsciiDoc</em> man pages
 <a href="asciidoc.1.css-embedded.html">with stylesheets</a> and
 <a href="asciidoc.1.html">without stylesheets</a> were generated by <em>AsciiDoc</em>
 from <a href="asciidoc.1.txt">this file</a>.</p></div>
-<div class="para"><p>This <a href="asciidoc.1">roff formatted  man page</a> was generated from
+<div class="paragraph"><p>This <a href="asciidoc.1">roff formatted  man page</a> was generated from
 <tt>asciidoc(1)</tt> DocBook output using <tt>xsltproc(1)</tt> and DocBook XSL
 Stylesheets.</p></div>
 <h3 id="_example_web_site">Example Web Site</h3><div style="clear:left"></div>
-<div class="para"><p>The <a href="README-website.html"><em>AsciiDoc</em> website</a> is included in the
+<div class="paragraph"><p>The <a href="README-website.html"><em>AsciiDoc</em> website</a> is included in the
 <em>AsciiDoc</em> distribution (in <tt>./examples/website/</tt>) as example website
 built using <em>AsciiDoc</em>.  See <tt>./examples/website/README-website.txt</tt>.</p></div>
 </div>
 <h2 id="_music_filter">Music Filter</h2>
 <div class="sectionbody">
-<div class="para"><p>A <a href="music-filter.html">music filter</a> is included in the distribution
+<div class="paragraph"><p>A <a href="music-filter.html">music filter</a> is included in the distribution
 <tt>./filters/</tt> directory. It translates music in
 <a href="http://lilypond.org/">LilyPond</a> or <a href="http://abcnotation.org.uk/">ABC</a>
 notation to standard classical notation</p></div>
 </div>
 <h2 id="_source_code_highlight_filter">Source Code Highlight Filter</h2>
 <div class="sectionbody">
-<div class="para"><p>A <a href="source-highlight-filter.html">source code highlight filter</a> is
+<div class="paragraph"><p>A <a href="source-highlight-filter.html">source code highlight filter</a> is
 included in the distribution <tt>./filters/</tt> directory.</p></div>
 </div>
 <h2 id="X3">Mathematical Formulae</h2>
 <div class="sectionbody">
-<div class="para"><p>You can include mathematical formulae in your <em>AsciiDoc</em> documents using
-<a href="asciimath.html">ASCIIMathML</a> or <a href="latexmath.html">LaTeXMathML</a>
+<div class="paragraph"><p>You can include mathematical formulae in <em>AsciiDoc</em> XHTML documents using
+<a href="asciimathml.html">ASCIIMathML</a> or <a href="latexmathml.html">LaTeXMathML</a>
 notation.</p></div>
+<div class="paragraph"><p><a href="latexmath.pdf">LaTeX Math</a> can be included in <em>AsciiDoc</em>
+documents processed by <tt>dblatex(1)</tt>.</p></div>
 </div>
 <h2 id="_vim_syntax_highlighter">Vim Syntax Highlighter</h2>
 <div class="sectionbody">
-<div class="para"><p>An <em>AsciiDoc</em> syntax highlighter for the Vim text editor is included in
+<div class="paragraph"><p>An <em>AsciiDoc</em> syntax highlighter for the Vim text editor is included in
 the <em>AsciiDoc</em> distribution (see <em>Appendix F</em> of the <em><em>AsciiDoc</em> User
 Guide</em> for details).</p></div>
 <div class="imageblock">
@@ -222,13 +204,13 @@ Guide</em> for details).</p></div>
 </div>
 <div class="image-title">Syntax highlighter screenshot</div>
 </div>
-<div class="para"><p>Dag Wieers has implemented an alternative Vim syntax file for <em>AsciiDoc</em>
+<div class="paragraph"><p>Dag Wieers has implemented an alternative Vim syntax file for <em>AsciiDoc</em>
 which can be found here
 <a href="http://svn.rpmforge.net/svn/trunk/tools/asciidoc-vim/">http://svn.rpmforge.net/svn/trunk/tools/asciidoc-vim/</a>.</p></div>
 </div>
 <h2 id="X2">Resources</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Check the <a href="downloads.html">Downloads page</a> for packaged versions
@@ -304,23 +286,34 @@ Karl Mowatt-Wilson has developed an <a href="http://ikiwiki.info/">ikiwiki</a>
 </div>
 <h2 id="_blogpost_weblog_client">Blogpost weblog client</h2>
 <div class="sectionbody">
-<div class="para"><p><a href="http://srackham.wordpress.com/blogpost-readme/">blogpost</a> is a
+<div class="paragraph"><p><a href="http://srackham.wordpress.com/blogpost-readme/">blogpost</a> is a
 command-line weblog client for publishing <em>AsciiDoc</em> documents to
 <a href="http://wordpress.org/">WordPress</a> blog hosts. It creates and updates
 weblog posts and pages directly from <em>AsciiDoc</em> source documents.</p></div>
 </div>
 <h2 id="X1">LaTeX Backend</h2>
 <div class="sectionbody">
-<div class="para"><p>An experimental LaTeX backend has been written for <em>AsciiDoc</em> by
+<div class="paragraph"><p>An experimental LaTeX backend has been written for <em>AsciiDoc</em> by
 Benjamin Klum.  Benjamin has done a superhuman job (I admit it, I
-didn't think this was doable due to <em>AsciiDoc</em>'s SGML/XML bias).</p></div>
-<div class="para"><p>Here's <a href="latex-backend.html">Benjamin's documentation</a>.</p></div>
+didn&#8217;t think this was doable due to <em>AsciiDoc</em>'s SGML/XML bias).</p></div>
+<div class="paragraph"><p>Here&#8217;s <a href="latex-backend.html">Benjamin&#8217;s documentation</a>.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note" />
+</td>
+<td class="content">Owning to to other commitments, Benjamin is unable to maintain
+this backend. I don&#8217;t have the expertise or time to take this on
+consequently the LaTeX backend has not been tested or updated since
+<em>AsciiDoc</em> version 8.2.7 and is currently unsupported.</td>
+</tr></table>
+</div>
 </div>
 <h2 id="_projects_using_asciidoc">Projects using AsciiDoc</h2>
 <div class="sectionbody">
-<div class="para"><p>Here are some projects I know of, if you know of more drop me a line
-and I'll add them to the list.</p></div>
-<div class="ilist"><ul>
+<div class="paragraph"><p>Here are some projects I know of, if you know of more drop me a line
+and I&#8217;ll add them to the list.</p></div>
+<div class="ulist"><ul>
 <li>
 <p>
 The Linux kernel
@@ -360,17 +353,24 @@ The <a href="http://xpt.sourceforge.net/">*Nix Power Tools project</a> uses
   highlighter (see <a href="#X2">Resources</a> above).
 </p>
 </li>
+<li>
+<p>
+The <a href="http://www.wesnoth.org/">Battle for Wesnoth</a> project uses
+  <em>AsciiDoc</em> for it&#8217;s <a href="http://www.wesnoth.org/wiki/WesnothManual">Manual</a>
+  in a number of different languages.
+</p>
+</li>
 </ul></div>
 </div>
 <h2 id="_asciidoc_version_9">AsciiDoc version 9</h2>
 <div class="sectionbody">
-<div class="para"><p>The next version of <em>AsciiDoc</em> is underway &#8212; details
+<div class="paragraph"><p>The next version of <em>AsciiDoc</em> is underway&#8201;&#8212;&#8201;details
 <a href="version9.html">here</a>.</p></div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 8.2.7<br />
-Last updated 2008-07-04 23:29:25 NZDT
+Version 8.3.1<br />
+Last updated 2008-12-13 10:13:03 NZDT
 </div>
 <div id="footer-badges">
 <a href="http://validator.w3.org/check?uri=referer">

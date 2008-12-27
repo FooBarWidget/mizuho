@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.2.7" />
+<meta name="generator" content="AsciiDoc 8.3.1" />
 <link rel="stylesheet" href="./xhtml11.css" type="text/css" />
 <link rel="stylesheet" href="./xhtml11-quirks.css" type="text/css" />
 <link rel="stylesheet" href="./layout1.css" type="text/css" />
@@ -53,69 +53,67 @@ window.onload = function(){generateToc(1)}
 <img src="./images/icons/note.png" alt="Note" />
 </td>
 <td class="content">The current version of <em>AsciiDoc</em> requires <strong>Python 2.4 or newer</strong>
-to run.  If you don't already have an up-to-date version of Python
+to run.  If you don&#8217;t already have an up-to-date version of Python
 installed it can be downloaded from the official Python website
 <a href="http://www.python.org/">http://www.python.org/</a>.</td>
 </tr></table>
 </div>
-<div class="para"><p>The latest <em>AsciiDoc</em> downloads can be found on the <em>AsciiDoc</em> website
+<div class="paragraph"><p>The latest <em>AsciiDoc</em> downloads can be found on the <em>AsciiDoc</em> website
 <a href="http://www.methods.co.nz/asciidoc/downloads.html">http://www.methods.co.nz/asciidoc/downloads.html</a> and at the
 SourceForge <a href="http://sourceforge.net/projects/asciidoc/">http://sourceforge.net/projects/asciidoc/</a>.</p></div>
 </div>
 </div>
 <h2 id="_prepackaged_asciidoc_installation">Prepackaged AsciiDoc installation</h2>
 <div class="sectionbody">
-<div class="para"><p>The <em>AsciiDoc</em>
+<div class="paragraph"><p>The <em>AsciiDoc</em>
 <a href="http://www.methods.co.nz/asciidoc/downloads.html">downloads page</a>
 lists <em>AsciiDoc</em> packages for various Linux distributions.</p></div>
 </div>
 <h2 id="_distribution_tarball_installation">Distribution tarball installation</h2>
 <div class="sectionbody">
-<div class="para"><p>If your flavor or UNIX or Linux is not supported or you prefer to
-install from source use the <tt>install.sh</tt> shell script in the tarball
-root directory (thanks to <a href="mailto:jlm@ofb.net">Jacob Mandelson</a> for the
-initial implementation of this script).</p></div>
-<div class="para"><p><tt>install.sh</tt> installs <em>AsciiDoc</em> executables, configuration files and
-man pages in the usual locations. Here's how:</p></div>
+<div class="paragraph"><p>If your flavor or UNIX or Linux does not have a packaged <em>AsciiDoc</em>
+distribution or if you prefer to install the latest <em>AsciiDoc</em> version
+from source use the <tt>configure</tt> shell script in the tarball root
+directory.</p></div>
+<div class="paragraph"><p>The <tt>autoconf(1)</tt> generated <tt>configure</tt> script creates a make file
+that is tailored for your system. To install:</p></div>
 <div class="literalblock">
 <div class="content">
-<pre><tt>$ tar -xzf asciidoc-8.2.7.tar.gz
-$ cd asciidoc-8.2.7
-$ sudo ./install.sh</tt></pre>
+<pre><tt>$ tar -xzf asciidoc-8.3.1.tar.gz
+$ cd asciidoc-8.3.1
+$ ./configure
+$ make
+$ sudo make install</tt></pre>
 </div></div>
-<div class="admonitionblock">
-<table><tr>
-<td class="icon">
-<img src="./images/icons/note.png" alt="Note" />
-</td>
-<td class="content">This script was tested on Ubuntu Linux.  You may need to edit
-<tt>install.sh</tt> if your file locations differ from those wired into the
-script.</td>
-</tr></table>
-</div>
-<div class="para"><p>The <tt>uninstall.sh</tt> script (actually just a symlink to <tt>install.sh</tt>)
-will uninstall <em>AsciiDoc</em>.</p></div>
-<div class="para"><p>If Vim is installed on your system <tt>install.sh</tt> will install the Vim
-syntax highlighter and filetype detection scripts in the global
-<tt>/etc/vim</tt> directory (<tt>asciidoc.vim</tt> in <tt>/etc/vim/syntax/</tt> and
-<tt>asciidoc_filetype.vim</tt> in <tt>/etc/vim/ftdetect/</tt>).</p></div>
-<div class="para"><p>To install locally put <tt>asciidoc.vim</tt> in <tt>~/.vim/syntax/</tt> and
-<tt>asciidoc_filetype.vim</tt> in <tt>~/.vim/ftdetect/</tt>.</p></div>
+<div class="paragraph"><p>To install the documentation:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>$ sudo make docs</tt></pre>
+</div></div>
+<div class="paragraph"><p>To uninstall <em>AsciiDoc</em>:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>$ sudo make uninstall</tt></pre>
+</div></div>
+<div class="paragraph"><p>If Vim is installed on your system the <em>AsciiDoc</em> Vim syntax highlighter
+and filetype detection scripts will be install in the global Vim
+configuration file directory (<tt>asciidoc.vim</tt> in the <tt>syntax</tt> directory
+and <tt>asciidoc_filetype.vim</tt> in the <tt>ftdetect</tt> directory).</p></div>
 </div>
 <h2 id="_microsoft_windows_installation">Microsoft Windows installation</h2>
 <div class="sectionbody">
-<div class="para"><p>To install the zip formatted distribution just unzip the contents to a
+<div class="paragraph"><p>To install the zip formatted distribution just unzip the contents to a
 new folder:</p></div>
 <div class="literalblock">
 <div class="content">
 <pre><tt>$ mkdir asciidoc
 $ cd asciidoc
-$ unzip ../asciidoc-8.2.7.zip</tt></pre>
+$ unzip ../asciidoc-8.3.1.zip</tt></pre>
 </div></div>
 </div>
 <h2 id="_testing_your_installation">Testing your installation</h2>
 <div class="sectionbody">
-<div class="para"><p>Test out asciidoc by changing to the <em>AsciiDoc</em> application directory
+<div class="paragraph"><p>Test out asciidoc by changing to the <em>AsciiDoc</em> application directory
 and convert the User Guide document (<tt>./doc/asciidoc.txt</tt>) to XHTML
 (<tt>./doc/asciidoc.html</tt>):</p></div>
 <div class="literalblock">
@@ -134,8 +132,8 @@ directly or create a suitable <tt>asciidoc.bat</tt> file.</td>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 8.2.7<br />
-Last updated 2008-07-04 23:29:26 NZDT
+Version 8.3.1<br />
+Last updated 2008-12-13 10:52:08 NZDT
 </div>
 <div id="footer-badges">
 <a href="http://validator.w3.org/check?uri=referer">

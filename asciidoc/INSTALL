@@ -1,6 +1,6 @@
                              AsciiDoc Installation
 
-   version 8.2.7, 4 July 2008
+   version 8.3.1, 14 December 2008
 
    Note: The current version of AsciiDoc requires Python 2.4 or newer to
    run. If you don't already have an up-to-date version of Python
@@ -20,42 +20,38 @@
 
 2. Distribution tarball installation
 
-   If your flavor or UNIX or Linux is not supported or you prefer to
-   install from source use the install.sh shell script in the tarball root
-   directory (thanks to [5]Jacob Mandelson for the initial implementation
-   of this script).
+   If your flavor or UNIX or Linux does not have a packaged AsciiDoc
+   distribution or if you prefer to install the latest AsciiDoc version
+   from source use the configure shell script in the tarball root
+   directory.
 
-   install.sh installs AsciiDoc executables, configuration files and man
-   pages in the usual locations. Here's how:
+   The autoconf(1) generated configure script creates a make file that is
+   tailored for your system. To install:
+  $ tar -xzf asciidoc-8.3.1.tar.gz
+  $ cd asciidoc-8.3.1
+  $ ./configure
+  $ make
+  $ sudo make install
 
-     $ tar -xzf asciidoc-8.2.7.tar.gz
-     $ cd asciidoc-8.2.7
-     $ sudo ./install.sh
+   To install the documentation:
+  $ sudo make docs
 
-   Note: This script was tested on Ubuntu Linux. You may need to edit
-   install.sh if your file locations differ from those wired into the
-   script.
+   To uninstall AsciiDoc:
+  $ sudo make uninstall
 
-   The uninstall.sh script (actually just a symlink to install.sh) will
-   uninstall AsciiDoc.
-
-   If Vim is installed on your system install.sh will install the Vim
-   syntax highlighter and filetype detection scripts in the global
-   /etc/vim directory (asciidoc.vim in /etc/vim/syntax/ and
-   asciidoc_filetype.vim in /etc/vim/ftdetect/).
-
-   To install locally put asciidoc.vim in ~/.vim/syntax/ and
-   asciidoc_filetype.vim in ~/.vim/ftdetect/.
+   If Vim is installed on your system the AsciiDoc Vim syntax highlighter
+   and filetype detection scripts will be install in the global Vim
+   configuration file directory (asciidoc.vim in the syntax directory and
+   asciidoc_filetype.vim in the ftdetect directory).
      __________________________________________________________________
 
 3. Microsoft Windows installation
 
    To install the zip formatted distribution just unzip the contents to a
    new folder:
-
-     $ mkdir asciidoc
-     $ cd asciidoc
-     $ unzip ../asciidoc-8.2.7.zip
+  $ mkdir asciidoc
+  $ cd asciidoc
+  $ unzip ../asciidoc-8.3.1.zip
      __________________________________________________________________
 
 4. Testing your installation
@@ -63,15 +59,14 @@
    Test out asciidoc by changing to the AsciiDoc application directory and
    convert the User Guide document (./doc/asciidoc.txt) to XHTML
    (./doc/asciidoc.html):
-
-     $ asciidoc doc/asciidoc.txt
+  $ asciidoc doc/asciidoc.txt
 
    Note: Windows users will need to execute the asciidoc.py script
    directly or create a suitable asciidoc.bat file.
      __________________________________________________________________
 
-   Version 8.2.7
-   Last updated 2008-07-04 23:26:27 NZDT
+   Version 8.3.1
+   Last updated 2008-12-13 10:52:07 NZDT
 
 References
 
@@ -79,4 +74,3 @@ References
    2. http://www.methods.co.nz/asciidoc/downloads.html
    3. http://sourceforge.net/projects/asciidoc/
    4. http://www.methods.co.nz/asciidoc/downloads.html
-   5. mailto:jlm@ofb.net

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.2.7" />
+<meta name="generator" content="AsciiDoc 8.3.1" />
 <link rel="stylesheet" href="./xhtml11.css" type="text/css" />
 <link rel="stylesheet" href="./xhtml11-quirks.css" type="text/css" />
 <link rel="stylesheet" href="./layout1.css" type="text/css" />
@@ -37,9 +37,9 @@
 </div>
 <div id="preamble">
 <div class="sectionbody">
-<div class="para"><p>PDF generation from <em>AsciiDoc</em> generated DocBook using FOP plus DocBook XSL
+<div class="paragraph"><p>PDF generation from <em>AsciiDoc</em> generated DocBook using FOP plus DocBook XSL
 Stylesheets.</p></div>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 FOP 0.95beta.
@@ -47,27 +47,27 @@ FOP 0.95beta.
 </li>
 <li>
 <p>
-DocBook XSL Stylesheets version 1.72.0.
+DocBook XSL Stylesheets version 1.74.0.
 </p>
 </li>
 </ul></div>
-<div class="para"><p>Output file customisation is achieved by tweaking the DocBook XSL
-stylesheets.  I've tried to keep customization to a minimum and
+<div class="paragraph"><p>Output file customisation is achieved by tweaking the DocBook XSL
+stylesheets.  I&#8217;ve tried to keep customization to a minimum and
 confine it to the separate XSL driver files in the distribution
 <tt>./docbook-xsl/</tt> directory (see the User Guide for details).</p></div>
-<div class="para"><p>To polish some rough edges I've written some patches for the DocBook
-XSL stylesheets &#8212; you don't need them but they're documented below
+<div class="paragraph"><p>To polish some rough edges I&#8217;ve written some patches for the DocBook
+XSL stylesheets&#8201;&#8212;&#8201;you don&#8217;t need them but they&#8217;re documented below
 and included in the distribution <tt>./docbook-xsl/</tt> directory.</p></div>
 </div>
 </div>
 <h2 id="_manually_upgrading_debian_to_the_latest_docbook_xsl_stylesheets">Manually upgrading Debian to the latest DocBook XSL stylesheets</h2>
 <div class="sectionbody">
-<div class="para"><p>The DocBook XSL Stylesheets distribution is just a directory full of
+<div class="paragraph"><p>The DocBook XSL Stylesheets distribution is just a directory full of
 text files and you can switch between releases by changing the
 directory name in the system XML catalog.</p></div>
-<div class="para"><p>To upgrade to the latest docbook-xsl stylesheets without having to
+<div class="paragraph"><p>To upgrade to the latest docbook-xsl stylesheets without having to
 wait for the Debian <tt>docbook-xsl</tt> package:</p></div>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Download the latest docbook-xsl tarball from
@@ -97,47 +97,12 @@ $ sudo cp -p docbook-xsl.xml docbook-xsl.xml.ORIG
 $ sudo vi docbook-xsl.xml</tt></pre>
 </div></div>
 </li>
-<li>
-<p>
-Apply optional patches (see below).
-</p>
-</li>
 </ul></div>
-</div>
-<h2 id="_patches_to_docbook_xsl_stylesheets">Patches to DocBook XSL Stylesheets</h2>
-<div class="sectionbody">
-<div class="admonitionblock">
-<table><tr>
-<td class="icon">
-<img src="./images/icons/note.png" alt="Note" />
-</td>
-<td class="content">You'll find the patch files in the <em>AsciiDoc</em> distribution archive
-<tt>./docbook-xsl/</tt> directory.</td>
-</tr></table>
-</div>
-<h3 id="_shade_literal_block_patch">Shade Literal Block Patch</h3><div style="clear:left"></div>
-<div class="para"><p>The processing expectation for <em>AsciiDoc</em> LiteralBlocks and
-LiteralParagraphs is that they are not shaded. The
-<tt>shaded-literallayout.patch</tt> was devised to allow AciiDoc Listing
-blocks to be shaded while leaving Literal paragraphs and Literal
-blocks unshaded (the default DocBook XSL Stylesheets behavior is to
-shade all verbatim elements).</p></div>
-<div class="para"><p>The patch implements a <tt>shade.literallayout</tt> XSL parameter so that
-shading in literal elements could be disabled while other verbatim
-elements are left shaded (by setting the XSL <tt>shade.verbatim</tt>
-parameter).</p></div>
-<div class="para"><p>The relevant patch file is <tt>shaded-literallayout.patch</tt> and it can be
-applied from the DocBook XSL Stylesheets directory:</p></div>
-<div class="literalblock">
-<div class="content">
-<pre><tt>$ cd /usr/share/xml/docbook/stylesheet/docbook-xsl-1.72.0
-$ sudo patch -p0 &lt; /tmp/shaded-literallayout.patch</tt></pre>
-</div></div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 8.2.7<br />
-Last updated 2008-07-04 23:29:16 NZDT
+Version 8.3.1<br />
+Last updated 2008-12-13 09:59:38 NZDT
 </div>
 <div id="footer-badges">
 <a href="http://validator.w3.org/check?uri=referer">

@@ -1,62 +1,644 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>The Article Title</title><link rel="stylesheet" href="./docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /></head><body><div class="article" lang="en" xml:lang="en"><div class="titlepage"><div><div><h1 class="title"><a id="id2433890"></a>The Article Title</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Author's</span> <span class="surname">Name</span></h3><div class="affiliation"><div class="address"><p><code class="email">&lt;<a href="mailto:authors@email.address">authors@email.address</a>&gt;</code></p></div></div></div></div><div><div class="revhistory"><table border="1" width="100%" summary="Revision history"><tr><th align="left" valign="top" colspan="3"><b>Revision History</b></th></tr><tr><td align="left">Revision 1.0</td><td align="left">Dec 2003</td><td align="left">AN</td></tr></table></div></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#_the_first_section">1. The First Section</a></span></dt><dd><dl><dt><span class="section"><a href="#X1">1.1. Sub-section with Anchor</a></span></dt></dl></dd><dt><span class="section"><a href="#_the_second_section">2. The Second Section</a></span></dt><dt><span class="appendix"><a href="#_example_appendix">A. Example Appendix</a></span></dt><dd><dl><dt><span class="section"><a href="#_appendix_sub_section">A.1. Appendix Sub-section</a></span></dt></dl></dd><dt><span class="bibliography"><a href="#_bibliography">Bibliography</a></span></dt><dt><span class="glossary"><a href="#_glossary">Glossary</a></span></dt><dt><span class="index"><a href="#_index">Index</a></span></dt></dl></div><p>This is the optional preamble (an untitled section body). Useful for
-writing simple sectionless documents consisting only of a preamble.</p><div class="abstract"><a id="_abstract"></a><p class="title"><b>Abstract</b></p><p>The optional abstract (one or more paragraphs) goes here.</p><p>This document is an <span class="emphasis"><em>AsciiDoc</em></span> article skeleton containing briefly
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.3.1" />
+<title>The Article Title</title>
+<style type="text/css">
+/* Debug borders */
+p, li, dt, dd, div, pre, h1, h2, h3, h4, h5, h6 {
+/*
+  border: 1px solid red;
+*/
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+tt {
+  color: navy;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  font-family: sans-serif;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+
+div.sectionbody {
+  font-family: serif;
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+
+pre {
+  padding: 0;
+  margin: 0;
+}
+
+span#author {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+span#email {
+}
+span#revision {
+  font-family: sans-serif;
+}
+
+div#footer {
+  font-family: sans-serif;
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+div#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+div#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+div#preamble,
+div.tableblock, div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-right: 10%;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.5em;
+  margin-bottom: 2.5em;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+
+div.listingblock {
+  margin-right: 0%;
+}
+div.listingblock > div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock {
+  padding-left: 2.0em;
+}
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock {
+  padding-left: 2.0em;
+}
+div.verseblock > div.content {
+  white-space: pre;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 2px solid silver;
+}
+
+div.exampleblock > div.content {
+  border-left: 2px solid silver;
+  padding: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+div.imageblock img { border: 1px solid silver; }
+span.image img { border-style: none; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+div.olist > ol {
+  list-style-type: decimal;
+}
+div.olist2 > ol {
+  list-style-type: lower-alpha;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead {
+  font-family: sans-serif;
+  font-weight: bold;
+}
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+@media print {
+  div#footer-badges { display: none; }
+}
+
+div#toctitle {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+/* Workarounds for IE6's broken and incomplete CSS2. */
+
+div.sidebar-content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+div.sidebar-title, div.image-title {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  margin-top: 0.0em;
+  margin-bottom: 0.5em;
+}
+
+div.listingblock div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock-attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock-content {
+  white-space: pre;
+}
+div.verseblock-attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+
+div.exampleblock-content {
+  border-left: 2px solid silver;
+  padding-left: 0.5em;
+}
+
+/* IE6 sets dynamically generated links as visited. */
+div#toc a:visited { color: blue; }
+
+/* Because IE6 child selector is broken. */
+div.olist2 ol {
+  list-style-type: lower-alpha;
+}
+div.olist2 div.olist ol {
+  list-style-type: decimal;
+}
+</style>
+</head>
+<body>
+<div id="header">
+<h1>The Article Title</h1>
+<span id="author">Author's Name</span><br />
+<span id="email"><tt>&lt;<a href="mailto:authors@email.address">authors@email.address</a>&gt;</tt></span><br />
+<span id="revision">version 1.0,</span>
+Dec 2003
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>This is the optional preamble (an untitled section body). Useful for
+writing simple sectionless documents consisting only of a preamble.</p></div>
+</div>
+</div>
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The optional abstract (one or more paragraphs) goes here.</p></div>
+<div class="paragraph"><p>This document is an <em>AsciiDoc</em> article skeleton containing briefly
 annotated element placeholders plus a couple of example index entries
 and footnotes. The preface, appendix, bibliography, glossary and index
-section titles are significant (<span class="emphasis"><em>specialsections</em></span>).</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_the_first_section"></a>1. The First Section</h2></div></div></div><p>Article sections start at level 1 and can be nested up to four levels
+section titles are significant (<em>specialsections</em>).</p></div>
+</div>
+<h2 id="_the_first_section">The First Section</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Article sections start at level 1 and can be nested up to four levels
 deep.
-<sup>[<a id="id2526524" href="#ftn.id2526524">1</a>]</sup>
-<a id="id2526528" class="indexterm"></a></p><p>And now for something completely different: <a id="id2488059" class="indexterm"></a>
-monkeys, lions and
+<br />[An example footnote.]<br /></p></div>
+<div class="paragraph"><p>And now for something completely different: monkeys, lions and
 tigers (Bengal and Siberian) using the alternative syntax index
 entries.
-<a id="id2488071" class="indexterm"></a>
-<a id="id2488083" class="indexterm"></a>
-<a id="id2488092" class="indexterm"></a>
-<a id="id2488105" class="indexterm"></a>
-<a id="id2488116" class="indexterm"></a>
-<a id="id2488126" class="indexterm"></a>
-<a id="id2488139" class="indexterm"></a>
-<a id="id2488151" class="indexterm"></a>
-Note that multi-entry terms generate separate index entries.</p><p>Here are a couple of image examples: an <span class="inlinemediaobject"><img src="images/smallnew.png" alt="images/smallnew.png" /></span>
-example inline image followed by an example block image:</p><div class="figure"><a id="id2488183"></a><p class="title"><b>Figure 1. Tiger block image</b></p><div class="figure-contents"><div class="mediaobject"><img src="images/tiger.png" alt="Tiger image" /></div></div></div><br class="figure-break" /><p>Followed by an example table:</p><div class="table"><a id="id2488210"></a><p class="title"><b>Table 1. An example table</b></p><div class="table-contents"><table summary="An example table" cellpadding="4px" border="0" style="border-collapse: collapse;border-top: 2px solid #527bbd; border-bottom: 2px solid #527bbd; "><colgroup><col align="left" /><col align="left" /></colgroup><thead><tr><th style="" align="left">
-    Option
-    </th><th style="" align="left">
-    Description
-    </th></tr></thead><tbody><tr><td style="" align="left">
-    -a <span class="emphasis"><em>USER GROUP</em></span>
-    </td><td style="" align="left">
-    Add <span class="emphasis"><em>USER</em></span> to <span class="emphasis"><em>GROUP</em></span>.
-    </td></tr><tr><td style="" align="left">
-    -R <span class="emphasis"><em>GROUP</em></span>
-    </td><td style="" align="left">
-    Disables access to <span class="emphasis"><em>GROUP</em></span>.
-    </td></tr></tbody></table></div></div><br class="table-break" /><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="X1"></a>1.1. Sub-section with Anchor</h3></div></div></div><p>Sub-section at level 2.</p><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h4 class="title"><a id="_a_nested_sub_section"></a>1.1.1. A Nested Sub-section</h4></div></div></div><p>Sub-section at level 3.</p><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h5 class="title"><a id="_yet_another_nested_sub_section"></a>1.1.1.1. Yet another nested Sub-section</h5></div></div></div><p>Sub-section at level 4.</p><p>This is the maximum sub-section depth supported by the distributed
-<span class="emphasis"><em>AsciiDoc</em></span> configuration.
-<sup>[<a id="id2488399" href="#ftn.id2488399">2</a>]</sup></p></div></div></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_the_second_section"></a>2. The Second Section</h2></div></div></div><p>Article sections are at level 1 and can contain sub-sections nested up
-to four deep.</p><p>An example link to anchor at start of the <a href="#X1" title="1.1.&#xA0;Sub-section with Anchor">first sub-section</a>.
-<a id="id2488537" class="indexterm"></a></p><p>An example link to a bibliography entry <a href="#taoup">[taoup]</a>.</p></div><div class="appendix" lang="en" xml:lang="en"><h2 class="title" style="clear: both"><a id="_example_appendix"></a>A. Example Appendix</h2><p><span class="emphasis"><em>AsciiDoc</em></span> article appendices are just just article sections with
-<span class="emphasis"><em>specialsection</em></span> titles.</p><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_appendix_sub_section"></a>A.1. Appendix Sub-section</h3></div></div></div><p>Appendix sub-section at level 2.</p></div></div><div class="bibliography"><div class="titlepage"><div><div><h2 class="title"><a id="_bibliography"></a>Bibliography</h2></div></div></div><p>The bibliography list is an example of an <span class="emphasis"><em>AsciiDoc</em></span> SimpleList, the
-<span class="emphasis"><em>AsciiDoc</em></span> source list items are bulleted with a <code class="literal">+</code> character.</p><div class="bibliomixed"><a id="id2488858"></a><p class="bibliomixed">
-<span class="bibliomisc">
-<a id="taoup"></a>[taoup] Eric Steven Raymond. <span class="emphasis"><em>The Art of Unix
-  Programming</em></span>. Addison-Wesley. ISBN 0-13-142901-9.
+
+
+
+Note that multi-entry terms generate separate index entries.</p></div>
+<div class="paragraph"><p>Here are a couple of image examples: an <span class="image">
+<img alt="images/smallnew.png" src="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAABsAAAARCAIAAACjLUBkAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlz
+AAAOwgAADsIBFShKgAAAAKxJREFUOE+tVFsOgDAI08T7n3jJRDGsK0yWZXw5Ukp5edZaj70mjHvt
+2Ev3VJwylnJ5jDhDf8CoUAugpwSgB3ktwafR4xY8WkqrWinEjEu/0QhAT2bUitSQHXP8MFqvu8lY
+gKlDjZQGMTilYdUm1mvsGvEWhMsw1UeaErWFNolnnU4GW0nyu8ks7MpoMZtGzUA4a1C6+fGsKZ6O
+z58ddTDYx/TGZwD5n2KGBTE3UQbhO1bl15wAAAAASUVORK5CYII=" />
 </span>
-</p></div><div class="bibliomixed"><a id="id2488879"></a><p class="bibliomixed">
-<span class="bibliomisc">
+example inline image followed by an example block image:</p></div>
+<div class="imageblock">
+<div class="content">
+<img alt="Tiger image" title="Tiger image" src="data:image/png;base64,
+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
+m2i9J54AAAAASUVORK5CYII=" />
+</div>
+<div class="title">Tiger block image</div>
+</div>
+<div class="paragraph"><p>Followed by an example table:</p></div>
+<div class="tableblock">
+<table rules="all"
+width="60%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">An example table</caption>
+<col width="50%" />
+<col width="50%" />
+<thead valign="top">
+<tr>
+<th align="left"> Option          </th>
+<th align="left"> Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr>
+<td align="left"><p class="table">-a <em>USER GROUP</em></p></td>
+<td align="left"><p class="table">Add <em>USER</em> to <em>GROUP</em>.</p></td>
+</tr>
+<tr>
+<td align="left"><p class="table">-R <em>GROUP</em></p></td>
+<td align="left"><p class="table">Disables access to <em>GROUP</em>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="X1">Sub-section with Anchor</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Sub-section at level 2.</p></div>
+<h4 id="_a_nested_sub_section">A Nested Sub-section</h4>
+<div class="paragraph"><p>Sub-section at level 3.</p></div>
+<h5 id="_yet_another_nested_sub_section">Yet another nested Sub-section</h5>
+<div class="paragraph"><p>Sub-section at level 4.</p></div>
+<div class="paragraph"><p>This is the maximum sub-section depth supported by the distributed
+<em>AsciiDoc</em> configuration.
+<br />[A second example footnote.]<br /></p></div>
+</div>
+<h2 id="_the_second_section">The Second Section</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Article sections are at level 1 and can contain sub-sections nested up
+to four deep.</p></div>
+<div class="paragraph"><p>An example link to anchor at start of the <a href="#X1">first sub-section</a>.</p></div>
+<div class="paragraph"><p>An example link to a bibliography entry <a href="#taoup">[taoup]</a>.</p></div>
+</div>
+<h2 id="_appendix_a_example_appendix">Appendix A: Example Appendix</h2>
+<div class="sectionbody">
+<div class="paragraph"><p><em>AsciiDoc</em> article appendices are just just article sections with
+<em>specialsection</em> titles.</p></div>
+<h3 id="_appendix_sub_section">Appendix Sub-section</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Appendix sub-section at level 2.</p></div>
+</div>
+<h2 id="_bibliography">Bibliography</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The bibliography list is a style of <em>AsciiDoc</em> bulleted list.</p></div>
+<div class="ulist bibliography"><ul>
+<li>
+<p>
+<a id="taoup"></a>[taoup] Eric Steven Raymond. <em>The Art of Unix
+  Programming</em>. Addison-Wesley. ISBN 0-13-142901-9.
+</p>
+</li>
+<li>
+<p>
 <a id="walsh-muellner"></a>[walsh-muellner] Norman Walsh &amp; Leonard Muellner.
-  <span class="emphasis"><em>DocBook - The Definitive Guide</em></span>. O'Reilly &amp; Associates. 1999.
+  <em>DocBook - The Definitive Guide</em>. O&#8217;Reilly &amp; Associates. 1999.
   ISBN 1-56592-580-7.
-</span>
-</p></div></div><div class="glossary"><div class="titlepage"><div><div><h2 class="title"><a id="_glossary"></a>Glossary</h2></div></div></div><p>Glossaries are optional. Glossaries entries are an example of <span class="emphasis"><em>AsciiDoc</em></span>
-VariableList entries, the <span class="emphasis"><em>AsciiDoc</em></span> source entry terms are terminated
-by the ":-" characters.</p><dl><dt>
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_glossary">Glossary</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Glossaries are optional. Glossaries entries are an example of a style
+of <em>AsciiDoc</em> labeled lists.</p></div>
+<div class="dlist glossary"><dl>
+<dt>
 A glossary term
-</dt><dd><p>
+</dt>
+<dd>
+<p>
   The corresponding (indented) definition.
-</p></dd><dt>
+</p>
+</dd>
+<dt>
 A second glossary term
-</dt><dd><p>
+</dt>
+<dd>
+<p>
   The corresponding (indented) definition.
-</p></dd></dl></div><div class="index"><div class="titlepage"><div><div><h2 class="title"><a id="_index"></a>Index</h2></div></div></div><div class="index"><div class="indexdiv"><h3>B</h3><dl><dt>Bengal Tiger, <a href="#_the_first_section">The First Section</a></dt><dt>Big cats</dt><dd><dl><dt>Lions, <a href="#_the_first_section">The First Section</a></dt><dt>Tigers</dt><dd><dl><dt>Bengal Tiger, <a href="#_the_first_section">The First Section</a></dt><dt>Siberian Tiger, <a href="#_the_first_section">The First Section</a></dt></dl></dd></dl></dd></dl></div><div class="indexdiv"><h3>E</h3><dl><dt>Example index entry, <a href="#_the_first_section">The First Section</a></dt></dl></div><div class="indexdiv"><h3>L</h3><dl><dt>Lions, <a href="#_the_first_section">The First Section</a></dt></dl></div><div class="indexdiv"><h3>M</h3><dl><dt>monkeys, <a href="#_the_first_section">The First Section</a></dt></dl></div><div class="indexdiv"><h3>S</h3><dl><dt>Second example index entry, <a href="#_the_second_section">The Second Section</a></dt><dt>Siberian Tiger, <a href="#_the_first_section">The First Section</a></dt></dl></div><div class="indexdiv"><h3>T</h3><dl><dt>Tigers</dt><dd><dl><dt>Bengal Tiger, <a href="#_the_first_section">The First Section</a></dt><dt>Siberian Tiger, <a href="#_the_first_section">The First Section</a></dt></dl></dd></dl></div></div></div><div class="footnotes"><br /><hr width="100" align="left" /><div class="footnote"><p><sup>[<a id="ftn.id2526524" href="#id2526524">1</a>] </sup>An example footnote.</p></div><div class="footnote"><p><sup>[<a id="ftn.id2488399" href="#id2488399">2</a>] </sup>A second example footnote.</p></div></div></div></body></html>
+</p>
+</dd>
+</dl></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0<br />
+Last updated 2008-12-13 10:32:44 NZDT
+</div>
+</div>
+</body>
+</html>

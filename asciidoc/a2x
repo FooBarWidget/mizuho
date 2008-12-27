@@ -41,6 +41,7 @@ XSLTPROC_OPTS=
 DBLATEX_OPTS=
 FOP_OPTS=
 FOP=no
+XMLLINT=yes
 
 #--------------------------------------------------------------------
 # General purpose functions
@@ -203,12 +204,14 @@ options:
   -h, --help                     print command syntax summary
   --icons                        use admonition, callout and navigation icons
   --icons-dir=PATH               admonition and navigation icon directory
+  -L, --no-xmllint               don't check asciidoc output with xmllint(1)
   -n, --dry-run                  don't do anything just print the commands
   -s, --skip-asciidoc            skip asciidoc execution
   --stylesheet=PATH              target HTML CSS stylesheet file name
   --version                      print program version to stdout
   -v, --verbose                  print operational details to stderr
   --dblatex-opts=DBLATEX_OPTS    dblatex options
+  --fop                          use FOP to generate PDF files
   --fop-opts=FOP_OPTS            options for FOP pdf generation
   --xsltproc-opts=XSLTPROC_OPTS  xsltproc options
 EOF
@@ -241,8 +244,8 @@ function parse_options()
     if [ $? -ne 4 ]; then
         quit "enhanced getopt(1) required"
     fi
-    short_opts="a:d:D:f:hnsv"
-    long_opts="attribute:,asciidoc-opts:,destination-dir:,doctype:,help,icons-dir:,dry-run,format:,copy,icons,skip-asciidoc,stylesheet:,version,verbose,xsltproc-opts:,dblatex-opts:,fop-opts:"
+    short_opts="a:d:D:f:hLnsv"
+    long_opts="attribute:,asciidoc-opts:,destination-dir:,doctype:,help,icons-dir:,dry-run,format:,copy,icons,skip-asciidoc,stylesheet:,version,verbose,xsltproc-opts:,dblatex-opts:,fop,fop-opts:,no-xmllint"
     args=$(getopt -o $short_opts -l $long_opts -n $BASENAME -- "$@" 2>/dev/null)
     if [ $? -ne 0 ]; then
         quit "invalid command options, run: a2x --help"
@@ -294,9 +297,15 @@ function parse_options()
                     VERBOSE=yes
                 fi
                 shift ;;
+            -L|--no-xmllint)
+                XMLLINT=no;
+                shift ;;
             --xsltproc-opts)
                 XSLTPROC_OPTS="$XSLTPROC_OPTS $2"
                 shift 2 ;;
+            --fop)
+                FOP=yes;
+                shift ;;
             --fop-opts)
                 FOP_OPTS="$FOP_OPTS $2"
                 FOP=yes
@@ -435,6 +444,18 @@ function copy_icons()
     execute_command_2 "cp -rfu  \"$src/\"* \"$dst\""
 }
 
+# Run xmllint(1) checking of $1 file if xmllint checking is enabled.
+function execute_xmllint()
+{
+    if isyes "$XMLLINT"; then
+        if ! is_executable "xmllint"; then
+            console_msg "xmllint not found: skipping validity checking"
+        else
+            execute_command_2 "xmllint --nonet --noout --valid \"$1\""
+        fi
+    fi
+}
+
 #--------------------------------------------------------------------
 # Format conversion functions.
 #--------------------------------------------------------------------
@@ -453,6 +474,7 @@ function to_docbook()
     fi
     require "asciidoc"
     execute_command_2 "asciidoc $ASCIIDOC_OPTS $1 -b docbook \"$SRC_FILE\""
+    execute_xmllint "$xml"
 }
 
 function to_xhtml()
@@ -534,7 +556,7 @@ function run_dblatex()
     xml="$SRC_DIR/$SRC_NAME.xml"
     xsl=$(conf_file dblatex/asciidoc-dblatex.xsl)
     sty=$(conf_file dblatex/asciidoc-dblatex.sty)
-    execute_command_2 "dblatex $DBLATEX_OPTS -t $FORMAT -p \"$xsl\" -s \"$sty\" \"$xml\""
+    execute_command_2 "dblatex -t $FORMAT -p \"$xsl\" -s \"$sty\" $DBLATEX_OPTS \"$xml\""
 }
 
 function run_fop()
@@ -581,13 +603,24 @@ function to_odt()
 function to_text()
 {
     require "asciidoc"
-    require "lynx"
-    local html text conf
+    local html text conf xsl
     html="$SRC_DIR/$SRC_NAME.html"
     text="$DESTINATION_DIR/$SRC_NAME.text"
     conf=$(conf_file text.conf)
-    execute_command_2 "asciidoc $ASCIIDOC_OPTS -f "$conf" -b html4 \
-        -o - \"$SRC_FILE\" | lynx -dump -stdin >\"$text\""
+    # Use lynx if there is no w3m.
+    if ! is_executable w3m && is_executable lynx; then
+        execute_command_2 "asciidoc $ASCIIDOC_OPTS -f "$conf" -b html4 \
+            -o - \"$SRC_FILE\" | lynx -dump -stdin >\"$text\""
+    else
+        require "w3m"
+        require "xsltproc"
+        xsl=$(conf_file docbook-xsl/text.xsl)
+        execute_command_2 "asciidoc $ASCIIDOC_OPTS -f \"$conf\" -b docbook \
+            -o - \"$SRC_FILE\" \
+            | xsltproc --nonet --xinclude \"$xsl\" - \
+            | w3m -cols 70 -dump -T text/html -no-graph >\"$text\""
+
+    fi
 }
 
 #--------------------------------------------------------------------

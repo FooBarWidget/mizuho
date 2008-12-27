@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.2.7" />
+<meta name="generator" content="AsciiDoc 8.3.1" />
 <link rel="stylesheet" href="./xhtml11.css" type="text/css" />
 <link rel="stylesheet" href="./xhtml11-quirks.css" type="text/css" />
 <link rel="stylesheet" href="./layout1.css" type="text/css" />
@@ -37,7 +37,7 @@
 </div>
 <div id="preamble">
 <div class="sectionbody">
-<div class="para"><p>The <em>AsciiDoc</em> distribution includes a source code syntax highlight
+<div class="paragraph"><p>The <em>AsciiDoc</em> distribution includes a source code syntax highlight
 filter (<tt>source-highlight-filter.conf</tt>). It uses
 <a href="http://www.gnu.org/software/src-highlite/">GNU source-highlight</a> to
 highlight HTML outputs; DocBook outputs are highlighted by toolchains
@@ -49,7 +49,7 @@ that have <tt>programlisting</tt> element highlight support, for example
 <img src="./images/icons/tip.png" alt="Tip" />
 </td>
 <td class="content">If the source <em>language</em> attribute has been set (using an
-<em>AttributeEntry</em> or from the command-line) you don't have to specify
+<em>AttributeEntry</em> or from the command-line) you don&#8217;t have to specify
 it in each source code block.</td>
 </tr></table>
 </div>
@@ -58,7 +58,7 @@ it in each source code block.</td>
 <h2 id="_examples">Examples</h2>
 <div class="sectionbody">
 <h3 id="_source_code_paragraphs">Source code paragraphs</h3><div style="clear:left"></div>
-<div class="para"><p>The <tt>source</tt> paragraph style will highlight a paragraph of source
+<div class="paragraph"><p>The <tt>source</tt> paragraph style will highlight a paragraph of source
 code. These three code paragraphs:</p></div>
 <div class="listingblock">
 <div class="content">
@@ -74,31 +74,28 @@ if n &lt; 0: print 'Hello World!'
 [true, false].cycle([0, 1, 2, 3, 4]) do |a, b|
     puts "#{a.inspect} =&gt; #{b.inspect}"</tt></pre>
 </div></div>
-<div class="para"><p>Render this highlighted source code:</p></div>
+<div class="paragraph"><p>Render this highlighted source code:</p></div>
 <div class="exampleblock">
 <div class="exampleblock-content"><!-- Generator: GNU source-highlight 2.4
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">if</span></span> n <span style="color: #990000">&lt;</span> <span style="color: #993399">0</span><span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #0000FF">print</span></span> <span style="color: #FF0000">'Hello World!'</span>
-</tt></pre></div></div>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">if</span></span> n <span style="color: #990000">&lt;</span> <span style="color: #993399">0</span><span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #0000FF">print</span></span> <span style="color: #FF0000">'Hello World!'</span></tt></pre></div></div>
 <div class="exampleblock">
 <div class="exampleblock-content"><!-- Generator: GNU source-highlight 2.4
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">if</span></span> n <span style="color: #990000">&lt;</span> <span style="color: #993399">0</span><span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #0000FF">print</span></span> <span style="color: #FF0000">'Hello World!'</span>
-</tt></pre></div></div>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">if</span></span> n <span style="color: #990000">&lt;</span> <span style="color: #993399">0</span><span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #0000FF">print</span></span> <span style="color: #FF0000">'Hello World!'</span></tt></pre></div></div>
 <div class="exampleblock">
 <div class="exampleblock-content"><!-- Generator: GNU source-highlight 2.4
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="color: #000000">00001:</span> <span style="color: #990000">[</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">cycle</span></span><span style="color: #990000">([</span><span style="color: #993399">0</span><span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">,</span> <span style="color: #993399">2</span><span style="color: #990000">,</span> <span style="color: #993399">3</span><span style="color: #990000">,</span> <span style="color: #993399">4</span><span style="color: #990000">])</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span> <span style="color: #990000">|</span>a<span style="color: #990000">,</span> b<span style="color: #990000">|</span>
-<span style="color: #000000">00002:</span>     puts <span style="color: #FF0000">"#{a.inspect} =&gt; #{b.inspect}"</span>
-</tt></pre></div></div>
+<span style="color: #000000">00002:</span>     puts <span style="color: #FF0000">"#{a.inspect} =&gt; #{b.inspect}"</span></tt></pre></div></div>
 <h3 id="_unnumbered_source_code_listing">Unnumbered source code listing</h3><div style="clear:left"></div>
-<div class="para"><p>This source-highlight filtered block:</p></div>
+<div class="paragraph"><p>This source-highlight filtered block:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt> [source,python]
@@ -114,7 +111,7 @@ http://www.gnu.org/software/src-highlite -->
          return word
  ---------------------------------------------------------------------</tt></pre>
 </div></div>
-<div class="para"><p>Renders this highlighted source code:</p></div>
+<div class="paragraph"><p>Renders this highlighted source code:</p></div>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 2.4
 by Lorenzo Bettini
@@ -128,10 +125,9 @@ http://www.gnu.org/software/src-highlite -->
     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span> word <span style="font-weight: bold"><span style="color: #0000FF">in</span></span> keywords<span style="color: #990000">[</span>language<span style="color: #990000">]:</span>
         <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> quote <span style="color: #990000">+</span> word <span style="color: #990000">+</span> quote
     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span><span style="color: #990000">:</span>
-        <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> word
-</tt></pre></div></div>
-<h3 id="_numbered_source_code_listing">Numbered source code listing</h3><div style="clear:left"></div>
-<div class="para"><p>This source-highlight filtered block:</p></div>
+        <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> word</tt></pre></div></div>
+<h3 id="_numbered_source_code_listing_with_callouts">Numbered source code listing with callouts</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This source-highlight filtered block:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt> [source,ruby,numbered]
@@ -154,21 +150,24 @@ http://www.gnu.org/software/src-highlite -->
 
  end
 
- if $0 == __FILE__
+ if $0 == __FILE__                                 &lt;1&gt;
    # Array#cycle test
    # true =&gt; 0
    # false =&gt; 1
    # true =&gt; 2
    # false =&gt; 3
    # true =&gt; 4
-   puts 'Array#cycle test'
+   puts 'Array#cycle test'                         &lt;2&gt;
    [true, false].cycle([0, 1, 2, 3, 4]) do |a, b|
      puts "#{a.inspect} =&gt; #{b.inspect}"
    end
  end
- ---------------------------------------------------------------------</tt></pre>
+ ---------------------------------------------------------------------
+
+ &lt;1&gt; First callout.
+ &lt;2&gt; Second callout.</tt></pre>
 </div></div>
-<div class="para"><p>Renders this highlighted source code:</p></div>
+<div class="paragraph"><p>Renders this highlighted source code:</p></div>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 2.4
 by Lorenzo Bettini
@@ -192,28 +191,64 @@ http://www.gnu.org/software/src-highlite -->
 <span style="color: #000000">00016:</span>
 <span style="color: #000000">00017:</span> <span style="font-weight: bold"><span style="color: #0000FF">end</span></span>
 <span style="color: #000000">00018:</span>
-<span style="color: #000000">00019:</span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span> <span style="color: #009900">$0</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">__FILE__</span></span>
+<span style="color: #000000">00019:</span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span> <span style="color: #009900">$0</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">__FILE__</span></span>                                 <span style="color: #FF0000"><b>&lt;1&gt;</b></span>
 <span style="color: #000000">00020:</span>   <span style="font-style: italic"><span style="color: #9A1900"># Array#cycle test</span></span>
 <span style="color: #000000">00021:</span>   <span style="font-style: italic"><span style="color: #9A1900"># true =&gt; 0</span></span>
 <span style="color: #000000">00022:</span>   <span style="font-style: italic"><span style="color: #9A1900"># false =&gt; 1</span></span>
 <span style="color: #000000">00023:</span>   <span style="font-style: italic"><span style="color: #9A1900"># true =&gt; 2</span></span>
 <span style="color: #000000">00024:</span>   <span style="font-style: italic"><span style="color: #9A1900"># false =&gt; 3</span></span>
 <span style="color: #000000">00025:</span>   <span style="font-style: italic"><span style="color: #9A1900"># true =&gt; 4</span></span>
-<span style="color: #000000">00026:</span>   puts <span style="color: #FF0000">'Array#cycle test'</span>
+<span style="color: #000000">00026:</span>   puts <span style="color: #FF0000">'Array#cycle test'</span>                         <span style="color: #FF0000"><b>&lt;2&gt;</b></span>
 <span style="color: #000000">00027:</span>   <span style="color: #990000">[</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">cycle</span></span><span style="color: #990000">([</span><span style="color: #993399">0</span><span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">,</span> <span style="color: #993399">2</span><span style="color: #990000">,</span> <span style="color: #993399">3</span><span style="color: #990000">,</span> <span style="color: #993399">4</span><span style="color: #990000">])</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span> <span style="color: #990000">|</span>a<span style="color: #990000">,</span> b<span style="color: #990000">|</span>
 <span style="color: #000000">00028:</span>     puts <span style="color: #FF0000">"#{a.inspect} =&gt; #{b.inspect}"</span>
 <span style="color: #000000">00029:</span>   <span style="font-weight: bold"><span style="color: #0000FF">end</span></span>
-<span style="color: #000000">00030:</span> <span style="font-weight: bold"><span style="color: #0000FF">end</span></span>
-</tt></pre></div></div>
+<span style="color: #000000">00030:</span> <span style="font-weight: bold"><span style="color: #0000FF">end</span></span></tt></pre></div></div>
+<div class="colist"><ol>
+<li>
+<p>
+First callout.
+</p>
+</li>
+<li>
+<p>
+Second callout.
+</p>
+</li>
+</ol></div>
 </div>
 <h2 id="_installation">Installation</h2>
 <div class="sectionbody">
-<div class="para"><p>If you want to syntax highlight <em>AsciiDoc</em> HTML outputs you need to
+<h3 id="_html">HTML</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If you want to syntax highlight <em>AsciiDoc</em> HTML outputs (<tt>html4</tt> and
+<tt>xhtml11</tt> backends) you need to
 install <a href="http://www.gnu.org/software/src-highlite/">GNU
-source-highlight</a> (most distributions have this package). It's not
-required if you are generating DocBook output (DocBook syntax
-highlighting is handled by the DocBook toolchain).</p></div>
-<div class="para"><p>Test the filter by converting the test file to HTML with <em>AsciiDoc</em>:</p></div>
+source-highlight</a> (most distributions have this package).</p></div>
+<h3 id="_docbook">DocBook</h3><div style="clear:left"></div>
+<div class="paragraph"><p><em>AsciiDoc</em> encloses the source code in a DocBook <em>programlisting</em>
+element and leaves source code highlighting to the DocBook toolchain
+(dblatex has a particularly nice programlisting highlighter). The
+DocBook programlisting element is assigned two attributes:</p></div>
+<div class="olist"><ol>
+<li>
+<p>
+The <em>language</em> attribute is set to the <em>AsciiDoc</em> <em>language</em>
+  attribute.
+</p>
+</li>
+<li>
+<p>
+The <em>linenumbering</em> attribute is set to the <em>AsciiDoc</em> <em>src_numbered</em>
+  attribute (<em>numbered</em> or <em>unnumbered</em>).
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>If you use <tt><tt>a2x(1)</tt></tt> to generate PDF you need to include the
+<tt>--no-xmllint</tt> option to suppress <tt>xmllint(1)</tt> checking&#8201;&#8212;&#8201;the
+programlisting <em>language</em> attribute (required by the dblatex source
+highlighter) is not part of the DocBook 4 specification (but it is in
+the newer DocBook 5 specification).</p></div>
+<h3 id="_testing">Testing</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Test the filter by converting the test file to HTML with <em>AsciiDoc</em>:</p></div>
 <div class="literalblock">
 <div class="content">
 <pre><tt>$ asciidoc -v ./filters/source-highlight-filter-test.txt
@@ -222,8 +257,8 @@ $ firefox ./filters/source-highlight-filter-test.html &amp;</tt></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 8.2.7<br />
-Last updated 2008-07-04 23:29:33 NZDT
+Version 8.3.1<br />
+Last updated 2008-12-13 09:59:49 NZDT
 </div>
 <div id="footer-badges">
 <a href="http://validator.w3.org/check?uri=referer">
