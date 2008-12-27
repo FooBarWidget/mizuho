@@ -14,3 +14,8 @@ task :install => :gem do
 	version = $1
 	ruby "-S gem install mizuho-#{version}.gem"
 end
+
+desc "Generate an Asciidoc file list, suitable for pasting into the gemspec"
+task :generate_asciidoc_file_list do
+	puts Dir["asciidoc/**/*"].inspect
+end
