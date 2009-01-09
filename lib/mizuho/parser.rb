@@ -28,7 +28,11 @@ class Parser
 		@title = CGI::unescapeHTML($1)
 		
 		# Get rid of the Asciidoc layout and unwanted elements.
-		@contents.sub!(/\A.*?(<div id="preamble">)/m, '\1')
+		if !@contents.sub!(/\A.*?(<div id="preamble">)/m, '\1')
+			# There's no preamble, so strip everything until the
+			# end of the TOC div.
+			@contents.sub!(%r(\A.*?</noscript>[\r\n\s]*</div>[\r\n\s]*</div>)m, '')
+		end
 		@contents.sub!(/<div id="footer">.*/m, '')
 		@contents.gsub!(%r{<div style="clear:left"></div>}, '')
 		

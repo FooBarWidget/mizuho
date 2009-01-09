@@ -186,5 +186,54 @@ describe Mizuho::Parser do
 		end
 	end
 	
+	describe "content extraction" do
+		describe "when there is a preamble" do
+			before :each do
+				@parser = generate_and_parse(%Q{
+					= Ruby Enterprise Edition Features Guide
+					Today
+					
+					Hello world
+					
+					== Overview
+					Ruby Enterprise Edition (REE) is a
+					server-oriented distribution of the
+					official Ruby interpreter, and includes
+					various additional enhancements.
+				})
+			end
+			
+			it "extracts the contents" do
+				@parser.contents.should include("various additional enhancements.")
+			end
+			
+			it "strips away the irrelevant HTML that come before the actual content" do
+				@parser.contents.should_not include("<title>")
+			end
+		end
+		
+		describe "when there is no preamble" do
+			before :each do
+				@parser = generate_and_parse(%Q{
+					= Ruby Enterprise Edition Features Guide
+					
+					== Overview
+					Ruby Enterprise Edition (REE) is a
+					server-oriented distribution of the
+					official Ruby interpreter, and includes
+					various additional enhancements.
+				})
+			end
+			
+			it "extracts the contents" do
+				@parser.contents.should include("various additional enhancements.")
+			end
+			
+			it "strips away the irrelevant HTML that come before the actual content" do
+				@parser.contents.should_not include("<title>")
+			end
+		end
+	end
+	
 	it "fixes cross-chapter references when in multi-page output mode"
 end
