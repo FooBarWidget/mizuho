@@ -2,6 +2,8 @@
 # Make file to install/uninstall AsciiDoc
 #
 
+.NOTPARALLEL:
+
 INSTALL = @INSTALL@
 INSTALL_PROG = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
@@ -32,11 +34,25 @@ manpdir = $(mandir)/man1
 conf = $(wildcard *.conf)
 confdir = $(ASCIIDOCCONF)
 
-filters = $(wildcard filters/*.py)
 filtersdir = $(ASCIIDOCCONF)/filters
 
-filterconfs = $(wildcard filters/*.conf)
-filterconfsdir = $(ASCIIDOCCONF)/filters
+codefilter = filters/code/code-filter.py
+codefilterdir = $(filtersdir)/code
+codefilterconf = filters/code/code-filter.conf
+codefilterconfdir = $(filtersdir)/code
+
+graphvizfilter = filters/graphviz/graphviz2png.py
+graphvizfilterdir = $(filtersdir)/graphviz
+graphvizfilterconf = filters/graphviz/graphviz-filter.conf
+graphvizfilterconfdir = $(filtersdir)/graphviz
+
+musicfilter = filters/music/music2png.py
+musicfilterdir = $(filtersdir)/music
+musicfilterconf = filters/music/music-filter.conf
+musicfilterconfdir = $(filtersdir)/music
+
+sourcefilterconf = filters/source/source-highlight-filter.conf
+sourcefilterconfdir = $(filtersdir)/source
 
 docbook = $(wildcard docbook-xsl/*.xsl)
 docbookdir = $(ASCIIDOCCONF)/docbook-xsl
@@ -59,8 +75,8 @@ iconsdir = $(ASCIIDOCCONF)/images/icons
 doc = $(wildcard README*) $(wildcard BUGS*) $(wildcard INSTALL*) $(wildcard CHANGELOG*)
 docdir = $(datadir)/doc/asciidoc
 
-DATATARGETS = manp conf filterconfs docbook dblatex css js callouts icons
-PROGTARGETS = prog filters
+DATATARGETS = manp conf docbook dblatex css js callouts icons codefilterconf musicfilterconf sourcefilterconf graphvizfilterconf
+PROGTARGETS = prog codefilter musicfilter graphvizfilter
 TARGETS = $(DATATARGETS) $(PROGTARGETS) doc
 
 INSTDIRS = $(TARGETS:%=%dir)

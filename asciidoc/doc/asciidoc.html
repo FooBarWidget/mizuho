@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>AsciiDoc User Guide</title><link rel="stylesheet" href="./docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.73.2" /></head><body><div class="article" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="id2425213"></a>AsciiDoc User Guide</h2></div><div><div class="author"><h3 class="author"><span class="firstname">Stuart</span> <span class="surname">Rackham</span></h3><div class="affiliation"><div class="address"><p><code class="email">&lt;<a class="email" href="mailto:srackham@gmail.com">srackham@gmail.com</a>&gt;</code></p></div></div></div></div><div><div class="revhistory"><table border="1" width="100%" summary="Revision history"><tr><th align="left" valign="top" colspan="3"><b>Revision History</b></th></tr><tr><td align="left">Revision 8.3.1</td><td align="left">14 December 2008</td><td align="left">SJR</td></tr></table></div></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#_introduction">1. Introduction</a></span></dt><dt><span class="section"><a href="#X6">2. Getting Started</a></span></dt><dd><dl><dt><span class="section"><a href="#_installing_asciidoc">2.1. Installing AsciiDoc</a></span></dt><dt><span class="section"><a href="#X11">2.2. Example AsciiDoc Documents</a></span></dt></dl></dd><dt><span class="section"><a href="#_asciidoc_document_types">3. AsciiDoc Document Types</a></span></dt><dd><dl><dt><span class="section"><a href="#_article">3.1. article</a></span></dt><dt><span class="section"><a href="#_book">3.2. book</a></span></dt><dt><span class="section"><a href="#_manpage">3.3. manpage</a></span></dt></dl></dd><dt><span class="section"><a href="#X5">4. AsciiDoc Backends</a></span></dt><dd><dl><dt><span class="section"><a href="#_docbook">4.1. docbook</a></span></dt><dt><span class="section"><a href="#X33">4.2. xhtml11</a></span></dt><dt><span class="section"><a href="#_html4">4.3. html4</a></span></dt></dl></dd><dt><span class="section"><a href="#_document_structure">5. Document Structure</a></span></dt><dd><dl><dt><span class="section"><a href="#_block_elements">5.1. Block Elements</a></span></dt><dt><span class="section"><a href="#_header">5.2. Header</a></span></dt><dt><span class="section"><a href="#_preamble">5.3. Preamble</a></span></dt><dt><span class="section"><a href="#_sections">5.4. Sections</a></span></dt><dt><span class="section"><a href="#_inline_elements">5.5. Inline Elements</a></span></dt></dl></dd><dt><span class="section"><a href="#_document_processing">6. Document Processing</a></span></dt><dt><span class="section"><a href="#_text_formatting">7. Text Formatting</a></span></dt><dd><dl><dt><span class="section"><a href="#X51">7.1. Quoted Text</a></span></dt><dt><span class="section"><a href="#_superscripts_and_subscripts">7.2. Superscripts and Subscripts</a></span></dt><dt><span class="section"><a href="#_line_breaks">7.3. Line Breaks</a></span></dt><dt><span class="section"><a href="#_page_breaks">7.4. Page Breaks</a></span></dt><dt><span class="section"><a href="#_rulers">7.5. Rulers</a></span></dt><dt><span class="section"><a href="#_tabs">7.6. Tabs</a></span></dt><dt><span class="section"><a href="#_replacements">7.7. Replacements</a></span></dt><dt><span class="section"><a href="#_special_words">7.8. Special Words</a></span></dt></dl></dd><dt><span class="section"><a href="#X17">8. Titles</a></span></dt><dd><dl><dt><span class="section"><a href="#_two_line_titles">8.1. Two line titles</a></span></dt><dt><span class="section"><a href="#X46">8.2. One line titles</a></span></dt></dl></dd><dt><span class="section"><a href="#X42">9. BlockTitles</a></span></dt><dt><span class="section"><a href="#X41">10. BlockId Element</a></span></dt><dt><span class="section"><a href="#_paragraphs">11. Paragraphs</a></span></dt><dd><dl><dt><span class="section"><a href="#_default_paragraph">11.1. Default Paragraph</a></span></dt><dt><span class="section"><a href="#_literal_paragraph">11.2. Literal Paragraph</a></span></dt><dt><span class="section"><a href="#X28">11.3. Admonition Paragraphs</a></span></dt></dl></dd><dt><span class="section"><a href="#_delimited_blocks">12. Delimited Blocks</a></span></dt><dd><dl><dt><span class="section"><a href="#_predefined_delimited_blocks">12.1. Predefined Delimited Blocks</a></span></dt><dt><span class="section"><a href="#_listing_blocks">12.2. Listing Blocks</a></span></dt><dt><span class="section"><a href="#X65">12.3. Literal Blocks</a></span></dt><dt><span class="section"><a href="#_sidebarblocks">12.4. SidebarBlocks</a></span></dt><dt><span class="section"><a href="#X26">12.5. Comment Blocks</a></span></dt><dt><span class="section"><a href="#X76">12.6. Passthrough Blocks</a></span></dt><dt><span class="section"><a href="#_quote_blocks">12.7. Quote Blocks</a></span></dt><dt><span class="section"><a href="#X48">12.8. Example Blocks</a></span></dt><dt><span class="section"><a href="#X22">12.9. Admonition Blocks</a></span></dt></dl></dd><dt><span class="section"><a href="#X64">13. Lists</a></span></dt><dd><dl><dt><span class="section"><a href="#_bulleted_and_numbered_lists">13.1. Bulleted and Numbered Lists</a></span></dt><dt><span class="section"><a href="#_labeled_lists">13.2. Labeled Lists</a></span></dt><dt><span class="section"><a href="#_question_and_answer_lists">13.3. Question and Answer Lists</a></span></dt><dt><span class="section"><a href="#_glossary_lists">13.4. Glossary Lists</a></span></dt><dt><span class="section"><a href="#_bibliography_lists">13.5. Bibliography Lists</a></span></dt><dt><span class="section"><a href="#X15">13.6. List Item Continuation</a></span></dt><dt><span class="section"><a href="#X29">13.7. List Block</a></span></dt></dl></dd><dt><span class="section"><a href="#_footnotes">14. Footnotes</a></span></dt><dt><span class="section"><a href="#_indexes">15. Indexes</a></span></dt><dt><span class="section"><a href="#_callouts">16. Callouts</a></span></dt><dd><dl><dt><span class="section"><a href="#_implementation_notes">16.1. Implementation Notes</a></span></dt><dt><span class="section"><a href="#_including_callouts_in_included_code">16.2. Including callouts in included code</a></span></dt></dl></dd><dt><span class="section"><a href="#_macros">17. Macros</a></span></dt><dd><dl><dt><span class="section"><a href="#_inline_macros">17.1. Inline Macros</a></span></dt><dt><span class="section"><a href="#_block_macros">17.2. Block Macros</a></span></dt><dt><span class="section"><a href="#_system_macros">17.3. System Macros</a></span></dt><dt><span class="section"><a href="#X77">17.4. Passthrough macros</a></span></dt><dt><span class="section"><a href="#_macro_definitions">17.5. Macro Definitions</a></span></dt></dl></dd><dt><span class="section"><a href="#_tables">18. Tables</a></span></dt><dd><dl><dt><span class="section"><a href="#_example_tables">18.1. Example tables</a></span></dt><dt><span class="section"><a href="#X68">18.2. Table input data formats</a></span></dt><dt><span class="section"><a href="#X69">18.3. Table attributes</a></span></dt><dt><span class="section"><a href="#X70">18.4. Column Specifiers</a></span></dt><dt><span class="section"><a href="#X71">18.5. Table styles</a></span></dt><dt><span class="section"><a href="#X72">18.6. Markup attributes</a></span></dt><dt><span class="section"><a href="#_nested_tables">18.7. Nested tables</a></span></dt></dl></dd><dt><span class="section"><a href="#X1">19. Manpage Documents</a></span></dt><dd><dl><dt><span class="section"><a href="#_document_header">19.1. Document Header</a></span></dt><dt><span class="section"><a href="#_the_name_section">19.2. The NAME Section</a></span></dt><dt><span class="section"><a href="#_the_synopsis_section">19.3. The SYNOPSIS Section</a></span></dt><dt><span class="section"><a href="#_refmiscinfo_attributes">19.4. refmiscinfo attributes</a></span></dt></dl></dd><dt><span class="section"><a href="#X78">20. Mathematical Formulas</a></span></dt><dd><dl><dt><span class="section"><a href="#_latex_math">20.1. LaTeX Math</a></span></dt><dt><span class="section"><a href="#_asciimathml">20.2. ASCIIMathML</a></span></dt><dt><span class="section"><a href="#_latexmathml">20.3. LaTeXMathML</a></span></dt><dt><span class="section"><a href="#_mathml">20.4. MathML</a></span></dt></dl></dd><dt><span class="section"><a href="#X7">21. Configuration Files</a></span></dt><dd><dl><dt><span class="section"><a href="#_configuration_file_format">21.1. Configuration File Format</a></span></dt><dt><span class="section"><a href="#_miscellaneous_section">21.2. Miscellaneous section</a></span></dt><dt><span class="section"><a href="#_titles_section">21.3. Titles section</a></span></dt><dt><span class="section"><a href="#_tags_section">21.4. Tags section</a></span></dt><dt><span class="section"><a href="#_attributes_section">21.5. Attributes section</a></span></dt><dt><span class="section"><a href="#_special_characters_section">21.6. Special Characters section</a></span></dt><dt><span class="section"><a href="#_quoted_text_section">21.7. Quoted Text section</a></span></dt><dt><span class="section"><a href="#_special_words_section">21.8. Special Words section</a></span></dt><dt><span class="section"><a href="#X10">21.9. Replacements section</a></span></dt><dt><span class="section"><a href="#_markup_template_sections">21.10. Markup Template Sections</a></span></dt><dt><span class="section"><a href="#X27">21.11. Configuration File Names and Locations</a></span></dt></dl></dd><dt><span class="section"><a href="#_document_attributes">22. Document Attributes</a></span></dt><dt><span class="section"><a href="#X18">23. Attribute Entries</a></span></dt><dd><dl><dt><span class="section"><a href="#_setting_configuration_entries">23.1. Setting configuration entries</a></span></dt></dl></dd><dt><span class="section"><a href="#X21">24. Attribute Lists</a></span></dt><dd><dl><dt><span class="section"><a href="#X75">24.1. Options attribute</a></span></dt><dt><span class="section"><a href="#_macro_attribute_lists">24.2. Macro Attribute lists</a></span></dt><dt><span class="section"><a href="#_attributelist_element">24.3. AttributeList Element</a></span></dt></dl></dd><dt><span class="section"><a href="#_attribute_references">25. Attribute References</a></span></dt><dd><dl><dt><span class="section"><a href="#_simple_attributes_references">25.1. Simple Attributes References</a></span></dt><dt><span class="section"><a href="#_conditional_attribute_references">25.2. Conditional Attribute References</a></span></dt><dt><span class="section"><a href="#X24">25.3. System Attribute References</a></span></dt></dl></dd><dt><span class="section"><a href="#X60">26. Intrinsic Attributes</a></span></dt><dt><span class="section"><a href="#X73">27. Block Element Definitions</a></span></dt><dd><dl><dt><span class="section"><a href="#X23">27.1. Styles</a></span></dt><dt><span class="section"><a href="#_paragraphs_2">27.2. Paragraphs</a></span></dt><dt><span class="section"><a href="#_delimited_blocks_2">27.3. Delimited Blocks</a></span></dt><dt><span class="section"><a href="#_lists">27.4. Lists</a></span></dt><dt><span class="section"><a href="#_tables_2">27.5. Tables</a></span></dt></dl></dd><dt><span class="section"><a href="#X59">28. Filters</a></span></dt><dd><dl><dt><span class="section"><a href="#_filter_search_paths">28.1. Filter Search Paths</a></span></dt><dt><span class="section"><a href="#_filter_configuration_files">28.2. Filter Configuration Files</a></span></dt><dt><span class="section"><a href="#X56">28.3. Code Filter</a></span></dt><dt><span class="section"><a href="#X57">28.4. Source Code Highlighter Filter</a></span></dt><dt><span class="section"><a href="#X58">28.5. Music Filter</a></span></dt></dl></dd><dt><span class="section"><a href="#X12">29. Converting DocBook to other file formats</a></span></dt><dd><dl><dt><span class="section"><a href="#X43">29.1. a2x Toolchain Wrapper</a></span></dt><dt><span class="section"><a href="#_html_generation">29.2. HTML generation</a></span></dt><dt><span class="section"><a href="#_pdf_generation">29.3. PDF generation</a></span></dt><dt><span class="section"><a href="#_html_help_generation">29.4. HTML Help generation</a></span></dt><dt><span class="section"><a href="#_toolchain_components_summary">29.5. Toolchain components summary</a></span></dt><dt><span class="section"><a href="#_asciidoc_dblatex_configuration_files">29.6. AsciiDoc dblatex configuration files</a></span></dt><dt><span class="section"><a href="#_asciidoc_docbook_xsl_stylesheets_drivers">29.7. AsciiDoc DocBook XSL Stylesheets drivers</a></span></dt></dl></dd><dt><span class="section"><a href="#_generating_plain_text_files">30. Generating Plain Text Files</a></span></dt><dt><span class="section"><a href="#_xml_and_character_sets">31. XML and Character Sets</a></span></dt><dd><dl><dt><span class="section"><a href="#_pdf_fonts">31.1. PDF Fonts</a></span></dt></dl></dd><dt><span class="section"><a href="#X36">32. Help Commands</a></span></dt><dd><dl><dt><span class="section"><a href="#_customizing_help">32.1. Customizing Help</a></span></dt></dl></dd><dt><span class="section"><a href="#_tips_and_tricks">33. Tips and Tricks</a></span></dt><dd><dl><dt><span class="section"><a href="#_know_your_editor">33.1. Know Your Editor</a></span></dt><dt><span class="section"><a href="#X20">33.2. Vim Commands for Formatting AsciiDoc</a></span></dt><dt><span class="section"><a href="#_troubleshooting">33.3. Troubleshooting</a></span></dt><dt><span class="section"><a href="#_gotchas">33.4. Gotchas</a></span></dt><dt><span class="section"><a href="#_combining_separate_documents">33.5. Combining Separate Documents</a></span></dt><dt><span class="section"><a href="#_processing_document_sections_separately">33.6. Processing Document Sections Separately</a></span></dt><dt><span class="section"><a href="#_processing_document_chunks">33.7. Processing Document Chunks</a></span></dt><dt><span class="section"><a href="#_badges_in_html_page_footers">33.8. Badges in HTML Page Footers</a></span></dt><dt><span class="section"><a href="#_pretty_printing_asciidoc_output">33.9. Pretty Printing AsciiDoc Output</a></span></dt><dt><span class="section"><a href="#_supporting_minor_docbook_dtd_variations">33.10. Supporting Minor DocBook DTD Variations</a></span></dt><dt><span class="section"><a href="#_shipping_stand_alone_asciidoc_source">33.11. Shipping Stand-alone AsciiDoc Source</a></span></dt><dt><span class="section"><a href="#_inserting_blank_space">33.12. Inserting Blank Space</a></span></dt><dt><span class="section"><a href="#_closing_open_sections">33.13. Closing Open Sections</a></span></dt><dt><span class="section"><a href="#_validating_output_files">33.14. Validating Output Files</a></span></dt></dl></dd><dt><span class="glossary"><a href="#_glossary">Glossary</a></span></dt><dt><span class="appendix"><a href="#_migration_notes">A. Migration Notes</a></span></dt><dd><dl><dt><span class="section"><a href="#X53">A.1. Version 7 to version 8</a></span></dt></dl></dd><dt><span class="appendix"><a href="#X38">B. Packager Notes</a></span></dt><dt><span class="appendix"><a href="#X39">C. AsciiDoc Safe Mode</a></span></dt><dt><span class="appendix"><a href="#_using_asciidoc_with_non_english_languages">D. Using AsciiDoc with non-English Languages</a></span></dt><dt><span class="appendix"><a href="#_vim_syntax_highlighter">E. Vim Syntax Highlighter</a></span></dt><dd><dl><dt><span class="section"><a href="#_limitations">E.1. Limitations</a></span></dt></dl></dd><dt><span class="appendix"><a href="#X74">F. Attribute Options</a></span></dt></dl></div><p><span class="emphasis"><em>AsciiDoc</em></span> is a text document format for writing short documents,
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>AsciiDoc User Guide</title><link rel="stylesheet" href="./docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.73.2" /></head><body><div class="article" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="id2425213"></a>AsciiDoc User Guide</h2></div><div><div class="author"><h3 class="author"><span class="firstname">Stuart</span> <span class="surname">Rackham</span></h3><div class="affiliation"><div class="address"><p><code class="email">&lt;<a class="email" href="mailto:srackham@gmail.com">srackham@gmail.com</a>&gt;</code></p></div></div></div></div><div><div class="revhistory"><table border="1" width="100%" summary="Revision history"><tr><th align="left" valign="top" colspan="3"><b>Revision History</b></th></tr><tr><td align="left">Revision 8.3.3</td><td align="left">2 January 2009</td><td align="left">SJR</td></tr></table></div></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#_introduction">1. Introduction</a></span></dt><dt><span class="section"><a href="#X6">2. Getting Started</a></span></dt><dd><dl><dt><span class="section"><a href="#_installing_asciidoc">2.1. Installing AsciiDoc</a></span></dt><dt><span class="section"><a href="#X11">2.2. Example AsciiDoc Documents</a></span></dt></dl></dd><dt><span class="section"><a href="#_asciidoc_document_types">3. AsciiDoc Document Types</a></span></dt><dd><dl><dt><span class="section"><a href="#_article">3.1. article</a></span></dt><dt><span class="section"><a href="#_book">3.2. book</a></span></dt><dt><span class="section"><a href="#_manpage">3.3. manpage</a></span></dt></dl></dd><dt><span class="section"><a href="#X5">4. AsciiDoc Backends</a></span></dt><dd><dl><dt><span class="section"><a href="#_docbook">4.1. docbook</a></span></dt><dt><span class="section"><a href="#X33">4.2. xhtml11</a></span></dt><dt><span class="section"><a href="#_html4">4.3. html4</a></span></dt></dl></dd><dt><span class="section"><a href="#_document_structure">5. Document Structure</a></span></dt><dd><dl><dt><span class="section"><a href="#_block_elements">5.1. Block Elements</a></span></dt><dt><span class="section"><a href="#_header">5.2. Header</a></span></dt><dt><span class="section"><a href="#_preamble">5.3. Preamble</a></span></dt><dt><span class="section"><a href="#_sections">5.4. Sections</a></span></dt><dt><span class="section"><a href="#_inline_elements">5.5. Inline Elements</a></span></dt></dl></dd><dt><span class="section"><a href="#_document_processing">6. Document Processing</a></span></dt><dt><span class="section"><a href="#_text_formatting">7. Text Formatting</a></span></dt><dd><dl><dt><span class="section"><a href="#X51">7.1. Quoted Text</a></span></dt><dt><span class="section"><a href="#_superscripts_and_subscripts">7.2. Superscripts and Subscripts</a></span></dt><dt><span class="section"><a href="#_line_breaks">7.3. Line Breaks</a></span></dt><dt><span class="section"><a href="#_page_breaks">7.4. Page Breaks</a></span></dt><dt><span class="section"><a href="#_rulers">7.5. Rulers</a></span></dt><dt><span class="section"><a href="#_tabs">7.6. Tabs</a></span></dt><dt><span class="section"><a href="#_replacements">7.7. Replacements</a></span></dt><dt><span class="section"><a href="#_special_words">7.8. Special Words</a></span></dt></dl></dd><dt><span class="section"><a href="#X17">8. Titles</a></span></dt><dd><dl><dt><span class="section"><a href="#_two_line_titles">8.1. Two line titles</a></span></dt><dt><span class="section"><a href="#X46">8.2. One line titles</a></span></dt></dl></dd><dt><span class="section"><a href="#X42">9. BlockTitles</a></span></dt><dt><span class="section"><a href="#X41">10. BlockId Element</a></span></dt><dt><span class="section"><a href="#_paragraphs">11. Paragraphs</a></span></dt><dd><dl><dt><span class="section"><a href="#_default_paragraph">11.1. Default Paragraph</a></span></dt><dt><span class="section"><a href="#_literal_paragraph">11.2. Literal Paragraph</a></span></dt><dt><span class="section"><a href="#X28">11.3. Admonition Paragraphs</a></span></dt></dl></dd><dt><span class="section"><a href="#_delimited_blocks">12. Delimited Blocks</a></span></dt><dd><dl><dt><span class="section"><a href="#_predefined_delimited_blocks">12.1. Predefined Delimited Blocks</a></span></dt><dt><span class="section"><a href="#_listing_blocks">12.2. Listing Blocks</a></span></dt><dt><span class="section"><a href="#X65">12.3. Literal Blocks</a></span></dt><dt><span class="section"><a href="#_sidebarblocks">12.4. SidebarBlocks</a></span></dt><dt><span class="section"><a href="#X26">12.5. Comment Blocks</a></span></dt><dt><span class="section"><a href="#X76">12.6. Passthrough Blocks</a></span></dt><dt><span class="section"><a href="#_quote_blocks">12.7. Quote Blocks</a></span></dt><dt><span class="section"><a href="#X48">12.8. Example Blocks</a></span></dt><dt><span class="section"><a href="#X22">12.9. Admonition Blocks</a></span></dt></dl></dd><dt><span class="section"><a href="#X64">13. Lists</a></span></dt><dd><dl><dt><span class="section"><a href="#_bulleted_and_numbered_lists">13.1. Bulleted and Numbered Lists</a></span></dt><dt><span class="section"><a href="#_labeled_lists">13.2. Labeled Lists</a></span></dt><dt><span class="section"><a href="#_question_and_answer_lists">13.3. Question and Answer Lists</a></span></dt><dt><span class="section"><a href="#_glossary_lists">13.4. Glossary Lists</a></span></dt><dt><span class="section"><a href="#_bibliography_lists">13.5. Bibliography Lists</a></span></dt><dt><span class="section"><a href="#X15">13.6. List Item Continuation</a></span></dt><dt><span class="section"><a href="#X29">13.7. List Block</a></span></dt></dl></dd><dt><span class="section"><a href="#_footnotes">14. Footnotes</a></span></dt><dt><span class="section"><a href="#_indexes">15. Indexes</a></span></dt><dt><span class="section"><a href="#_callouts">16. Callouts</a></span></dt><dd><dl><dt><span class="section"><a href="#_implementation_notes">16.1. Implementation Notes</a></span></dt><dt><span class="section"><a href="#_including_callouts_in_included_code">16.2. Including callouts in included code</a></span></dt></dl></dd><dt><span class="section"><a href="#_macros">17. Macros</a></span></dt><dd><dl><dt><span class="section"><a href="#_inline_macros">17.1. Inline Macros</a></span></dt><dt><span class="section"><a href="#_block_macros">17.2. Block Macros</a></span></dt><dt><span class="section"><a href="#_system_macros">17.3. System Macros</a></span></dt><dt><span class="section"><a href="#X77">17.4. Passthrough macros</a></span></dt><dt><span class="section"><a href="#_macro_definitions">17.5. Macro Definitions</a></span></dt></dl></dd><dt><span class="section"><a href="#_tables">18. Tables</a></span></dt><dd><dl><dt><span class="section"><a href="#_example_tables">18.1. Example tables</a></span></dt><dt><span class="section"><a href="#X68">18.2. Table input data formats</a></span></dt><dt><span class="section"><a href="#X69">18.3. Table attributes</a></span></dt><dt><span class="section"><a href="#X70">18.4. Column Specifiers</a></span></dt><dt><span class="section"><a href="#X71">18.5. Table styles</a></span></dt><dt><span class="section"><a href="#X72">18.6. Markup attributes</a></span></dt><dt><span class="section"><a href="#_nested_tables">18.7. Nested tables</a></span></dt></dl></dd><dt><span class="section"><a href="#X1">19. Manpage Documents</a></span></dt><dd><dl><dt><span class="section"><a href="#_document_header">19.1. Document Header</a></span></dt><dt><span class="section"><a href="#_the_name_section">19.2. The NAME Section</a></span></dt><dt><span class="section"><a href="#_the_synopsis_section">19.3. The SYNOPSIS Section</a></span></dt><dt><span class="section"><a href="#_refmiscinfo_attributes">19.4. refmiscinfo attributes</a></span></dt></dl></dd><dt><span class="section"><a href="#X78">20. Mathematical Formulas</a></span></dt><dd><dl><dt><span class="section"><a href="#_latex_math">20.1. LaTeX Math</a></span></dt><dt><span class="section"><a href="#_asciimathml">20.2. ASCIIMathML</a></span></dt><dt><span class="section"><a href="#_latexmathml">20.3. LaTeXMathML</a></span></dt><dt><span class="section"><a href="#_mathml">20.4. MathML</a></span></dt></dl></dd><dt><span class="section"><a href="#X7">21. Configuration Files</a></span></dt><dd><dl><dt><span class="section"><a href="#_configuration_file_format">21.1. Configuration File Format</a></span></dt><dt><span class="section"><a href="#_miscellaneous_section">21.2. Miscellaneous section</a></span></dt><dt><span class="section"><a href="#_titles_section">21.3. Titles section</a></span></dt><dt><span class="section"><a href="#_tags_section">21.4. Tags section</a></span></dt><dt><span class="section"><a href="#_attributes_section">21.5. Attributes section</a></span></dt><dt><span class="section"><a href="#_special_characters_section">21.6. Special Characters section</a></span></dt><dt><span class="section"><a href="#_quoted_text_section">21.7. Quoted Text section</a></span></dt><dt><span class="section"><a href="#_special_words_section">21.8. Special Words section</a></span></dt><dt><span class="section"><a href="#X10">21.9. Replacements section</a></span></dt><dt><span class="section"><a href="#_markup_template_sections">21.10. Markup Template Sections</a></span></dt><dt><span class="section"><a href="#X27">21.11. Configuration File Names and Locations</a></span></dt></dl></dd><dt><span class="section"><a href="#_document_attributes">22. Document Attributes</a></span></dt><dt><span class="section"><a href="#X18">23. Attribute Entries</a></span></dt><dd><dl><dt><span class="section"><a href="#_setting_configuration_entries">23.1. Setting configuration entries</a></span></dt></dl></dd><dt><span class="section"><a href="#X21">24. Attribute Lists</a></span></dt><dd><dl><dt><span class="section"><a href="#X75">24.1. Options attribute</a></span></dt><dt><span class="section"><a href="#_macro_attribute_lists">24.2. Macro Attribute lists</a></span></dt><dt><span class="section"><a href="#_attributelist_element">24.3. AttributeList Element</a></span></dt></dl></dd><dt><span class="section"><a href="#_attribute_references">25. Attribute References</a></span></dt><dd><dl><dt><span class="section"><a href="#_simple_attributes_references">25.1. Simple Attributes References</a></span></dt><dt><span class="section"><a href="#_conditional_attribute_references">25.2. Conditional Attribute References</a></span></dt><dt><span class="section"><a href="#X24">25.3. System Attribute References</a></span></dt></dl></dd><dt><span class="section"><a href="#X60">26. Intrinsic Attributes</a></span></dt><dt><span class="section"><a href="#X73">27. Block Element Definitions</a></span></dt><dd><dl><dt><span class="section"><a href="#X23">27.1. Styles</a></span></dt><dt><span class="section"><a href="#_paragraphs_2">27.2. Paragraphs</a></span></dt><dt><span class="section"><a href="#_delimited_blocks_2">27.3. Delimited Blocks</a></span></dt><dt><span class="section"><a href="#_lists">27.4. Lists</a></span></dt><dt><span class="section"><a href="#_tables_2">27.5. Tables</a></span></dt></dl></dd><dt><span class="section"><a href="#X59">28. Filters</a></span></dt><dd><dl><dt><span class="section"><a href="#_filter_search_paths">28.1. Filter Search Paths</a></span></dt><dt><span class="section"><a href="#_filter_configuration_files">28.2. Filter Configuration Files</a></span></dt><dt><span class="section"><a href="#X56">28.3. Code Filter</a></span></dt><dt><span class="section"><a href="#X57">28.4. Source Code Highlighter Filter</a></span></dt><dt><span class="section"><a href="#X58">28.5. Music Filter</a></span></dt></dl></dd><dt><span class="section"><a href="#X12">29. Converting DocBook to other file formats</a></span></dt><dd><dl><dt><span class="section"><a href="#X43">29.1. a2x Toolchain Wrapper</a></span></dt><dt><span class="section"><a href="#_html_generation">29.2. HTML generation</a></span></dt><dt><span class="section"><a href="#_pdf_generation">29.3. PDF generation</a></span></dt><dt><span class="section"><a href="#_html_help_generation">29.4. HTML Help generation</a></span></dt><dt><span class="section"><a href="#_toolchain_components_summary">29.5. Toolchain components summary</a></span></dt><dt><span class="section"><a href="#X67">29.6. AsciiDoc dblatex configuration files</a></span></dt><dt><span class="section"><a href="#_asciidoc_docbook_xsl_stylesheets_drivers">29.7. AsciiDoc DocBook XSL Stylesheets drivers</a></span></dt></dl></dd><dt><span class="section"><a href="#_generating_plain_text_files">30. Generating Plain Text Files</a></span></dt><dt><span class="section"><a href="#_xml_and_character_sets">31. XML and Character Sets</a></span></dt><dd><dl><dt><span class="section"><a href="#_pdf_fonts">31.1. PDF Fonts</a></span></dt></dl></dd><dt><span class="section"><a href="#X36">32. Help Commands</a></span></dt><dd><dl><dt><span class="section"><a href="#_customizing_help">32.1. Customizing Help</a></span></dt></dl></dd><dt><span class="section"><a href="#_tips_and_tricks">33. Tips and Tricks</a></span></dt><dd><dl><dt><span class="section"><a href="#_know_your_editor">33.1. Know Your Editor</a></span></dt><dt><span class="section"><a href="#X20">33.2. Vim Commands for Formatting AsciiDoc</a></span></dt><dt><span class="section"><a href="#_troubleshooting">33.3. Troubleshooting</a></span></dt><dt><span class="section"><a href="#_gotchas">33.4. Gotchas</a></span></dt><dt><span class="section"><a href="#_combining_separate_documents">33.5. Combining separate documents</a></span></dt><dt><span class="section"><a href="#_processing_document_sections_separately">33.6. Processing document sections separately</a></span></dt><dt><span class="section"><a href="#_processing_document_snippets">33.7. Processing document snippets</a></span></dt><dt><span class="section"><a href="#_badges_in_html_page_footers">33.8. Badges in HTML page footers</a></span></dt><dt><span class="section"><a href="#_pretty_printing_asciidoc_output">33.9. Pretty printing AsciiDoc output</a></span></dt><dt><span class="section"><a href="#_supporting_minor_docbook_dtd_variations">33.10. Supporting minor DocBook DTD variations</a></span></dt><dt><span class="section"><a href="#_shipping_stand_alone_asciidoc_source">33.11. Shipping stand-alone AsciiDoc source</a></span></dt><dt><span class="section"><a href="#_inserting_blank_space">33.12. Inserting blank space</a></span></dt><dt><span class="section"><a href="#_closing_open_sections">33.13. Closing open sections</a></span></dt><dt><span class="section"><a href="#_validating_output_files">33.14. Validating output files</a></span></dt></dl></dd><dt><span class="glossary"><a href="#_glossary">Glossary</a></span></dt><dt><span class="appendix"><a href="#_migration_notes">A. Migration Notes</a></span></dt><dd><dl><dt><span class="section"><a href="#X53">A.1. Version 7 to version 8</a></span></dt></dl></dd><dt><span class="appendix"><a href="#X38">B. Packager Notes</a></span></dt><dt><span class="appendix"><a href="#X39">C. AsciiDoc Safe Mode</a></span></dt><dt><span class="appendix"><a href="#_using_asciidoc_with_non_english_languages">D. Using AsciiDoc with non-English Languages</a></span></dt><dt><span class="appendix"><a href="#_vim_syntax_highlighter">E. Vim Syntax Highlighter</a></span></dt><dd><dl><dt><span class="section"><a href="#_limitations">E.1. Limitations</a></span></dt></dl></dd><dt><span class="appendix"><a href="#X74">F. Attribute Options</a></span></dt></dl></div><p><span class="emphasis"><em>AsciiDoc</em></span> is a text document format for writing short documents,
 articles, books and UNIX man pages. <span class="emphasis"><em>AsciiDoc</em></span> files can be translated
 to HTML and DocBook markups using the <code class="literal">asciidoc(1)</code> command.  <span class="emphasis"><em>AsciiDoc</em></span>
 is highly configurable: both the <span class="emphasis"><em>AsciiDoc</em></span> source file syntax and the
@@ -150,13 +150,13 @@ stylesheet
   embedding the stylesheet specify the actual file name; if you are
   linking CSS specify the file name relative to the directory
   specified by the <span class="emphasis"><em>stylesdir</em></span> attribute.
-</dd></dl></div><div class="variablelist"><a id="X45"></a><dl><dt><span class="term">
+</dd><dt><span class="term">
 icons
 </span></dt><dd>
   Link admonition paragraph and admonition block icon images and badge
   images. By default <span class="emphasis"><em>icons</em></span> is undefined and text is used in place of
   icon images.
-</dd></dl></div><div class="variablelist"><a id="X44"></a><dl><dt><span class="term">
+</dd><dt><span class="term">
 iconsdir
 </span></dt><dd>
   The name of the directory containing linked admonition and
@@ -175,7 +175,7 @@ badges
 </span></dt><dd>
   Link badges (<span class="emphasis"><em>XHTML 1.1</em></span>, <span class="emphasis"><em>CSS</em></span> and <span class="emphasis"><em>Get Firefox!</em></span>) in document
   footers. By default badges are omitted (<span class="emphasis"><em>badges</em></span> is undefined).
-</dd></dl></div><div class="note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="./images/icons/note.png" /></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>The path names of images, icons and scripts are relative to the
+</dd></dl></div><div class="note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="./images/icons/note.png" /></td><th align="left"><a id="X44"></a></th></tr><tr><td align="left" valign="top"><p>The path names of images, icons and scripts are relative to the
 output document not the source document.</p></td></tr></table></div><div class="variablelist"><a id="X54"></a><dl><dt><span class="term">
 encoding
 </span></dt><dd><p>
@@ -231,7 +231,7 @@ Preamble, followed by zero or more document Sections.</p><p>Almost any combinati
 <span class="emphasis"><em>AsciiDoc</em></span> document: documents can range from a single sentence to a
 multi-part book.</p><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_block_elements"></a>5.1. Block Elements</h3></div></div></div><p>Block elements consist of one or more lines of text and may contain
 other block elements.</p><p>The <span class="emphasis"><em>AsciiDoc</em></span> block structure can be informally summarized
-<sup>[<a id="id2528534" href="#ftn.id2528534" class="footnote">1</a>]</sup> as follows:</p><pre class="literallayout">Document      ::= (Header?,Preamble?,Section*)
+<sup>[<a id="id2528525" href="#ftn.id2528525" class="footnote">1</a>]</sup> as follows:</p><pre class="literallayout">Document      ::= (Header?,Preamble?,Section*)
 Header        ::= (Title,(AuthorLine,RevisionLine?)?)
 AuthorLine    ::= (FirstName,(MiddleName?,LastName)?,EmailAddress?)
 RevisionLine  ::= (Revision?,Date)
@@ -485,7 +485,7 @@ and <code class="literal">#</code> constrained quotes:</p><pre class="literallay
 double-escaped (because of their similarity to the single character
 constrained quotes) — here’s how to escape the previous example:</p><pre class="literallayout">\*\*F**ile Open...</pre></td></tr></table></div></div></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_superscripts_and_subscripts"></a>7.2. Superscripts and Subscripts</h3></div></div></div><p>Put ^carets on either^ side of the text to be superscripted, put
 ~tildes on either side~ of text to be subscripted.  For example, the
-following line:</p><pre class="literallayout">e^{amp}#960;i^+1 = 0. H~2~O and x^10^. Some ^super text^
+following line:</p><pre class="literallayout">e^&amp;#960;i^+1 = 0. H~2~O and x^10^. Some ^super text^
 and ~some sub text~</pre><p>Is rendered like:</p><p>e<sup>πi</sup>+1 = 0. H<sub>2</sub>O and x<sup>10</sup>. Some <sup>super text</sup>
 and <sub>some sub text</sub></p><p>Superscripts and subscripts are implemented as <a class="link" href="#X52" title="7.1.1.&#xA0;Constrained and Unconstrained Quotes">unconstrained quotes</a> so they can be escaped with a leading backslash and prefixed
 with with an attribute list.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_line_breaks"></a>7.3. Line Breaks</h3></div></div></div><p>A plus character preceded by at least one space character at the end
@@ -593,15 +593,15 @@ you are going the DocBook route then the <a class="link" href="#X43" title="29.1
 and <code class="literal">--icons-dir</code> options can be used to set the appropriate XSL
 Stylesheets parameters.</p></td></tr></table></div><p>By default the <code class="literal">asciidoc(1)</code> <code class="literal">xhtml11</code> and <code class="literal">html4</code> backends generate
 text captions instead of icon image links. To generate links to icon
-images define the <a class="link" href="#X45" title="???TITLE???"><code class="literal">icons</code></a> attribute, for example using the <code class="literal">-a
-icons</code> command-line option.</p><p>The <a class="link" href="#X44" title="???TITLE???"><code class="literal">iconsdir</code></a> attribute sets the location of linked icon
+images define the <a class="link" href="#"><code class="literal">icons</code></a> attribute, for example using the <code class="literal">-a
+icons</code> command-line option.</p><p>The <a class="link" href="#X44" title="Note"><code class="literal">iconsdir</code></a> attribute sets the location of linked icon
 images.</p><p>You can override the default icon image using the <code class="literal">icon</code> attribute to
 specify the path of the linked image. For example:</p><pre class="literallayout">[icon="./images/icons/wink.png"]
 NOTE: What lovely war.</pre><p>Use the <code class="literal">caption</code> attribute to customize the admonition captions (not
 applicable to <code class="literal">docbook</code> backend). The following example suppresses the
 icon image and customizes the caption of a NOTE admonition (undefining
 the <code class="literal">icons</code> attribute with <code class="literal">icons=None</code> is only necessary if
-<a class="link" href="#X45" title="???TITLE???">admonition icons</a> have been enabled):</p><pre class="literallayout">[icons=None, caption="My Special Note"]
+<a class="link" href="#">admonition icons</a> have been enabled):</p><pre class="literallayout">[icons=None, caption="My Special Note"]
 NOTE: This is my special note.</pre><p>This subsection also applies to <a class="link" href="#X22" title="12.9.&#xA0;Admonition Blocks">Admonition Blocks</a>.</p></div></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_delimited_blocks"></a>12. Delimited Blocks</h2></div></div></div><p>Delimited blocks are blocks of text enveloped by leading and trailing
 delimiter lines (normally a series of four or more repeated
 characters). The behavior of Delimited Blocks is specified by entries
@@ -615,18 +615,18 @@ SidebarBlock:     **************************
 QuoteBlock:       __________________________
 ExampleBlock:     ==========================
 Filter blocks:    ~~~~~~~~~~~~~~~~~~~~~~~~~~</pre><p>The <a class="link" href="#X56" title="28.3.&#xA0;Code Filter">code</a>, <a class="link" href="#X57" title="28.4.&#xA0;Source Code Highlighter Filter">source</a> and <a class="link" href="#X58" title="28.5.&#xA0;Music Filter">music</a> filter blocks are
-detailed in the <a class="link" href="#X59" title="28.&#xA0;Filters">Filters</a> section.</p><div class="table"><a id="id2531049"></a><p class="title"><b>Table 1. Default DelimitedBlock substitutions</b></p><div class="table-contents"><table summary="Default DelimitedBlock substitutions" cellpadding="4px" style="border-collapse: collapse;border-top: 2px solid #527bbd; border-bottom: 2px solid #527bbd; border-left: 2px solid #527bbd; border-right: 2px solid #527bbd; "><colgroup><col align="left" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /></colgroup><thead valign="top"><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top">              </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top">Passthrough </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top">Listing  </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top">Literal  </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top">Sidebar  </th><th style="border-bottom: 1px solid ; " align="center" valign="top">Quote</th></tr></thead><tbody valign="top"><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>Callouts</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>Attributes</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>Inline Macros</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>Quotes</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>Replacements</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>Special chars</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td></tr><tr><td style="border-right: 1px solid ; " align="left" valign="top"><p>Special words</p></td><td style="border-right: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="" align="center" valign="top"><p>Yes</p></td></tr></tbody></table></div></div><br class="table-break" /></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_listing_blocks"></a>12.2. Listing Blocks</h3></div></div></div><p>ListingBlocks are rendered verbatim in a monospaced font, they retain
+detailed in the <a class="link" href="#X59" title="28.&#xA0;Filters">Filters</a> section.</p><div class="table"><a id="id2531046"></a><p class="title"><b>Table 1. Default DelimitedBlock substitutions</b></p><div class="table-contents"><table summary="Default DelimitedBlock substitutions" cellpadding="4px" style="border-collapse: collapse;border-top: 2px solid #527bbd; border-bottom: 2px solid #527bbd; border-left: 2px solid #527bbd; border-right: 2px solid #527bbd; "><colgroup><col align="left" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /></colgroup><thead valign="top"><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top">              </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top">Passthrough </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top">Listing  </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top">Literal  </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top">Sidebar  </th><th style="border-bottom: 1px solid ; " align="center" valign="top">Quote</th></tr></thead><tbody valign="top"><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>Callouts</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>Attributes</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>Inline Macros</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>Quotes</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>Replacements</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>Special chars</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="border-bottom: 1px solid ; " align="center" valign="top"><p>Yes</p></td></tr><tr><td style="border-right: 1px solid ; " align="left" valign="top"><p>Special words</p></td><td style="border-right: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; " align="center" valign="top"><p>No</p></td><td style="border-right: 1px solid ; " align="center" valign="top"><p>Yes</p></td><td style="" align="center" valign="top"><p>Yes</p></td></tr></tbody></table></div></div><br class="table-break" /></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_listing_blocks"></a>12.2. Listing Blocks</h3></div></div></div><p>ListingBlocks are rendered verbatim in a monospaced font, they retain
 line and whitespace formatting and often distinguished by a background
 or border. There is no text formatting or substitutions within Listing
 blocks apart from Special Characters and Callouts. Listing blocks are
-often used for code and file listings.</p><p>Here’s an example:</p><pre class="screen"> --------------------------------------
- #include &lt;stdio.h&gt;
+often used for code and file listings.</p><p>Here’s an example:</p><pre class="screen">--------------------------------------
+#include &lt;stdio.h&gt;
 
-  int main() {
-     printf("Hello World!\n");
-     exit(0);
- }
- --------------------------------------</pre><p>Which will be rendered like:</p><pre class="screen">#include &lt;stdio.h&gt;
+int main() {
+   printf("Hello World!\n");
+   exit(0);
+}
+--------------------------------------</pre><p>Which will be rendered like:</p><pre class="screen">#include &lt;stdio.h&gt;
 
 int main() {
     printf("Hello World!\n");
@@ -645,12 +645,15 @@ bordered box to set it apart from the main text.</p><p>The sidebar body is treat
 Any AsciiDoc SectionBody element (apart from
 SidebarBlocks) can be placed inside a sidebar.
 ************************************************</pre><p>Which will be rendered like:</p><div class="sidebar"><p class="title"><b>An Example Sidebar</b></p><p>Any <span class="emphasis"><em>AsciiDoc</em></span> SectionBody element (apart from
-SidebarBlocks) can be placed inside a sidebar.</p></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="X26"></a>12.5. Comment Blocks</h3></div></div></div><p>The contents of CommentBlocks are not processed; they are useful for
+SidebarBlocks) can be placed inside a sidebar.</p></div><p>Apply the <span class="emphasis"><em>abstract</em></span> style to generate an abstract, for example:</p><pre class="screen">[abstract]
+************************************************
+In this paper we will attempt to...
+************************************************</pre></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="X26"></a>12.5. Comment Blocks</h3></div></div></div><p>The contents of CommentBlocks are not processed; they are useful for
 annotations and for excluding new or outdated content that you don’t
 want displayed.  Here’s and example:</p><pre class="screen">//////////////////////////////////////////
 CommentBlock contents are not processed by
 asciidoc(1).
-//////////////////////////////////////////</pre><p>See also <a class="link" href="#X25" title="17.2.3.&#xA0;Comment Lines">Comment Lines</a>.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="X76"></a>12.6. Passthrough Blocks</h3></div></div></div><p>By default the block contents is subject to attribute and macro
+//////////////////////////////////////////</pre><p>See also <a class="link" href="#X25" title="17.2.3.&#xA0;Comment Lines">Comment Lines</a>.</p><div class="note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="./images/icons/note.png" /></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>System macros are executed inside comment blocks.</p></td></tr></table></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="X76"></a>12.6. Passthrough Blocks</h3></div></div></div><p>By default the block contents is subject to attribute and macro
 substitution, no other markup is generated.  PassthroughBlock content
 will often be backend specific. Here’s an example:</p><pre class="screen">++++++++++++++++++++++++++++++++++++++
 &lt;table border="1"&gt;&lt;tr&gt;
@@ -701,7 +704,7 @@ inside an example block. For example:</p><pre class="screen">.An example
 =====================================================================
 Qui in magna commodo, est labitur dolorum an. Est ne magna primis
 adolescens.
-=====================================================================</pre><p>Renders:</p><div class="example"><a id="id2531765"></a><p class="title"><b>Example 1. An example</b></p><div class="example-contents"><p>Qui in magna commodo, est labitur dolorum an. Est ne magna primis
+=====================================================================</pre><p>Renders:</p><div class="example"><a id="id2531785"></a><p class="title"><b>Example 1. An example</b></p><div class="example-contents"><p>Qui in magna commodo, est labitur dolorum an. Est ne magna primis
 adolescens.</p></div></div><br class="example-break" /><p>A title prefix that can be inserted with the <code class="literal">caption</code> attribute
 (<code class="literal">xhtml11</code> and <code class="literal">html4</code> backends). For example:</p><pre class="screen">[caption="Example 1: "]
 .An example with a custom caption
@@ -769,12 +772,29 @@ You need to use <a class="link" href="#X15" title="13.6.&#xA0;List Item Continua
   accompanied by an <a class="link" href="#X21" title="24.&#xA0;Attribute Lists">attribute list</a>.
 </li></ul></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_bulleted_and_numbered_lists"></a>13.1. Bulleted and Numbered Lists</h3></div></div></div><p>Bulleted list items start with a dash or an asterisk followed by a
 space or tab character. Bulleted list syntaxes are:</p><pre class="literallayout">- List item.
-* List item.</pre><p>Numbered list items start with an optional number or letter followed
-by a period followed by a space or tab character.  List numbering is
-optional. Numbered list syntaxes are:</p><pre class="literallayout">.  Integer numbered list item.
-1. Integer numbered list item with optional numbering.
-.. Lowercase letter numbered list item.
-a. Lowercase letter numbered list item with optional numbering.</pre><p>Here are some examples:</p><pre class="screen">- Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+* List item.</pre><p>There are two numbered list item syntaxes:</p><div class="orderedlist"><ol type="1"><li>
+List items beginning with a single period followed by a space. The
+  period can be preceded by an optional decimal number.  The default
+  numbering style is arabic (decimal).
+</li><li><p>
+List items beginning with two periods followed by a space. An alpha
+  character or a roman number (upper or lower case) can optionally be
+  used in place of the first period:
+</p><div class="itemizedlist"><ul type="disc"><li>
+An attempt is made to set the number style based on number style
+    of the first list item.
+</li><li>
+The default numbering style is lowercase alpha.
+</li></ul></div></li></ol></div><p>You can use the <span class="emphasis"><em>style</em></span> attribute to specify an alternative numbering
+style.  The numbered list style can be set to one of the following
+values: <span class="emphasis"><em>arabic</em></span>, <span class="emphasis"><em>loweralpha</em></span>, <span class="emphasis"><em>upperalpha</em></span>, <span class="emphasis"><em>lowerroman</em></span>,
+<span class="emphasis"><em>upperroman</em></span>.</p><p>Examples of numbered list items:</p><pre class="literallayout">.    Arabic (decimal) numbered list item.
+1.   Arabic (decimal) numbered list item.
+..   Lower case letter numbered list item.
+a.   Lower case letter numbered list item.
+A.   Upper case letter numbered list item.
+iii. Lower case roman numbered list item.
+IX.  Upper case roman numbered list item.</pre><p>Here are some examples of bulleted and numbered lists:</p><pre class="screen">- Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
   * Fusce euismod commodo velit.
   * Qui in magna commodo, est labitur dolorum an. Est ne magna primis
     adolescens. Sit munere ponderum dignissim et. Minim luptatum et
@@ -784,6 +804,7 @@ a. Lowercase letter numbered list item with optional numbering.</pre><p>Here are
 - Nulla porttitor vulputate libero.
   . Fusce euismod commodo velit.
   . Vivamus fringilla mi eu lacus.
+[upperroman]
     .. Fusce euismod commodo velit.
     .. Vivamus fringilla mi eu lacus.
   . Donec eget arcu bibendum nunc consequat lobortis.
@@ -793,6 +814,8 @@ a. Lowercase letter numbered list item with optional numbering.</pre><p>Here are
     b. Vivamus fringilla mi eu lacus.
     c. Donec eget arcu bibendum nunc consequat lobortis.
   2. Vivamus fringilla mi eu lacus.
+    .. Fusce euismod commodo velit.
+    .. Vivamus fringilla mi eu lacus.
   3. Donec eget arcu bibendum nunc consequat lobortis.
   4. Nam fermentum mattis ante.</pre><p>Which render as:</p><div class="itemizedlist"><ul type="disc"><li><p>
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
@@ -812,7 +835,7 @@ Nulla porttitor vulputate libero.
 Fusce euismod commodo velit.
 </li><li><p>
 Vivamus fringilla mi eu lacus.
-</p><div class="orderedlist"><ol type="a"><li>
+</p><div class="orderedlist"><ol type="I"><li>
 Fusce euismod commodo velit.
 </li><li>
 Vivamus fringilla mi eu lacus.
@@ -828,9 +851,13 @@ Fusce euismod commodo velit.
 Vivamus fringilla mi eu lacus.
 </li><li>
 Donec eget arcu bibendum nunc consequat lobortis.
-</li></ol></div></li><li>
+</li></ol></div></li><li><p>
 Vivamus fringilla mi eu lacus.
+</p><div class="orderedlist"><ol type="a"><li>
+Fusce euismod commodo velit.
 </li><li>
+Vivamus fringilla mi eu lacus.
+</li></ol></div></li><li>
 Donec eget arcu bibendum nunc consequat lobortis.
 </li><li>
 Nam fermentum mattis ante.
@@ -945,7 +972,7 @@ Current PDF toolchains do not make a good job of determining
 </li><li>
 If you are generating DocBook markup then horizontal labeled lists
   should not be nested because the <span class="emphasis"><em>DocBook XML V4.2</em></span> DTD does not
-  permit nested informal tables (although <a class="link" href="#X13" title="???TITLE???">DocBook XSL   Stylesheets</a> and <a class="link" href="#X31" title="???TITLE???">dblatex</a> process them correctly).
+  permit nested informal tables (although <a class="link" href="#">DocBook XSL   Stylesheets</a> and <a class="link" href="#">dblatex</a> process them correctly).
 </li><li>
 The label width can be set as a percentage of the total width by
   setting the <span class="emphasis"><em>width</em></span> attribute e.g. <code class="literal">width="10%"</code>
@@ -954,15 +981,15 @@ DocBook question and answer (Q&amp;A) lists. Example:</p><pre class="screen">[qa
 Question one::
         Answer one.
 Question two::
-        Answer two.</pre><p>Renders:</p><div class="qandaset"><dl><dt>13.3.1. <a href="#id2532869">
+        Answer two.</pre><p>Renders:</p><div class="qandaset"><dl><dt>13.3.1. <a href="#id2532998">
 Question one
-</a></dt><dt>13.3.2. <a href="#id2532886">
+</a></dt><dt>13.3.2. <a href="#id2533015">
 Question two
-</a></dt></dl><table border="0" summary="Q and A Set"><col align="left" width="1%" /><tbody><tr class="question"><td align="left" valign="top"><a id="id2532869"></a><a id="id2532872"></a><p><b>13.3.1.</b></p></td><td align="left" valign="top"><p>
+</a></dt></dl><table border="0" summary="Q and A Set"><col align="left" width="1%" /><tbody><tr class="question"><td align="left" valign="top"><a id="id2532998"></a><a id="id2533000"></a><p><b>13.3.1.</b></p></td><td align="left" valign="top"><p>
 Question one
 </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
         Answer one.
-</p></td></tr><tr class="question"><td align="left" valign="top"><a id="id2532886"></a><a id="id2532888"></a><p><b>13.3.2.</b></p></td><td align="left" valign="top"><p>
+</p></td></tr><tr class="question"><td align="left" valign="top"><a id="id2533015"></a><a id="id2533017"></a><p><b>13.3.2.</b></p></td><td align="left" valign="top"><p>
 Question two
 </p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>
         Answer two.
@@ -1077,7 +1104,7 @@ The <code class="literal">footnoteref</code> macro has two forms: if the text is
 The footnote text can span multiple lines.
 </li></ul></div><p>Example footnote:</p><pre class="literallayout">A footnote footnote:[An example footnote.];
 a second footnote with a reference ID footnoteref:[note2,Second footnote.];
-finally a reference to the second footnote footnoteref:[note2].</pre><p>Which renders:</p><p>A footnote <sup>[<a id="id2533484" href="#ftn.id2533484" class="footnote">2</a>]</sup>;
+finally a reference to the second footnote footnoteref:[note2].</pre><p>Which renders:</p><p>A footnote <sup>[<a id="id2533619" href="#ftn.id2533619" class="footnote">2</a>]</sup>;
 a second footnote with a reference ID <sup>[<a id="note2" href="#ftn.note2" class="footnote">3</a>]</sup>;
 finally a reference to the second footnote <sup>[<a href="#ftn.note2" class="footnoteref">3</a>]</sup>.</p><p>Footnotes are primarily useful when generating DocBook output — DocBook conversion programs render footnote outside the primary text
 flow.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_indexes"></a>15. Indexes</h2></div></div></div><p>The shipped <span class="emphasis"><em>AsciiDoc</em></span> configuration includes the inline macros for
@@ -1125,7 +1152,7 @@ example:</p><pre class="screen"> .MS-DOS directory listing
 
  &lt;1&gt; This directory holds MS-DOS.
  &lt;2&gt; System startup code for DOS.
- &lt;3&gt; Some sort of Windows 3.1 hack.</pre><p>Which renders:</p><div class="example"><a id="id2533708"></a><p class="title"><b>Example 2. MS-DOS directory listing</b></p><div class="example-contents"><pre class="screen">10/17/97   9:04         &lt;DIR&gt;    bin
+ &lt;3&gt; Some sort of Windows 3.1 hack.</pre><p>Which renders:</p><div class="example"><a id="id2533843"></a><p class="title"><b>Example 2. MS-DOS directory listing</b></p><div class="example-contents"><pre class="screen">10/17/97   9:04         &lt;DIR&gt;    bin
 10/16/97  14:11         &lt;DIR&gt;    DOS            <a id="CO1-1"></a><img src="./images/icons/callouts/1.png" alt="1" border="0" />
 10/16/97  14:40         &lt;DIR&gt;    Program Files
 10/16/97  14:46         &lt;DIR&gt;    TEMP
@@ -1183,12 +1210,12 @@ substitution — it is a space delimited list of callout IDs that refer
 to the explanatory list item.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_including_callouts_in_included_code"></a>16.2. Including callouts in included code</h3></div></div></div><p>You can annotate working code examples with callouts — just remember
 to put the callouts inside source code comments. This example displays
 the <code class="literal">test.py</code> source file (containing a single callout) using the
-<a class="link" href="#X57" title="28.4.&#xA0;Source Code Highlighter Filter">Source Code Highlighter Filter</a>:</p><div class="example"><a id="id2534045"></a><p class="title"><b>Example 3. AsciiDoc source</b></p><div class="example-contents"><pre class="screen"> [source,python]
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- include::test.py[]
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<a class="link" href="#X57" title="28.4.&#xA0;Source Code Highlighter Filter">Source Code Highlighter Filter</a>:</p><div class="example"><a id="id2534180"></a><p class="title"><b>Example 3. AsciiDoc source</b></p><div class="example-contents"><pre class="screen">[source,python]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include::test.py[]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- &lt;1&gt; Print statement.</pre></div></div><br class="example-break" /><div class="example"><a id="id2534062"></a><p class="title"><b>Example 4. Included <code class="literal">test.py</code> source</b></p><div class="example-contents"><pre class="screen">print 'Hello World!'   # &lt;1&gt;</pre></div></div><br class="example-break" /></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_macros"></a>17. Macros</h2></div></div></div><p>Macros are a mechanism for substituting parametrized text into output
+&lt;1&gt; Print statement.</pre></div></div><br class="example-break" /><div class="example"><a id="id2534196"></a><p class="title"><b>Example 4. Included <code class="literal">test.py</code> source</b></p><div class="example-contents"><pre class="screen">print 'Hello World!'   # &lt;1&gt;</pre></div></div><br class="example-break" /></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_macros"></a>17. Macros</h2></div></div></div><p>Macros are a mechanism for substituting parametrized text into output
 documents.</p><p>Macros have a <span class="emphasis"><em>name</em></span>, a single <span class="emphasis"><em>target</em></span> argument and an <span class="emphasis"><em>attribute
 list</em></span>.  The usual syntax is <code class="literal">&lt;name&gt;:&lt;target&gt;[&lt;attrlist&gt;]</code> (for
 inline macros) and <code class="literal">&lt;name&gt;::&lt;target&gt;[&lt;attrlist&gt;]</code> (for block
@@ -1330,9 +1357,9 @@ but it is supported by Internet Explorer 8 Beta 1.</p></td></tr></table></div></
 left margin are treated as comments and are stripped from the output.
 Comment lines have been implemented as a block macro and are only
 valid in a block context — they are not treated as comments inside
-paragraphs or delimited blocks. Example comment line:</p><pre class="literallayout">// This is a comment.</pre><p>See also <a class="link" href="#X26" title="12.5.&#xA0;Comment Blocks">Comment Blocks</a>.</p></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_system_macros"></a>17.3. System Macros</h3></div></div></div><p>System macros are block macros that perform a predefined task which is
+paragraphs or delimited blocks. Example comment line:</p><pre class="literallayout">// This is a comment.</pre><p>See also <a class="link" href="#X26" title="12.5.&#xA0;Comment Blocks">Comment Blocks</a>.</p></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_system_macros"></a>17.3. System Macros</h3></div></div></div><p>System macros are block macros that perform a predefined task and are
 hardwired into the <code class="literal">asciidoc(1)</code> program.</p><div class="itemizedlist"><ul type="disc"><li>
-You can’t escape system macros with a leading backslash character
+You can escape system macros with a leading backslash character
   (as you can with other macros).
 </li><li>
 The syntax and tasks performed by system macros is built into
@@ -1346,7 +1373,7 @@ contents of <code class="literal">include1</code> files are not subject to tab e
 system macro processing nor are attribute or lower priority
 substitutions performed. The <code class="literal">include1</code> macro’s main use is to include
 verbatim embedded CSS or scripts into configuration file headers.
-Example:</p><pre class="screen"> include::chapter1.txt[tabsize=4]</pre><div class="itemizedlist"><p class="title"><b>Include macro behavior</b></p><ul type="disc"><li>
+Example:</p><pre class="screen">include::chapter1.txt[tabsize=4]</pre><div class="itemizedlist"><p class="title"><b>Include macro behavior</b></p><ul type="disc"><li>
 If the included file name is specified with a relative path then the
   path is relative to the location of the referring document.
 </li><li>
@@ -1475,7 +1502,7 @@ a markup template. If <code class="literal">&lt;name&gt;</code> is omitted then 
 regular expression match group named <span class="emphasis"><em>name</em></span>.  The optional
 <code class="literal">[&lt;subslist]</code> is a comma-separated list of substitution names enclosed
 in <code class="literal">[]</code> brackets, it sets the default substitutions for passthrough
-text.</p><p><b>Pattern named groups. </b>The following named groups can be used in macro <code class="literal">&lt;pattern&gt;</code> regular
+text, if omitted then no passthrough substitutions are performed.</p><p><b>Pattern named groups. </b>The following named groups can be used in macro <code class="literal">&lt;pattern&gt;</code> regular
 expressions and are available as markup template attributes:</p><div class="variablelist"><dl><dt><span class="term">
 name
 </span></dt><dd>
@@ -1523,8 +1550,8 @@ All table meta-data is contained specified in the table’s attribute
 There is no provision for cells to span multiple columns.
 </li></ul></div><div class="sidebar"><p class="title"><b>Use tables sparingly</b></p><p>When technical users first start creating documents, tables (complete
 with column spanning and table nesting) are often considered very
-important.  important must-have feature. The reality is that tables
-are seldom used, even in technical documentation.</p><p>Try this exercise: thumb through your library of technical books,
+important. The reality is that tables are seldom used, even in
+technical documentation.</p><p>Try this exercise: thumb through your library of technical books,
 you’ll be surprised just how seldom tables are actually used, even
 less seldom are tables containing block elements such as paragraphs or
 lists. This is no accident, like figures, tables are outside the
@@ -1534,7 +1561,7 @@ displaying column oriented tabular data.</p></div><div class="section" lang="en"
 |1 |2 |A
 |3 |4 |B
 |5 |6 |C
-|=======</pre></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h4 class="title"><a id="_columns_formatted_with_strong_monospaced_and_emphasis_styles"></a>18.1.2. Columns formatted with strong, monospaced and emphasis styles</h4></div></div></div><div class="table"><a id="id2536576"></a><p class="title"><b>Table 2. An example table</b></p><div class="table-contents"><table summary="An example table" cellpadding="4px" style="border: none;"><colgroup><col align="right" /><col align="center" /><col align="left" /></colgroup><thead valign="top"><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="right" valign="top">        </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top">Column 2</th><th style="border-bottom: 1px solid ; " align="left" valign="top">Column 3</th></tr></thead><tfoot valign="top"><tr><th style="border-right: 1px solid ; " align="right" valign="top"><p><span class="strong"><strong>footer 1</strong></span></p></th><th style="border-right: 1px solid ; " align="center" valign="top"><p><code class="literal">footer 2</code></p></th><th style="" align="left" valign="top"><p><span class="emphasis"><em>footer 3</em></span></p></th></tr></tfoot><tbody valign="top"><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="right" valign="top"><p><span class="strong"><strong>1</strong></span></p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p><code class="literal">Item 1</code></p></td><td style="border-bottom: 1px solid ; " align="left" valign="top"><p><span class="emphasis"><em>Item 1</em></span></p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="right" valign="top"><p><span class="strong"><strong>2</strong></span></p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p><code class="literal">Item 2</code></p></td><td style="border-bottom: 1px solid ; " align="left" valign="top"><p><span class="emphasis"><em>Item 2</em></span></p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="right" valign="top"><p><span class="strong"><strong>3</strong></span></p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p><code class="literal">Item 3</code></p></td><td style="border-bottom: 1px solid ; " align="left" valign="top"><p><span class="emphasis"><em>Item 3</em></span></p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="right" valign="top"><p><span class="strong"><strong>4</strong></span></p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p><code class="literal">Item 4</code></p></td><td style="border-bottom: 1px solid ; " align="left" valign="top"><p><span class="emphasis"><em>Item 4</em></span></p></td></tr></tbody></table></div></div><br class="table-break" /><p><span class="emphasis"><em>AsciiDoc</em></span> source:</p><pre class="screen">.An example table
+|=======</pre></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h4 class="title"><a id="_columns_formatted_with_strong_monospaced_and_emphasis_styles"></a>18.1.2. Columns formatted with strong, monospaced and emphasis styles</h4></div></div></div><div class="table"><a id="id2536713"></a><p class="title"><b>Table 2. An example table</b></p><div class="table-contents"><table summary="An example table" cellpadding="4px" style="border: none;"><colgroup><col align="right" /><col align="center" /><col align="left" /></colgroup><thead valign="top"><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="right" valign="top">        </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top">Column 2</th><th style="border-bottom: 1px solid ; " align="left" valign="top">Column 3</th></tr></thead><tfoot valign="top"><tr><th style="border-right: 1px solid ; " align="right" valign="top"><p><span class="strong"><strong>footer 1</strong></span></p></th><th style="border-right: 1px solid ; " align="center" valign="top"><p><code class="literal">footer 2</code></p></th><th style="" align="left" valign="top"><p><span class="emphasis"><em>footer 3</em></span></p></th></tr></tfoot><tbody valign="top"><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="right" valign="top"><p><span class="strong"><strong>1</strong></span></p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p><code class="literal">Item 1</code></p></td><td style="border-bottom: 1px solid ; " align="left" valign="top"><p><span class="emphasis"><em>Item 1</em></span></p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="right" valign="top"><p><span class="strong"><strong>2</strong></span></p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p><code class="literal">Item 2</code></p></td><td style="border-bottom: 1px solid ; " align="left" valign="top"><p><span class="emphasis"><em>Item 2</em></span></p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="right" valign="top"><p><span class="strong"><strong>3</strong></span></p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p><code class="literal">Item 3</code></p></td><td style="border-bottom: 1px solid ; " align="left" valign="top"><p><span class="emphasis"><em>Item 3</em></span></p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="right" valign="top"><p><span class="strong"><strong>4</strong></span></p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p><code class="literal">Item 4</code></p></td><td style="border-bottom: 1px solid ; " align="left" valign="top"><p><span class="emphasis"><em>Item 4</em></span></p></td></tr></tbody></table></div></div><br class="table-break" /><p><span class="emphasis"><em>AsciiDoc</em></span> source:</p><pre class="screen">.An example table
 [width="50%",cols="&gt;s,^m,e",frame="none",options="header,footer"]
 |==========================
 |        |Column 2|Column 3
@@ -1545,7 +1572,7 @@ displaying column oriented tabular data.</p></div><div class="section" lang="en"
 |footer 1|footer 2|footer 3
 |==========================</pre></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h4 class="title"><a id="_horizontal_and_vertical_source_data"></a>18.1.3. Horizontal and vertical source data</h4></div></div></div><p>Short cells can be entered horizontally, longer cells vertically.  The
 default behavior is to strip leading and trailing blank lines within a
-cell. These characteristics aid readability and data entry.</p><div class="table"><a id="id2536795"></a><p class="title"><b>Table 3. Windtrainer workouts</b></p><div class="table-contents"><table summary="Windtrainer workouts" cellpadding="4px" style="border-collapse: collapse;border-top: 2px solid #527bbd; border-bottom: 2px solid #527bbd; border-left: 2px solid #527bbd; border-right: 2px solid #527bbd; "><colgroup><col align="left" /><col align="center" /><col align="center" /><col align="left" /></colgroup><thead valign="top"><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top">Date </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top">Duration </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top">Avg HR </th><th style="border-bottom: 1px solid ; " align="left" valign="top">Notes</th></tr></thead><tbody valign="top"><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>22-Aug-08</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>10:24</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>157</p></td><td style="border-bottom: 1px solid ; " align="left" valign="top"><p>Worked out MSHR (max sustainable heart rate) by going hard
+cell. These characteristics aid readability and data entry.</p><div class="table"><a id="id2536932"></a><p class="title"><b>Table 3. Windtrainer workouts</b></p><div class="table-contents"><table summary="Windtrainer workouts" cellpadding="4px" style="border-collapse: collapse;border-top: 2px solid #527bbd; border-bottom: 2px solid #527bbd; border-left: 2px solid #527bbd; border-right: 2px solid #527bbd; "><colgroup><col align="left" /><col align="center" /><col align="center" /><col align="left" /></colgroup><thead valign="top"><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top">Date </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top">Duration </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top">Avg HR </th><th style="border-bottom: 1px solid ; " align="left" valign="top">Notes</th></tr></thead><tbody valign="top"><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>22-Aug-08</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>10:24</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>157</p></td><td style="border-bottom: 1px solid ; " align="left" valign="top"><p>Worked out MSHR (max sustainable heart rate) by going hard
 for this interval.</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>22-Aug-08</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>23:03</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>152</p></td><td style="border-bottom: 1px solid ; " align="left" valign="top"><p>Back-to-back with previous interval.</p></td></tr><tr><td style="border-right: 1px solid ; " align="left" valign="top"><p>24-Aug-08</p></td><td style="border-right: 1px solid ; " align="center" valign="top"><p>40:00</p></td><td style="border-right: 1px solid ; " align="center" valign="top"><p>145</p></td><td style="" align="left" valign="top"><p>Moderately hard interspersed with 3x 3min intervals (2min
 hard + 1min really hard taking the HR up to 160).</p></td></tr></tbody></table></div></div><br class="table-break" /><p><span class="emphasis"><em>AsciiDoc</em></span> source:</p><pre class="screen">.Windtrainer workouts
 [width="80%",cols="3,^2,^2,10",options="header"]
@@ -1572,11 +1599,11 @@ Madrid</p></td><td style="border-bottom: 1px solid ; " align="left" valign="top"
 Marseille</p></td><td style="border-bottom: 1px solid ; " align="left" valign="top"><p>91.24.45.40</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>BOTTM</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>Bottom-Dollar Markets</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>Elizabeth Lincoln</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>23 Tsawassen Blvd.
 Tsawassen</p></td><td style="border-bottom: 1px solid ; " align="left" valign="top"><p>(604) 555-4729</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="center" valign="top"><p>BSBEV</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>B’s Beverages</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>Victoria Ashworth</p></td><td style="border-right: 1px solid ; border-bottom: 1px solid ; " align="left" valign="top"><p>Fauntleroy Circus
 London</p></td><td style="border-bottom: 1px solid ; " align="left" valign="top"><p>(171) 555-1212</p></td></tr><tr><td style="border-right: 1px solid ; " align="center" valign="top"><p>CACTU</p></td><td style="border-right: 1px solid ; " align="left" valign="top"><p>Cactus Comidas para llevar</p></td><td style="border-right: 1px solid ; " align="left" valign="top"><p>Patricio Simpson</p></td><td style="border-right: 1px solid ; " align="left" valign="top"><p>Cerrito 333
-Buenos Aires</p></td><td style="" align="left" valign="top"><p>(1) 135-5555</p></td></tr></tbody></table></div><p><span class="emphasis"><em>AsciiDoc</em></span> source:</p><pre class="screen"> [format="csv",cols="^1,4*2",options="header"]
- |===================================================
- ID,Customer Name,Contact Name,Customer Address,Phone
- include::customers.csv[]
- |===================================================</pre></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="X68"></a>18.2. Table input data formats</h3></div></div></div><p><span class="emphasis"><em>AsciiDoc</em></span> table data can be <span class="emphasis"><em>psv</em></span>, <span class="emphasis"><em>dsv</em></span> or <span class="emphasis"><em>csv</em></span> formatted.  The
+Buenos Aires</p></td><td style="" align="left" valign="top"><p>(1) 135-5555</p></td></tr></tbody></table></div><p><span class="emphasis"><em>AsciiDoc</em></span> source:</p><pre class="screen">[format="csv",cols="^1,4*2",options="header"]
+|===================================================
+ID,Customer Name,Contact Name,Customer Address,Phone
+include::customers.csv[]
+|===================================================</pre></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="X68"></a>18.2. Table input data formats</h3></div></div></div><p><span class="emphasis"><em>AsciiDoc</em></span> table data can be <span class="emphasis"><em>psv</em></span>, <span class="emphasis"><em>dsv</em></span> or <span class="emphasis"><em>csv</em></span> formatted.  The
 default <span class="emphasis"><em>AsciiDoc</em></span> table format is <span class="emphasis"><em>psv</em></span>.</p><p><span class="emphasis"><em>csv</em></span>  is the quasi-standard row oriented <span class="emphasis"><em>Comma Separated Values
 (CSV)</em></span> format commonly used to import and export spreadsheet and
 database data.</p><p><span class="emphasis"><em>AsciiDoc</em></span> <span class="emphasis"><em>psv</em></span> (<span class="emphasis"><em>Prefix Separated Values</em></span>) and <span class="emphasis"><em>dsv</em></span> (<span class="emphasis"><em>Delimiter
@@ -1801,11 +1828,11 @@ source file:</p><pre class="literallayout">:man source:   AsciiDoc
 can use the following math markups:</p><div class="note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="./images/icons/note.png" /></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>The <span class="emphasis"><em>latexmath</em></span> macro used to include <span class="emphasis"><em>LaTeX Math</em></span> in DocBook
 outputs is not the same as the <span class="emphasis"><em>latexmath</em></span> macro used to include
 <span class="emphasis"><em>LaTeX MathML</em></span> in XHTML outputs.  <span class="emphasis"><em>LaTeX Math</em></span> applies to DocBook
-outputs that are processed by <a class="link" href="#X31" title="???TITLE???">dblatex</a> and is normally used to
+outputs that are processed by <a class="link" href="#">dblatex</a> and is normally used to
 generate PDF files.  <span class="emphasis"><em>LaTeXMathML</em></span> is very much a subset of <span class="emphasis"><em>LaTeX
 Math</em></span> and applies to XHTML documents.</p></td></tr></table></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_latex_math"></a>20.1. LaTeX Math</h3></div></div></div><p><a class="ulink" href="ftp://ftp.ams.org/pub/tex/doc/amsmath/short-math-guide.pdf" target="_top">LaTeX
 math</a> can be included in documents that are processed by
-<a class="link" href="#X31" title="???TITLE???">dblatex(1)</a>.  Example inline formula:</p><pre class="literallayout">latexmath:[$C = \alpha + \beta Y^{\gamma} + \epsilon$]</pre><p>For more examples see the <a class="ulink" href="http://www.methods.co.nz/asciidoc/" target="_top"><span class="emphasis"><em>AsciiDoc</em></span>
+<a class="link" href="#">dblatex(1)</a>.  Example inline formula:</p><pre class="literallayout">latexmath:[$C = \alpha + \beta Y^{\gamma} + \epsilon$]</pre><p>For more examples see the <a class="ulink" href="http://www.methods.co.nz/asciidoc/" target="_top"><span class="emphasis"><em>AsciiDoc</em></span>
 website</a> or the distributed <code class="literal">doc/latexmath.txt</code> file.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_asciimathml"></a>20.2. ASCIIMathML</h3></div></div></div><p><a class="ulink" href="http://www1.chapman.edu/~jipsen/mathml/asciimath.html" target="_top">ASCIIMathML</a>
 formulas can be included in XHTML documents generated using the
 <span class="emphasis"><em>xhtml11</em></span> backend. To enable ASCIIMathML support you must define the
@@ -2217,7 +2244,7 @@ Here are some more attribute entry examples:
 {date}, {revision}, {keywords}, {revisionhistory}</pre><p>The preceding example is equivalent to the standard <span class="emphasis"><em>AsciiDoc</em></span> two line
 document header.  Actually it’s a little bit different with the
 addition of the <code class="literal">{keywords}</code> and <code class="literal">{revisionhistory}</code> attributes
-<sup>[<a id="id2541276" href="#ftn.id2541276" class="footnote">4</a>]</sup>.</p><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_setting_configuration_entries"></a>23.1. Setting configuration entries</h3></div></div></div><p>A variant of the Attribute Entry syntax allows configuration file
+<sup>[<a id="id2541424" href="#ftn.id2541424" class="footnote">4</a>]</sup>.</p><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_setting_configuration_entries"></a>23.1. Setting configuration entries</h3></div></div></div><p>A variant of the Attribute Entry syntax allows configuration file
 entries to be set from within an <span class="emphasis"><em>AsciiDoc</em></span> document:</p><pre class="literallayout">:&lt;section_name&gt;.&lt;entry_name&gt;: &lt;entry_value&gt;</pre><p>Where <code class="literal">&lt;section_name&gt;</code> is the configuration section name,
 <code class="literal">&lt;entry_name&gt;</code> is the name of the entry and <code class="literal">&lt;entry_value&gt;</code> is the
 optional entry value. This example sets the default labeled list style
@@ -2267,7 +2294,8 @@ List attributes take precedence over existing attributes.
 List attributes can only be referenced in configuration file markup
   templates and tags, they are not available inside the document.
 </li><li>
-Attribute references are allowed inside attribute lists.
+Attribute references are allowed inside attribute lists — this is
+  the only substitution performed on attribute lists.
 </li><li>
 Setting a named attribute to <code class="literal">None</code> undefines the attribute.
 </li><li>
@@ -2299,7 +2327,8 @@ empty but it cannot be omitted. List entries are used to pass
 attribute values to macro markup templates.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_attributelist_element"></a>24.3. AttributeList Element</h3></div></div></div><p>An <a class="link" href="#X21" title="24.&#xA0;Attribute Lists">attribute list</a> on a line by itself constitutes an
 <span class="emphasis"><em>AttributeList</em></span> block element, its attributes apply to the following
 block element.  The list attributes are passed to the next block
-element for markup template substitution.</p></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_attribute_references"></a>25. Attribute References</h2></div></div></div><p>An attribute references is an attribute name (possibly followed by an
+element for markup template substitution. Often the first list
+parameter is used to specify the element’s <a class="link" href="#X23" title="27.1.&#xA0;Styles">style</a>.</p></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_attribute_references"></a>25. Attribute References</h2></div></div></div><p>An attribute references is an attribute name (possibly followed by an
 additional parameters) enclosed in braces.  When an attribute
 reference is encountered it is evaluated and replaced by its
 corresponding text value.  If the attribute is undefined the line
@@ -2492,7 +2521,7 @@ See also the <a class="link" href="#X33" title="4.2.&#xA0;xhtml11">xhtml11</a> s
 The entries that translate to blank strings are designed to be used
    for conditional text inclusion. You can also use the <code class="literal">ifdef</code>,
    <code class="literal">ifndef</code> and <code class="literal">endif</code> System macros for conditional inclusion.
-   <sup>[<a id="id2543072" href="#ftn.id2543072" class="footnote">5</a>]</sup>
+   <sup>[<a id="id2543097" href="#ftn.id2543097" class="footnote">5</a>]</sup>
 </li></ol></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="X73"></a>27. Block Element Definitions</h2></div></div></div><p>The syntax and behavior of Paragraph, DelimitedBlock, List and Table
 block elements is determined by block definitions contained in
 <a class="link" href="#X7" title="21.&#xA0;Configuration Files"><span class="emphasis"><em>AsciiDoc</em></span> configuration file</a> sections.</p><p>Each definition consists of a section title followed by one or more
@@ -2638,7 +2667,7 @@ sectionbody
 </dd><dt><span class="term">
 skip
 </span></dt><dd>
-    The block is treated as a comment (see CommentBlocks).
+    The block is treated as a comment (see <a class="link" href="#X26" title="12.5.&#xA0;Comment Blocks">CommentBlocks</a>).
 </dd><dt><span class="term">
 list
 </span></dt><dd>
@@ -2746,23 +2775,26 @@ Then it looks in the <code class="literal">asciidoc(1)</code> <code class="liter
 </li><li>
 Finally it relies on the executing shell to search the environment
   search path (<code class="literal">$PATH</code>).
-</li></ul></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_filter_configuration_files"></a>28.2. Filter Configuration Files</h3></div></div></div><p>Filters are normally accompanied by a configuration file containing a
+</li></ul></div><p>Sub-directories are also included in the searches — standard practice
+is to install each filter in it’s own sub-directory with the same name
+as the filter’s style definition. For example the music filter’s style
+name is <span class="emphasis"><em>music</em></span> so it’s configuration and filter files are stored in
+the <code class="literal">filters/music</code> directory.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_filter_configuration_files"></a>28.2. Filter Configuration Files</h3></div></div></div><p>Filters are normally accompanied by a configuration file containing a
 Paragraph or DelimitedBlock definition along with corresponding markup
-templates.</p><p>There are two ways to implement filters:</p><div class="itemizedlist"><ul type="disc"><li>
-As a new Paragraph or DelimitedBlock definition.
-</li><li>
-By styling an existing Paragraph or DelimitedBlock using a <span class="emphasis"><em>style</em></span>
-  configuration entry — the <span class="emphasis"><em>source highlight</em></span> and <span class="emphasis"><em>music</em></span> filters
-  use this technique to customize the ListingBlock. By convention the
-  style is given the same name as the filter.
-</li></ul></div><p><code class="literal">asciidoc(1)</code> auto-loads all <code class="literal">.conf</code> files found in the filter search
-paths (see previous section).</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="X56"></a>28.3. Code Filter</h3></div></div></div><p><span class="emphasis"><em>AsciiDoc</em></span> comes with a simple minded for highlighting source code
-keywords and comments.  See also the
-<code class="literal">./filters/code-filter-readme.txt</code> file.</p><div class="note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="./images/icons/note.png" /></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>This filter primarily to demonstrate how to write a filter — it’s much to simplistic to be passed off as a code syntax highlighter.
+templates.</p><p>While it is possible to create new Paragraph or DelimitedBlock
+definitions the preferred way to implement a filter is to add a
+<a class="link" href="#X23" title="27.1.&#xA0;Styles">style</a> to an existing Paragraph or DelimitedBlock definition
+(all filters shipped with <span class="emphasis"><em>AsciiDoc</em></span> use this technique). The filter is
+applied to the paragraph or delimited block by preceding it with an
+attribute list: the first positional attribute is the style name,
+remaining attributes are normally filter specific parameters.</p><p><code class="literal">asciidoc(1)</code> auto-loads all <code class="literal">.conf</code> files found in the filter search
+paths (see previous section).</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="X56"></a>28.3. Code Filter</h3></div></div></div><p><span class="emphasis"><em>AsciiDoc</em></span> comes with a toy filter for highlighting source code keywords
+and comments.  See also the <code class="literal">./filters/code/code-filter-readme.txt</code>
+file.</p><div class="note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="./images/icons/note.png" /></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>This filter primarily to demonstrate how to write a filter — it’s much to simplistic to be passed off as a code syntax highlighter.
 If you want a full featured multi-language highlighter use the
 <a class="link" href="#X57" title="28.4.&#xA0;Source Code Highlighter Filter">Source Code Highlighter Filter</a>.</p></td></tr></table></div><pre class="screen">.Code filter example
 [code,python]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------
 ''' A multi-line
     comment.'''
 def sub_word(mo):
@@ -2772,7 +2804,7 @@ def sub_word(mo):
         return quote + word + quote
     else:
         return word
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</pre><p>Outputs:</p><div class="example"><a id="id2544701"></a><p class="title"><b>Example 5. Code filter example</b></p><div class="example-contents"><pre class="screen"><span class="emphasis"><em>''' A multi-line</em></span>
+----------------------------------------------</pre><p>Outputs:</p><div class="example"><a id="id2544749"></a><p class="title"><b>Example 5. Code filter example</b></p><div class="example-contents"><pre class="screen"><span class="emphasis"><em>''' A multi-line</em></span>
 <span class="emphasis"><em>    comment.'''</em></span>
 <span class="strong"><strong>def</strong></span> sub_word(mo):
 <span class="emphasis"><em>    ''' Single line comment.'''</em></span>
@@ -2803,8 +2835,8 @@ associated with generating and sequencing the toolchain commands and
 managing intermediate and output files.  <code class="literal">a2x(1)</code> also optionally
 deploys admonition and navigation icons and a CSS stylesheet. See the
 <code class="literal"><code class="literal">a2x(1)</code></code> man page for more details. All you need is
-<a class="link" href="#X40" title="???TITLE???">xsltproc(1)</a>, <a class="link" href="#X13" title="???TITLE???">DocBook XSL Stylesheets</a> and optionally:
-<a class="link" href="#X31" title="???TITLE???">dblatex</a> or <a class="link" href="#X14" title="???TITLE???">FOP</a> (if you want PDF); <code class="literal">w3m(1)</code> or
+<a class="link" href="#">xsltproc(1)</a>, <a class="link" href="#">DocBook XSL Stylesheets</a> and optionally:
+<a class="link" href="#">dblatex</a> or <a class="link" href="#">FOP</a> (if you want PDF); <code class="literal">w3m(1)</code> or
 <code class="literal">lynx(1)</code> (if you want text).</p><p>The following examples generate <code class="literal">doc/source-highlight-filter.pdf</code> from
 the <span class="emphasis"><em>AsciiDoc</em></span> <code class="literal">doc/source-highlight-filter.txt</code> source file. The first
 example uses <code class="literal">dblatex(1)</code> (the default PDF generator) the second
@@ -2829,7 +2861,7 @@ If the DocBook <span class="emphasis"><em>lang</em></span> attribute is set then
 is easily customized and can be used in situations where there is no
 suitable DocBook toolchain (see the
 <a class="ulink" href="http://www.methods.co.nz/asciidoc/" target="_top"><span class="emphasis"><em>AsciiDoc</em></span> website</a> for example).</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_pdf_generation"></a>29.3. PDF generation</h3></div></div></div><p>There are two commonly used tools to generate PDFs from DocBook,
-<a class="link" href="#X31" title="???TITLE???">dblatex</a> and <a class="link" href="#X14" title="???TITLE???">FOP</a>.</p><div class="itemizedlist"><p class="title"><b>dblatex or FOP?</b></p><ul type="disc"><li>
+<a class="link" href="#">dblatex</a> and <a class="link" href="#">FOP</a>.</p><div class="itemizedlist"><p class="title"><b>dblatex or FOP?</b></p><ul type="disc"><li>
 <span class="emphasis"><em>dblatex</em></span> is easier to install, there’s zero configuration
   required and no Java VM to install — it just works out of the box.
 </li><li>
@@ -2837,56 +2869,56 @@ suitable DocBook toolchain (see the
 </li><li>
 <span class="emphasis"><em>dblatex</em></span> is easier to use as it converts DocBook directly to PDF
   whereas before using <span class="emphasis"><em>FOP</em></span> you have to convert DocBook to XML-FO
-  using <a class="link" href="#X13" title="???TITLE???">DocBook XSL Stylesheets</a>.
+  using <a class="link" href="#">DocBook XSL Stylesheets</a>.
 </li><li>
 <span class="emphasis"><em>FOP</em></span> is more feature complete (for example, callouts are processed
   inside literal layouts) and arguably produces nicer looking output.
 </li></ul></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_html_help_generation"></a>29.4. HTML Help generation</h3></div></div></div><div class="orderedlist"><ol type="1"><li>
 Convert DocBook XML documents to HTML Help compiler source files
-  using <a class="link" href="#X13" title="???TITLE???">DocBook XSL Stylesheets</a> and <a class="link" href="#X40" title="???TITLE???">xsltproc(1)</a>.
+  using <a class="link" href="#">DocBook XSL Stylesheets</a> and <a class="link" href="#">xsltproc(1)</a>.
 </li><li>
 Convert the HTML Help source (<code class="literal">.hhp</code> and <code class="literal">.html</code>) files to HTML Help
-  (<code class="literal">.chm</code>) files using the <a class="link" href="#X67" title="???TITLE???">Microsoft HTML Help Compiler</a>.
+  (<code class="literal">.chm</code>) files using the <a class="link" href="#X67" title="29.6.&#xA0;AsciiDoc dblatex configuration files">Microsoft HTML Help Compiler</a>.
 </li></ol></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_toolchain_components_summary"></a>29.5. Toolchain components summary</h3></div></div></div><div class="variablelist"><dl><dt><span class="term">
 <span class="emphasis"><em>AsciiDoc</em></span>
 </span></dt><dd>
     Converts <span class="emphasis"><em>AsciiDoc</em></span> (<code class="literal">.txt</code>) files to DocBook XML (<code class="literal">.xml</code>) files.
-</dd></dl></div><div class="variablelist"><a id="X13"></a><dl><dt><span class="term">
+</dd><dt><span class="term">
 <a class="ulink" href="http://docbook.sourceforge.net/projects/xsl/" target="_top">DocBook XSL Stylesheets</a>
 </span></dt><dd>
   These are a set of XSL stylesheets containing rules for converting
   DocBook XML documents to HTML, XSL-FO, manpage and HTML Help files.
   The stylesheets are used in conjunction with an XML parser such as
-  <a class="link" href="#X40" title="???TITLE???">xsltproc(1)</a>.
-</dd></dl></div><div class="variablelist"><a id="X40"></a><dl><dt><span class="term">
+  <a class="link" href="#">xsltproc(1)</a>.
+</dd><dt><span class="term">
 <a class="ulink" href="http://www.xmlsoft.org" target="_top">xsltproc</a>
 </span></dt><dd>
   An XML parser for applying XSLT stylesheets (in our case the
-  <a class="link" href="#X13" title="???TITLE???">DocBook XSL Stylesheets</a>) to XML documents.
-</dd></dl></div><div class="variablelist"><a id="X31"></a><dl><dt><span class="term">
+  <a class="link" href="#">DocBook XSL Stylesheets</a>) to XML documents.
+</dd><dt><span class="term">
 <a class="ulink" href="http://dblatex.sourceforge.net/" target="_top">dblatex</a>
 </span></dt><dd>
   Generates PDF, DVI, PostScript and LaTeX formats directly from
-  DocBook source via the intermediate LaTeX typesetting language —   uses <a class="link" href="#X13" title="???TITLE???">DocBook XSL Stylesheets</a>, <a class="link" href="#X40" title="???TITLE???">xsltproc(1)</a> and
+  DocBook source via the intermediate LaTeX typesetting language —   uses <a class="link" href="#">DocBook XSL Stylesheets</a>, <a class="link" href="#">xsltproc(1)</a> and
   <code class="literal">latex(1)</code>.
-</dd></dl></div><div class="variablelist"><a id="X14"></a><dl><dt><span class="term">
+</dd><dt><span class="term">
 <a class="ulink" href="http://xml.apache.org/fop/" target="_top">FOP</a>
 </span></dt><dd>
   The Apache Formatting Objects Processor converts XSL-FO (<code class="literal">.fo</code>)
   files to PDF files.  The XSL-FO files are generated from DocBook
-  source files using <a class="link" href="#X13" title="???TITLE???">DocBook XSL Stylesheets</a> and
-  <a class="link" href="#X40" title="???TITLE???">xsltproc(1)</a>.
-</dd></dl></div><div class="variablelist"><a id="X67"></a><dl><dt><span class="term">
+  source files using <a class="link" href="#">DocBook XSL Stylesheets</a> and
+  <a class="link" href="#">xsltproc(1)</a>.
+</dd><dt><span class="term">
 Microsoft Help Compiler
 </span></dt><dd>
   The Microsoft HTML Help Compiler (<code class="literal">hhc.exe</code>) is a command-line tool
   that converts HTML Help source files to a single HTML Help (<code class="literal">.chm</code>)
   file. It runs on MS Windows platforms and can be downloaded from
   <a class="ulink" href="http://www.microsoft.com" target="_top">http://www.microsoft.com</a>.
-</dd></dl></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_asciidoc_dblatex_configuration_files"></a>29.6. AsciiDoc dblatex configuration files</h3></div></div></div><p>The <span class="emphasis"><em>AsciiDoc</em></span> distribution <code class="literal">./dblatex</code> directory contains
+</dd></dl></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="X67"></a>29.6. AsciiDoc dblatex configuration files</h3></div></div></div><p>The <span class="emphasis"><em>AsciiDoc</em></span> distribution <code class="literal">./dblatex</code> directory contains
 <code class="literal">asciidoc-dblatex.xsl</code> (customized XSL parameter settings) and
 <code class="literal">asciidoc-dblatex.sty</code> (customized LaTeX settings). These are examples
-of optional <a class="link" href="#X31" title="???TITLE???">dblatex</a> output customization and are used by
+of optional <a class="link" href="#">dblatex</a> output customization and are used by
 <a class="link" href="#X43" title="29.1.&#xA0;a2x Toolchain Wrapper"><code class="literal">a2x(1)</code></a>.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_asciidoc_docbook_xsl_stylesheets_drivers"></a>29.7. AsciiDoc DocBook XSL Stylesheets drivers</h3></div></div></div><p>You will have noticed that the distributed HTML and HTML Help
 documentation files (for example <code class="literal">./doc/asciidoc.html</code>) are not the
 plain outputs produced using the default <span class="emphasis"><em>DocBook XSL Stylesheets</em></span>
@@ -3005,17 +3037,16 @@ highlight clear Search
 " Don't move to matched text while search pattern is being entered.
 set noincsearch
 
-" Q command to reformat paragraphs and list.
-nnoremap Q gq}
+" Reformat paragraphs and list.
+nnoremap R gq}
 
-" W command to delete trailing white space and Dos-returns and to expand tabs
-" to spaces.
-nnoremap W :%s/[\r \t]\+$//&lt;CR&gt;:set et&lt;CR&gt;:retab!&lt;CR&gt;
+" Delete trailing white space and Dos-returns and to expand tabs to spaces.
+nnoremap S :set et&lt;CR&gt;:retab!&lt;CR&gt;:%s/[\r \t]\+$//&lt;CR&gt;
 
 autocmd BufRead,BufNewFile *.txt,README,TODO,CHANGELOG,NOTES
-        \ setlocal autoindent expandtab tabstop=8 softtabstop=2 shiftwidth=2
+        \ setlocal autoindent expandtab tabstop=8 softtabstop=2 shiftwidth=2 filetype=asciidoc
         \ textwidth=70 wrap formatoptions=tcqn
-        \ formatlistpat=^\\s*&lt;\\?\\d\\+[\\]:.)}\\t\ &gt;]\\s*
+        \ formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\\|^\\s*&lt;\\d\\+&gt;\\s\\+\\\\|^\\s*[a-zA-Z.]\\.\\s\\+\\\\|^\\s*[ivxIVX]\\+\\.\\s\\+
         \ comments=s1:/*,ex:*/,://,b:#,:%,:XCOMM,fb:-,fb:*,fb:+,fb:.,fb:&gt;</pre></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_troubleshooting"></a>33.3. Troubleshooting</h3></div></div></div><div class="itemizedlist"><ul type="disc"><li>
 The <code class="literal">asciidoc(1)</code> <code class="literal">-v</code> (<code class="literal">--verbose</code>) command-line option displays the
   order of configuration file loading and warns of potential
@@ -3073,35 +3104,22 @@ Macro attribute lists
 </span></dt><dd><p>
     If named attribute list entries are present then all string
     attribute values must be quoted.  For example:
-</p><pre class="literallayout">["Desktop screenshot",width=32]</pre></dd></dl></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_combining_separate_documents"></a>33.5. Combining Separate Documents</h3></div></div></div><p>You have a number of stand-alone <span class="emphasis"><em>AsciiDoc</em></span> documents that you want to
+</p><pre class="literallayout">["Desktop screenshot",width=32]</pre></dd></dl></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_combining_separate_documents"></a>33.5. Combining separate documents</h3></div></div></div><p>You have a number of stand-alone <span class="emphasis"><em>AsciiDoc</em></span> documents that you want to
 process as a single document. Simply processing them with a series of
-<code class="literal">include</code> macros won’t work, because instead of starting at level 1
-the section levels of the combined document start at level 0 (the
-document title level).</p><p>The solution is to redefine the title underlines so that document and
-section titles are pushed down one level.</p><div class="orderedlist"><ol type="1"><li><p>
-Push the standard title underlines down one level by defining a new
-  level 0 underline in a custom configuration file. For example
-  <code class="literal">combined.conf</code>:
-</p><pre class="literallayout">[titles]
-underlines="__","==","--","~~","^^"</pre></li><li>
-If you use single line titles you’ll need to make corresponding
-  adjustments to the <code class="literal">[titles]</code> section <code class="literal">sect0</code>…<code class="literal">sect4</code> entries.
-</li><li><p>
-Create a top level wrapper document. For example <code class="literal">combined.txt</code>:
-</p><pre class="screen"> Combined Document Title
- _______________________
+<code class="literal">include</code> macros won’t work because the documents contain (level 0)
+document titles.  The solution is to create a top level wrapper
+document that redefines the document underlines, pushing them down one
+level.  For example <code class="literal">combined.txt</code>:</p><pre class="screen">:titles.underlines: "__","==","--","~~","^^"
 
- include::document1.txt[]
+Combined Document Title
+_______________________
 
- include::document2.txt[]
+include::document1.txt[]
 
- include::document3.txt[]</pre></li><li><p>
-Process the wrapper document. For example:
-</p><pre class="literallayout">$ asciidoc --conf-file=combined.conf combined.txt</pre></li></ol></div><p>Actually the <code class="literal">--conf-file</code> option is unnecessary as <code class="literal">asciidoc(1)</code>
-automatically looks for a same-named <code class="literal">.conf</code> file.</p><div class="itemizedlist"><ul type="disc"><li>
-The combined document title uses the newly defined level 0 underline
-  (underscore characters).
-</li><li>
+include::document2.txt[]
+
+include::document3.txt[]</pre><p>The document titles in the included documents will now be processed as
+level 1 section titles.</p><div class="itemizedlist"><ul type="disc"><li>
 Put a blank line between the <code class="literal">include</code> macro lines to ensure the
   title of the included document is not seen as part of the last
   paragraph of the previous document.
@@ -3109,41 +3127,40 @@ Put a blank line between the <code class="literal">include</code> macro lines to
 You won’t want document Headers (Author and Revision lines) in the
   included files — conditionally exclude them if they are necessary
   for stand-alone processing.
-</li></ul></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_processing_document_sections_separately"></a>33.6. Processing Document Sections Separately</h3></div></div></div><p>You have divided your <span class="emphasis"><em>AsciiDoc</em></span> document into separate files (one per top level
-section) which are combined and processed with the following top level
-document:</p><pre class="screen"> Combined Document Title
- =======================
- Joe Bloggs
- v1.0, 12-Aug-03
+</li></ul></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_processing_document_sections_separately"></a>33.6. Processing document sections separately</h3></div></div></div><p>You have divided your <span class="emphasis"><em>AsciiDoc</em></span> document into separate files (one per
+top level section) which are combined and processed with the following
+top level document:</p><pre class="screen">Combined Document Title
+=======================
+Joe Bloggs
+v1.0, 12-Aug-03
 
- include::section1.txt[]
+include::section1.txt[]
 
- include::section2.txt[]
+include::section2.txt[]
 
- include::section3.txt[]</pre><p>You also want to process the section files as separate documents.
+include::section3.txt[]</pre><p>You also want to process the section files as separate documents.
 This is easy because <code class="literal">asciidoc(1)</code> will quite happily process
-<code class="literal">section1.txt</code>, <code class="literal">section2.txt</code> and <code class="literal">section3.txt</code> separately.</p><p>If you want to promote the section levels up one level, so the
-document is processed just like a stand-alone document, then pop the
-section underline definition up one level:</p><pre class="literallayout">[titles]
-underlines="--","~~","^^","++","__"</pre><p>The last <code class="literal">"__"</code> underline is a dummy that won’t actually be used but
-is necessary to legitimize the underline definition.</p><p>This is just the reverse of the technique used for combining separate
-documents explained in the previous section.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_processing_document_chunks"></a>33.7. Processing Document Chunks</h3></div></div></div><p><code class="literal">asciidoc(1)</code> can be used as a filter, so you can pipe chunks of text
+<code class="literal">section1.txt</code>, <code class="literal">section2.txt</code> and <code class="literal">section3.txt</code> separately — the
+resulting output documents contain the section but have no document
+title.</p><p>Use the <code class="literal">-s</code> (<code class="literal">--no-header-footer</code>) command-line option to suppress
+header and footer output, this is useful if the processed output is to
+be included in another file. For example:</p><pre class="literallayout">$ asciidoc -s -b docbook section1.txt</pre></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_processing_document_snippets"></a>33.7. Processing document snippets</h3></div></div></div><p><code class="literal">asciidoc(1)</code> can be used as a filter, so you can pipe chunks of text
 through it. For example:</p><pre class="literallayout">$ echo 'Hello *World!*' | asciidoc -s -
-&lt;div class="para"&gt;&lt;p&gt;Hello &lt;strong&gt;World!&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;</pre><p>The <code class="literal">-s</code> (<code class="literal">--no-header-footer</code>) command-line option suppresses header
-and footer output and is useful if the processed output is to be
-included in another file.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_badges_in_html_page_footers"></a>33.8. Badges in HTML Page Footers</h3></div></div></div><p>See the <code class="literal">[footer]</code> section in the <span class="emphasis"><em>AsciiDoc</em></span> distribution <code class="literal">xhtml11.conf</code>
-configuration file.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_pretty_printing_asciidoc_output"></a>33.9. Pretty Printing AsciiDoc Output</h3></div></div></div><p>If the indentation and layout of the <code class="literal">asciidoc(1)</code> output is not to your
+&lt;div class="paragraph"&gt;&lt;p&gt;Hello &lt;strong&gt;World!&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;</pre></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_badges_in_html_page_footers"></a>33.8. Badges in HTML page footers</h3></div></div></div><p>See the <code class="literal">[footer]</code> section in the <span class="emphasis"><em>AsciiDoc</em></span> distribution <code class="literal">xhtml11.conf</code>
+configuration file.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_pretty_printing_asciidoc_output"></a>33.9. Pretty printing AsciiDoc output</h3></div></div></div><p>If the indentation and layout of the <code class="literal">asciidoc(1)</code> output is not to your
 liking you can:</p><div class="orderedlist"><ol type="1"><li>
 Change the indentation and layout of configuration file markup
    template sections. The <code class="literal">{empty}</code> glossary entry is useful for
    outputting trailing blank lines in markup templates.
 </li><li><p>
-Or use Dave Raggett’s excellent <span class="emphasis"><em>HTML Tidy</em></span> program to tidy
-   <code class="literal">asciidoc(1)</code> output. Example:
-</p><pre class="literallayout">$ asciidoc -b docbook -o - mydoc.txt | tidy -indent -xml &gt;mydoc.xml</pre></li></ol></div><p><span class="emphasis"><em>HTML Tidy</em></span> can be downloaded from <a class="ulink" href="http://tidy.sourceforge.net/" target="_top">http://tidy.sourceforge.net/</a></p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_supporting_minor_docbook_dtd_variations"></a>33.10. Supporting Minor DocBook DTD Variations</h3></div></div></div><p>The conditional inclusion of DocBook SGML markup at the end of the
+Use Dave Raggett’s <a class="ulink" href="http://tidy.sourceforge.net/" target="_top">HTML Tidy</a> program
+   to tidy <code class="literal">asciidoc(1)</code> output. Example:
+</p><pre class="literallayout">$ asciidoc -b docbook -o - mydoc.txt | tidy -indent -xml &gt;mydoc.xml</pre></li><li><p>
+Use the <code class="literal">xmllint(1)</code> format option. Example:
+</p><pre class="literallayout">$ xmllint --format mydoc.xml</pre></li></ol></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_supporting_minor_docbook_dtd_variations"></a>33.10. Supporting minor DocBook DTD variations</h3></div></div></div><p>The conditional inclusion of DocBook SGML markup at the end of the
 distribution <code class="literal">docbook.conf</code> file illustrates how to support minor DTD
 variations. The included sections override corresponding entries from
-preceding sections.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_shipping_stand_alone_asciidoc_source"></a>33.11. Shipping Stand-alone AsciiDoc Source</h3></div></div></div><p>Reproducing presentation documents from someone else’s source has one
+preceding sections.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_shipping_stand_alone_asciidoc_source"></a>33.11. Shipping stand-alone AsciiDoc source</h3></div></div></div><p>Reproducing presentation documents from someone else’s source has one
 major problem: unless your configuration files are the same as the
 creator’s you won’t get the same output.</p><p>The solution is to create a single backend specific configuration file
 using the <code class="literal">asciidoc(1)</code> <code class="literal">-c</code> (<code class="literal">--dump-conf</code>) command-line option. You
@@ -3155,26 +3172,26 @@ file for <code class="literal">mydoc.txt</code>:</p><pre class="literallayout">$
 these three files (and a Python interpreter) the recipient can
 regenerate the HMTL output:</p><pre class="literallayout">$ ./asciidoc.py -eb xhtml11 mydoc.txt</pre><p>The <code class="literal">-e</code> (<code class="literal">--no-conf</code>) option excludes the use of implicit
 configuration files, ensuring that only entries from the
-<code class="literal">mydoc-html.conf</code> configuration are used.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_inserting_blank_space"></a>33.12. Inserting Blank Space</h3></div></div></div><p>Adjust your style sheets to add the correct separation between block
+<code class="literal">mydoc-html.conf</code> configuration are used.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_inserting_blank_space"></a>33.12. Inserting blank space</h3></div></div></div><p>Adjust your style sheets to add the correct separation between block
 elements. Inserting blank paragraphs containing a single non-breaking
 space character <code class="literal">{nbsp}</code> works but is an ad hoc solution compared
-to using style sheets.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_closing_open_sections"></a>33.13. Closing Open Sections</h3></div></div></div><p>You can close off section tags up to level <code class="literal">N</code> by calling the
+to using style sheets.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_closing_open_sections"></a>33.13. Closing open sections</h3></div></div></div><p>You can close off section tags up to level <code class="literal">N</code> by calling the
 <code class="literal">eval::[Section.setlevel(N)]</code> system macro. This is useful if you
 want to include a section composed of raw markup. The following
 example includes a DocBook glossary division at the top section level
-(level 0):</p><pre class="screen">  ifdef::backend-docbook[]
+(level 0):</p><pre class="screen">ifdef::backend-docbook[]
 
-  eval::[Section.setlevel(0)]
+eval::[Section.setlevel(0)]
 
-  +++++++++++++++++++++++++++++++
-  &lt;glossary&gt;
-    &lt;title&gt;Glossary&lt;/title&gt;
-    &lt;glossdiv&gt;
-    ...
-    &lt;/glossdiv&gt;
-  &lt;/glossary&gt;
-  +++++++++++++++++++++++++++++++
-  endif::backend-docbook[]</pre></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_validating_output_files"></a>33.14. Validating Output Files</h3></div></div></div><p>Use <code class="literal">xmllint(1)</code> to check the <span class="emphasis"><em>AsciiDoc</em></span> generated markup is both well
++++++++++++++++++++++++++++++++
+&lt;glossary&gt;
+  &lt;title&gt;Glossary&lt;/title&gt;
+  &lt;glossdiv&gt;
+  ...
+  &lt;/glossdiv&gt;
+&lt;/glossary&gt;
++++++++++++++++++++++++++++++++
+endif::backend-docbook[]</pre></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="_validating_output_files"></a>33.14. Validating output files</h3></div></div></div><p>Use <code class="literal">xmllint(1)</code> to check the <span class="emphasis"><em>AsciiDoc</em></span> generated markup is both well
 formed and valid. Here are some examples:</p><pre class="literallayout">$ xmllint --nonet --noout --valid docbook-file.xml
 $ xmllint --nonet --noout --valid xhtml11-file.html
 $ xmllint --nonet --noout --valid --html html4-file.html</pre><p>The <code class="literal">--valid</code> option checks the file is valid against the document
@@ -3229,7 +3246,7 @@ inclusion of arbitrary files.</p><p>The safe mode is enabled by default and can 
 <code class="literal">eval</code>, <code class="literal">sys</code> and <code class="literal">sys2</code> executable attributes and block macros are
   not executed.
 </li><li>
-<code class="literal">\include::&lt;filename&gt;[]</code> and <code class="literal">\include1::&lt;filename&gt;[]</code> block macro
+<code class="literal">include::&lt;filename&gt;[]</code> and <code class="literal">\include1::&lt;filename&gt;[]</code> block macro
   files must reside inside the parent file’s directory.
 </li><li>
 <code class="literal">{include:&lt;filename&gt;}</code> executable attribute files must reside
@@ -3310,13 +3327,13 @@ idea.</p></td></tr></table></div></div></div><div class="appendix" lang="en" xml
 boundaries (the default behavior); <span class="emphasis"><em>unbreakable</em></span> attempts to keep the
 table together on a single page. If neither option is specified the
 default XSL stylesheet behavior prevails.</p></td></tr><tr><td style="border-right: 1px solid ; " align="left" valign="top"><p>pgwide</p></td><td style="border-right: 1px solid ; " align="left" valign="top"><p>docbook (XSL/FO)</p></td><td style="border-right: 1px solid ; " align="left" valign="top"><p>table, block image, horizontal labeled list</p></td><td style="" align="left" valign="top"><p>Specifies that the element should be rendered across the full text
-width of the page irrespective of the current indentation.</p></td></tr></tbody></table></div></div><div class="footnotes"><br /><hr width="100" align="left" /><div class="footnote"><p><sup>[<a id="ftn.id2528534" href="#id2528534" class="simpara">1</a>] </sup>This is a rough structural guide, not a rigorous syntax
-definition</p></div><div class="footnote"><p><sup>[<a id="ftn.id2533484" href="#id2533484" class="simpara">2</a>] </sup>An example footnote.</p></div><div class="footnote"><p><sup>[<a id="ftn.note2" href="#note2" class="simpara">3</a>] </sup>Second footnote</p></div><div class="footnote"><p><sup>[<a id="ftn.id2541276" href="#id2541276" class="simpara">4</a>] </sup>The existence of a <code class="literal">{revisionhistory}</code> attribute causes a
+width of the page irrespective of the current indentation.</p></td></tr></tbody></table></div></div><div class="footnotes"><br /><hr width="100" align="left" /><div class="footnote"><p><sup>[<a id="ftn.id2528525" href="#id2528525" class="simpara">1</a>] </sup>This is a rough structural guide, not a rigorous syntax
+definition</p></div><div class="footnote"><p><sup>[<a id="ftn.id2533619" href="#id2533619" class="simpara">2</a>] </sup>An example footnote.</p></div><div class="footnote"><p><sup>[<a id="ftn.note2" href="#note2" class="simpara">3</a>] </sup>Second footnote</p></div><div class="footnote"><p><sup>[<a id="ftn.id2541424" href="#id2541424" class="simpara">4</a>] </sup>The existence of a <code class="literal">{revisionhistory}</code> attribute causes a
 revision history file (if it exists) to be included in DocBook
 outputs. If a file named like <code class="literal">{docname}-revhistory.xml</code> exists in
 the document’s directory then it will be added verbatim to the DocBook
 header (see the <code class="literal">./doc/asciidoc-revhistory.xml</code> example that comes
-with the <span class="emphasis"><em>AsciiDoc</em></span> distribution).</p></div><div class="footnote"><p><sup>[<a id="ftn.id2543072" href="#id2543072" class="simpara">5</a>] </sup>Conditional inclusion using <code class="literal">ifdef</code> and <code class="literal">ifndef</code> macros
+with the <span class="emphasis"><em>AsciiDoc</em></span> distribution).</p></div><div class="footnote"><p><sup>[<a id="ftn.id2543097" href="#id2543097" class="simpara">5</a>] </sup>Conditional inclusion using <code class="literal">ifdef</code> and <code class="literal">ifndef</code> macros
    differs from attribute conditional inclusion in that the former
    occurs when the file is read while the latter occurs when the
    contents are written.</p></div></div></div></body></html>

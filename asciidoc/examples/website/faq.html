@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.3.1" />
+<meta name="generator" content="AsciiDoc 8.3.3" />
 <link rel="stylesheet" href="./xhtml11.css" type="text/css" />
 <link rel="stylesheet" href="./xhtml11-quirks.css" type="text/css" />
 <link rel="stylesheet" href="./layout1.css" type="text/css" />
@@ -50,7 +50,70 @@ window.onload = function(){generateToc(2)}
 <div class="paragraph"><p>An embryonic <em>AsciiDoc</em> FAQ.</p></div>
 </div>
 </div>
-<h2 id="_how_can_i_render_indented_paragraphs">1. How can I render indented paragraphs?</h2>
+<h2 id="_is_it_possible_to_include_charts_in_asciidoc_documents">1. Is it possible to include charts in AsciiDoc documents?</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>There are a number of programs available that generate presentation
+charts from textual specification, for example
+<a href="http://home.gna.org/pychart/">Pychart</a> is a library for writing chart
+scripts in Python. Here&#8217;s an example from the <em>Pychart</em> documentation:</p></div>
+<div class="listingblock">
+<div class="title">barchart.py</div>
+<div class="content">
+<pre><tt>#
+# Example bar chart (from Pychart documentation http://home.gna.org/pychart/).
+#
+from pychart import *
+theme.get_options()
+
+data = [(10, 20, 30, 5), (20, 65, 33, 5), (30, 55, 30, 5), (40, 45, 51, 7),
+        (50, 25, 27, 3), (60, 75, 30, 5), (70, 80, 42, 5), (80, 62, 32, 5),
+        (90, 42, 39, 5), (100, 32, 39, 4)]
+
+# The attribute y_coord=... tells that the Y axis values
+# should be taken from samples.
+# In this example, Y values will be [40,50,60,70,80].
+ar = area.T(y_coord = category_coord.T(data[3:8], 0),
+            x_grid_style=line_style.gray50_dash1,
+            x_grid_interval=20, x_range = (0,100),
+            x_axis=axis.X(label="X label"),
+            y_axis=axis.Y(label="Y label"),
+            bg_style = fill_style.gray90,
+            border_line_style = line_style.default,
+            legend = legend.T(loc=(80,10)))
+
+# Below call sets the default attributes for all bar plots.
+chart_object.set_defaults(bar_plot.T, direction="horizontal", data=data)
+
+# Attribute cluster=(0,3) tells that you are going to draw three bar
+# plots side by side.  The plot labeled "foo" will the leftmost (i.e.,
+# 0th out of 3).  Attribute hcol tells the column from which to
+# retrive sample values from.  It defaults to one.
+ar.add_plot(bar_plot.T(label="foo", cluster=(0,3)))
+ar.add_plot(bar_plot.T(label="bar", hcol=2, cluster=(1,3)))
+ar.add_plot(bar_plot.T(label="baz", hcol=3, cluster=(2,3)))
+ar.draw()</tt></pre>
+</div></div>
+<div class="paragraph"><p>To execute the script and include the generated chart image in your
+document add the following lines to the <em>AsciiDoc</em> source:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>// Generate chart image file.
+sys2::[python barchart.py --format=png --output=barchart.png --scale=2]
+
+// Display chart image file.
+image::barchart.png[]</tt></pre>
+</div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note" />
+</td>
+<td class="content">You need to run <tt>asciidoc(1)</tt> with the <tt>--unsafe</tt> command-line
+option to execute the <tt>sys2</tt> system macro.</td>
+</tr></table>
+</div>
+</div>
+<h2 id="_how_can_i_render_indented_paragraphs">2. How can I render indented paragraphs?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>To unconditionally indent all paragraphs add the following line to the
 <tt>xhtml11.css</tt> stylesheet (or a custom stylesheet).</p></div>
@@ -89,7 +152,7 @@ stylesheets to indent paragraphs with the <tt>simpara</tt> element
 </tr></table>
 </div>
 </div>
-<h2 id="_is_there_a_way_to_set_default_image_height_and_width_attributes">2. Is there a way to set default image height and width attributes?</h2>
+<h2 id="_is_there_a_way_to_set_default_image_height_and_width_attributes">3. Is there a way to set default image height and width attributes?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>You can set the <em>height</em> and <em>width</em> attributes globally in your
 document with Attribute Entries or from the command-line using the
@@ -104,7 +167,7 @@ pixels.</p></div>
 image:images/tiger.png[]</tt></pre>
 </div></div>
 </div>
-<h2 id="_how_can_i_place_a_backslash_character_in_front_of_an_attribute_reference_without_escaping_the_reference">3. How can I place a backslash character in front of an attribute reference without escaping the reference?</h2>
+<h2 id="_how_can_i_place_a_backslash_character_in_front_of_an_attribute_reference_without_escaping_the_reference">4. How can I place a backslash character in front of an attribute reference without escaping the reference?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Use the predefined <tt>{backslash}</tt> attribute reference instead of an
 actual backslash, for example if the <tt>{projectname}</tt> attribute has
@@ -119,7 +182,7 @@ the value <tt>foobar</tt> then:</p></div>
 <pre><tt>d:\data\foobar</tt></pre>
 </div></div>
 </div>
-<h2 id="_how_can_i_escape_asciidoc_markup">4. How can I escape AsciiDoc markup?</h2>
+<h2 id="_how_can_i_escape_asciidoc_markup">5. How can I escape AsciiDoc markup?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Most <em>AsciiDoc</em> inline elements can be suppressed by preceding them with
 a backslash character. These elements include:</p></div>
@@ -141,7 +204,7 @@ Quoting,
 </li>
 <li>
 <p>
-<em>URLs</em>, <em>image</em> and <em>link</em> macros.
+Macros.
 </p>
 </li>
 <li>
@@ -162,7 +225,7 @@ Table cell separators.
 </ul></div>
 <div class="paragraph"><p>But there are exceptions&#8201;&#8212;&#8201;see the next question.</p></div>
 </div>
-<h2 id="_some_elements_can_8217_t_be_escaped_with_a_single_backslash">5. Some elements can&#8217;t be escaped with a single backslash</h2>
+<h2 id="_some_elements_can_8217_t_be_escaped_with_a_single_backslash">6. Some elements can&#8217;t be escaped with a single backslash</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>There are a number of  exceptions to the usual single backslash rule&#8201;&#8212;&#8201;mostly relating to URL macros that  have two syntaxes or quoting
 ambiguity.  Here are some non-standard escape examples:</p></div>
@@ -199,16 +262,8 @@ A C+\+ Library for C+\+ \+++
 <div class="paragraph"><p>The source of this problem is ambiguity across substitution types&#8201;&#8212;&#8201;the first match unescapes allowing the second to substitute. A
 work-around for difficult cases is to side-step the problem using the
 <tt>pass:[]</tt> passthrough inline macro.</p></div>
-<div class="admonitionblock">
-<table><tr>
-<td class="icon">
-<img src="./images/icons/note.png" alt="Note" />
-</td>
-<td class="content">System macros cannot be escaped.</td>
-</tr></table>
 </div>
-</div>
-<h2 id="_how_can_i_set_default_list_and_tables_styles">6. How can I set default list and tables styles?</h2>
+<h2 id="_how_can_i_set_default_list_and_tables_styles">7. How can I set default list and tables styles?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>You can set the element&#8217;s <em>style</em> entry in a global or custom
 configuration file.</p></div>
@@ -241,7 +296,7 @@ document, the above examples are equivalent to:</p></div>
 :tabledef-default.style: topbot</tt></pre>
 </div></div>
 </div>
-<h2 id="_why_do_i_get_a_filter_non_zero_exit_code_error">7. Why do I get a filter non-zero exit code error?</h2>
+<h2 id="_why_do_i_get_a_filter_non_zero_exit_code_error">8. Why do I get a filter non-zero exit code error?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>An error was returned when <em>AsciiDoc</em> tried to execute an external
 filter command. The most common reason for this is that the filter
@@ -250,7 +305,7 @@ the problem is run <em>AsciiDoc</em> with the <tt>--verbose</tt> option to deter
 the command that is failing and then try to run the command manually
 from the command-line.</p></div>
 </div>
-<h2 id="_are_there_any_docbook_viewers">8. Are there any DocBook viewers?</h2>
+<h2 id="_are_there_any_docbook_viewers">9. Are there any DocBook viewers?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><a href="http://live.gnome.org/Yelp">Yelp</a>, the GNOME help viewer, does a
 creditable job of displaying DocBook files XML files directly. Just
@@ -272,7 +327,7 @@ yelp "file://$(pwd)/$1"</tt></pre>
 </div></div>
 <div class="paragraph"><p>This tip was submitted by Lionel Orry.</p></div>
 </div>
-<h2 id="_can_you_create_odf_documents_using_asciidoc">9. Can you create ODF documents using AsciiDoc?</h2>
+<h2 id="_can_you_create_odf_documents_using_asciidoc">10. Can you create ODF documents using AsciiDoc?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>The easiest and highest fidelity methods I&#8217;ve seen is to generate
 HTML from <em>AsciiDoc</em> then paste it from your browser (we use Firefox)
@@ -295,14 +350,14 @@ Don&#8217;t paste <em>AsciiDoc</em> tables of contents, OpenOffice Writer (I was
 </ul></div>
 <div class="paragraph"><p>This tip was contributed by Bernard Amade.</p></div>
 </div>
-<h2 id="_how_can_i_supress_cell_separators_in_included_table_data_files">10. How can I supress cell separators in included table data files?</h2>
+<h2 id="_how_can_i_supress_cell_separators_in_included_table_data_files">11. How can I supress cell separators in included table data files?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Use the <tt>{include:}</tt> system attribute instead of the <tt>\include::[]</tt>
 macro (the former is not expanded until after the table data has been
 parsed into cells, whereas the latter is included before the table is
 processed.</p></div>
 </div>
-<h2 id="_how_can_i_preserve_paragraph_line_boundaries">11. How can I preserve paragraph line boundaries?</h2>
+<h2 id="_how_can_i_preserve_paragraph_line_boundaries">12. How can I preserve paragraph line boundaries?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Apply the The <em>verse</em> paragraph style, the rendered text preserves
 line boundaries and is useful for lyrics and poems.  For example:</p></div>
@@ -322,18 +377,18 @@ consetetur, eu pro everti postulant +
 homero verear ea mea, qui.</tt></pre>
 </div></div>
 </div>
-<h2 id="_how_can_i_include_non_breaking_space_characters">12. How can I include non-breaking space characters?</h2>
+<h2 id="_how_can_i_include_non_breaking_space_characters">13. How can I include non-breaking space characters?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>The predefined <tt>{nbsp}</tt> attribute reference will be replaced by a
 non-breaking space character. You could also use the non-breaking
 space character entity reference <tt>&amp;#160;</tt> (see the next question).</p></div>
 </div>
-<h2 id="_can_i_include_html_and_xml_character_entity_references_in_my_document">13. Can I include HTML and XML character entity references in my document?</h2>
+<h2 id="_can_i_include_html_and_xml_character_entity_references_in_my_document">14. Can I include HTML and XML character entity references in my document?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Yes, just enter the reference in your document. For example <tt>&amp;#946;</tt>
 will print a Greek small beta character &#946;</p></div>
 </div>
-<h2 id="X1">14. How do I include spaces in URLs?</h2>
+<h2 id="X1">15. How do I include spaces in URLs?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>URL inline macro targets (addresses) cannot contain white space
 characters. If you need spaces encode them as <tt>%20</tt>. For example:</p></div>
@@ -343,7 +398,7 @@ characters. If you need spaces encode them as <tt>%20</tt>. For example:</p></di
 http://www.foo.bar.com/an%20example%20document.html</tt></pre>
 </div></div>
 </div>
-<h2 id="_how_can_i_get_asciidoc_to_assign_the_correct_docbook_language_attribute">15. How can I get AsciiDoc to assign the correct DocBook language attribute?</h2>
+<h2 id="_how_can_i_get_asciidoc_to_assign_the_correct_docbook_language_attribute">16. How can I get AsciiDoc to assign the correct DocBook language attribute?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Set the <em>AsciiDoc</em> <em>lang</em> attribute to the appropriate language code.
 For example:</p></div>
@@ -356,7 +411,7 @@ correct language specific document headings (things like table of
 contents, revision history, figure and table captions, admonition
 captions).</p></div>
 </div>
-<h2 id="_why_does_asciidoc_give_me_a_8220_malformed_author_8221_error">16. Why does AsciiDoc give me a &#8220;malformed author&#8221; error?</h2>
+<h2 id="_why_does_asciidoc_give_me_a_8220_malformed_author_8221_error">17. Why does AsciiDoc give me a &#8220;malformed author&#8221; error?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>This is normally because there are more than three names (up to three
 are expected: first name, middle name and last name). For example,
@@ -380,7 +435,7 @@ explicit attribute entries:</p></div>
 :Last name:   Van Gogh</tt></pre>
 </div></div>
 </div>
-<h2 id="_how_can_i_assign_multiple_author_names">17. How can I assign multiple author names?</h2>
+<h2 id="_how_can_i_assign_multiple_author_names">18. How can I assign multiple author names?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>A quick way to do this is put both authors in a single first name, for
 example:</p></div>
@@ -407,7 +462,7 @@ related markup:</p></div>
   :</tt></pre>
 </div></div>
 </div>
-<h2 id="_how_can_i_escape_a_labeled_list_entry">18. How can I escape a labeled list entry?</h2>
+<h2 id="_how_can_i_escape_a_labeled_list_entry">19. How can I escape a labeled list entry?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Two colons or semicolons in a paragraph may be confused with a labeled
 list entry. Use the predefined <tt>{two_colons}</tt> and <tt>{two_semicolons}</tt>
@@ -421,7 +476,7 @@ magna primis adolescens.</tt></pre>
 <div class="paragraph"><p>Qui in magna commodo:: est labitur dolorum an. Est ne
 magna primis adolescens.</p></div>
 </div>
-<h2 id="_how_can_i_selectively_disable_a_quoted_text_substitution">19. How can I selectively disable a quoted text substitution?</h2>
+<h2 id="_how_can_i_selectively_disable_a_quoted_text_substitution">20. How can I selectively disable a quoted text substitution?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Omitting the tag name will disable quoting. For example, if you don&#8217;t
 want superscripts or subscripts then put the following in a custom
@@ -441,7 +496,7 @@ document, the above examples are equivalent to:</p></div>
 :quotes.~:</tt></pre>
 </div></div>
 </div>
-<h2 id="_how_can_i_customize_the_localdate_format">20. How can I customize the {localdate} format?</h2>
+<h2 id="_how_can_i_customize_the_localdate_format">21. How can I customize the {localdate} format?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>The default format for the <tt>{localdate}</tt> attribute is the ISO 8601
 <tt>yyyy-mm-dd</tt> format. You can change this format by explicitly setting
@@ -460,7 +515,7 @@ document, for example:</p></div>
 <div class="paragraph"><p>Since it&#8217;s set using an executable attribute you&#8217;ll also need to
 include the <tt>--unsafe</tt> option when you run asciidoc).</p></div>
 </div>
-<h2 id="_why_doesn_8217_t_asciidoc_support_strike_through_text">21. Why doesn&#8217;t AsciiDoc support strike through text?</h2>
+<h2 id="_why_doesn_8217_t_asciidoc_support_strike_through_text">22. Why doesn&#8217;t AsciiDoc support strike through text?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>The reason it&#8217;s not in the distribution is that DocBook does not have
 provision for strike through text and one of the <em>AsciiDoc</em> design goals
@@ -486,20 +541,20 @@ through text with hyphen characters:</p></div>
  endif::basebackend-html[]</tt></pre>
 </div></div>
 </div>
-<h2 id="_where_can_i_find_examples_of_commands_used_to_build_output_documents">22. Where can I find examples of commands used to build output documents?</h2>
+<h2 id="_where_can_i_find_examples_of_commands_used_to_build_output_documents">23. Where can I find examples of commands used to build output documents?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>The User Guide has some. You could also look at <tt>./doc/main.aap</tt> in
 the <em>AsciiDoc</em> distribution, it has all the commands used to build the
 <em>AsciiDoc</em> documentation (even if you don&#8217;t use A-A-P you&#8217;ll still find
 it useful).</p></div>
 </div>
-<h2 id="_why_have_you_used_the_docbook_lt_simpara_gt_element_instead_of_lt_para_gt">23. Why have you used the DocBook &lt;simpara&gt; element instead of &lt;para&gt;?</h2>
+<h2 id="_why_have_you_used_the_docbook_lt_simpara_gt_element_instead_of_lt_para_gt">24. Why have you used the DocBook &lt;simpara&gt; element instead of &lt;para&gt;?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><tt>&lt;simpara&gt;</tt> is really the same as <tt>&lt;para&gt;</tt> except it can&#8217;t contain
 block elements&#8201;&#8212;&#8201;this matched, more closely, the <em>AsciiDoc</em> paragraph
 semantics.</p></div>
 </div>
-<h2 id="_how_can_i_format_text_inside_a_listing_block">24. How can I format text inside a listing block?</h2>
+<h2 id="_how_can_i_format_text_inside_a_listing_block">25. How can I format text inside a listing block?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>By default only <em>specialcharacters</em> and <em>callouts</em> are substituted in
 listing blocks; you can add quotes substitutions by explicitly setting
@@ -532,7 +587,7 @@ This only works if your DocBook processor recognizes DocBook
 </li>
 </ul></div>
 </div>
-<h2 id="_why_doesn_8217_t_the_include1_macro_work">25. Why doesn&#8217;t the include1::[] macro work?</h2>
+<h2 id="_why_doesn_8217_t_the_include1_macro_work">26. Why doesn&#8217;t the include1::[] macro work?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Internally the <tt>include1</tt> macro is translated to the <tt>include1</tt> system
 attribute which means it must be evaluated in a region where attribute
@@ -547,7 +602,7 @@ include::blogpost_media_processing.txt[depth=1]
 -----------------------------------------------</tt></pre>
 </div></div>
 </div>
-<h2 id="_how_can_i_customize_pdf_files_generated_by_dblatex">26. How can I customize PDF files generated by dblatex?</h2>
+<h2 id="_how_can_i_customize_pdf_files_generated_by_dblatex">27. How can I customize PDF files generated by dblatex?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>There are a number of dblatex XSL parameters that can be used to
 customize PDF output. You can set them globally in the <em>AsciiDoc</em>
@@ -559,7 +614,7 @@ pass them on the <tt>a2x(1)</tt> command-line, for example:</p></div>
 </div></div>
 <div class="paragraph"><p>See also the <a href="http://dblatex.sourceforge.net/">dblatex</a> documentation.</p></div>
 </div>
-<h2 id="_how_can_i_make_the_mailto_macro_work_with_multiple_email_addresses">27. How can I make the mailto macro work with multiple email addresses?</h2>
+<h2 id="_how_can_i_make_the_mailto_macro_work_with_multiple_email_addresses">28. How can I make the mailto macro work with multiple email addresses?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>For the <em>AsciiDoc</em> <em>mailto</em> macro to work with multiple email addresses
 (as per RFC2368) you need to URL encode the <em>@</em> characters (replace
@@ -576,7 +631,7 @@ rendered as separate links. You also need to <a href="#X1">replace spaces with <
 <pre><tt>mailto:jb%40foobar.com,jd%40acme.co.nz?subject=New%20foofoo%20release[New foofoo release]</tt></pre>
 </div></div>
 </div>
-<h2 id="_how_can_a_replacement_have_a_trailing_backslash">28. How can a replacement have a trailing backslash?</h2>
+<h2 id="_how_can_a_replacement_have_a_trailing_backslash">29. How can a replacement have a trailing backslash?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Quote the entry name&#8201;&#8212;&#8201;this nonsensical example replaces <tt>x\</tt> with
 <tt>y</tt>:</p></div>
@@ -589,8 +644,8 @@ entry name <tt>x</tt> from the value <tt>y</tt>) would be escaped.</p></div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 8.3.1<br />
-Last updated 2008-12-13 09:59:43 NZDT
+Version 8.3.3<br />
+Last updated 2009-01-02 11:18:49 NZDT
 </div>
 <div id="footer-badges">
 <a href="http://validator.w3.org/check?uri=referer">

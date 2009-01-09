@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.2.7" />
+<meta name="generator" content="AsciiDoc 8.3.1" />
+<title>Music Filter</title>
 <style type="text/css">
 /* Debug borders */
 p, li, dt, dd, div, pre, h1, h2, h3, h4, h5, h6 {
@@ -165,13 +166,25 @@ div.listingblock > div.content {
   padding: 0.5em;
 }
 
-div.quoteblock > div.content {
+div.quoteblock {
   padding-left: 2.0em;
 }
-
-div.attribution {
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
   text-align: right;
 }
+
+div.verseblock {
+  padding-left: 2.0em;
+}
+div.verseblock > div.content {
+  white-space: pre;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
 div.verseblock + div.attribution {
   text-align: left;
 }
@@ -194,10 +207,6 @@ div.exampleblock > div.content {
   padding: 0.5em;
 }
 
-div.verseblock div.content {
-  white-space: pre;
-}
-
 div.imageblock div.content { padding-left: 0; }
 div.imageblock img { border: 1px solid silver; }
 span.image img { border-style: none; }
@@ -210,6 +219,7 @@ dt {
   margin-top: 0.5em;
   margin-bottom: 0;
   font-style: normal;
+  color: navy;
 }
 dd > *:first-child {
   margin-top: 0.1em;
@@ -218,11 +228,27 @@ dd > *:first-child {
 ul, ol {
     list-style-position: outside;
 }
-div.olist > ol {
+ol.arabic {
   list-style-type: decimal;
 }
-div.olist2 > ol {
+ol.loweralpha {
   list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
 }
 
 div.tableblock > table {
@@ -235,21 +261,48 @@ thead {
 tfoot {
   font-weight: bold;
 }
+td > div.verse {
+  white-space: pre;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
 
-div.hlist {
+
+div.hdlist {
   margin-top: 0.8em;
   margin-bottom: 0.8em;
 }
-div.hlist td {
+div.hdlist tr {
   padding-bottom: 15px;
 }
-td.hlist1 {
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
   vertical-align: top;
   font-style: normal;
   padding-right: 0.8em;
+  color: navy;
 }
-td.hlist2 {
+td.hdlist2 {
   vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
 }
 
 @media print {
@@ -302,8 +355,17 @@ div.listingblock div.content {
   padding: 0.5em;
 }
 
-div.quoteblock-content {
-  padding-left: 2.0em;
+div.quoteblock-attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock-content {
+  white-space: pre;
+}
+div.verseblock-attribution {
+  padding-top: 0.75em;
+  text-align: left;
 }
 
 div.exampleblock-content {
@@ -313,16 +375,7 @@ div.exampleblock-content {
 
 /* IE6 sets dynamically generated links as visited. */
 div#toc a:visited { color: blue; }
-
-/* Because IE6 child selector is broken. */
-div.olist2 ol {
-  list-style-type: lower-alpha;
-}
-div.olist2 div.olist ol {
-  list-style-type: decimal;
-}
 </style>
-<title>Music Filter</title>
 </head>
 <body>
 <div id="header">
@@ -330,28 +383,28 @@ div.olist2 div.olist ol {
 </div>
 <div id="preamble">
 <div class="sectionbody">
-<div class="para"><p>The <em>AsciiDoc</em> distribution includes a Music Block filter that
+<div class="paragraph"><p>The <em>AsciiDoc</em> distribution includes a Music Block filter that
 translates music in <a href="http://lilypond.org/">LilyPond</a> or
 <a href="http://abcnotation.org.uk/">ABC</a> notation to standard classical
 notation in the form of a trimmed PNG image which is automatically
 inserted into the <em>AsciiDoc</em> output document (see the <a href="#X1">examples below</a>).</p></div>
-<div class="para"><p>Actually the filter (<tt>./filters/music2png.py</tt>) can be used outside
+<div class="paragraph"><p>Actually the filter (<tt>./filters/music2png.py</tt>) can be used outside
 <em>AsciiDoc</em> to convert LilyPond or ABC music files to PNG images.
 Execute the following command to see how to use it:</p></div>
 <div class="literalblock">
 <div class="content">
 <pre><tt>$ ./filters/music2png.py --help</tt></pre>
 </div></div>
-<div class="para"><p>The Music Filter can be used as a model for filters that convert a
+<div class="paragraph"><p>The Music Filter can be used as a model for filters that convert a
 block of text into a file that is linked or embedded into the <em>AsciiDoc</em>
 output document.</p></div>
 <div class="exampleblock" id="X1">
 <div class="title">Example 1: Music Block containing ABC notation</div>
 <div class="exampleblock-content">
-<div class="para"><p>This Music Block:</p></div>
+<div class="paragraph"><p>This Music Block:</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt> [music,music1.png]
+<pre><tt> ["music","music1.png",scaledwidth="100%"]
  ---------------------------------------------------------------------
  T:The Butterfly
  R:slip jig
@@ -367,7 +420,7 @@ output document.</p></div>
  |:~B3 (B2A) G2A|~B3 BA(uB d)BA|~B3 (B2A) G2(A|B2d) (g2e) (dBA):|
  ---------------------------------------------------------------------</tt></pre>
 </div></div>
-<div class="para"><p>Renders:</p></div>
+<div class="paragraph"><p>Renders:</p></div>
 <div class="musicblock">
 <div class="content">
 <img style="border-width: 0;" src="music1.png" alt="music1.png" />
@@ -376,7 +429,7 @@ output document.</p></div>
 <div class="exampleblock" id="X2">
 <div class="title">Example 2: Music Block containing LilyPond notation</div>
 <div class="exampleblock-content">
-<div class="para"><p>This example contains LilyPond musical markup, it uses the <em>link</em>
+<div class="paragraph"><p>This example contains LilyPond musical markup, it uses the <em>link</em>
 attribute so you can click on the music image to display the source
 notation. The <tt>music2.ly</tt> source file is automatically created and
 retained by the <tt>music2png.py</tt> filter when the <tt>-m</tt> option is used.</p></div>
@@ -395,7 +448,7 @@ retained by the <tt>music2png.py</tt> filter when the <tt>-m</tt> option is used
  }
  ---------------------------------------------------------------------</tt></pre>
 </div></div>
-<div class="para"><p>Renders:</p></div>
+<div class="paragraph"><p>Renders:</p></div>
 <div class="musicblock">
 <div class="content">
 <a href="music2.ly">
@@ -418,9 +471,9 @@ are using.</td>
 </div>
 <h2 id="_using_the_filter">Using the Filter</h2>
 <div class="sectionbody">
-<div class="para"><p>Insert a delimited Music Block containing valid ABC notation into your
+<div class="paragraph"><p>Insert a delimited Music Block containing valid ABC notation into your
 <em>AsciiDoc</em> document:</p></div>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 The Music Block delimiter is the word <tt>music</tt> followed by four or
@@ -452,7 +505,7 @@ The optional named block attributes <em>link</em>, <em>width</em> and <em>height
 </div>
 <h2 id="_limitations">Limitations</h2>
 <div class="sectionbody">
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 The <tt><tt>asciidoc(1)</tt></tt> output file cannot be <tt>-</tt> (stdout), you must
@@ -470,8 +523,8 @@ If the music image file is linked to the output document then the
 </div>
 <h2 id="_installation">Installation</h2>
 <div class="sectionbody">
-<div class="para"><p>In addition to <em>AsciiDoc</em> you will need to have installed:</p></div>
-<div class="ilist"><ul>
+<div class="paragraph"><p>In addition to <em>AsciiDoc</em> you will need to have installed:</p></div>
+<div class="ulist"><ul>
 <li>
 <p>
 <a href="http://lilypond.org/web/">LilyPond</a> (most Linux distributions include
@@ -485,13 +538,13 @@ If the music image file is linked to the output document then the
 </p>
 </li>
 </ul></div>
-<div class="para"><p>Test the music filter it by converting the test file to HTML with <em>AsciiDoc</em>:</p></div>
+<div class="paragraph"><p>Test the music filter it by converting the test file to HTML with <em>AsciiDoc</em>:</p></div>
 <div class="literalblock">
 <div class="content">
 <pre><tt>$ asciidoc -v ./filters/music-filter-test.txt
 $ firefox ./filters/music-filter-test.html &amp;</tt></pre>
 </div></div>
-<div class="para"><p>The filter was developed and tested on Xubuntu Linux using LilyPond
+<div class="paragraph"><p>The filter was developed and tested on Xubuntu Linux using LilyPond
 2.10.5 and ImageMagick 6.2.4.</p></div>
 <div class="admonitionblock">
 <table><tr>
@@ -506,7 +559,7 @@ a problem).</td>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2008-07-02 21:36:40 NZDT
+Last updated 2008-12-31 14:47:04 NZDT
 </div>
 </div>
 </body>

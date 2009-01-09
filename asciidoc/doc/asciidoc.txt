@@ -691,12 +691,12 @@ Put \^carets on either^ side of the text to be superscripted, put
 \~tildes on either side~ of text to be subscripted.  For example, the
 following line:
 
-  e^{amp}#960;i^+1 = 0. H~2~O and x^10^. Some ^super text^
+  e^&#960;i^+1 = 0. H~2~O and x^10^. Some ^super text^
   and ~some sub text~
 
 Is rendered like:
 
-e^{amp}#960;i^+1 = 0. H~2~O and x^10^. Some ^super text^
+e^&#960;i^+1 = 0. H~2~O and x^10^. Some ^super text^
 and ~some sub text~
 
 Superscripts and subscripts are implemented as <<X52,unconstrained
@@ -1043,16 +1043,17 @@ often used for code and file listings.
 
 Here's an example:
 
----------------------------------------
- --------------------------------------
- #include <stdio.h>
+[listing]
+......................................
+--------------------------------------
+#include <stdio.h>
 
-  int main() {
-     printf("Hello World!\n");
-     exit(0);
- }
- --------------------------------------
----------------------------------------
+int main() {
+   printf("Hello World!\n");
+   exit(0);
+}
+--------------------------------------
+......................................
 
 Which will be rendered like:
 
@@ -1114,6 +1115,15 @@ Any AsciiDoc SectionBody element (apart from
 SidebarBlocks) can be placed inside a sidebar.
 ************************************************
 
+Apply the 'abstract' style to generate an abstract, for example:
+
+---------------------------------------------------------------------
+[abstract]
+************************************************
+In this paper we will attempt to...
+************************************************
+---------------------------------------------------------------------
+
 [[X26]]
 Comment Blocks
 ~~~~~~~~~~~~~~
@@ -1129,6 +1139,8 @@ asciidoc(1).
 ---------------------------------------------------------------------
 
 See also <<X25,Comment Lines>>.
+
+NOTE: System macros are executed inside comment blocks.
 
 [[X76]]
 Passthrough Blocks
@@ -1326,17 +1338,36 @@ space or tab character. Bulleted list syntaxes are:
 * List item.
 ...................
 
-Numbered list items start with an optional number or letter followed
-by a period followed by a space or tab character.  List numbering is
-optional. Numbered list syntaxes are:
+There are two numbered list item syntaxes:
+
+. List items beginning with a single period followed by a space. The
+  period can be preceded by an optional decimal number.  The default
+  numbering style is arabic (decimal).
+. List items beginning with two periods followed by a space. An alpha
+  character or a roman number (upper or lower case) can optionally be
+  used in place of the first period:
+  * An attempt is made to set the number style based on number style
+    of the first list item.
+  * The default numbering style is lowercase alpha.
+
+You can use the 'style' attribute to specify an alternative numbering
+style.  The numbered list style can be set to one of the following
+values: 'arabic', 'loweralpha', 'upperalpha', 'lowerroman',
+'upperroman'.
+
+Examples of numbered list items:
+
 .....................................................................
-.  Integer numbered list item.
-1. Integer numbered list item with optional numbering.
-.. Lowercase letter numbered list item.
-a. Lowercase letter numbered list item with optional numbering.
+.    Arabic (decimal) numbered list item.
+1.   Arabic (decimal) numbered list item.
+..   Lower case letter numbered list item.
+a.   Lower case letter numbered list item.
+A.   Upper case letter numbered list item.
+iii. Lower case roman numbered list item.
+IX.  Upper case roman numbered list item.
 .....................................................................
 
-Here are some examples:
+Here are some examples of bulleted and numbered lists:
 ---------------------------------------------------------------------
 - Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
   * Fusce euismod commodo velit.
@@ -1348,6 +1379,7 @@ Here are some examples:
 - Nulla porttitor vulputate libero.
   . Fusce euismod commodo velit.
   . Vivamus fringilla mi eu lacus.
+[upperroman]
     .. Fusce euismod commodo velit.
     .. Vivamus fringilla mi eu lacus.
   . Donec eget arcu bibendum nunc consequat lobortis.
@@ -1357,6 +1389,8 @@ Here are some examples:
     b. Vivamus fringilla mi eu lacus.
     c. Donec eget arcu bibendum nunc consequat lobortis.
   2. Vivamus fringilla mi eu lacus.
+    .. Fusce euismod commodo velit.
+    .. Vivamus fringilla mi eu lacus.
   3. Donec eget arcu bibendum nunc consequat lobortis.
   4. Nam fermentum mattis ante.
 ---------------------------------------------------------------------
@@ -1373,6 +1407,7 @@ Which render as:
 - Nulla porttitor vulputate libero.
   . Fusce euismod commodo velit.
   . Vivamus fringilla mi eu lacus.
+[upperroman]
     .. Fusce euismod commodo velit.
     .. Vivamus fringilla mi eu lacus.
   . Donec eget arcu bibendum nunc consequat lobortis.
@@ -1382,6 +1417,8 @@ Which render as:
     b. Vivamus fringilla mi eu lacus.
     c. Donec eget arcu bibendum nunc consequat lobortis.
   2. Vivamus fringilla mi eu lacus.
+    .. Fusce euismod commodo velit.
+    .. Vivamus fringilla mi eu lacus.
   3. Donec eget arcu bibendum nunc consequat lobortis.
   4. Nam fermentum mattis ante.
 
@@ -1866,12 +1903,12 @@ the `test.py` source file (containing a single callout) using the
 
 .AsciiDoc source
 ---------------------------------------------------------------------
- [source,python]
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- include::test.py[]
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[source,python]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\include::test.py[]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- \<1> Print statement.
+\<1> Print statement.
 ---------------------------------------------------------------------
 
 .Included `test.py` source
@@ -2170,10 +2207,10 @@ See also <<X26,Comment Blocks>>.
 
 System Macros
 ~~~~~~~~~~~~~
-System macros are block macros that perform a predefined task which is
+System macros are block macros that perform a predefined task and are
 hardwired into the asciidoc(1) program.
 
-- You can't escape system macros with a leading backslash character
+- You can escape system macros with a leading backslash character
   (as you can with other macros).
 - The syntax and tasks performed by system macros is built into
   asciidoc(1) so they don't appear in configuration files.  You can
@@ -2195,7 +2232,7 @@ verbatim embedded CSS or scripts into configuration file headers.
 Example:
 
 ------------------------------------
- include::chapter1.txt[tabsize=4]
+\include::chapter1.txt[tabsize=4]
 ------------------------------------
 
 .Include macro behavior
@@ -2370,7 +2407,7 @@ a markup template. If `<name>` is omitted then it is the value of the
 regular expression match group named 'name'.  The optional
 `[<subslist]` is a comma-separated list of substitution names enclosed
 in `[]` brackets, it sets the default substitutions for passthrough
-text.
+text, if omitted then no passthrough substitutions are performed.
 
 .Pattern named groups
 The following named groups can be used in macro `<pattern>` regular
@@ -2422,8 +2459,8 @@ There are a wide variety of built-in customizable styles.
 *********************************************************************
 When technical users first start creating documents, tables (complete
 with column spanning and table nesting) are often considered very
-important.  important must-have feature. The reality is that tables
-are seldom used, even in technical documentation.
+important. The reality is that tables are seldom used, even in
+technical documentation.
 
 Try this exercise: thumb through your library of technical books,
 you'll be surprised just how seldom tables are actually used, even
@@ -2546,11 +2583,11 @@ include::customers.csv[]
 AsciiDoc source:
 
 ---------------------------------------------------------------------
- [format="csv",cols="^1,4*2",options="header"]
- |===================================================
- ID,Customer Name,Contact Name,Customer Address,Phone
- include::customers.csv[]
- |===================================================
+[format="csv",cols="^1,4*2",options="header"]
+|===================================================
+ID,Customer Name,Contact Name,Customer Address,Phone
+\include::customers.csv[]
+|===================================================
 ---------------------------------------------------------------------
 
 
@@ -3498,7 +3535,8 @@ named attributes):
 - List attributes take precedence over existing attributes.
 - List attributes can only be referenced in configuration file markup
   templates and tags, they are not available inside the document.
-- Attribute references are allowed inside attribute lists.
+- Attribute references are allowed inside attribute lists -- this is
+  the only substitution performed on attribute lists.
 - Setting a named attribute to `None` undefines the attribute.
 - Positional attributes are referred to as `\{1}`,`\{2}`,`\{3}`,...
 - Attribute `\{0}` refers to the entire list (excluding the enclosing
@@ -3536,7 +3574,8 @@ AttributeList Element
 An <<X21,attribute list>> on a line by itself constitutes an
 'AttributeList' block element, its attributes apply to the following
 block element.  The list attributes are passed to the next block
-element for markup template substitution.
+element for markup template substitution. Often the first list
+parameter is used to specify the element's <<X23,style>>.
 
 
 Attribute References
@@ -3922,7 +3961,7 @@ sectionbody::
     The block contents are processed as a SectionBody.
 
 skip::
-    The block is treated as a comment (see CommentBlocks).
+    The block is treated as a comment (see <<X26,CommentBlocks>>).
 
 list::
     The block is a <<X29,list block>>.
@@ -4049,19 +4088,25 @@ asciidoc(1) searches for the command:
 - Finally it relies on the executing shell to search the environment
   search path (`$PATH`).
 
+Sub-directories are also included in the searches -- standard practice
+is to install each filter in it's own sub-directory with the same name
+as the filter's style definition. For example the music filter's style
+name is 'music' so it's configuration and filter files are stored in
+the `filters/music` directory.
+
 Filter Configuration Files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 Filters are normally accompanied by a configuration file containing a
 Paragraph or DelimitedBlock definition along with corresponding markup
 templates.
 
-There are two ways to implement filters:
-
-- As a new Paragraph or DelimitedBlock definition.
-- By styling an existing Paragraph or DelimitedBlock using a 'style'
-  configuration entry -- the 'source highlight' and 'music' filters
-  use this technique to customize the ListingBlock. By convention the
-  style is given the same name as the filter.
+While it is possible to create new Paragraph or DelimitedBlock
+definitions the preferred way to implement a filter is to add a
+<<X23,style>> to an existing Paragraph or DelimitedBlock definition
+(all filters shipped with AsciiDoc use this technique). The filter is
+applied to the paragraph or delimited block by preceding it with an
+attribute list: the first positional attribute is the style name,
+remaining attributes are normally filter specific parameters.
 
 asciidoc(1) auto-loads all `.conf` files found in the filter search
 paths (see previous section).
@@ -4069,19 +4114,20 @@ paths (see previous section).
 [[X56]]
 Code Filter
 ~~~~~~~~~~~
-AsciiDoc comes with a simple minded for highlighting source code
-keywords and comments.  See also the
-`./filters/code-filter-readme.txt` file.
+AsciiDoc comes with a toy filter for highlighting source code keywords
+and comments.  See also the `./filters/code/code-filter-readme.txt`
+file.
 
 NOTE: This filter primarily to demonstrate how to write a filter --
 it's much to simplistic to be passed off as a code syntax highlighter.
 If you want a full featured multi-language highlighter use the
 <<X57,Source Code Highlighter Filter>>.
 
----------------------------------------------------------------------
+[listing]
+.....................................................................
 .Code filter example
 [code,python]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------
 ''' A multi-line
     comment.'''
 def sub_word(mo):
@@ -4091,14 +4137,14 @@ def sub_word(mo):
         return quote + word + quote
     else:
         return word
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
----------------------------------------------------------------------
+----------------------------------------------
+.....................................................................
 
 Outputs:
 
 .Code filter example
 [code,python]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------
 ''' A multi-line
     comment.'''
 def sub_word(mo):
@@ -4108,7 +4154,7 @@ def sub_word(mo):
         return quote + word + quote
     else:
         return word
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------
 
 [[X57]]
 Source Code Highlighter Filter
@@ -4467,17 +4513,16 @@ highlight clear Search
 " Don't move to matched text while search pattern is being entered.
 set noincsearch
 
-" Q command to reformat paragraphs and list.
-nnoremap Q gq}
+" Reformat paragraphs and list.
+nnoremap R gq}
 
-" W command to delete trailing white space and Dos-returns and to expand tabs
-" to spaces.
-nnoremap W :%s/[\r \t]\+$//<CR>:set et<CR>:retab!<CR>
+" Delete trailing white space and Dos-returns and to expand tabs to spaces.
+nnoremap S :set et<CR>:retab!<CR>:%s/[\r \t]\+$//<CR>
 
 autocmd BufRead,BufNewFile *.txt,README,TODO,CHANGELOG,NOTES
-        \ setlocal autoindent expandtab tabstop=8 softtabstop=2 shiftwidth=2
+        \ setlocal autoindent expandtab tabstop=8 softtabstop=2 shiftwidth=2 filetype=asciidoc
         \ textwidth=70 wrap formatoptions=tcqn
-        \ formatlistpat=^\\s*<\\?\\d\\+[\\]:.)}\\t\ >]\\s*
+        \ formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\\|^\\s*<\\d\\+>\\s\\+\\\\|^\\s*[a-zA-Z.]\\.\\s\\+\\\\|^\\s*[ivxIVX]\\+\\.\\s\\+
         \ comments=s1:/*,ex:*/,://,b:#,:%,:XCOMM,fb:-,fb:*,fb:+,fb:.,fb:>
 ---------------------------------------------------------------------
 
@@ -4546,49 +4591,31 @@ Macro attribute lists::
 
     ["Desktop screenshot",width=32]
 
-Combining Separate Documents
+Combining separate documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 You have a number of stand-alone AsciiDoc documents that you want to
 process as a single document. Simply processing them with a series of
-`include` macros won't work, because instead of starting at level 1
-the section levels of the combined document start at level 0 (the
-document title level).
+`include` macros won't work because the documents contain (level 0)
+document titles.  The solution is to create a top level wrapper
+document that redefines the document underlines, pushing them down one
+level.  For example `combined.txt`:
 
-The solution is to redefine the title underlines so that document and
-section titles are pushed down one level.
-
-. Push the standard title underlines down one level by defining a new
-  level 0 underline in a custom configuration file. For example
-  `combined.conf`:
-
-  [titles]
-  underlines="__","==","--","~~","^^"
-
-. If you use single line titles you'll need to make corresponding
-  adjustments to the `[titles]` section `sect0`...`sect4` entries.
-
-. Create a top level wrapper document. For example `combined.txt`:
-+
 ---------------------------------------------------------------------
- Combined Document Title
- _______________________
+:titles.underlines: "__","==","--","~~","^^"
 
- include::document1.txt[]
+Combined Document Title
+_______________________
 
- include::document2.txt[]
+\include::document1.txt[]
 
- include::document3.txt[]
+\include::document2.txt[]
+
+\include::document3.txt[]
 ---------------------------------------------------------------------
 
-. Process the wrapper document. For example:
+The document titles in the included documents will now be processed as
+level 1 section titles.
 
-  $ asciidoc --conf-file=combined.conf combined.txt
-
-Actually the `--conf-file` option is unnecessary as asciidoc(1)
-automatically looks for a same-named `.conf` file.
-
-- The combined document title uses the newly defined level 0 underline
-  (underscore characters).
 - Put a blank line between the `include` macro lines to ensure the
   title of the included document is not seen as part of the last
   paragraph of the previous document.
@@ -4596,60 +4623,51 @@ automatically looks for a same-named `.conf` file.
   included files -- conditionally exclude them if they are necessary
   for stand-alone processing.
 
-Processing Document Sections Separately
+Processing document sections separately
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-You have divided your AsciiDoc document into separate files (one per top level
-section) which are combined and processed with the following top level
-document:
+You have divided your AsciiDoc document into separate files (one per
+top level section) which are combined and processed with the following
+top level document:
 
 ---------------------------------------------------------------------
- Combined Document Title
- =======================
- Joe Bloggs
- v1.0, 12-Aug-03
+Combined Document Title
+=======================
+Joe Bloggs
+v1.0, 12-Aug-03
 
- include::section1.txt[]
+\include::section1.txt[]
 
- include::section2.txt[]
+\include::section2.txt[]
 
- include::section3.txt[]
+\include::section3.txt[]
 ---------------------------------------------------------------------
 
 You also want to process the section files as separate documents.
 This is easy because asciidoc(1) will quite happily process
-`section1.txt`, `section2.txt` and `section3.txt` separately.
+`section1.txt`, `section2.txt` and `section3.txt` separately -- the
+resulting output documents contain the section but have no document
+title.
 
-If you want to promote the section levels up one level, so the
-document is processed just like a stand-alone document, then pop the
-section underline definition up one level:
+Use the `-s` (`--no-header-footer`) command-line option to suppress
+header and footer output, this is useful if the processed output is to
+be included in another file. For example:
 
-  [titles]
-  underlines="--","~~","^^","++","__"
+  $ asciidoc -s -b docbook section1.txt
 
-The last `"__"` underline is a dummy that won't actually be used but
-is necessary to legitimize the underline definition.
-
-This is just the reverse of the technique used for combining separate
-documents explained in the previous section.
-
-Processing Document Chunks
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Processing document snippets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 asciidoc(1) can be used as a filter, so you can pipe chunks of text
 through it. For example:
 
   $ echo 'Hello *World!*' | asciidoc -s -
-  <div class="para"><p>Hello <strong>World!</strong></p></div>
+  <div class="paragraph"><p>Hello <strong>World!</strong></p></div>
 
-The `-s` (`--no-header-footer`) command-line option suppresses header
-and footer output and is useful if the processed output is to be
-included in another file.
-
-Badges in HTML Page Footers
+Badges in HTML page footers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 See the `[footer]` section in the AsciiDoc distribution `xhtml11.conf`
 configuration file.
 
-Pretty Printing AsciiDoc Output
+Pretty printing AsciiDoc output
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 If the indentation and layout of the asciidoc(1) output is not to your
 liking you can:
@@ -4658,21 +4676,23 @@ liking you can:
    template sections. The `\{empty}` glossary entry is useful for
    outputting trailing blank lines in markup templates.
 
-2. Or use Dave Raggett's excellent 'HTML Tidy' program to tidy
-   asciidoc(1) output. Example:
+2. Use Dave Raggett's http://tidy.sourceforge.net/[HTML Tidy] program
+   to tidy asciidoc(1) output. Example:
 
    $ asciidoc -b docbook -o - mydoc.txt | tidy -indent -xml >mydoc.xml
 
-'HTML Tidy' can be downloaded from http://tidy.sourceforge.net/
+3. Use the `xmllint(1)` format option. Example:
 
-Supporting Minor DocBook DTD Variations
+   $ xmllint --format mydoc.xml
+
+Supporting minor DocBook DTD variations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The conditional inclusion of DocBook SGML markup at the end of the
 distribution `docbook.conf` file illustrates how to support minor DTD
 variations. The included sections override corresponding entries from
 preceding sections.
 
-Shipping Stand-alone AsciiDoc Source
+Shipping stand-alone AsciiDoc source
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Reproducing presentation documents from someone else's source has one
 major problem: unless your configuration files are the same as the
@@ -4698,14 +4718,14 @@ The `-e` (`--no-conf`) option excludes the use of implicit
 configuration files, ensuring that only entries from the
 `mydoc-html.conf` configuration are used.
 
-Inserting Blank Space
+Inserting blank space
 ~~~~~~~~~~~~~~~~~~~~~
 Adjust your style sheets to add the correct separation between block
 elements. Inserting blank paragraphs containing a single non-breaking
 space character `\{nbsp}` works but is an ad hoc solution compared
 to using style sheets.
 
-Closing Open Sections
+Closing open sections
 ~~~~~~~~~~~~~~~~~~~~~
 You can close off section tags up to level `N` by calling the
 `eval::[Section.setlevel(N)]` system macro. This is useful if you
@@ -4714,23 +4734,22 @@ example includes a DocBook glossary division at the top section level
 (level 0):
 
 ---------------------------------------------------------------------
-  ifdef::backend-docbook[]
+\ifdef::backend-docbook[]
 
-  eval::[Section.setlevel(0)]
+\eval::[Section.setlevel(0)]
 
-  +++++++++++++++++++++++++++++++
-  <glossary>
-    <title>Glossary</title>
-    <glossdiv>
-    ...
-    </glossdiv>
-  </glossary>
-  +++++++++++++++++++++++++++++++
-  endif::backend-docbook[]
++++++++++++++++++++++++++++++++
+<glossary>
+  <title>Glossary</title>
+  <glossdiv>
+  ...
+  </glossdiv>
+</glossary>
++++++++++++++++++++++++++++++++
+\endif::backend-docbook[]
 ---------------------------------------------------------------------
 
-
-Validating Output Files
+Validating output files
 ~~~~~~~~~~~~~~~~~~~~~~~
 Use `xmllint(1)` to check the AsciiDoc generated markup is both well
 formed and valid. Here are some examples:
@@ -4813,7 +4832,7 @@ asciidoc(1) `--unsafe` command-line option.
 .Safe mode constraints
 - `eval`, `sys` and `sys2` executable attributes and block macros are
   not executed.
-- `\include::<filename>[]` and `\include1::<filename>[]` block macro
+- `include::<filename>[]` and `\include1::<filename>[]` block macro
   files must reside inside the parent file's directory.
 - `\{include:<filename>}` executable attribute files must reside
   inside the source document directory.

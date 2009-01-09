@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.3.1" />
+<meta name="generator" content="AsciiDoc 8.3.3" />
 <link rel="stylesheet" href="./xhtml11.css" type="text/css" />
 <link rel="stylesheet" href="./xhtml11-quirks.css" type="text/css" />
 <link rel="stylesheet" href="./layout1.css" type="text/css" />
@@ -38,6 +38,131 @@
 <div id="preamble">
 <div class="sectionbody">
 </div>
+</div>
+<h2 id="_version_8_3_3_2009_01_02">Version 8.3.3 (2009-01-02)</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This release supercedes 8.3.2.</p></div>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
+<li>
+<p>
+The broken and confusing numeration and numeration2 numbered list
+  attributes have been dropped, use the style attribute instead.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_version_8_3_2_2009_01_01">Version 8.3.2 (2009-01-01)</h2>
+<div class="sectionbody">
+<div class="ulist"><div class="title">Additions and changes</div><ul>
+<li>
+<p>
+Added Gouichi Iisaka&#8217;s Graphviz filter to distribution.
+</p>
+</li>
+<li>
+<p>
+The <em>SidebarBlock</em> element can now be rendered with an <em>abstract</em>
+  style.
+</p>
+</li>
+<li>
+<p>
+Reorganized filters into a separate subdirectory for each filter.
+</p>
+</li>
+<li>
+<p>
+Updated <tt>Makefile.in</tt> and <tt>MANIFEST</tt> files to reflect new filters
+  organization.
+</p>
+</li>
+<li>
+<p>
+Added <em>listing</em> style to <em>LiteralBlock</em> element so listings with
+  nested listing blocks can be rendered as a listing block.
+</p>
+</li>
+<li>
+<p>
+Changed example <em>code</em> filter to use preferred <em>ListingBlock</em> syntax
+  (the old <tt>~</tt> delimited filter syntax is no longer used).
+</p>
+</li>
+<li>
+<p>
+Implemented <em>enumeration</em> and <em>enumeration2</em> numbered list
+  attributes for specifying the list numbering style (<em>arabic</em>,
+  <em>loweralpha</em>, <em>upperalpha</em>, <em>lowerroman</em> and <em>upperroman</em>).
+</p>
+</li>
+<li>
+<p>
+<em>AsciiDoc</em> now recognizes <em>upperalpha</em>, <em>lowerroman</em> and <em>upperroman</em>
+  numbers in <tt>listdef-numbered2</tt> numbered lists and sets the number
+  style based on the style of the first numbered list item
+  (alternative to setting <em>enumeration2</em> attribute).
+</p>
+</li>
+<li>
+<p>
+Updated <tt>formatlistpat</tt> definition in <tt>.vimrc</tt> example in User
+  Guide.
+</p>
+</li>
+<li>
+<p>
+You can now backslash escape system block macros.
+</p>
+</li>
+<li>
+<p>
+Added <em>Pychart</em> FAQ.
+</p>
+</li>
+<li>
+<p>
+Drop paragraph <em>text</em> and list <em>text</em>, <em>index</em> and <em>label</em> match
+  groups from attributes&#8201;&#8212;&#8201;they are included in the element&#8217;s text
+  and we don&#8217;t want them processed a second time as attributes.
+</p>
+</li>
+<li>
+<p>
+Changed comment line block macro to a passthrough block macro to
+  ensure no substitutions.
+</p>
+</li>
+<li>
+<p>
+A <em>subslist</em> no longer has to be appended to a <em>PassthroughBlock</em>
+  macro definition, if omitted no substitutions are performed.
+</p>
+</li>
+<li>
+<p>
+Code tidy up: replaced deprecated <tt>&lt;&gt;</tt> operator with <tt>!=</tt>.
+</p>
+</li>
+<li>
+<p>
+Removed unused linuxdoc code.
+</p>
+</li>
+<li>
+<p>
+Code tidy ups: dropped old types module reference; replaced
+  <tt>has_key()</tt> with preferred <tt>in</tt> operator.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Bug fixes</div><ul>
+<li>
+<p>
+Old syntax source highlight filter regression: special characters
+  where not escaped in DocBook outputs.
+</p>
+</li>
+</ul></div>
 </div>
 <h2 id="_version_8_3_1_2008_12_14">Version 8.3.1 (2008-12-14)</h2>
 <div class="sectionbody">
@@ -2996,7 +3121,7 @@ Fixed broken code-filter <tt>-b linuxdoc</tt> option. The asciidoc.asc User
 </p>
 </li>
 </ul></div>
-<div class="olist"><div class="title">Compatibility issues:</div><ol>
+<div class="olist arabic"><div class="title">Compatibility issues:</div><ol class="arabic">
 <li>
 <p>
 Table titles are no longer in the arguments line, use the new
@@ -4235,8 +4360,8 @@ Fixed error that occurred when <em>==</em> title underline was
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 8.3.1<br />
-Last updated 2008-12-13 09:59:39 NZDT
+Version 8.3.3<br />
+Last updated 2009-01-02 12:58:49 NZDT
 </div>
 <div id="footer-badges">
 <a href="http://validator.w3.org/check?uri=referer">

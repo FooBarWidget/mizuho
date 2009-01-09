@@ -7,9 +7,8 @@ under the terms of the GNU General Public License (GPL).
 """
 
 import sys, os, re, time, traceback, tempfile, subprocess, codecs, locale
-from types import *
 
-VERSION = '8.3.1'   # See CHANGLOG file for version history.
+VERSION = '8.3.3'   # See CHANGLOG file for version history.
 
 #---------------------------------------------------------------------------
 # Program onstants.
@@ -110,22 +109,19 @@ def verbose(msg,linenos=True):
     if config.verbose:
         console(msg,linenos=linenos)
 
-def warning(msg,linenos=True):
-    console(msg,'WARNING: ',linenos)
+def warning(msg,linenos=True,offset=0):
+    console(msg,'WARNING: ',linenos,offset=offset)
     document.has_warnings = True
 
 def deprecated(msg, linenos=True):
     console(msg, 'DEPRECATED: ', linenos)
 
-def message(msg, prefix='', linenos=True, cursor=None):
-    """
-    Return formatted message string. 'offset' is added to reported line number
-    for warnings emitted when reading ahead.
-    """
+def message(msg, prefix='', linenos=True, cursor=None, offset=0):
+    """Return formatted message string."""
     if linenos and reader.cursor:
         if not cursor:
             cursor = reader.cursor
-        prefix += '%s: line %d: ' % (os.path.basename(cursor[0]),cursor[1])
+        prefix += '%s: line %d: ' % (os.path.basename(cursor[0]),cursor[1]+offset)
     return prefix + msg
 
 def error(msg, cursor=None, halt=False):
@@ -141,8 +137,8 @@ def error(msg, cursor=None, halt=False):
         console(msg,'ERROR: ',cursor=cursor)
         document.has_errors = True
 
-def console(msg, prefix='', linenos=True, cursor=None):
-    print_stderr(message(msg,prefix,linenos,cursor))
+def console(msg, prefix='', linenos=True, cursor=None, offset=0):
+    print_stderr(message(msg,prefix,linenos,cursor,offset))
 
 def file_in(fname, directory):
     """Return True if file fname resides inside directory."""
@@ -308,7 +304,7 @@ def parse_attributes(attrs,dict):
     def f(*args,**keywords):
         # Name and add aguments '1','2'... to keywords.
         for i in range(len(args)):
-            if not keywords.has_key(str(i+1)):
+            if not str(i+1) in keywords:
                 keywords[str(i+1)] = args[i]
         return keywords
 
@@ -560,16 +556,28 @@ def update_attrs(attrs,dict):
             raise EAsciiDoc,'illegal attribute name: %s' % k
         attrs[k] = v
 
-def filter_lines(filter_cmd, lines, dict={}):
+def filter_lines(filter_cmd, lines, attrs={}):
     """
     Run 'lines' through the 'filter_cmd' shell command and return the result.
-    The 'dict' dictionary contains additional filter attributes.
+    The 'attrs' dictionary contains additional filter attributes.
     """
+    def findfilter(name,dir,filter):
+        """Find filter file 'fname' with style name 'name' in directory
+        'dir'. Return found file path or None if not found."""
+        if name:
+            result = os.path.join(dir,'filters',name,filter)
+            if os.path.isfile(result):
+                return result
+        result = os.path.join(dir,'filters',filter)
+        if os.path.isfile(result):
+            return result
+        return None
+
     # Return input lines if there's not filter.
     if not filter_cmd or not filter_cmd.strip():
         return lines
     # Perform attributes substitution on the filter command.
-    s = subs_attrs(filter_cmd, dict)
+    s = subs_attrs(filter_cmd, attrs)
     if not s:
         raise EAsciiDoc,'undefined filter attribute in command: %s' % filter_cmd
     filter_cmd = s.strip()
@@ -583,33 +591,23 @@ def filter_lines(filter_cmd, lines, dict={}):
             # Unquoted catch all.
             mo = re.match(r'^(?P<cmd>\S+)(?P<tail>.*)$', filter_cmd)
     cmd = mo.group('cmd').strip()
-    # Search for the filter command in  both user and application 'filters'
-    # sub-directories.
-    found = False
+    found = None
     if not os.path.dirname(cmd):
-        # Check in asciidoc user and application directories for unqualified
-        # file name.
+        # Filter command has no directory path so search filter directories.
+        filtername = attrs.get('style')
         if USER_DIR:
-            cmd2 = os.path.join(USER_DIR,'filters',cmd)
-            if os.path.isfile(cmd2):
-                found = True
+            found = findfilter(filtername, USER_DIR, cmd)
         if not found:
-            cmd2 = os.path.join(CONF_DIR,'filters',cmd)
-            if os.path.isfile(cmd2):
-                found = True
+            found = findfilter(filtername, CONF_DIR, cmd)
         if not found:
-            cmd2 = os.path.join(APP_DIR,'filters',cmd)
-            if os.path.isfile(cmd2):
-                found = True
-        if found:
-            cmd = cmd2
+            found = findfilter(filtername, APP_DIR, cmd)
     else:
         if os.path.isfile(cmd):
-            found = True
+            found = cmd
         else:
             warning('filter not found: %s' % cmd)
     if found:
-        filter_cmd = '"' + cmd + '"' + mo.group('tail')
+        filter_cmd = '"' + found + '"' + mo.group('tail')
     if sys.platform == 'win32':
         # Windows doesn't like running scripts directly so explicitly
         # specify interpreter.
@@ -743,7 +741,7 @@ def subs_attrs(lines, dictionary=None):
             if n == 0: break
         return result
 
-    if isinstance(lines,StringType):
+    if type(lines) == str:
         string_result = True
         lines = [lines]
     else:
@@ -929,6 +927,7 @@ class Lex:
     prev_cursor = None
     def __init__(self):
         raise AssertionError,'no class instances allowed'
+    @staticmethod
     def next():
         """Returns class of next element on the input (None if EOF).  The
         reader is assumed to be at the first line following a previous element,
@@ -981,8 +980,8 @@ class Lex:
         Lex.prev_cursor = reader.cursor
         Lex.prev_element = result
         return result
-    next = staticmethod(next)
 
+    @staticmethod
     def subs_1(s,options):
         """Perform substitution specified in 'options' (in 'options' order) on
         Does not process 'attributes' substitutions."""
@@ -1011,8 +1010,8 @@ class Lex:
             if not result:
                 break
         return result
-    subs_1 = staticmethod(subs_1)
 
+    @staticmethod
     def subs(lines,options):
         """Perform inline processing specified by 'options' (in 'options'
         order) on sequence of 'lines'."""
@@ -1040,8 +1039,8 @@ class Lex:
         if 'macros' in options:
             para = macros.restore_passthroughs(para)
         return para.splitlines()
-    subs = staticmethod(subs)
 
+    @staticmethod
     def set_margin(lines, margin=0):
         """Utility routine that sets the left margin to 'margin' space in a
         block of non-blank lines."""
@@ -1055,7 +1054,6 @@ class Lex:
         for i in range(len(lines)):
             lines[i] = ' '*margin + lines[i][width:]
         return lines
-    set_margin = staticmethod(set_margin)
 
 #---------------------------------------------------------------------------
 # Document element classes parse AsciiDoc reader input and write DocBook writer
@@ -1167,7 +1165,7 @@ class Document:
                     error('SYNOPSIS section expected')
                 else:
                     Title.translate()
-                    if Title.attributes['title'].upper() <> 'SYNOPSIS':
+                    if Title.attributes['title'].upper() != 'SYNOPSIS':
                         error('second section must be named SYNOPSIS')
                     if Title.level != 1:
                         error('SYNOPSIS section title must be at level 1')
@@ -1272,6 +1270,7 @@ class Header:
     """Static methods and attributes only."""
     def __init__(self):
         raise AssertionError,'no class instances allowed'
+    @staticmethod
     def translate():
         assert Lex.next() is Title and Title.level == 0
         Title.translate()
@@ -1324,7 +1323,7 @@ class Header:
                 error('NAME section expected')
             else:
                 Title.translate()
-                if Title.attributes['title'].upper() <> 'NAME':
+                if Title.attributes['title'].upper() != 'NAME':
                     error('first section must be named NAME')
                 if Title.level != 1:
                     error('NAME section title must be at level 1')
@@ -1338,9 +1337,6 @@ class Header:
                 attrs['manname'] = mo.group('manname').strip()
                 attrs['manpurpose'] = mo.group('manpurpose').strip()
         document.process_author_names()
-        if document.backend == 'linuxdoc' and not attrs.has_key('author'):
-            warning('linuxdoc requires author name')
-    translate = staticmethod(translate)
 
 class AttributeEntry:
     """Static methods and attributes only."""
@@ -1351,6 +1347,7 @@ class AttributeEntry:
     value = None
     def __init__(self):
         raise AssertionError,'no class instances allowed'
+    @staticmethod
     def isnext():
         result = False  # Assume not next.
         if not AttributeEntry.pattern:
@@ -1377,7 +1374,7 @@ class AttributeEntry:
                 AttributeEntry.value = AttributeEntry.value.strip()
                 result = True
         return result
-    isnext = staticmethod(isnext)
+    @staticmethod
     def translate():
         assert Lex.next() is AttributeEntry
         attr = AttributeEntry   # Alias for brevity.
@@ -1411,12 +1408,11 @@ class AttributeEntry:
                 document.attributes[attr.name] = attr.value
             elif attr.name in document.attributes:
                 del document.attributes[attr.name]
-    translate = staticmethod(translate)
+    @staticmethod
     def translate_all():
         """ Process all contiguous attribute lines on reader."""
         while AttributeEntry.isnext():
             AttributeEntry.translate()
-    translate_all = staticmethod(translate_all)
 
 class AttributeList:
     """Static methods and attributes only."""
@@ -1425,10 +1421,11 @@ class AttributeList:
     attrs = {}
     def __init__(self):
         raise AssertionError,'no class instances allowed'
+    @staticmethod
     def isnext():
         result = False  # Assume not next.
         if not AttributeList.pattern:
-            if not document.attributes.has_key('attributelist-pattern'):
+            if not 'attributelist-pattern' in document.attributes:
                 error("[attributes] missing 'attributelist-pattern' entry")
             AttributeList.pattern = document.attributes['attributelist-pattern']
         line = reader.read_next()
@@ -1438,7 +1435,7 @@ class AttributeList:
                 AttributeList.match = mo
                 result = True
         return result
-    isnext = staticmethod(isnext)
+    @staticmethod
     def translate():
         assert Lex.next() is AttributeList
         reader.read()   # Discard attribute list from reader.
@@ -1451,7 +1448,7 @@ class AttributeList:
                         parse_attributes(v, AttributeList.attrs)
                 else:
                     AttributeList.attrs[k] = v
-    translate = staticmethod(translate)
+    @staticmethod
     def consume(d):
         """Add attribute list to the dictionary 'd' and reset the
         list."""
@@ -1463,7 +1460,6 @@ class AttributeList:
                 options = parse_options(d['options'], (), 'illegal option name')
                 for option in options:
                     d[option+'-option'] = ''
-    consume = staticmethod(consume)
 
 class BlockTitle:
     """Static methods and attributes only."""
@@ -1471,6 +1467,7 @@ class BlockTitle:
     pattern = None
     def __init__(self):
         raise AssertionError,'no class instances allowed'
+    @staticmethod
     def isnext():
         result = False  # Assume not next.
         line = reader.read_next()
@@ -1480,7 +1477,7 @@ class BlockTitle:
                 BlockTitle.title = mo.group('title')
                 result = True
         return result
-    isnext = staticmethod(isnext)
+    @staticmethod
     def translate():
         assert Lex.next() is BlockTitle
         reader.read()   # Discard title from reader.
@@ -1492,13 +1489,12 @@ class BlockTitle:
         if not s:
             warning('blank block title')
         BlockTitle.title = s
-    translate = staticmethod(translate)
+    @staticmethod
     def consume(d):
         """If there is a title add it to dictionary 'd' then reset title."""
         if BlockTitle.title:
             d['title'] = BlockTitle.title
             BlockTitle.title = None
-    consume = staticmethod(consume)
 
 class Title:
     """Processes Header and Section titles. Static methods and attributes
@@ -1515,6 +1511,7 @@ class Title:
     linecount = None    # Number of lines in title (1 or 2).
     def __init__(self):
         raise AssertionError,'no class instances allowed'
+    @staticmethod
     def translate():
         """Parse the Title.attributes and Title.level from the reader. The
         real work has already been done by parse()."""
@@ -1531,11 +1528,11 @@ class Title:
         if not s:
             warning('blank section title')
         Title.attributes['title'] = s
-    translate = staticmethod(translate)
+    @staticmethod
     def isnext():
         lines = reader.read_ahead(2)
         return Title.parse(lines)
-    isnext = staticmethod(isnext)
+    @staticmethod
     def parse(lines):
         """Parse title at start of lines tuple."""
         if len(lines) == 0: return False
@@ -1544,7 +1541,7 @@ class Title:
         result = False
         for level in range(len(Title.underlines)):
             k = 'sect%s' % level
-            if Title.dump_dict.has_key(k):
+            if k in Title.dump_dict:
                 mo = re.match(Title.dump_dict[k], lines[0])
                 if mo:
                     Title.attributes = mo.groupdict()
@@ -1578,16 +1575,16 @@ class Title:
                 result = True
         # Check for expected pattern match groups.
         if result:
-            if not Title.attributes.has_key('title'):
+            if not 'title' in Title.attributes:
                 warning('[titles] entry has no <title> group')
                 Title.attributes['title'] = lines[0]
             for k,v in Title.attributes.items():
                 if v is None: del Title.attributes[k]
         return result
-    parse = staticmethod(parse)
+    @staticmethod
     def load(entries):
         """Load and validate [titles] section entries dictionary."""
-        if entries.has_key('underlines'):
+        if 'underlines' in entries:
             errmsg = 'malformed [titles] underlines entry'
             try:
                 underlines = parse_list(entries['underlines'])
@@ -1600,17 +1597,17 @@ class Title:
                     raise EAsciiDoc,errmsg
             Title.underlines = tuple(underlines)
             Title.dump_dict['underlines'] = entries['underlines']
-        if entries.has_key('subs'):
+        if 'subs' in entries:
             Title.subs = parse_options(entries['subs'], SUBS_OPTIONS,
                 'illegal [titles] subs entry')
             Title.dump_dict['subs'] = entries['subs']
-        if entries.has_key('sectiontitle'):
+        if 'sectiontitle' in entries:
             pat = entries['sectiontitle']
             if not pat or not is_regexp(pat):
                 raise EAsciiDoc,'malformed [titles] sectiontitle entry'
             Title.pattern = pat
             Title.dump_dict['sectiontitle'] = pat
-        if entries.has_key('blocktitle'):
+        if 'blocktitle' in entries:
             pat = entries['blocktitle']
             if not pat or not is_regexp(pat):
                 raise EAsciiDoc,'malformed [titles] blocktitle entry'
@@ -1618,7 +1615,7 @@ class Title:
             Title.dump_dict['blocktitle'] = pat
         # Load single-line title patterns.
         for k in ('sect0','sect1','sect2','sect3','sect4'):
-            if entries.has_key(k):
+            if k in entries:
                 pat = entries[k]
                 if not pat or not is_regexp(pat):
                     raise EAsciiDoc,'malformed [titles] %s entry' % k
@@ -1626,10 +1623,10 @@ class Title:
         # TODO: Check we have either a Title.pattern or at least one
         # single-line title pattern -- can this be done here or do we need
         # check routine like the other block checkers?
-    load = staticmethod(load)
+    @staticmethod
     def dump():
         dump_section('titles',Title.dump_dict)
-    dump = staticmethod(dump)
+    @staticmethod
     def setsectname():
         """Set Title section name. First search for section title in
         [specialsections], if not found use default 'sect<level>' name."""
@@ -1645,7 +1642,7 @@ class Title:
                 break
         else:
             Title.sectname = 'sect%d' % Title.level
-    setsectname = staticmethod(setsectname)
+    @staticmethod
     def getnumber(level):
         """Return next section number at section 'level' formatted like
         1.2.3.4."""
@@ -1663,7 +1660,6 @@ class Title:
                 # Reset unprocessed section levels.
                 Title.section_numbers[l] = 0
         return number
-    getnumber = staticmethod(getnumber)
 
 
 class Section:
@@ -1672,16 +1668,17 @@ class Section:
     ids = []      # List of already used ids.
     def __init__(self):
         raise AssertionError,'no class instances allowed'
+    @staticmethod
     def savetag(level,etag):
         """Save section end."""
         Section.endtags.append((level,etag))
-    savetag = staticmethod(savetag)
+    @staticmethod
     def setlevel(level):
         """Set document level and write open section close tags up to level."""
         while Section.endtags and Section.endtags[-1][0] >= level:
             writer.write(Section.endtags.pop()[1])
         document.level = level
-    setlevel = staticmethod(setlevel)
+    @staticmethod
     def gen_id(title):
         """
         The normalized value of the id attribute is an NCName according to
@@ -1708,7 +1705,7 @@ class Section:
             else:
                 ident = base_ident
             i += 1
-    gen_id = staticmethod(gen_id)
+    @staticmethod
     def translate():
         assert Lex.next() is Title
         prev_sectname = Title.sectname
@@ -1743,17 +1740,13 @@ class Section:
         Section.savetag(Title.level,etag)
         writer.write(stag)
         Section.translate_body()
-    translate = staticmethod(translate)
+    @staticmethod
     def translate_body(terminator=Title):
         isempty = True
         next = Lex.next()
         while next and next is not terminator:
             if next is Title and isinstance(terminator,DelimitedBlock):
                 error('title not permitted in sidebar body')
-            if document.backend == 'linuxdoc'   \
-                and document.level == 0         \
-                and not isinstance(next,Paragraph):
-                warning('only paragraphs are permitted in linuxdoc synopsis')
             next.translate()
             next = Lex.next()
             isempty = False
@@ -1764,7 +1757,6 @@ class Section:
         if isempty:
             if document.backend == 'docbook' and Title.sectname != 'sect-index':
                 error('empty section is not valid')
-    translate_body = staticmethod(translate_body)
 
 class AbstractBlock:
     def __init__(self):
@@ -1930,7 +1922,7 @@ class AbstractBlock:
         if self.style:
             if not is_name(self.style):
                 raise EAsciiDoc, 'illegal style name: %s' % self.style
-            if not self.styles.has_key(self.style):
+            if not self.style in self.styles:
                 if not isinstance(self,List):   # Lists don't have templates.
                     warning('[%s] \'%s\' style not in %s' % (
                         self.name,self.style,self.styles.keys()))
@@ -1938,7 +1930,7 @@ class AbstractBlock:
         all_styles_have_template = True
         for k,v in self.styles.items():
             t = v.get('template')
-            if t and not config.sections.has_key(t):
+            if t and not t in config.sections:
                 warning('[%s] missing template section' % t)
             if not t:
                 all_styles_have_template = False
@@ -1946,7 +1938,7 @@ class AbstractBlock:
         # styles have templates.
         if self.is_conf_entry('template') and not 'skip' in self.options:
             if self.template:
-                if not config.sections.has_key(self.template):
+                if not self.template in config.sections:
                     warning('[%s] missing template section' % self.template)
             elif not all_styles_have_template:
                 if not isinstance(self,List): # Lists don't have templates.
@@ -2003,6 +1995,9 @@ class AbstractBlock:
 
         params = list(self.PARAM_NAMES) + params
         self.attributes = {}
+        if self.style:
+            # If a default style is defined make it available in the template.
+            self.attributes['style'] = self.style
         self.attributes.update(attrs)
         # Calculate dynamic block parameters.
         # Start with configuration file defaults.
@@ -2020,19 +2015,19 @@ class AbstractBlock:
         if style:
             if not is_name(style):
                 raise EAsciiDoc, 'illegal style name: %s' % style
-            if self.styles.has_key(style):
+            if style in self.styles:
                 self.attributes['style'] = style
                 for k,v in self.styles[style].items():
                     if k == 'posattrs':
                         posattrs = v
                     elif k in params:
                         self.parameters[k] = v
-                    elif not self.attributes.has_key(k):
+                    elif not k in self.attributes:
                         # Style attributes don't take precedence over explicit.
                         self.attributes[k] = v
         # Set named positional attributes.
         for i,v in enumerate(posattrs):
-            if self.attributes.has_key(str(i+1)):
+            if str(i+1) in self.attributes:
                 self.attributes[v] = self.attributes[str(i+1)]
         # Override config and style attributes with attribute list attributes.
         self.update_parameters(attrs)
@@ -2102,8 +2097,8 @@ class Paragraph(AbstractBlock):
         return result
     def translate(self):
         AbstractBlock.translate(self)
-        attrs = {}
-        attrs.update(self.mo.groupdict())
+        attrs = self.mo.groupdict().copy()
+        if 'text' in attrs: del attrs['text']
         BlockTitle.consume(attrs)
         AttributeList.consume(attrs)
         self.merge_attributes(attrs)
@@ -2153,14 +2148,15 @@ class List(AbstractBlock):
         self.PARAM_NAMES += ('tags',)
         # tabledef conf file parameters.
         self.type=None
-        self.tags=None          # Name of listtags-<tags> conf section.
+        self.tags=None      # Name of listtags-<tags> conf section.
         # Calculated parameters.
         self.tag=None       # Current tags AttrDict.
         self.label=None     # List item label (labeled lists).
         self.text=None      # Text in first line of list item.
         self.index=None     # Matched delimiter 'index' group (numbered lists).
-        self.type=None      # List type.
+        self.type=None      # List type ('numbered','bulleted','labeled').
         self.listindex=None # Current list index (1..)
+        self.number_style=None  # Numbered list number style ('arabic'..)
     def load(self,name,entries):
         AbstractBlock.load(self,name,entries)
     def dump(self):
@@ -2202,9 +2198,6 @@ class List(AbstractBlock):
     def iscontinued(self):
         if reader.read_next() == '+':
             reader.read()   # Discard.
-            # Allow attribute list to precede continued list item element.
-            while Lex.next() is AttributeList:
-                Lex.next().translate()
             return True
         else:
             return False
@@ -2233,6 +2226,7 @@ class List(AbstractBlock):
                     lists.delimiter + r'|^\+$|^$|' + blocks.delimiter
                     + r'|' + tables.delimiter
                     + r'|' + tables_OLD.delimiter
+                    + r'|' + AttributeList.pattern
             )
             if self.text is not None:
                 text = [self.text] + list(text)
@@ -2240,6 +2234,9 @@ class List(AbstractBlock):
                 writer.write_tag(self.tag.text, text, self.presubs, self.attributes)
             continued = self.iscontinued()
         while True:
+            # Allow attribute list to precede continued list item element.
+            while Lex.next() is AttributeList:
+                Lex.next().translate()
             next = Lex.next()
             if next in lists.open:
                 break
@@ -2267,11 +2264,16 @@ class List(AbstractBlock):
                     lists.delimiter + r'|^$|' + blocks.delimiter
                     + r'|' + tables.delimiter
                     + r'|' + tables_OLD.delimiter
+                    + r'|' + AttributeList.pattern
             )
             if self.text is not None:
                 text = [self.text] + list(text)
-            writer.write_tag(self.tag.text, text, self.presubs, self.attributes)
+            if text:
+                writer.write_tag(self.tag.text, text, self.presubs, self.attributes)
         while True:
+            # Allow attribute list to precede continued list item element.
+            while Lex.next() is AttributeList:
+                Lex.next().translate()
             next = Lex.next()
             if next in lists.open:
                 break
@@ -2288,21 +2290,63 @@ class List(AbstractBlock):
             else:
                 break
         writer.write(itemtag[1])
+
+    @staticmethod
+    def parse_index(index):
+        """Parse the numbered list item index and return a (style,ordinal)
+        tuple. style in ('arabic'...); ordinal in (1...).
+        NOTE: 'i' and 'I' return (1,'lowerroman') and (1,'upperroman')."""
+        def roman_to_int(roman):
+            roman = roman.lower()
+            digits = {'i':1,'v':5,'x':10}
+            result = 0
+            for i in range(len(roman)):
+                digit = digits[roman[i]]
+                # If next digit is larger this digit is negative.
+                if i+1 < len(roman) and digits[roman[i+1]] > digit:
+                    result -= digit
+                else:
+                    result += digit
+            return result
+        if re.match(r'^\d+$', index):
+            style = 'arabic'
+            ordinal = int(index)
+        elif re.match(r'^[ivx]+$', index):
+            style = 'lowerroman'
+            ordinal = roman_to_int(index)
+        elif re.match(r'^[IVX]+$', index):
+            style = 'upperroman'
+            ordinal = roman_to_int(index)
+        elif re.match(r'^[a-z]$', index):
+            style = 'loweralpha'
+            ordinal = ord(index) - ord('a') + 1
+        elif re.match(r'^[A-Z]$', index):
+            style = 'upperalpha'
+            ordinal = ord(index) - ord('A') + 1
+        else:
+            style = None
+            ordinal = None
+        return (style,ordinal)
+
     def check_index(self):
-        """ Check calculated listindex (1,2,...) against the item index in the
-        document (self.index)."""
+        """ Check calculated listindex (1,2,...) against the item number in the
+        document (self.index) and check the number style is the same as
+        the first item (self.number_style)."""
         assert self.type in ('numbered','callout')
         if self.index:
-            matched = False
-            if re.match(r'\d+', self.index):
-                i = int(self.index)
-                matched = True
-            elif re.match(r'[a-z]', self.index):
-                i = ord(self.index) - ord('a') + 1
-                matched = True
-            if matched and i != self.listindex:
-                print 'type: ',self.type,': expected ',self.listindex,' got ',i
-                warning('list item %s out of sequence' % self.index)
+            style,ordinal = self.parse_index(self.index)
+            if style and self.number_style:
+                if (self.index in 'ivx' and self.number_style == 'loweralpha' or
+                    self.index in 'IVX' and self.number_style == 'upperalpha'):
+                    # Sidestep possible i,v,x,I,V,X ambiguity.
+                    return
+                if style != self.number_style:
+                    warning('list item style: expected %s got %s' %
+                            (self.number_style,style), offset=1)
+                if ordinal != self.listindex:
+                    warning('list item index: expected %s got %s' %
+                            (self.listindex,ordinal), offset=1)
+
     def check_tags(self):
         """ Check that all necessary tags are present. """
         tags = set(Lists.TAGS)
@@ -2316,10 +2360,17 @@ class List(AbstractBlock):
         if self.short_name() in ('bibliography','glossary','qanda'):
             deprecated('old %s list syntax' % self.short_name())
         lists.open.append(self)
-        attrs = {}
-        attrs.update(self.mo.groupdict())
+        attrs = self.mo.groupdict().copy()
+        for k in ('label','text','index'):
+            if k in attrs: del attrs[k]
+        if self.index:
+            # Set the numbering style from first list item.
+            style = self.parse_index(self.index)[0]
+            if style:
+                attrs['style'] = style
         BlockTitle.consume(attrs)
         AttributeList.consume(attrs)
+        self.number_style = attrs.get('style')
         self.merge_attributes(attrs,['tags'])
         self.tag = lists.tags[self.parameters.tags]
         self.check_tags()
@@ -2380,7 +2431,7 @@ class Lists(AbstractBlocks):
             mo = re.match(r'^listtags-(?P<name>\w+)$',section)
             if mo:
                 name = mo.group('name')
-                if self.tags.has_key(name):
+                if name in self.tags:
                     d = self.tags[name]
                 else:
                     d = AttrDict()
@@ -2904,7 +2955,7 @@ class Tables(AbstractBlocks):
             mo = re.match(r'^tabletags-(?P<name>\w+)$',section)
             if mo:
                 name = mo.group('name')
-                if self.tags.has_key(name):
+                if name in self.tags:
                     d = self.tags[name]
                 else:
                     d = AttrDict()
@@ -2961,15 +3012,15 @@ class Tables(AbstractBlocks):
 
 class Macros:
     # Default system macro syntax.
-    SYS_DEFAULT = r'(?u)^(?P<name>\w(\w|-)*?)::(?P<target>\S*?)' + \
-                  r'(\[(?P<attrlist>.*?)\])$'
+    SYS_RE = r'(?u)^(?P<name>[\\]?\w(\w|-)*?)::(?P<target>\S*?)' + \
+             r'(\[(?P<attrlist>.*?)\])$'
     def __init__(self):
         self.macros = []        # List of Macros.
         self.current = None     # The last matched block macro.
         self.passthroughs = []
         # Initialize default system macro.
         m = Macro()
-        m.pattern = self.SYS_DEFAULT
+        m.pattern = self.SYS_RE
         m.prefix = '+'
         m.reo = re.compile(m.pattern)
         self.macros.append(m)
@@ -3060,7 +3111,7 @@ class Macro:
         self.name = ''          # Conf file macro name (None if implicit).
         self.prefix = ''        # '' if inline, '+' if system, '#' if block.
         self.reo = None         # Compiled pattern re object.
-        self.subslist = None    # Default subs for macros passtext group.
+        self.subslist = []      # Default subs for macros passtext group.
     def has_passthrough(self):
         return self.pattern.find(r'(?P<passtext>') >= 0
     def section_name(self,name=None):
@@ -3074,7 +3125,7 @@ class Macro:
             suffix = '-blockmacro'
         else:
             suffix = '-inlinemacro'
-        if config.sections.has_key(name+suffix):
+        if name+suffix in config.sections:
             return name+suffix
         else:
             warning('missing macro section: [%s]' % (name+suffix))
@@ -3112,7 +3163,7 @@ class Macro:
         self.reo = re.compile(pattern)
         self.prefix = prefix
         self.name = name
-        self.subslist = subslist
+        self.subslist = subslist or []
 
     def subs(self,text):
         def subs_func(mo):
@@ -3129,7 +3180,7 @@ class Macro:
             if self.name:
                 name = self.name
             else:
-                if not d.has_key('name'):
+                if not 'name' in d:
                     warning('missing macro name group: %s' % mo.re.pattern)
                     return ''
                 name = d['name']
@@ -3142,7 +3193,7 @@ class Macro:
                 AttributeList.consume(d)
                 BlockTitle.consume(d)
             # Parse macro attributes.
-            if d.has_key('attrlist'):
+            if 'attrlist' in d:
                 if d['attrlist'] in (None,''):
                     del d['attrlist']
                 else:
@@ -3160,8 +3211,8 @@ class Macro:
                 listindex =int(d['index'])
                 d['coid'] = calloutmap.add(listindex)
             # Unescape special characters in LaTeX target file names.
-            if document.backend == 'latex' and d.has_key('target') and d['target']:
-                if not d.has_key('0'):
+            if document.backend == 'latex' and 'target' in d and d['target']:
+                if not '0' in d:
                     d['0'] = d['target']
                 d['target']= config.subs_specialchars_reverse(d['target'])
             # BUG: We've already done attribute substitution on the macro which
@@ -3217,7 +3268,7 @@ class Macro:
             if mo.group()[0] == '\\':
                 return mo.group()
             d = mo.groupdict()
-            if not d.has_key('passtext'):
+            if not 'passtext' in d:
                 warning('passthrough macro %s: missing passtext group' %
                         d.get('name',''))
                 return mo.group()
@@ -3261,17 +3312,17 @@ class CalloutMap:
         # Add next callout index to listindex map entry. Return the callout id.
         self.calloutindex += 1
         # Append the coindex to a list in the comap dictionary.
-        if not self.comap.has_key(listindex):
+        if not listindex in self.comap:
             self.comap[listindex] = [self.calloutindex]
         else:
             self.comap[listindex].append(self.calloutindex)
         return self.calloutid(self.listnumber, self.calloutindex)
+    @staticmethod
     def calloutid(listnumber,calloutindex):
         return 'CO%d-%d' % (listnumber,calloutindex)
-    calloutid = staticmethod(calloutid)
     def calloutids(self,listindex):
         # Retieve list of callout indexes that refer to listindex.
-        if self.comap.has_key(listindex):
+        if listindex in self.comap:
             result = ''
             for coindex in self.comap[listindex]:
                 result += ' ' + self.calloutid(self.listnumber,coindex)
@@ -3385,13 +3436,13 @@ class Reader1:
                 assign(parent,self)
                 self.parent = parent
                 # Set attributes in child.
-                if attrs.has_key('tabsize'):
+                if 'tabsize' in attrs:
                     self.tabsize = int(validate(attrs['tabsize'],
                         'int($)>=0',
                         'illegal include macro tabsize argument'))
                 else:
                     self.tabsize = config.tabsize
-                if attrs.has_key('depth'):
+                if 'depth' in attrs:
                     attrs['depth'] = int(validate(attrs['depth'],
                         'int($)>=1',
                         'illegal include macro depth argument'))
@@ -3498,6 +3549,10 @@ class Reader(Reader1):
                 if s is not None:
                     self.cursor[2] = s  # So we don't re-evaluate.
                     result = s
+        if result:
+            # Unescape escaped system macros.
+            if macros.match('+',r'\\eval|\\sys|\\sys2|\\ifdef|\\ifndef|\\endif|\\include|\\include1',result):
+                result = result[1:]
         return result
     def eof(self):
         return self.read_next() is None
@@ -3649,7 +3704,7 @@ def _subs_specialwords(mo):
     Config.subs_specialwords()."""
     word = mo.re.pattern                    # The special word.
     template = config.specialwords[word]    # The corresponding markup template.
-    if not config.sections.has_key(template):
+    if not template in config.sections:
         raise EAsciiDoc,'missing special word template [%s]' % template
     if mo.group()[0] == '\\':
         return mo.group()[1:]   # Return escaped word.
@@ -3737,7 +3792,7 @@ class Config:
             found = reo.findall(s)
             if found:
                 if section:             # Store previous section.
-                    if sections.has_key(section) \
+                    if section in sections \
                         and self.entries_section(section):
                         if ''.join(contents):
                             # Merge entries.
@@ -3751,7 +3806,7 @@ class Config:
             else:
                 contents.append(s)
         if section and contents:        # Store last section.
-            if sections.has_key(section) \
+            if section in sections \
                 and self.entries_section(section):
                 if ''.join(contents):
                     # Merge entries.
@@ -3816,17 +3871,17 @@ class Config:
         if lang:
             conf = 'lang-' + lang + '.conf'
             self.load_file(conf,dir)
-        # Load ./filters/*.conf files if they exist.
-        filters = os.path.join(dir,'filters')
-        if os.path.isdir(filters):
-            for f in os.listdir(filters):
+        # Load filter .conf files.
+        filtersdir = os.path.join(dir,'filters')
+        for dirpath,dirnames,filenames in os.walk(filtersdir):
+            for f in filenames:
                 if re.match(r'^.+\.conf$',f):
-                    self.load_file(f,filters)
+                    self.load_file(f,dirpath)
 
     def load_miscellaneous(self,d):
         """Set miscellaneous configuration entries from dictionary 'd'."""
         def set_misc(name,rule='True',intval=False):
-            if d.has_key(name):
+            if name in d:
                 errmsg = 'illegal [miscellaneous] %s entry' % name
                 if intval:
                     setattr(self, name, int(validate(d[name],rule,errmsg)))
@@ -3837,14 +3892,14 @@ class Config:
         set_misc('pagewidth','int($)>0',intval=True)
         set_misc('pageunits')
         set_misc('outfilesuffix')
-        if d.has_key('newline'):
+        if 'newline' in d:
             # Convert escape sequences to their character values.
             self.newline = eval('"'+d['newline']+'"')
-        if d.has_key('subsnormal'):
+        if 'subsnormal' in d:
             self.subsnormal = parse_options(d['subsnormal'],SUBS_OPTIONS,
                     'illegal [%s] %s: %s' %
                     ('miscellaneous','subsnormal',d['subsnormal']))
-        if d.has_key('subsverbatim'):
+        if 'subsverbatim' in d:
             self.subsverbatim = parse_options(d['subsverbatim'],SUBS_OPTIONS,
                     'illegal [%s] %s: %s' %
                     ('miscellaneous','subsverbatim',d['subsverbatim']))
@@ -3864,7 +3919,7 @@ class Config:
         for macro in self.specialwords.values():
             if not is_name(macro):
                 raise EAsciiDoc,'illegal special word name: %s' % macro
-            if not self.sections.has_key(macro):
+            if not macro in self.sections:
                 warning('missing special word macro: [%s]' % macro)
         # Check all text quotes have a corresponding tag.
         for q in self.quotes.keys():
@@ -3874,11 +3929,11 @@ class Config:
             else:
                 if tag[0] == '#':
                     tag = tag[1:]
-                if not self.tags.has_key(tag):
+                if not tag in self.tags:
                     warning('[quotes] %s missing tag definition: %s' % (q,tag))
         # Check all specialsections section names exist.
         for k,v in self.specialsections.items():
-            if not self.sections.has_key(v):
+            if not v in self.sections:
                 warning('[%s] missing specialsections section' % v)
         paragraphs.validate()
         lists.validate()
@@ -3920,7 +3975,7 @@ class Config:
         dump_section('specialcharacters',self.specialchars)
         d = {}
         for k,v in self.specialwords.items():
-            if d.has_key(v):
+            if v in d:
                 d[v] = '%s "%s"' % (d[v],k)   # Append word list.
             else:
                 d[v] = '"%s"' % k
@@ -3950,7 +4005,7 @@ class Config:
         """Section attribute substitution using attributes from
         document.attributes and 'd'.  Lines containing undefinded
         attributes are deleted."""
-        if self.sections.has_key(section):
+        if section in self.sections:
             return subs_attrs(self.sections[section],d)
         else:
             warning('missing [%s] section' % section)
@@ -3962,7 +4017,7 @@ class Config:
         parse_entries(self.sections.get('tags',()),d)
         for k,v in d.items():
             if v is None:
-                if self.tags.has_key(k):
+                if k in self.tags:
                     del self.tags[k]
             elif v == '':
                 self.tags[k] = (None,None)
@@ -3986,7 +4041,7 @@ class Config:
         # split_tag() and would call subs_tag(). self.tags dictionary values
         # would be strings not tuples.
 
-        if not self.tags.has_key(name):
+        if not name in self.tags:
             raise EAsciiDoc, 'missing tag: %s' % name
         stag,etag = self.tags[name]
         if d is not None:
@@ -4011,7 +4066,7 @@ class Config:
                 raise EAsciiDoc,'[specialsections] entry ' \
                                 'is not a valid regular expression: %s' % pat
             if sectname is None:
-                if self.specialsections.has_key(pat):
+                if pat in self.specialsections:
                     del self.specialsections[pat]
             else:
                 self.specialsections[pat] = sectname
@@ -4025,18 +4080,18 @@ class Config:
                 raise EAsciiDoc,'[%s] entry in %s is not a valid' \
                     ' regular expression: %s' % (sect,self.fname,pat)
 
+    @staticmethod
     def set_replacement(pat, rep, replacements):
         """Add pattern and replacement to replacements dictionary."""
         pat = strip_quotes(pat)
         if not is_regexp(pat):
             return False
         if rep is None:
-            if replacements.has_key(pat):
+            if pat in replacements:
                 del replacements[pat]
         else:
             replacements[pat] = strip_quotes(rep)
         return True
-    set_replacement = staticmethod(set_replacement)
 
     def subs_replacements(self,s,sect='replacements'):
         """Substitute patterns from self.replacements in 's'."""
@@ -4104,7 +4159,7 @@ class Config:
             mo = macros.match('+',r'template',line)
             if mo:
                 s = mo.group('attrlist')
-                if self.sections.has_key(s):
+                if s in self.sections:
                     result += self.sections[s]
                 else:
                     warning('missing [%s] section' % s)
@@ -4121,7 +4176,7 @@ class Config:
         attributes plus 'd' attributes. Return tuple (stag,etag) containing
         pre and post | placeholder tags."""
         assert section is not None
-        if self.sections.has_key(section):
+        if section in self.sections:
             body = self.sections[section]
         else:
             warning('missing [%s] section' % section)
@@ -4689,9 +4744,6 @@ def asciidoc(backend, doctype, confiles, infile, outfile, options):
     try:
         if doctype not in ('article','manpage','book'):
             raise EAsciiDoc,'illegal document type'
-        if backend == 'linuxdoc' and doctype != 'article':
-            raise EAsciiDoc,'%s %s documents are not supported' \
-                            % (backend,doctype)
         document.backend = backend
         if not os.path.exists(os.path.join(APP_DIR, backend+'.conf')) and not \
                os.path.exists(os.path.join(CONF_DIR, backend+'.conf')):

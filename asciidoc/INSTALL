@@ -1,6 +1,6 @@
                              AsciiDoc Installation
 
-   version 8.3.1, 14 December 2008
+   version 8.3.3, 2 January 2009
 
    Note: The current version of AsciiDoc requires Python 2.4 or newer to
    run. If you don't already have an up-to-date version of Python
@@ -27,8 +27,8 @@
 
    The autoconf(1) generated configure script creates a make file that is
    tailored for your system. To install:
-  $ tar -xzf asciidoc-8.3.1.tar.gz
-  $ cd asciidoc-8.3.1
+  $ tar -xzf asciidoc-8.3.3.tar.gz
+  $ cd asciidoc-8.3.3
   $ ./configure
   $ make
   $ sudo make install
@@ -51,7 +51,7 @@
    new folder:
   $ mkdir asciidoc
   $ cd asciidoc
-  $ unzip ../asciidoc-8.3.1.zip
+  $ unzip ../asciidoc-8.3.3.zip
      __________________________________________________________________
 
 4. Testing your installation
@@ -65,8 +65,8 @@
    directly or create a suitable asciidoc.bat file.
      __________________________________________________________________
 
-   Version 8.3.1
-   Last updated 2008-12-13 10:52:07 NZDT
+   Version 8.3.3
+   Last updated 2009-01-02 12:45:19 NZDT
 
 References
 

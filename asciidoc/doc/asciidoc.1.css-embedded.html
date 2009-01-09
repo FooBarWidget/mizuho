@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.3.1" />
+<meta name="generator" content="AsciiDoc 8.3.3" />
 <title>ASCIIDOC(1)</title>
 <style type="text/css">
 /* Debug borders */
@@ -228,11 +228,20 @@ dd > *:first-child {
 ul, ol {
     list-style-position: outside;
 }
-div.olist > ol {
+ol.arabic {
   list-style-type: decimal;
 }
-div.olist2 > ol {
+ol.loweralpha {
   list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
 }
 
 div.compact ul, div.compact ol,
@@ -384,14 +393,6 @@ div.exampleblock-content {
 
 /* IE6 sets dynamically generated links as visited. */
 div#toc a:visited { color: blue; }
-
-/* Because IE6 child selector is broken. */
-div.olist2 ol {
-  list-style-type: lower-alpha;
-}
-div.olist2 div.olist ol {
-  list-style-type: decimal;
-}
 </style>
 </head>
 <body>
@@ -589,8 +590,8 @@ granted under the terms of the GNU General Public License (GPL).</p></div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 8.3.1<br />
-Last updated 2008-12-13 09:58:07 NZDT
+Version 8.3.3<br />
+Last updated 2009-01-02 12:45:00 NZDT
 </div>
 </div>
 </body>

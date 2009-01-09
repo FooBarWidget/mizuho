@@ -1,4 +1,4 @@
-personal_ws-1.1 en 723 
+personal_ws-1.1 en 732 
 Sturmer
 Kleber
 Kléber
@@ -55,6 +55,7 @@ ListContinuation
 listcontinuation
 consectetuer
 Magnocavallo
+Gouichi
 defacto
 ListParagraph
 charset
@@ -112,6 +113,7 @@ dsv
 O'Reilly
 dvi
 CommentBlocks
+lowerroman
 gif
 Builtin
 tabledef
@@ -132,6 +134,7 @@ itemtag
 entrytag
 hhc
 else's
+Graphviz
 executables
 basebackend
 expr
@@ -156,6 +159,7 @@ fermentum
 ListingBlocks
 GPL
 hsides
+upperalpha
 Bolido
 Bólido
 footrow
@@ -299,6 +303,7 @@ rewriteURI
 formatlistpat
 Konqueror
 pageunit
+upperroman
 Blauer
 backmatter
 stdin
@@ -444,6 +449,7 @@ RTF
 DSSSL
 fileext
 WINA
+arabic
 fringilla
 retab
 BackendBlocks
@@ -465,6 +471,7 @@ endtag
 Vasilev
 crlf
 vel
+Iisaka's
 localtime
 blockmacro
 BlockMacro
@@ -585,6 +592,7 @@ superscripted
 glossdiv
 symlinked
 Mihai
+Pychart
 Klum
 fo
 sgmlformat
@@ -713,6 +721,7 @@ AsciiDoc
 manmanual
 TableBody
 realpath
+loweralpha
 labitur
 prepended
 builtins

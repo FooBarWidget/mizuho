@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.3.1" />
+<meta name="generator" content="AsciiDoc 8.3.3" />
 <title>AsciiDoc User Guide</title>
 <link rel="stylesheet" href="../stylesheets/xhtml11.css" type="text/css" />
 <link rel="stylesheet" href="../stylesheets/xhtml11-quirks.css" type="text/css" />
@@ -19,8 +19,8 @@ window.onload = function(){generateToc(2)}
 <h1>AsciiDoc User Guide</h1>
 <span id="author">Stuart Rackham</span><br />
 <span id="email"><tt>&lt;<a href="mailto:srackham@gmail.com">srackham@gmail.com</a>&gt;</tt></span><br />
-<span id="revision">version 8.3.1,</span>
-14 December 2008
+<span id="revision">version 8.3.3,</span>
+2 January 2009
 <div id="toc">
   <div id="toctitle">Table of Contents</div>
   <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
@@ -317,8 +317,6 @@ stylesheet
   specified by the <em>stylesdir</em> attribute.
 </p>
 </dd>
-</dl></div>
-<div class="dlist" id="X45"><dl>
 <dt class="hdlist1">
 icons
 </dt>
@@ -329,8 +327,6 @@ icons
   icon images.
 </p>
 </dd>
-</dl></div>
-<div class="dlist" id="X44"><dl>
 <dt class="hdlist1">
 iconsdir
 </dt>
@@ -367,7 +363,7 @@ badges
 </p>
 </dd>
 </dl></div>
-<div class="admonitionblock">
+<div class="admonitionblock" id="X44">
 <table><tr>
 <td class="icon">
 <img src="./images/icons/note.png" alt="Note" />
@@ -578,7 +574,7 @@ address comes last and must be enclosed in angle &lt;&gt; brackets. Author
 names cannot contain angle &lt;&gt; bracket characters.</p></div>
 <div class="paragraph"><p>The optional document header revision line should immediately follow
 the author line. The revision line can be one of two formats:</p></div>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 An alphanumeric document revision number followed by a date:
@@ -787,7 +783,7 @@ Inline Macros
 <h2 id="_document_processing">6. Document Processing</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>The <em>AsciiDoc</em> source document is read and processed as follows:</p></div>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 The document <em>Header</em> is parsed, header parameter values are
@@ -818,7 +814,7 @@ to be checked.</p></div>
 and block syntax rules.</p></div>
 <div class="paragraph"><p>Inline substitutions within block elements are performed in the
 following default order:</p></div>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 Special characters
@@ -1017,7 +1013,7 @@ constrained quotes)&#8201;&#8212;&#8201;here&#8217;s how to escape the previous 
 following line:</p></div>
 <div class="literalblock">
 <div class="content">
-<pre><tt>e^{amp}#960;i^+1 = 0. H~2~O and x^10^. Some ^super text^
+<pre><tt>e^&amp;#960;i^+1 = 0. H~2~O and x^10^. Some ^super text^
 and ~some sub text~</tt></pre>
 </div></div>
 <div class="paragraph"><p>Is rendered like:</p></div>
@@ -1439,14 +1435,14 @@ often used for code and file listings.</p></div>
 <div class="paragraph"><p>Here&#8217;s an example:</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt> --------------------------------------
- #include &lt;stdio.h&gt;
+<pre><tt>--------------------------------------
+#include &lt;stdio.h&gt;
 
-  int main() {
-     printf("Hello World!\n");
-     exit(0);
- }
- --------------------------------------</tt></pre>
+int main() {
+   printf("Hello World!\n");
+   exit(0);
+}
+--------------------------------------</tt></pre>
 </div></div>
 <div class="paragraph"><p>Which will be rendered like:</p></div>
 <div class="listingblock">
@@ -1498,6 +1494,14 @@ SidebarBlocks) can be placed inside a sidebar.
 <div class="paragraph"><p>Any <em>AsciiDoc</em> SectionBody element (apart from
 SidebarBlocks) can be placed inside a sidebar.</p></div>
 </div></div>
+<div class="paragraph"><p>Apply the <em>abstract</em> style to generate an abstract, for example:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[abstract]
+************************************************
+In this paper we will attempt to...
+************************************************</tt></pre>
+</div></div>
 <h3 id="X26">12.5. Comment Blocks</h3><div style="clear:left"></div>
 <div class="paragraph"><p>The contents of CommentBlocks are not processed; they are useful for
 annotations and for excluding new or outdated content that you don&#8217;t
@@ -1510,6 +1514,14 @@ asciidoc(1).
 //////////////////////////////////////////</tt></pre>
 </div></div>
 <div class="paragraph"><p>See also <a href="#X25">Comment Lines</a>.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note" />
+</td>
+<td class="content">System macros are executed inside comment blocks.</td>
+</tr></table>
+</div>
 <h3 id="X76">12.6. Passthrough Blocks</h3><div style="clear:left"></div>
 <div class="paragraph"><p>By default the block contents is subject to attribute and macro
 substitution, no other markup is generated.  PassthroughBlock content
@@ -1657,7 +1669,7 @@ adolescens.
 <div class="title">A NOTE block</div>
 <div class="paragraph"><p>Qui in magna commodo, est labitur dolorum an. Est ne magna primis
 adolescens.</p></div>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 Fusce euismod commodo velit.
@@ -1667,7 +1679,7 @@ Fusce euismod commodo velit.
 <p>
 Vivamus fringilla mi eu lacus.
 </p>
-<div class="olist2"><ol>
+<div class="olist2 loweralpha"><ol class="loweralpha">
 <li>
 <p>
 Fusce euismod commodo velit.
@@ -1770,17 +1782,52 @@ space or tab character. Bulleted list syntaxes are:</p></div>
 <pre><tt>- List item.
 * List item.</tt></pre>
 </div></div>
-<div class="paragraph"><p>Numbered list items start with an optional number or letter followed
-by a period followed by a space or tab character.  List numbering is
-optional. Numbered list syntaxes are:</p></div>
+<div class="paragraph"><p>There are two numbered list item syntaxes:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+List items beginning with a single period followed by a space. The
+  period can be preceded by an optional decimal number.  The default
+  numbering style is arabic (decimal).
+</p>
+</li>
+<li>
+<p>
+List items beginning with two periods followed by a space. An alpha
+  character or a roman number (upper or lower case) can optionally be
+  used in place of the first period:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+An attempt is made to set the number style based on number style
+    of the first list item.
+</p>
+</li>
+<li>
+<p>
+The default numbering style is lowercase alpha.
+</p>
+</li>
+</ul></div>
+</li>
+</ol></div>
+<div class="paragraph"><p>You can use the <em>style</em> attribute to specify an alternative numbering
+style.  The numbered list style can be set to one of the following
+values: <em>arabic</em>, <em>loweralpha</em>, <em>upperalpha</em>, <em>lowerroman</em>,
+<em>upperroman</em>.</p></div>
+<div class="paragraph"><p>Examples of numbered list items:</p></div>
 <div class="literalblock">
 <div class="content">
-<pre><tt>.  Integer numbered list item.
-1. Integer numbered list item with optional numbering.
-.. Lowercase letter numbered list item.
-a. Lowercase letter numbered list item with optional numbering.</tt></pre>
+<pre><tt>.    Arabic (decimal) numbered list item.
+1.   Arabic (decimal) numbered list item.
+..   Lower case letter numbered list item.
+a.   Lower case letter numbered list item.
+A.   Upper case letter numbered list item.
+iii. Lower case roman numbered list item.
+IX.  Upper case roman numbered list item.</tt></pre>
 </div></div>
-<div class="paragraph"><p>Here are some examples:</p></div>
+<div class="paragraph"><p>Here are some examples of bulleted and numbered lists:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>- Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
@@ -1793,6 +1840,7 @@ a. Lowercase letter numbered list item with optional numbering.</tt></pre>
 - Nulla porttitor vulputate libero.
   . Fusce euismod commodo velit.
   . Vivamus fringilla mi eu lacus.
+[upperroman]
     .. Fusce euismod commodo velit.
     .. Vivamus fringilla mi eu lacus.
   . Donec eget arcu bibendum nunc consequat lobortis.
@@ -1802,6 +1850,8 @@ a. Lowercase letter numbered list item with optional numbering.</tt></pre>
     b. Vivamus fringilla mi eu lacus.
     c. Donec eget arcu bibendum nunc consequat lobortis.
   2. Vivamus fringilla mi eu lacus.
+    .. Fusce euismod commodo velit.
+    .. Vivamus fringilla mi eu lacus.
   3. Donec eget arcu bibendum nunc consequat lobortis.
   4. Nam fermentum mattis ante.</tt></pre>
 </div></div>
@@ -1840,7 +1890,7 @@ Donec eget arcu bibendum nunc consequat lobortis.
 <p>
 Nulla porttitor vulputate libero.
 </p>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 Fusce euismod commodo velit.
@@ -1850,7 +1900,7 @@ Fusce euismod commodo velit.
 <p>
 Vivamus fringilla mi eu lacus.
 </p>
-<div class="olist2"><ol>
+<div class="olist2 upperroman"><ol class="upperroman">
 <li>
 <p>
 Fusce euismod commodo velit.
@@ -1874,12 +1924,12 @@ Donec eget arcu bibendum nunc consequat lobortis.
 <p>
 Praesent eget purus quis magna eleifend eleifend.
 </p>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 Fusce euismod commodo velit.
 </p>
-<div class="olist2"><ol>
+<div class="olist2 loweralpha"><ol class="loweralpha">
 <li>
 <p>
 Fusce euismod commodo velit.
@@ -1901,6 +1951,18 @@ Donec eget arcu bibendum nunc consequat lobortis.
 <p>
 Vivamus fringilla mi eu lacus.
 </p>
+<div class="olist2 loweralpha"><ol class="loweralpha">
+<li>
+<p>
+Fusce euismod commodo velit.
+</p>
+</li>
+<li>
+<p>
+Vivamus fringilla mi eu lacus.
+</p>
+</li>
+</ol></div>
 </li>
 <li>
 <p>
@@ -2269,7 +2331,7 @@ Nested list appended list item one paragraph
 -  Nested list item two.</tt></pre>
 </div></div>
 <div class="paragraph"><p>Renders:</p></div>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 List item one.
@@ -2333,7 +2395,7 @@ Any block title or attributes are passed to the first element inside
 </li>
 </ul></div>
 <div class="paragraph"><p>The List Block is useful for:</p></div>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 Lists with long multi-element list items.
@@ -2369,13 +2431,13 @@ This paragraph belongs to item 1.
 2. Item 2 of the outer list.</tt></pre>
 </div></div>
 <div class="paragraph"><p>Renders:</p></div>
-<div class="olist"><div class="title">Nested List Block</div><ol>
+<div class="olist arabic"><div class="title">Nested List Block</div><ol class="arabic">
 <li>
 <p>
 List item one.
 </p>
 <div class="paragraph"><p>This paragraph is part of the preceding list item</p></div>
-<div class="olist2"><ol>
+<div class="olist2 loweralpha"><ol class="loweralpha">
 <li>
 <p>
 This list is nested and does not require explicit item continuation.
@@ -2529,7 +2591,7 @@ example:</p></div>
 11/16/97  17:17      61,865,984  pagefile.sys
  2/13/94   6:21           9,349  WINA20.386     <b>&lt;3&gt;</b></tt></pre>
 </div></div>
-<div class="colist"><ol>
+<div class="colist arabic"><ol>
 <li>
 <p>
 This directory holds MS-DOS.
@@ -2632,12 +2694,12 @@ the <tt>test.py</tt> source file (containing a single callout) using the
 <div class="listingblock">
 <div class="title">AsciiDoc source</div>
 <div class="content">
-<pre><tt> [source,python]
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- include::test.py[]
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<pre><tt>[source,python]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include::test.py[]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- &lt;1&gt; Print statement.</tt></pre>
+&lt;1&gt; Print statement.</tt></pre>
 </div></div>
 <div class="listingblock">
 <div class="title">Included <tt>test.py</tt> source</div>
@@ -3023,12 +3085,12 @@ paragraphs or delimited blocks. Example comment line:</p></div>
 </div></div>
 <div class="paragraph"><p>See also <a href="#X26">Comment Blocks</a>.</p></div>
 <h3 id="_system_macros">17.3. System Macros</h3><div style="clear:left"></div>
-<div class="paragraph"><p>System macros are block macros that perform a predefined task which is
+<div class="paragraph"><p>System macros are block macros that perform a predefined task and are
 hardwired into the <tt>asciidoc(1)</tt> program.</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
-You can&#8217;t escape system macros with a leading backslash character
+You can escape system macros with a leading backslash character
   (as you can with other macros).
 </p>
 </li>
@@ -3053,7 +3115,7 @@ verbatim embedded CSS or scripts into configuration file headers.
 Example:</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt> include::chapter1.txt[tabsize=4]</tt></pre>
+<pre><tt>include::chapter1.txt[tabsize=4]</tt></pre>
 </div></div>
 <div class="ulist"><div class="title">Include macro behavior</div><ul>
 <li>
@@ -3312,7 +3374,7 @@ a markup template. If <tt>&lt;name&gt;</tt> is omitted then it is the value of t
 regular expression match group named <em>name</em>.  The optional
 <tt>[&lt;subslist]</tt> is a comma-separated list of substitution names enclosed
 in <tt>[]</tt> brackets, it sets the default substitutions for passthrough
-text.</p></div>
+text, if omitted then no passthrough substitutions are performed.</p></div>
 <div class="paragraph"><div class="title">Pattern named groups</div><p>The following named groups can be used in macro <tt>&lt;pattern&gt;</tt> regular
 expressions and are available as markup template attributes:</p></div>
 <div class="dlist"><dl>
@@ -3413,8 +3475,8 @@ There is no provision for cells to span multiple columns.
 <div class="sidebar-title">Use tables sparingly</div>
 <div class="paragraph"><p>When technical users first start creating documents, tables (complete
 with column spanning and table nesting) are often considered very
-important.  important must-have feature. The reality is that tables
-are seldom used, even in technical documentation.</p></div>
+important. The reality is that tables are seldom used, even in
+technical documentation.</p></div>
 <div class="paragraph"><p>Try this exercise: thumb through your library of technical books,
 you&#8217;ll be surprised just how seldom tables are actually used, even
 less seldom are tables containing block elements such as paragraphs or
@@ -3690,11 +3752,11 @@ Buenos Aires</p></td>
 <div class="paragraph"><p><em>AsciiDoc</em> source:</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt> [format="csv",cols="^1,4*2",options="header"]
- |===================================================
- ID,Customer Name,Contact Name,Customer Address,Phone
- include::customers.csv[]
- |===================================================</tt></pre>
+<pre><tt>[format="csv",cols="^1,4*2",options="header"]
+|===================================================
+ID,Customer Name,Contact Name,Customer Address,Phone
+include::customers.csv[]
+|===================================================</tt></pre>
 </div></div>
 <h3 id="X68">18.2. Table input data formats</h3><div style="clear:left"></div>
 <div class="paragraph"><p><em>AsciiDoc</em> table data can be <em>psv</em>, <em>dsv</em> or <em>csv</em> formatted.  The
@@ -4806,7 +4868,7 @@ explicitly (using the <tt>asciidoc(1)</tt> <tt>-f</tt> (<tt>--conf-file</tt>) co
 option).</p></div>
 <div class="paragraph"><p>Implicit configuration files are loaded from the following directories
 in the following order:</p></div>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 The global configuration directory (normally <tt>/etc/asciidoc</tt> or
@@ -4831,7 +4893,7 @@ The directory containing the <em>AsciiDoc</em> source file.
 </ol></div>
 <div class="paragraph"><p>The following implicit configuration files from each of the above
 locations are loaded in the following order:</p></div>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 <tt>asciidoc.conf</tt>
@@ -4875,7 +4937,7 @@ files will be processed in the order they appear on the command-line.</p></div>
 </div></div>
 <div class="paragraph"><p>Configuration files (if they exist) will be processed in the following
 order:</p></div>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 First default global configuration files from the asciidoc program
@@ -5216,7 +5278,8 @@ List attributes can only be referenced in configuration file markup
 </li>
 <li>
 <p>
-Attribute references are allowed inside attribute lists.
+Attribute references are allowed inside attribute lists&#8201;&#8212;&#8201;this is
+  the only substitution performed on attribute lists.
 </p>
 </li>
 <li>
@@ -5279,7 +5342,8 @@ attribute values to macro markup templates.</p></div>
 <div class="paragraph"><p>An <a href="#X21">attribute list</a> on a line by itself constitutes an
 <em>AttributeList</em> block element, its attributes apply to the following
 block element.  The list attributes are passed to the next block
-element for markup template substitution.</p></div>
+element for markup template substitution. Often the first list
+parameter is used to specify the element&#8217;s <a href="#X23">style</a>.</p></div>
 </div>
 <h2 id="_attribute_references">25. Attribute References</h2>
 <div class="sectionbody">
@@ -5583,7 +5647,7 @@ predefined intrinsic attributes:</p></div>
 {user-dir}            the ~/.asciidoc directory (if it exists)
 {verbose}             defined as '' if --verbose command option specified</tt></pre>
 </div></div>
-<div class="olist"><div class="title">NOTES</div><ol>
+<div class="olist arabic"><div class="title">NOTES</div><ol class="arabic">
 <li>
 <p>
 Intrinsic attributes are global so avoid defining custom attributes
@@ -5826,7 +5890,7 @@ delimiter=(?P&lt;text&gt;\S.*)
 template=paragraph</tt></pre>
 </div></div>
 <div class="paragraph"><p>The Default paragraph definition has a couple of special properties:</p></div>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 It must exist and be defined in a configuration file section named
@@ -5864,7 +5928,7 @@ options
 </p>
 </dd>
 </dl></div>
-<div class="olist"><div class="title">Paragraph processing proceeds as follows:</div><ol>
+<div class="olist arabic"><div class="title">Paragraph processing proceeds as follows:</div><ol class="arabic">
 <li>
 <p>
 The paragraph text is aligned to the left margin.
@@ -5912,7 +5976,7 @@ skip
 </dt>
 <dd>
 <p>
-    The block is treated as a comment (see CommentBlocks).
+    The block is treated as a comment (see <a href="#X26">CommentBlocks</a>).
 </p>
 </dd>
 <dt class="hdlist1">
@@ -5927,7 +5991,7 @@ list
 <div class="paragraph"><p><em>presubs</em>, <em>postsubs</em> and <em>filter</em> entries are meaningless when
 <em>sectionbody</em>, <em>skip</em> or <em>list</em> options are set.</p></div>
 <div class="paragraph"><p>DelimitedBlock processing proceeds as follows:</p></div>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 Optional <em>presubs</em> substitutions are performed on the block
@@ -6140,32 +6204,28 @@ Finally it relies on the executing shell to search the environment
 </p>
 </li>
 </ul></div>
+<div class="paragraph"><p>Sub-directories are also included in the searches&#8201;&#8212;&#8201;standard practice
+is to install each filter in it&#8217;s own sub-directory with the same name
+as the filter&#8217;s style definition. For example the music filter&#8217;s style
+name is <em>music</em> so it&#8217;s configuration and filter files are stored in
+the <tt>filters/music</tt> directory.</p></div>
 <h3 id="_filter_configuration_files">28.2. Filter Configuration Files</h3><div style="clear:left"></div>
 <div class="paragraph"><p>Filters are normally accompanied by a configuration file containing a
 Paragraph or DelimitedBlock definition along with corresponding markup
 templates.</p></div>
-<div class="paragraph"><p>There are two ways to implement filters:</p></div>
-<div class="ulist"><ul>
-<li>
-<p>
-As a new Paragraph or DelimitedBlock definition.
-</p>
-</li>
-<li>
-<p>
-By styling an existing Paragraph or DelimitedBlock using a <em>style</em>
-  configuration entry&#8201;&#8212;&#8201;the <em>source highlight</em> and <em>music</em> filters
-  use this technique to customize the ListingBlock. By convention the
-  style is given the same name as the filter.
-</p>
-</li>
-</ul></div>
+<div class="paragraph"><p>While it is possible to create new Paragraph or DelimitedBlock
+definitions the preferred way to implement a filter is to add a
+<a href="#X23">style</a> to an existing Paragraph or DelimitedBlock definition
+(all filters shipped with <em>AsciiDoc</em> use this technique). The filter is
+applied to the paragraph or delimited block by preceding it with an
+attribute list: the first positional attribute is the style name,
+remaining attributes are normally filter specific parameters.</p></div>
 <div class="paragraph"><p><tt>asciidoc(1)</tt> auto-loads all <tt>.conf</tt> files found in the filter search
 paths (see previous section).</p></div>
 <h3 id="X56">28.3. Code Filter</h3><div style="clear:left"></div>
-<div class="paragraph"><p><em>AsciiDoc</em> comes with a simple minded for highlighting source code
-keywords and comments.  See also the
-<tt>./filters/code-filter-readme.txt</tt> file.</p></div>
+<div class="paragraph"><p><em>AsciiDoc</em> comes with a toy filter for highlighting source code keywords
+and comments.  See also the <tt>./filters/code/code-filter-readme.txt</tt>
+file.</p></div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
@@ -6180,7 +6240,7 @@ If you want a full featured multi-language highlighter use the
 <div class="content">
 <pre><tt>.Code filter example
 [code,python]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------
 ''' A multi-line
     comment.'''
 def sub_word(mo):
@@ -6190,7 +6250,7 @@ def sub_word(mo):
         return quote + word + quote
     else:
         return word
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</tt></pre>
+----------------------------------------------</tt></pre>
 </div></div>
 <div class="paragraph"><p>Outputs:</p></div>
 <div class="listingblock">
@@ -6326,7 +6386,7 @@ suitable DocBook toolchain (see the
 </li>
 </ul></div>
 <h3 id="_html_help_generation">29.4. HTML Help generation</h3><div style="clear:left"></div>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 Convert DocBook XML documents to HTML Help compiler source files
@@ -6350,8 +6410,6 @@ Convert the HTML Help source (<tt>.hhp</tt> and <tt>.html</tt>) files to HTML He
     Converts <em>AsciiDoc</em> (<tt>.txt</tt>) files to DocBook XML (<tt>.xml</tt>) files.
 </p>
 </dd>
-</dl></div>
-<div class="dlist" id="X13"><dl>
 <dt class="hdlist1">
 <a href="http://docbook.sourceforge.net/projects/xsl/">DocBook XSL Stylesheets</a>
 </dt>
@@ -6363,8 +6421,6 @@ Convert the HTML Help source (<tt>.hhp</tt> and <tt>.html</tt>) files to HTML He
   <a href="#X40">xsltproc(1)</a>.
 </p>
 </dd>
-</dl></div>
-<div class="dlist" id="X40"><dl>
 <dt class="hdlist1">
 <a href="http://www.xmlsoft.org">xsltproc</a>
 </dt>
@@ -6374,8 +6430,6 @@ Convert the HTML Help source (<tt>.hhp</tt> and <tt>.html</tt>) files to HTML He
   <a href="#X13">DocBook XSL Stylesheets</a>) to XML documents.
 </p>
 </dd>
-</dl></div>
-<div class="dlist" id="X31"><dl>
 <dt class="hdlist1">
 <a href="http://dblatex.sourceforge.net/">dblatex</a>
 </dt>
@@ -6386,8 +6440,6 @@ Convert the HTML Help source (<tt>.hhp</tt> and <tt>.html</tt>) files to HTML He
   <tt>latex(1)</tt>.
 </p>
 </dd>
-</dl></div>
-<div class="dlist" id="X14"><dl>
 <dt class="hdlist1">
 <a href="http://xml.apache.org/fop/">FOP</a>
 </dt>
@@ -6399,8 +6451,6 @@ Convert the HTML Help source (<tt>.hhp</tt> and <tt>.html</tt>) files to HTML He
   <a href="#X40">xsltproc(1)</a>.
 </p>
 </dd>
-</dl></div>
-<div class="dlist" id="X67"><dl>
 <dt class="hdlist1">
 Microsoft Help Compiler
 </dt>
@@ -6413,7 +6463,7 @@ Microsoft Help Compiler
 </p>
 </dd>
 </dl></div>
-<h3 id="_asciidoc_dblatex_configuration_files">29.6. AsciiDoc dblatex configuration files</h3><div style="clear:left"></div>
+<h3 id="X67">29.6. AsciiDoc dblatex configuration files</h3><div style="clear:left"></div>
 <div class="paragraph"><p>The <em>AsciiDoc</em> distribution <tt>./dblatex</tt> directory contains
 <tt>asciidoc-dblatex.xsl</tt> (customized XSL parameter settings) and
 <tt>asciidoc-dblatex.sty</tt> (customized LaTeX settings). These are examples
@@ -6608,7 +6658,7 @@ follow.</p></div>
 <pre><tt>:set textwidth=70</tt></pre>
 </div></div>
 <div class="paragraph"><p>To reformat a paragraph:</p></div>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 Position the cursor at the start of the paragraph.
@@ -6658,7 +6708,7 @@ callout lists. First you need to set the <tt>comments</tt>, <tt>formatoptions</t
 and <tt>formatlistpat</tt> (see the <a href="#X61">Example <tt>~/.vimrc</tt> file</a>).</p></div>
 <div class="paragraph"><p>Now you can format simple lists that use dash, asterisk, period and
 plus bullets along with numbered ordered lists:</p></div>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 Position the cursor at the start of the list.
@@ -6686,17 +6736,16 @@ highlight clear Search
 " Don't move to matched text while search pattern is being entered.
 set noincsearch
 
-" Q command to reformat paragraphs and list.
-nnoremap Q gq}
+" Reformat paragraphs and list.
+nnoremap R gq}
 
-" W command to delete trailing white space and Dos-returns and to expand tabs
-" to spaces.
-nnoremap W :%s/[\r \t]\+$//&lt;CR&gt;:set et&lt;CR&gt;:retab!&lt;CR&gt;
+" Delete trailing white space and Dos-returns and to expand tabs to spaces.
+nnoremap S :set et&lt;CR&gt;:retab!&lt;CR&gt;:%s/[\r \t]\+$//&lt;CR&gt;
 
 autocmd BufRead,BufNewFile *.txt,README,TODO,CHANGELOG,NOTES
-        \ setlocal autoindent expandtab tabstop=8 softtabstop=2 shiftwidth=2
+        \ setlocal autoindent expandtab tabstop=8 softtabstop=2 shiftwidth=2 filetype=asciidoc
         \ textwidth=70 wrap formatoptions=tcqn
-        \ formatlistpat=^\\s*&lt;\\?\\d\\+[\\]:.)}\\t\ &gt;]\\s*
+        \ formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\\|^\\s*&lt;\\d\\+&gt;\\s\\+\\\\|^\\s*[a-zA-Z.]\\.\\s\\+\\\\|^\\s*[ivxIVX]\\+\\.\\s\\+
         \ comments=s1:/*,ex:*/,://,b:#,:%,:XCOMM,fb:-,fb:*,fb:+,fb:.,fb:&gt;</tt></pre>
 </div></div>
 <h3 id="_troubleshooting">33.3. Troubleshooting</h3><div style="clear:left"></div>
@@ -6817,68 +6866,29 @@ Macro attribute lists
 </div></div>
 </dd>
 </dl></div>
-<h3 id="_combining_separate_documents">33.5. Combining Separate Documents</h3><div style="clear:left"></div>
+<h3 id="_combining_separate_documents">33.5. Combining separate documents</h3><div style="clear:left"></div>
 <div class="paragraph"><p>You have a number of stand-alone <em>AsciiDoc</em> documents that you want to
 process as a single document. Simply processing them with a series of
-<tt>include</tt> macros won&#8217;t work, because instead of starting at level 1
-the section levels of the combined document start at level 0 (the
-document title level).</p></div>
-<div class="paragraph"><p>The solution is to redefine the title underlines so that document and
-section titles are pushed down one level.</p></div>
-<div class="olist"><ol>
-<li>
-<p>
-Push the standard title underlines down one level by defining a new
-  level 0 underline in a custom configuration file. For example
-  <tt>combined.conf</tt>:
-</p>
-<div class="literalblock">
-<div class="content">
-<pre><tt>[titles]
-underlines="__","==","--","~~","^^"</tt></pre>
-</div></div>
-</li>
-<li>
-<p>
-If you use single line titles you&#8217;ll need to make corresponding
-  adjustments to the <tt>[titles]</tt> section <tt>sect0</tt>&#8230;<tt>sect4</tt> entries.
-</p>
-</li>
-<li>
-<p>
-Create a top level wrapper document. For example <tt>combined.txt</tt>:
-</p>
+<tt>include</tt> macros won&#8217;t work because the documents contain (level 0)
+document titles.  The solution is to create a top level wrapper
+document that redefines the document underlines, pushing them down one
+level.  For example <tt>combined.txt</tt>:</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt> Combined Document Title
- _______________________
+<pre><tt>:titles.underlines: "__","==","--","~~","^^"
 
- include::document1.txt[]
+Combined Document Title
+_______________________
 
- include::document2.txt[]
+include::document1.txt[]
 
- include::document3.txt[]</tt></pre>
+include::document2.txt[]
+
+include::document3.txt[]</tt></pre>
 </div></div>
-</li>
-<li>
-<p>
-Process the wrapper document. For example:
-</p>
-<div class="literalblock">
-<div class="content">
-<pre><tt>$ asciidoc --conf-file=combined.conf combined.txt</tt></pre>
-</div></div>
-</li>
-</ol></div>
-<div class="paragraph"><p>Actually the <tt>--conf-file</tt> option is unnecessary as <tt>asciidoc(1)</tt>
-automatically looks for a same-named <tt>.conf</tt> file.</p></div>
+<div class="paragraph"><p>The document titles in the included documents will now be processed as
+level 1 section titles.</p></div>
 <div class="ulist"><ul>
-<li>
-<p>
-The combined document title uses the newly defined level 0 underline
-  (underscore characters).
-</p>
-</li>
 <li>
 <p>
 Put a blank line between the <tt>include</tt> macro lines to ensure the
@@ -6894,56 +6904,50 @@ You won&#8217;t want document Headers (Author and Revision lines) in the
 </p>
 </li>
 </ul></div>
-<h3 id="_processing_document_sections_separately">33.6. Processing Document Sections Separately</h3><div style="clear:left"></div>
-<div class="paragraph"><p>You have divided your <em>AsciiDoc</em> document into separate files (one per top level
-section) which are combined and processed with the following top level
-document:</p></div>
+<h3 id="_processing_document_sections_separately">33.6. Processing document sections separately</h3><div style="clear:left"></div>
+<div class="paragraph"><p>You have divided your <em>AsciiDoc</em> document into separate files (one per
+top level section) which are combined and processed with the following
+top level document:</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt> Combined Document Title
- =======================
- Joe Bloggs
- v1.0, 12-Aug-03
+<pre><tt>Combined Document Title
+=======================
+Joe Bloggs
+v1.0, 12-Aug-03
 
- include::section1.txt[]
+include::section1.txt[]
 
- include::section2.txt[]
+include::section2.txt[]
 
- include::section3.txt[]</tt></pre>
+include::section3.txt[]</tt></pre>
 </div></div>
 <div class="paragraph"><p>You also want to process the section files as separate documents.
 This is easy because <tt>asciidoc(1)</tt> will quite happily process
-<tt>section1.txt</tt>, <tt>section2.txt</tt> and <tt>section3.txt</tt> separately.</p></div>
-<div class="paragraph"><p>If you want to promote the section levels up one level, so the
-document is processed just like a stand-alone document, then pop the
-section underline definition up one level:</p></div>
+<tt>section1.txt</tt>, <tt>section2.txt</tt> and <tt>section3.txt</tt> separately&#8201;&#8212;&#8201;the
+resulting output documents contain the section but have no document
+title.</p></div>
+<div class="paragraph"><p>Use the <tt>-s</tt> (<tt>--no-header-footer</tt>) command-line option to suppress
+header and footer output, this is useful if the processed output is to
+be included in another file. For example:</p></div>
 <div class="literalblock">
 <div class="content">
-<pre><tt>[titles]
-underlines="--","~~","^^","++","__"</tt></pre>
+<pre><tt>$ asciidoc -s -b docbook section1.txt</tt></pre>
 </div></div>
-<div class="paragraph"><p>The last <tt>"__"</tt> underline is a dummy that won&#8217;t actually be used but
-is necessary to legitimize the underline definition.</p></div>
-<div class="paragraph"><p>This is just the reverse of the technique used for combining separate
-documents explained in the previous section.</p></div>
-<h3 id="_processing_document_chunks">33.7. Processing Document Chunks</h3><div style="clear:left"></div>
+<h3 id="_processing_document_snippets">33.7. Processing document snippets</h3><div style="clear:left"></div>
 <div class="paragraph"><p><tt>asciidoc(1)</tt> can be used as a filter, so you can pipe chunks of text
 through it. For example:</p></div>
 <div class="literalblock">
 <div class="content">
 <pre><tt>$ echo 'Hello *World!*' | asciidoc -s -
-&lt;div class="para"&gt;&lt;p&gt;Hello &lt;strong&gt;World!&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;</tt></pre>
+&lt;div class="paragraph"&gt;&lt;p&gt;Hello &lt;strong&gt;World!&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;</tt></pre>
 </div></div>
-<div class="paragraph"><p>The <tt>-s</tt> (<tt>--no-header-footer</tt>) command-line option suppresses header
-and footer output and is useful if the processed output is to be
-included in another file.</p></div>
-<h3 id="_badges_in_html_page_footers">33.8. Badges in HTML Page Footers</h3><div style="clear:left"></div>
+<h3 id="_badges_in_html_page_footers">33.8. Badges in HTML page footers</h3><div style="clear:left"></div>
 <div class="paragraph"><p>See the <tt>[footer]</tt> section in the <em>AsciiDoc</em> distribution <tt>xhtml11.conf</tt>
 configuration file.</p></div>
-<h3 id="_pretty_printing_asciidoc_output">33.9. Pretty Printing AsciiDoc Output</h3><div style="clear:left"></div>
+<h3 id="_pretty_printing_asciidoc_output">33.9. Pretty printing AsciiDoc output</h3><div style="clear:left"></div>
 <div class="paragraph"><p>If the indentation and layout of the <tt>asciidoc(1)</tt> output is not to your
 liking you can:</p></div>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 Change the indentation and layout of configuration file markup
@@ -6953,22 +6957,30 @@ Change the indentation and layout of configuration file markup
 </li>
 <li>
 <p>
-Or use Dave Raggett&#8217;s excellent <em>HTML Tidy</em> program to tidy
-   <tt>asciidoc(1)</tt> output. Example:
+Use Dave Raggett&#8217;s <a href="http://tidy.sourceforge.net/">HTML Tidy</a> program
+   to tidy <tt>asciidoc(1)</tt> output. Example:
 </p>
 <div class="literalblock">
 <div class="content">
 <pre><tt>$ asciidoc -b docbook -o - mydoc.txt | tidy -indent -xml &gt;mydoc.xml</tt></pre>
 </div></div>
 </li>
+<li>
+<p>
+Use the <tt>xmllint(1)</tt> format option. Example:
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>$ xmllint --format mydoc.xml</tt></pre>
+</div></div>
+</li>
 </ol></div>
-<div class="paragraph"><p><em>HTML Tidy</em> can be downloaded from <a href="http://tidy.sourceforge.net/">http://tidy.sourceforge.net/</a></p></div>
-<h3 id="_supporting_minor_docbook_dtd_variations">33.10. Supporting Minor DocBook DTD Variations</h3><div style="clear:left"></div>
+<h3 id="_supporting_minor_docbook_dtd_variations">33.10. Supporting minor DocBook DTD variations</h3><div style="clear:left"></div>
 <div class="paragraph"><p>The conditional inclusion of DocBook SGML markup at the end of the
 distribution <tt>docbook.conf</tt> file illustrates how to support minor DTD
 variations. The included sections override corresponding entries from
 preceding sections.</p></div>
-<h3 id="_shipping_stand_alone_asciidoc_source">33.11. Shipping Stand-alone AsciiDoc Source</h3><div style="clear:left"></div>
+<h3 id="_shipping_stand_alone_asciidoc_source">33.11. Shipping stand-alone AsciiDoc source</h3><div style="clear:left"></div>
 <div class="paragraph"><p>Reproducing presentation documents from someone else&#8217;s source has one
 major problem: unless your configuration files are the same as the
 creator&#8217;s you won&#8217;t get the same output.</p></div>
@@ -6993,12 +7005,12 @@ regenerate the HMTL output:</p></div>
 <div class="paragraph"><p>The <tt>-e</tt> (<tt>--no-conf</tt>) option excludes the use of implicit
 configuration files, ensuring that only entries from the
 <tt>mydoc-html.conf</tt> configuration are used.</p></div>
-<h3 id="_inserting_blank_space">33.12. Inserting Blank Space</h3><div style="clear:left"></div>
+<h3 id="_inserting_blank_space">33.12. Inserting blank space</h3><div style="clear:left"></div>
 <div class="paragraph"><p>Adjust your style sheets to add the correct separation between block
 elements. Inserting blank paragraphs containing a single non-breaking
 space character <tt>{nbsp}</tt> works but is an ad hoc solution compared
 to using style sheets.</p></div>
-<h3 id="_closing_open_sections">33.13. Closing Open Sections</h3><div style="clear:left"></div>
+<h3 id="_closing_open_sections">33.13. Closing open sections</h3><div style="clear:left"></div>
 <div class="paragraph"><p>You can close off section tags up to level <tt>N</tt> by calling the
 <tt>eval::[Section.setlevel(N)]</tt> system macro. This is useful if you
 want to include a section composed of raw markup. The following
@@ -7006,21 +7018,21 @@ example includes a DocBook glossary division at the top section level
 (level 0):</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>  ifdef::backend-docbook[]
+<pre><tt>ifdef::backend-docbook[]
 
-  eval::[Section.setlevel(0)]
+eval::[Section.setlevel(0)]
 
-  +++++++++++++++++++++++++++++++
-  &lt;glossary&gt;
-    &lt;title&gt;Glossary&lt;/title&gt;
-    &lt;glossdiv&gt;
-    ...
-    &lt;/glossdiv&gt;
-  &lt;/glossary&gt;
-  +++++++++++++++++++++++++++++++
-  endif::backend-docbook[]</tt></pre>
++++++++++++++++++++++++++++++++
+&lt;glossary&gt;
+  &lt;title&gt;Glossary&lt;/title&gt;
+  &lt;glossdiv&gt;
+  ...
+  &lt;/glossdiv&gt;
+&lt;/glossary&gt;
++++++++++++++++++++++++++++++++
+endif::backend-docbook[]</tt></pre>
 </div></div>
-<h3 id="_validating_output_files">33.14. Validating Output Files</h3><div style="clear:left"></div>
+<h3 id="_validating_output_files">33.14. Validating output files</h3><div style="clear:left"></div>
 <div class="paragraph"><p>Use <tt>xmllint(1)</tt> to check the <em>AsciiDoc</em> generated markup is both well
 formed and valid. Here are some examples:</p></div>
 <div class="literalblock">
@@ -7141,7 +7153,7 @@ inclusion of arbitrary files.</p></div>
 </li>
 <li>
 <p>
-<tt>\include::&lt;filename&gt;[]</tt> and <tt>\include1::&lt;filename&gt;[]</tt> block macro
+<tt>include::&lt;filename&gt;[]</tt> and <tt>\include1::&lt;filename&gt;[]</tt> block macro
   files must reside inside the parent file&#8217;s directory.
 </p>
 </li>
@@ -7165,7 +7177,7 @@ Passthrough Blocks are dropped.
 <td class="content">
 <div class="paragraph"><p>The safe mode is not designed to protect against unsafe <em>AsciiDoc</em>
 configuration files. Be especially careful when:</p></div>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 Implementing filters.
@@ -7396,8 +7408,8 @@ width of the page irrespective of the current indentation.</p></td>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 8.3.1<br />
-Last updated 2008-12-13 10:39:44 NZDT
+Version 8.3.3<br />
+Last updated 2009-01-02 13:12:48 NZDT
 </div>
 </div>
 </body>

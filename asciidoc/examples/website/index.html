@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.3.1" />
+<meta name="generator" content="AsciiDoc 8.3.3" />
 <meta name="description" content="Text based document generation" />
 <meta name="keywords" content="text to HTML, text to DocBook, text to XML, AsciiDoc" />
 <link rel="stylesheet" href="./xhtml11.css" type="text/css" />
@@ -51,16 +51,29 @@ window.onload = function(){generateToc(1)}
 <div class="sectionbody">
 <div class="sidebarblock">
 <div class="sidebar-content">
-<div class="sidebar-title">14 December 2008: AsciiDoc 8.3.1 Released</div>
-<div class="paragraph"><p>This release fixes a couple of regression bugs in the initial
-<a href="version83.html">version 8.3</a> release along with some minor
-additions.
-The platform dependent <tt>install.sh</tt> script has been replaced with an
-<a href="INSTALL.html#_distribution_tarball_installation">autoconf make
-file</a> (this change didn&#8217;t make it into the 8.3.0 release because of
-time constraints).
-Read the <a href="CHANGELOG.html">CHANGELOG</a> for a full list of all
-additions and changes.</p></div>
+<div class="sidebar-title">2 January 2009: AsciiDoc 8.3.3 Released</div>
+<div class="paragraph"><p>Two significant changes in this release:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Included Gouichi Iisaka&#8217;s <a href="#X4">Graphviz filter</a> in the <em>AsciiDoc</em>
+  distribution.
+</p>
+</li>
+<li>
+<p>
+You can now set the numbered list number style (<em>arabic</em>,
+  <em>loweralpha</em>, <em>upperalpha</em>, <em>lowerroman</em>, <em>upperroman</em>) or let
+  <em>AsciiDoc</em> guess the style of the first numbered item.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Plus a number of smaller additions along with the usual documentation
+polishing.  Read the <a href="CHANGELOG.html">CHANGELOG</a> for a full list of
+all additions and changes.</p></div>
+<div class="paragraph"><p>One final note: if you are upgrading from version 8.2.7 or less please
+read about possible <a href="CHANGELOG.html#X1">compatibility issues</a>
+first.</p></div>
 <div class="paragraph"><p><a href="mailto:srackham@gmail.com"><em>Stuart Rackham</em></a></p></div>
 </div></div>
 </div>
@@ -182,6 +195,14 @@ notation to standard classical notation</p></div>
 <div class="sectionbody">
 <div class="paragraph"><p>A <a href="source-highlight-filter.html">source code highlight filter</a> is
 included in the distribution <tt>./filters/</tt> directory.</p></div>
+</div>
+<h2 id="X4">Graphviz Filter</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Gouichi Iisaka has written a <a href="http://www.graphviz.org/">Graphviz</a> filter
+for <em>AsciiDoc</em>.  Graphviz generates diagrams from a textual
+specification. Gouichi Iisaka&#8217;s Graphviz filter is included in the
+<em>AsciiDoc</em> distribution. Here are some
+<a href="asciidoc-graphviz-sample.html"><em>AsciiDoc</em> Graphviz examples</a>.</p></div>
 </div>
 <h2 id="X3">Mathematical Formulae</h2>
 <div class="sectionbody">
@@ -369,8 +390,8 @@ The <a href="http://www.wesnoth.org/">Battle for Wesnoth</a> project uses
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 8.3.1<br />
-Last updated 2008-12-13 10:13:03 NZDT
+Version 8.3.3<br />
+Last updated 2009-01-02 13:10:49 NZDT
 </div>
 <div id="footer-badges">
 <a href="http://validator.w3.org/check?uri=referer">
