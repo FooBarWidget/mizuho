@@ -1,0 +1,7 @@
+include "xml.lang"
+
+keyword = '<(/)?[[:alpha:]][[:alnum:]]*(/)?>'
+
+state keyword delim '<(/)?[[:alpha:]][[:alnum:]]*' '(/)?>' multiline begin
+	include "key_string.lang"
+end

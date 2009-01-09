@@ -19,3 +19,7 @@ desc "Generate an Asciidoc file list, suitable for pasting into the gemspec"
 task :generate_asciidoc_file_list do
 	puts Dir["asciidoc/**/*"].inspect
 end
+
+task :generate_source_highlight_file_list do
+	puts Dir["source-highlight/**/*"].inspect
+end

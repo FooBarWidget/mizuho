@@ -1,0 +1,10 @@
+# lang definition file for xorg configuration files
+
+include "script_comment.lang"
+include "number.lang"
+include "c_string.lang"
+
+keyword = '\<(End)?(Sub)*Section\>'
+
+# anything else is considered a parameter
+type = '[[:word:]]+'

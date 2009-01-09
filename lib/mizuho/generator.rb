@@ -3,6 +3,9 @@ require 'digest/sha1'
 require 'mizuho/parser'
 require 'mizuho/template'
 
+root = File.expand_path(File.join(File.dirname(__FILE__), "..", ".."))
+ENV['PATH'] += ":" + File.join(root, "source-highlight")
+
 module Mizuho
 
 class GenerationError < StandardError

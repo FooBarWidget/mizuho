@@ -1,0 +1,27 @@
+# c_comment.lang
+
+vardef TODO = '(TODO|FIXME|BUG)([:]?)'
+
+# comments with documentation tags
+environment comment start "///" begin
+  include "url.lang"
+  include "html.lang"
+  type = '@[[:alpha:]]+'
+  todo = $TODO
+end
+
+comment start "//"
+
+# comments with documentation tags
+environment comment delim "/**" "*/" multiline begin
+  include "url.lang"
+  include "html.lang"
+  type = '@[[:alpha:]]+'
+  todo = $TODO
+end
+
+# standard comments
+environment comment delim "/*" "*/" multiline begin
+  include "url.lang"
+  todo = $TODO
+end

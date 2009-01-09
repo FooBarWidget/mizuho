@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+dir = File.dirname(__FILE__)
+full_dir = File.expand_path(dir)
+bin = File.join(dir, RUBY_PLATFORM, "source-highlight")
+exec(bin, "--data-dir=#{full_dir}", *ARGV)

@@ -1,0 +1,4 @@
+# highlighting for key="string", used in HTML and XML
+
+(type,normal,symbol) = `([^="[:blank:]>]+)([[:blank:]]*)(=?)`
+string delim "\"" "\"" escape "\\" multiline
