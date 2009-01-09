@@ -1,8 +1,9 @@
-$LOAD_PATH << File.expand_path(File.dirname(__FILE__) + "/../lib")
+ROOT_DIR = File.expand_path(File.dirname(__FILE__) + "/..")
+$LOAD_PATH << "#{ROOT_DIR}/lib"
 require 'digest/md5'
 require 'mizuho/generator'
 
-CACHE_DIR = File.expand_path(File.dirname(__FILE__) + "/cache")
+CACHE_DIR = "#{ROOT_DIR}/test/cache"
 
 def generate_and_parse(text)
 	Dir.mkdir(CACHE_DIR) if !File.exist?(CACHE_DIR)
@@ -27,7 +28,9 @@ def generate_and_parse(text)
 	output_filename = File.join(CACHE_DIR, Digest::MD5.hexdigest(text)) + ".html"
 	
 	# Generate Asciidoc output if it isn't cached, otherwise use cached version.
-	if !File.exist?(output_filename)
+	# Also check whether the cache is newer than Asciidoc; we want to invalidate
+	# the cache upon upgrading Asciidoc.
+	if !File.exist?(output_filename) || asciidoc_newer_than?(output_filename)
 		input_filename = File.join(CACHE_DIR, "input.#{Process.pid}.txt")
 		begin
 			File.open(input_filename, 'w') do |f|
@@ -40,4 +43,9 @@ def generate_and_parse(text)
 	end
 	
 	return Mizuho::Parser.new(output_filename)
+end
+
+def asciidoc_newer_than?(filename)
+	asciidoc_mtime = File.stat("#{ROOT_DIR}/asciidoc/asciidoc.py").mtime
+	return asciidoc_mtime > File.stat(filename).mtime
 end
