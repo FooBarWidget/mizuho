@@ -4872,9 +4872,10 @@ def main():
         print_stderr('FAILED: Python 2.3 or better required.')
         sys.exit(1)
     # Locate the executable and configuration files directory.
-    global APP_FILE,APP_DIR,USER_DIR
+    global APP_FILE,APP_DIR,CONF_DIR,USER_DIR
     APP_FILE = os.path.realpath(sys.argv[0])
     APP_DIR = os.path.dirname(APP_FILE)
+    CONF_DIR = APP_DIR
     USER_DIR = os.environ.get('HOME')
     if USER_DIR is not None:
         USER_DIR = os.path.join(USER_DIR,'.asciidoc')
