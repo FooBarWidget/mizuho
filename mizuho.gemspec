@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "mizuho"
-  s.version = "0.9.4"
+  s.version = "0.9.5"
   s.summary = "Mizuho documentation formatting tool"
   s.email = "hongli@phusion.nl"
   s.homepage = "http://github.com/FooBarWidget/mizuho/tree/master"
