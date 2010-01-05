@@ -1,5 +1,24 @@
 #!/usr/bin/env ruby
 dir = File.dirname(__FILE__)
 full_dir = File.expand_path(dir)
-bin = File.join(dir, RUBY_PLATFORM, "source-highlight")
+if RUBY_PLATFORM =~ /darwin/
+	# "xxx-darwinY.Y.Y" => "darwinY.Y.Y"
+	platform = RUBY_PLATFORM.sub(/.*?-/, '')
+	bin = File.join(dir, platform, "source-highlight")
+	if !File.exist?(bin)
+		# "darwinY.Y.Y" => "darwinY.Y"
+		platform.sub!(/(.*)\..*/, '\1')
+		bin = File.join(dir, platform, "source-highlight")
+		if !File.exist?(bin)
+			# "darwinY.Y" => "darwinY"
+			platform.sub!(/(.*)\..*/, '\1')
+			bin = File.join(dir, platform, "source-highlight")
+			if !File.exist?(bin)
+				bin = File.join(dir, "darwin", "source-highlight")
+			end
+		end
+	end
+else
+	bin = File.join(dir, RUBY_PLATFORM, "source-highlight")
+end
 exec(bin, "--data-dir=#{full_dir}", *ARGV)
