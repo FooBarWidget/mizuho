@@ -29,13 +29,15 @@ multi-page XHTML output support and support for multiple templates.
  * hpricot (`gem install hpricot`)
  * Python (because Asciidoc is written in Python)
  * [GNU Source-highlight](http://www.gnu.org/software/src-highlite/), if you
-   want syntax highlighting support
+   want syntax highlighting support. If you're on OS X then it's not necessary
+   to install this yourself; we've bundled a precompiled source-highlight
+   binary for OS X for your convenience.
 
 ## Installation
 
 Run the following command as root:
 
-    gem install FooBarWidget-mizuho
+    gem install mizuho
 
 ## Usage
 
