@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require File.expand_path(File.dirname(__FILE__) + "/../lib/mizuho")
+require 'mizuho/source_highlight'
+exec("python", Mizuho::ASCIIDOC, *ARGV)

@@ -1,11 +1,8 @@
+require 'rake/gempackagetask'
+
 desc "Run unit tests"
 task :test do
 	ruby "-S spec -f s -c test/*_spec.rb"
-end
-
-desc "Build a gem"
-task :gem do
-	ruby "-S gem build mizuho.gemspec"
 end
 
 desc "Build a gem and install it"
@@ -15,11 +12,30 @@ task :install => :gem do
 	ruby "-S gem install mizuho-#{version}.gem"
 end
 
-desc "Generate an Asciidoc file list, suitable for pasting into the gemspec"
-task :generate_asciidoc_file_list do
-	puts Dir["asciidoc/**/*"].inspect
+spec = Gem::Specification.new do |s|
+	s.name = "mizuho"
+	s.version = "0.9.6"
+	s.summary = "Mizuho documentation formatting tool"
+	s.email = "hongli@phusion.nl"
+	s.homepage = "http://github.com/FooBarWidget/mizuho/tree/master"
+	s.description = "A documentation formatting tool. Mizuho converts Asciidoc input files into nicely outputted HTML, possibly one file per chapter. Multiple templates are supported, so you can write your own."
+	s.has_rdoc = false
+	s.executables = ["mizuho", "mizuho-asciidoc"]
+	s.authors = ["Hongli Lai"]
+	s.add_dependency("hpricot")
+	
+	s.files = FileList[
+		"README.markdown", "LICENSE.txt", "Rakefile",
+		"bin/*",
+		"lib/**/*",
+		"test/*",
+		"templates/*",
+		"asciidoc/**/*",
+		"source-highlight/**/*"
+	]
 end
 
-task :generate_source_highlight_file_list do
-	puts Dir["source-highlight/**/*"].inspect
+Rake::GemPackageTask.new(spec) do |pkg|
+	pkg.need_zip = false
+	pkg.need_tar = false
 end

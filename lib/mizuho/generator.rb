@@ -1,10 +1,9 @@
 require 'optparse'
 require 'digest/sha1'
+require 'mizuho'
 require 'mizuho/parser'
 require 'mizuho/template'
-
-root = File.expand_path(File.join(File.dirname(__FILE__), "..", ".."))
-ENV['PATH'] += ":" + File.join(root, "source-highlight")
+require 'mizuho/source_highlight'
 
 module Mizuho
 
@@ -49,9 +48,6 @@ class Generator
 	end
 
 private
-	ROOT = File.expand_path(File.dirname(__FILE__) + "/../..")
-	ASCIIDOC = "#{ROOT}/asciidoc/asciidoc.py"
-
 	def locate_template_file(template_name)
 		if template_name.nil?
 			return "#{ROOT}/templates/asciidoc.html.erb"
