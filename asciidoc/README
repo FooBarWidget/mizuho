@@ -1,6 +1,6 @@
                               AsciiDoc README File
 
-   version 8.3.3, 2 January 2009
+   version 8.5.2, 7 December 2009
      __________________________________________________________________
 
 1. Prerequisites
@@ -13,17 +13,15 @@
 
 2. Obtaining AsciiDoc
 
-   The latest AsciiDoc version and online documentation can be found at
-   [2]http://www.methods.co.nz/asciidoc/ and at the SourceForge
-   [3]http://sourceforge.net/projects/asciidoc/.
+   Documentation and installation instructions are on the AsciiDoc website
+   [2]http://www.methods.co.nz/asciidoc/
      __________________________________________________________________
 
 3. Tools
 
    Current AsciiDoc version tested on Xubuntu Linux 8.04 with:
      * Python 2.5.2
-     * bash 3.2.39
-     * DocBook XSL Stylesheets 1.73.2
+     * DocBook XSL Stylesheets 1.75.2
      * xsltproc (libxml 20631, libxslt 10122 and libexslt 813).
      * w3m 0.5.1
      * dblatex 0.2.9
@@ -32,15 +30,14 @@
 
 4. COPYING
 
-   Copyright © 2002-2008 Stuart Rackham. Free use of this software is
+   Copyright © 2002-2009 Stuart Rackham. Free use of this software is
    granted under the terms of the GNU General Public License (GPL).
      __________________________________________________________________
 
-   Version 8.3.3
-   Last updated 2009-01-02 12:45:18 NZDT
+   Version 8.5.2
+   Last updated 2009-09-30 09:14:17 NZDT
 
 References
 
    1. http://www.python.org/
    2. http://www.methods.co.nz/asciidoc/
-   3. http://sourceforge.net/projects/asciidoc/

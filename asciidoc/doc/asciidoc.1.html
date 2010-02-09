@@ -2,20 +2,20 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="generator" content="AsciiDoc 8.3.3">
+<meta name="generator" content="AsciiDoc 8.5.2">
 <title>asciidoc</title>
 </head>
 <body>
-<hr />
+<hr>
 <h1>
     ASCIIDOC(1) Manual Page
 </h1>
-<hr />
+<hr>
 <h2>NAME</h2>
 <p>asciidoc -
-   converts an AsciiDoc text file to DocBook, HTML or LinuxDoc
+   converts an AsciiDoc text file to HTML or DocBook
 </p>
-<h2>SYNOPSIS</h2>
+<h2><a name="_synopsis"></a>SYNOPSIS</h2>
 <p><strong>asciidoc</strong> [<b>OPTIONS</b>] <b>FILE</b></p>
 <h2><a name="_description"></a>DESCRIPTION</h2>
 <p>The asciidoc(1) command translates the AsciiDoc text file <b>FILE</b> to a
@@ -35,7 +35,8 @@ input is used.</p>
     <b>NAME!</b> (delete the <b>NAME</b> attribute); <b>NAME@</b> (do not override
     document or configuration file attributes).  Values containing
     spaces should be enclosed in double-quote characters. This option
-    may be specified more than once.
+    may be specified more than once.  A special attribute named
+    <b>trace</b> controls the output of diagnostic information.
 </p>
 </dd>
 <dt>
@@ -55,6 +56,14 @@ input is used.</p>
     Use configuration file <b>CONF_FILE</b>.Configuration files processed
     in command-line order (after implicit configuration files).  This
     option may be specified more than once.
+</p>
+</dd>
+<dt>
+<strong>--doctest</strong>
+</dt>
+<dd>
+<p>
+    Run Python doctests in <b>asciidoc</b> module.
 </p>
 </dd>
 <dt>
@@ -124,12 +133,13 @@ input is used.</p>
 </p>
 </dd>
 <dt>
-<strong>--unsafe</strong>
+<strong>--safe</strong>
 </dt>
 <dd>
 <p>
-    Disable safe mode. Safe mode is enabled by default, disabling
-    it is potentially dangerous.
+    Enable safe mode. Safe mode is disabled by default.  AsciiDoc
+    <b>safe mode</b> skips potentially dangerous scripted sections in
+    AsciiDoc source files.
 </p>
 </dd>
 <dt>
@@ -178,13 +188,13 @@ input is used.</p>
 <p>SourceForge: <a href="http://sourceforge.net/projects/asciidoc/">http://sourceforge.net/projects/asciidoc/</a></p>
 <p>Main web site: <a href="http://www.methods.co.nz/asciidoc/">http://www.methods.co.nz/asciidoc/</a></p>
 <h2><a name="_copying"></a>COPYING</h2>
-<p>Copyright (C) 2002-2008 Stuart Rackham. Free use of this software is
+<p>Copyright (C) 2002-2009 Stuart Rackham. Free use of this software is
 granted under the terms of the GNU General Public License (GPL).</p>
 <p></p>
 <p></p>
-<hr /><p><small>
-Version 8.3.3<br />
-Last updated 2009-01-02 12:44:42 NZDT
+<hr><p><small>
+Version 8.5.2<br>
+Last updated 2009-11-18 13:43:26 NZDT
 </small></p>
 </body>
 </html>

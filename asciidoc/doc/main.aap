@@ -1,6 +1,6 @@
 #####################################################################
 #
-# A-A-P file for making AsciiDoc distribution documents.
+# A-A-P file for making AsciiDoc distribution documentation.
 # (you can obtain A-A-P from http://www.a-a-p.org)
 #
 # Stuart Rackham <srackham@gmail.com>
@@ -12,39 +12,17 @@
 # include PDF_PROCESSOR=dblatex on the command-line.
 #PDF_PROCESSOR = dblatex
 
-#####################################################################
-# Programs used by this script.
-#####################################################################
+ASCIIDOC = python ../asciidoc.py -a revnumber=$(VERS)@ -a revdate="$(DATE)@"
+A2X = python ../a2x.py
 
-# If python is not in your executable search path you may have to
-# tweak these locations. Note also that this script is in the distribution
-# ./doc directory and a number of paths are relative.
-
-## Older or alternative rules and actions have been commented out but not
-#  deleted.
-
-@if OSTYPE == 'mswin':
-    ASCIIDOC = python ..\asciidoc.py -a revision=$(VERS)@ -a date="$(DATE)@" 
-    HHC = "C:\Program Files\HTML Help Workshop\hhc.exe"
-    FOP = fop.bat
-@else:
-    ASCIIDOC = python ../asciidoc.py -a revision=$(VERS)@ -a date="$(DATE)@" 
-    @if os.uname()[0][:6] == 'CYGWIN':
-        HHC = "c:/Program\ Files/HTML\ Help\ Workshop/hhc.exe"
-        :syseval which fop.bat | :assign FOP
-    @else:
-        HHC =
-        :syseval which fop.sh | :assign FOP
-
-:syseval which jw | :assign JW              # Converts DocBook SGML to PDF.
+:syseval which fop | :assign FOP
+@if not _no.FOP:
+    :syseval which fop.sh | :assign FOP
 :syseval which lynx | :assign LYNX          # Converts HTML to text.
 :syseval which xmllint | :assign XMLLINT    # Validates XML.
 :syseval which dblatex | :assign DBLATEX    # Converts DocBook XML to PDF.
-
-## xsltproc(1) is used instead of xmlto(1).
-#XMLTO = xmlto
-ASPELL = aspell
-XSLTPROC = xsltproc
+:syseval which aspell | :assign ASPELL
+:syseval which xsltproc | :assign XSLTPROC
 
 ROOT = asciidoc asciidoc.1
 INFILES = $*(ROOT).txt
@@ -62,12 +40,15 @@ OUTFILES = $*(ROOT).html $*(ROOT).css.html $*(ROOT).css-embedded.html \
         article.pdf \
         latexmath.pdf \
         source-highlight-filter.pdf \
-        music-filter.pdf
+        music-filter.pdf \
+        article.epub \
+        article-standalone.html
 
 TEST_FILES = $*(ROOT).css-embedded.html 
         article.css-embedded.html book.css-embedded.html \
         article.xml book.xml book-multi.xml asciidoc.xml asciidoc.1.xml \
         asciidoc.1.html a2x.1.xml music-filter.xml \
+        article.epub asciidoc.epub \
         ../examples/oldtables.xml ../examples/oldtables.html
 
 
@@ -75,11 +56,12 @@ TEST_FILES = $*(ROOT).css-embedded.html
 # Filetype build rules.
 #####################################################################
 
+:rule %.epub : %.txt
+    :sys $A2X -vf epub --epubcheck $source
+
 :rule %.text : %.txt
     # Convert AsciiDoc to HTML then use lynx(1) to convert HTML to text.
-    @if _no.OSTYPE != 'posix':
-        :print WARNING: non-POSIX environment: skipping $target file generation
-    @elif not _no.LYNX:
+    @if not _no.LYNX:
         :print WARNING: lynx(1) unavailable: skipping $target file generation
     @else:
         opt = -f ../text.conf
@@ -89,10 +71,6 @@ TEST_FILES = $*(ROOT).css-embedded.html
             opt += -n
         :sys $ASCIIDOC $opt -b html4 -o - $source | \
             lynx -dump -stdin > $target
-
-## The preceding rule makes a better job of producing plain text.
-#:rule %.text : %.xml 
-#   :sys $XMLTO txt $source
 
 :rule %.css.html : %.txt
     opt =
@@ -126,16 +104,9 @@ TEST_FILES = $*(ROOT).css-embedded.html
         opt += -d manpage
     @else:
         opt += -n
-##
-#    @if source_list[0] == 'asciidoc.txt':
-#        # User Guide is a book.
-#        opt += -d book
     :sys $ASCIIDOC $opt -b docbook $(source[0])
     @if _no.XMLLINT:
-        # Don't validate against DTD (using --valid option) because of
-        # non-standard dblatex <programlisting> 'linenumbering' attribute.
-        #:sys $XMLLINT --nonet --noout --valid $target
-        :sys $XMLLINT --nonet --noout $target
+        :sys $XMLLINT --nonet --noout --valid $target
     @else:
         :print WARNING: xmllint(1) unavailable: skipping validation
 
@@ -146,26 +117,11 @@ TEST_FILES = $*(ROOT).css-embedded.html
     :sys $ASCIIDOC $opt -b docbook-sgml $(source[0])
 
 :rule %.html: %.xml
-#   :sys $XMLTO xhtml-nochunks $source
     :sys $XSLTPROC --nonet --stringparam admon.textlabel 0 --stringparam html.stylesheet ./docbook-xsl.css ../docbook-xsl/xhtml.xsl $source >$target
-
-## Generate plain HTML from DocBook XML using the preceeding rule.
-#:rule %.html : %.txt
-#   opt =
-#   @if source_list[0] == 'asciidoc.1.txt':
-#       opt += -d manpage
-#   @else:
-#       opt += -n
-#   :sys $ASCIIDOC $opt -b xhtml $(source[0])
 
 :rule %.man : %.xml
     :sys $XSLTPROC --nonet ../docbook-xsl/manpage.xsl $source
     :sys touch $target  # Dummy target.
-
-## Generate manpage from XML using preceeding rule.
-#:rule %.man : %.sgml
-#   :sys $JW -b man $(match).sgml
-#   :sys touch $target  # Dummy target.
 
 :rule %.fo: %.xml
     :sys $XSLTPROC --nonet --stringparam admon.textlabel 0 ../docbook-xsl/fo.xsl $source >$target
@@ -173,8 +129,10 @@ TEST_FILES = $*(ROOT).css-embedded.html
 # This kludge forces the User Guide and LaTeX Math PDFs to be generated using
 # dblatex so we include a dblatex example in the distribution.
 @if _no.DBLATEX:
-    asciidoc.pdf: asciidoc.xml
-        :sys $DBLATEX -p ../dblatex/asciidoc-dblatex.xsl -s ../dblatex/asciidoc-dblatex.sty -o $target $source
+    asciidoc.pdf: asciidoc.txt
+        # dblatex table widths can only be set via absolute column widths.
+        :sys $ASCIIDOC -a pageunits=pt -b docbook $(source[0])
+        :sys $DBLATEX -p ../dblatex/asciidoc-dblatex.xsl -s ../dblatex/asciidoc-dblatex.sty -o $target asciidoc.xml
     latexmath.pdf: latexmath.xml
         :sys $DBLATEX -p ../dblatex/asciidoc-dblatex.xsl -s ../dblatex/asciidoc-dblatex.sty -o $target $source
 
@@ -191,21 +149,17 @@ TEST_FILES = $*(ROOT).css-embedded.html
 @elif _no.FOP:
     :rule %.pdf: %.fo
         :sys $FOP $source $target
-@elif _no.JW:
-    :rule %.pdf: %.sgml
-        :sys $JW -b pdf $source
 @else:
     :rule %.pdf:
         :print WARNING: PDF processor  unavailable: skipping $target file generation
-
-## jw(1) renders better PDF than xmlto(1) (see preceeding rule).
-#:rule %.pdf : %.xml 
-#   :sys $XMLTO pdf $source
 
 
 #####################################################################
 # Explicit file generation (cases that don't fit the rules).
 #####################################################################
+
+article-standalone.html: article.txt
+    :sys $ASCIIDOC -a data-uri -a icons -a toc -a max-width=55em -o $target $source
 
 asciidoc.1.html: asciidoc.1.txt
     :sys $ASCIIDOC -d manpage -b html4 $source
@@ -225,12 +179,6 @@ $HTMLHELP_DIR/index.html: asciidoc.xml
     :mkdir {f} $HTMLHELP_DIR
     :del {f} {q} $HTMLHELP_DIR/*.html
     :sys $XSLTPROC --nonet --stringparam admon.textlabel 0 --stringparam base.dir $HTMLHELP_DIR/ --stringparam html.stylesheet ../docbook-xsl.css --stringparam htmlhelp.hhp ${HTMLHELP_FILE}.hhp --stringparam htmlhelp.chm ${HTMLHELP_FILE}.chm ../docbook-xsl/htmlhelp.xsl $source
-
-${HTMLHELP_FILE}.chm: $HTMLHELP_DIR/index.html
-    @if _no.HHC:
-        :sys {f} "$HHC" ${HTMLHELP_FILE}.hhp
-    @else:
-        :print WARNING: HTMLHelp compiler unavailable: skipping asciidoc.chm file generation
 
 # Book template.
 book.xml: book.txt
@@ -284,7 +232,7 @@ clean:
     :del {f} *.bak          # Remove aspell backups.
 
 spell: $INFILES ../CHANGELOG.txt ../README.txt ../BUGS.txt ../INSTALL.txt \
-        a2x.1.txt
+        a2x.1.txt asciidocapi.txt testasciidoc.txt
     # Interactively spell check all files.
     @for s in source_list:
         :sys {i} $ASPELL check -p ./asciidoc.dict $s
@@ -293,5 +241,12 @@ clean_testfiles:
     :del {f} $TEST_FILES
     :del {f} music*.png     # Force Lilypond to run.
 
-test: clean_testfiles $TEST_FILES
+doctest:
+    :sys python ../asciidoc.py --doctest
+    :sys python ../asciidocapi.py
+
+testasciidoc:
+    :sys python ../tests/testasciidoc.py run
+
+test: doctest clean_testfiles $TEST_FILES testasciidoc
     # Force generation and validation of .html and Docbook (.xml) files.

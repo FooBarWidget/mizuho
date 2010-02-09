@@ -3,13 +3,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.3.3" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
 <link rel="stylesheet" href="./xhtml11.css" type="text/css" />
 <link rel="stylesheet" href="./xhtml11-quirks.css" type="text/css" />
 <link rel="stylesheet" href="./layout1.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes();}
+/*]]>*/
+</script>
+<script type="text/javascript" src="./asciidoc-xhtml11.js"></script>
 <title>Source Code Highlight Filter</title>
 </head>
-<body>
+<body style="max-width:70em">
 <div id="layout-banner">
   <div id="layout-title">AsciiDoc</div>
   <div id="layout-description">Text based document generation</div>
@@ -20,13 +26,13 @@
   <div>&#187;<a href="index.html">Home</a></div>
   <div>&#187;<a href="manpage.html">Man&nbsp;Page</a></div>
   <div>&#187;<a href="userguide.html">User&nbsp;Guide</a></div>
-  <div>&#187;<a href="http://powerman.name/doc/asciidoc">Cheatsheet</a></div>
-  <div>&#187;<a href="a2x.1.html">a2x</a></div>
-  <div>&#187;<a href="README.html">README</a></div>
-  <div>&#187;<a href="CHANGELOG.html">ChangeLog</a></div>
   <div>&#187;<a href="INSTALL.html">Installation</a></div>
-  <div>&#187;<a href="downloads.html">Downloads</a></div>
   <div>&#187;<a href="faq.html">FAQ</a></div>
+  <div>&#187;<a href="a2x.1.html">a2x</a></div>
+  <div>&#187;<a href="asciidocapi.html">API</a></div>
+  <div>&#187;<a href="http://powerman.name/doc/asciidoc">Cheatsheet</a></div>
+  <div>&#187;<a href="testasciidoc.html">Tests</a></div>
+  <div>&#187;<a href="CHANGELOG.html">ChangeLog</a></div>
   <div>&#187;<a href="support.html">Support</a></div>
   <div id="page-source">&#187;<a href="source-highlight-filter.txt">Page&nbsp;Source</a></div>
 </td>
@@ -35,9 +41,10 @@
 <div id="header">
 <h1>Source Code Highlight Filter</h1>
 </div>
+<div id="content">
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph"><p>The <em>AsciiDoc</em> distribution includes a source code syntax highlight
+<div class="paragraph"><p>The AsciiDoc distribution includes a source code syntax highlight
 filter (<tt>source-highlight-filter.conf</tt>). It uses
 <a href="http://www.gnu.org/software/src-highlite/">GNU source-highlight</a> to
 highlight HTML outputs; DocBook outputs are highlighted by toolchains
@@ -75,20 +82,20 @@ if n &lt; 0: print 'Hello World!'
     puts "#{a.inspect} =&gt; #{b.inspect}"</tt></pre>
 </div></div>
 <div class="paragraph"><p>Render this highlighted source code:</p></div>
-<div class="exampleblock">
-<div class="exampleblock-content"><!-- Generator: GNU source-highlight 2.4
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 2.4
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-weight: bold"><span style="color: #0000FF">if</span></span> n <span style="color: #990000">&lt;</span> <span style="color: #993399">0</span><span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #0000FF">print</span></span> <span style="color: #FF0000">'Hello World!'</span></tt></pre></div></div>
-<div class="exampleblock">
-<div class="exampleblock-content"><!-- Generator: GNU source-highlight 2.4
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 2.4
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-weight: bold"><span style="color: #0000FF">if</span></span> n <span style="color: #990000">&lt;</span> <span style="color: #993399">0</span><span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #0000FF">print</span></span> <span style="color: #FF0000">'Hello World!'</span></tt></pre></div></div>
-<div class="exampleblock">
-<div class="exampleblock-content"><!-- Generator: GNU source-highlight 2.4
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 2.4
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -219,57 +226,54 @@ Second callout.
 <h2 id="_installation">Installation</h2>
 <div class="sectionbody">
 <h3 id="_html">HTML</h3><div style="clear:left"></div>
-<div class="paragraph"><p>If you want to syntax highlight <em>AsciiDoc</em> HTML outputs (<tt>html4</tt> and
+<div class="paragraph"><p>If you want to syntax highlight AsciiDoc HTML outputs (<tt>html4</tt> and
 <tt>xhtml11</tt> backends) you need to
 install <a href="http://www.gnu.org/software/src-highlite/">GNU
 source-highlight</a> (most distributions have this package).</p></div>
 <h3 id="_docbook">DocBook</h3><div style="clear:left"></div>
-<div class="paragraph"><p><em>AsciiDoc</em> encloses the source code in a DocBook <em>programlisting</em>
+<div class="paragraph"><p>AsciiDoc encloses the source code in a DocBook <em>programlisting</em>
 element and leaves source code highlighting to the DocBook toolchain
 (dblatex has a particularly nice programlisting highlighter). The
 DocBook programlisting element is assigned two attributes:</p></div>
 <div class="olist arabic"><ol class="arabic">
 <li>
 <p>
-The <em>language</em> attribute is set to the <em>AsciiDoc</em> <em>language</em>
+The <em>language</em> attribute is set to the AsciiDoc <em>language</em>
   attribute.
 </p>
 </li>
 <li>
 <p>
-The <em>linenumbering</em> attribute is set to the <em>AsciiDoc</em> <em>src_numbered</em>
+The <em>linenumbering</em> attribute is set to the AsciiDoc <em>src_numbered</em>
   attribute (<em>numbered</em> or <em>unnumbered</em>).
 </p>
 </li>
 </ol></div>
-<div class="paragraph"><p>If you use <tt><tt>a2x(1)</tt></tt> to generate PDF you need to include the
-<tt>--no-xmllint</tt> option to suppress <tt>xmllint(1)</tt> checking&#8201;&#8212;&#8201;the
-programlisting <em>language</em> attribute (required by the dblatex source
-highlighter) is not part of the DocBook 4 specification (but it is in
-the newer DocBook 5 specification).</p></div>
 <h3 id="_testing">Testing</h3><div style="clear:left"></div>
-<div class="paragraph"><p>Test the filter by converting the test file to HTML with <em>AsciiDoc</em>:</p></div>
+<div class="paragraph"><p>Test the filter by converting the test file to HTML with AsciiDoc:</p></div>
 <div class="literalblock">
 <div class="content">
-<pre><tt>$ asciidoc -v ./filters/source-highlight-filter-test.txt
-$ firefox ./filters/source-highlight-filter-test.html &amp;</tt></pre>
+<pre><tt>$ asciidoc -v ./filters/source/source-highlight-filter-test.txt
+$ firefox ./filters/source/source-highlight-filter-test.html &amp;</tt></pre>
 </div></div>
 </div>
+</div>
+<div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Version 8.3.3<br />
-Last updated 2009-01-02 11:18:54 NZDT
+Version 8.5.2<br />
+Last updated 2009-12-07 17:24:59 NZDT
 </div>
 <div id="footer-badges">
 <a href="http://validator.w3.org/check?uri=referer">
-  <img style="border:none; width:88px; height:31px;"
-       src="http://www.w3.org/Icons/valid-xhtml11"
-       alt="Valid XHTML 1.1!" />
+  <img style="border:0;width:88px;height:31px"
+    src="http://www.w3.org/Icons/valid-xhtml11-blue"
+    alt="Valid XHTML 1.1" height="31" width="88" />
 </a>
-<a href="http://jigsaw.w3.org/css-validator/check/referer">
-  <img style="border:none; width:88px; height:31px;"
-       src="http://jigsaw.w3.org/css-validator/images/vcss"
-       alt="Valid CSS!" />
+<a href="http://jigsaw.w3.org/css-validator/">
+  <img style="border:0;width:88px;height:31px"
+    src="http://jigsaw.w3.org/css-validator/images/vcss-blue"
+    alt="Valid CSS!" />
 </a>
 <a href="http://www.mozilla.org/products/firefox/">
   <img style="border:none; width:110px; height:32px;"

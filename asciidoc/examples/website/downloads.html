@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.3.3" />
+<meta name="generator" content="AsciiDoc 8.4.5" />
 <link rel="stylesheet" href="./xhtml11.css" type="text/css" />
 <link rel="stylesheet" href="./xhtml11-quirks.css" type="text/css" />
 <link rel="stylesheet" href="./layout1.css" type="text/css" />
@@ -26,13 +26,15 @@ window.onload = function(){generateToc(1)}
   <div>&#187;<a href="index.html">Home</a></div>
   <div>&#187;<a href="manpage.html">Man&nbsp;Page</a></div>
   <div>&#187;<a href="userguide.html">User&nbsp;Guide</a></div>
-  <div>&#187;<a href="http://powerman.name/doc/asciidoc">Cheatsheet</a></div>
   <div>&#187;<a href="a2x.1.html">a2x</a></div>
+  <div>&#187;<a href="asciidocapi.html">API</a></div>
+  <div>&#187;<a href="http://powerman.name/doc/asciidoc">Cheatsheet</a></div>
   <div>&#187;<a href="README.html">README</a></div>
   <div>&#187;<a href="CHANGELOG.html">ChangeLog</a></div>
   <div>&#187;<a href="INSTALL.html">Installation</a></div>
   <div>&#187;<a href="downloads.html">Downloads</a></div>
   <div>&#187;<a href="faq.html">FAQ</a></div>
+  <div>&#187;<a href="testasciidoc.html">Tests</a></div>
   <div>&#187;<a href="support.html">Support</a></div>
   <div id="page-source">&#187;<a href="downloads.txt">Page&nbsp;Source</a></div>
 </td>
@@ -56,27 +58,6 @@ for install prerequisites and procedures.</p></div>
 <div class="paragraph"><p>These distribution archives are also available, along with previous
 <em>AsciiDoc</em> versions, at the SourceForge
 <a href="http://sourceforge.net/projects/asciidoc/">http://sourceforge.net/projects/asciidoc/</a>.</p></div>
-<div class="dlist"><dl>
-<dt class="hdlist1">
-<a href="asciidoc-8.3.3.tar.gz">asciidoc-8.3.3.tar.gz</a>
-</dt>
-<dd>
-<p>
-  A tarball distribution of the latest version of <em>AsciiDoc</em> for *NIX
-  platforms.
-</p>
-</dd>
-<dt class="hdlist1">
-<a href="asciidoc-8.3.3.zip">asciidoc-8.3.3.zip</a>
-</dt>
-<dd>
-<p>
-  A Zip distribution of the latest version of <em>AsciiDoc</em> for Microsoft
-  Windows users (UNIX users should use the tarball since includes
-  symbolic links to eliminate file duplication).
-</p>
-</dd>
-</dl></div>
 </div>
 <h2 id="X3">Mercurial Repository</h2>
 <div class="sectionbody">
@@ -84,46 +65,6 @@ for install prerequisites and procedures.</p></div>
 is hosted by <a href="http://sharesource.org">ShareSource</a>.  ShareSource is a
 Mercurial friendly website for hosting Open Source projects.</p></div>
 <div class="paragraph"><p>To browse the repo go to <a href="http://hg.sharesource.org/asciidoc/">http://hg.sharesource.org/asciidoc/</a>.</p></div>
-<h3 id="_installing_from_the_repository">Installing from the repository</h3><div style="clear:left"></div>
-<div class="paragraph"><p>This is an easy way to install <em>AsciiDoc</em> if you don&#8217;t have an up to
-date packaged version or want to get the latest version from the
-trunk:</p></div>
-<div class="ulist"><ul>
-<li>
-<p>
-Make sure you have <a href="http://www.selenic.com/mercurial/">Mercurial</a>
-  installed, you can check with:
-</p>
-<div class="literalblock">
-<div class="content">
-<pre><tt>$ hg --version</tt></pre>
-</div></div>
-</li>
-<li>
-<p>
-Go to the directory you want to install <em>AsciiDoc</em> into and download
-  the repository.  This example gets the 8.3.3 tagged release:
-</p>
-<div class="literalblock">
-<div class="content">
-<pre><tt>$ cd ~/bin
-$ hg clone -r 8.3.3 http://hg.sharesource.org/asciidoc asciidoc.hg</tt></pre>
-</div></div>
-</li>
-<li>
-<p>
-Create a symlink to the <em>AsciiDoc</em> script in a search <tt>PATH</tt> directory
-  so it&#8217;s easy to execute <tt>asciidoc</tt> from the command-line, for
-  example:
-</p>
-<div class="literalblock">
-<div class="content">
-<pre><tt>$ ln -s ~/bin/asciidoc.hg/asciidoc.py ~/bin/asciidoc</tt></pre>
-</div></div>
-</li>
-</ul></div>
-<div class="paragraph"><p>You can now use the Mercurial <tt>pull</tt> command to update your <em>AsciiDoc</em>
-repository.</p></div>
 </div>
 <h2 id="X1">Prepackaged Versions</h2>
 <div class="sectionbody">
@@ -223,24 +164,24 @@ Guide</em>.</p></div>
 </div>
 <h2 id="_copying">Copying</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Copyright &#169; 2002-2008 Stuart Rackham. Free use of <em>AsciiDoc</em> is
+<div class="paragraph"><p>Copyright &#169; 2002-2009 Stuart Rackham. Free use of <em>AsciiDoc</em> is
 granted under the terms of the GNU General Public License (GPL).</p></div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 8.3.3<br />
-Last updated 2009-01-02 11:18:48 NZDT
+Version 8.4.5<br />
+Last updated 2009-05-22 17:10:34 NZDT
 </div>
 <div id="footer-badges">
 <a href="http://validator.w3.org/check?uri=referer">
-  <img style="border:none; width:88px; height:31px;"
-       src="http://www.w3.org/Icons/valid-xhtml11"
-       alt="Valid XHTML 1.1!" />
+  <img style="border:0;width:88px;height:31px"
+    src="http://www.w3.org/Icons/valid-xhtml11-blue"
+    alt="Valid XHTML 1.1" height="31" width="88" />
 </a>
-<a href="http://jigsaw.w3.org/css-validator/check/referer">
-  <img style="border:none; width:88px; height:31px;"
-       src="http://jigsaw.w3.org/css-validator/images/vcss"
-       alt="Valid CSS!" />
+<a href="http://jigsaw.w3.org/css-validator/">
+  <img style="border:0;width:88px;height:31px"
+    src="http://jigsaw.w3.org/css-validator/images/vcss-blue"
+    alt="Valid CSS!" />
 </a>
 <a href="http://www.mozilla.org/products/firefox/">
   <img style="border:none; width:110px; height:32px;"

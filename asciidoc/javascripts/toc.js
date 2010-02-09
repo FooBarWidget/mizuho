@@ -1,3 +1,11 @@
+/*
+ * IMPORTANT:
+ * This file (toc.js is) deprecated (superceded by asciidoc-xhtml11.js in
+ * AsciiDoc 8.5.1.  toc.js is retained for compatibility with user customised
+ * (pre 8.5.1) xhtml11 [header] and [footer] sections.
+ *
+ */
+
 /* Author: Mihai Bazon, September 2002
  * http://students.infoiasi.ro/~mishoo
  *

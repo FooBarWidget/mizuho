@@ -1,30 +1,419 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="generator" content="AsciiDoc 8.3.2">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.4.5" />
 <title>Source Code Highlight Filter</title>
+<style type="text/css">
+/* Debug borders */
+p, li, dt, dd, div, pre, h1, h2, h3, h4, h5, h6 {
+/*
+  border: 1px solid red;
+*/
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+tt {
+  color: navy;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  font-family: sans-serif;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+
+div.sectionbody {
+  font-family: serif;
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+
+pre {
+  padding: 0;
+  margin: 0;
+}
+
+span#author {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+span#email {
+}
+span#revnumber, span#revdate, span#revremark {
+  font-family: sans-serif;
+}
+
+div#footer {
+  font-family: sans-serif;
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+div#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+div#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+div#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.tableblock, div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.5em;
+  margin-bottom: 2.5em;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock {
+  padding-left: 2.0em;
+  margin-right: 10%;
+}
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock {
+  padding-left: 2.0em;
+  margin-right: 10%;
+}
+div.verseblock > div.content {
+  white-space: pre;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 2px solid silver;
+}
+
+div.exampleblock > div.content {
+  border-left: 2px solid silver;
+  padding: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead {
+  font-family: sans-serif;
+  font-weight: bold;
+}
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+@media print {
+  div#footer-badges { display: none; }
+}
+
+div#toctitle {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+/* Workarounds for IE6's broken and incomplete CSS2. */
+
+div.sidebar-content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+div.sidebar-title, div.image-title {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  margin-top: 0.0em;
+  margin-bottom: 0.5em;
+}
+
+div.listingblock div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock-attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock-content {
+  white-space: pre;
+}
+div.verseblock-attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+
+div.exampleblock-content {
+  border-left: 2px solid silver;
+  padding-left: 0.5em;
+}
+
+/* IE6 sets dynamically generated links as visited. */
+div#toc a:visited { color: blue; }
+</style>
 </head>
 <body>
+<div id="header">
 <h1>Source Code Highlight Filter</h1>
-<p>
-</p>
-<p>The <em>AsciiDoc</em> distribution includes a source code syntax highlight
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>The <em>AsciiDoc</em> distribution includes a source code syntax highlight
 filter (<tt>source-highlight-filter.conf</tt>). It uses
 <a href="http://www.gnu.org/software/src-highlite/">GNU source-highlight</a> to
 highlight HTML outputs; DocBook outputs are highlighted by toolchains
 that have <tt>programlisting</tt> element highlight support, for example
-<em>dblatex</em>.</p>
-<p><b>Tip:</b> If the source <em>language</em> attribute has been set (using an
+<em>dblatex</em>.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">If the source <em>language</em> attribute has been set (using an
 <em>AttributeEntry</em> or from the command-line) you don&#8217;t have to specify
-it in each source code block.</p>
-<hr />
-<h2><a name="_examples"></a>Examples</h2>
-<h3><a name="_source_code_paragraphs"></a>Source code paragraphs</h3>
-<p>The <tt>source</tt> paragraph style will highlight a paragraph of source
-code. These three code paragraphs:</p>
-<table border="0" bgcolor="#e8e8e8" width="100%" cellpadding="10"><tr><td>
-<pre>[source,python]
+it in each source code block.</td>
+</tr></table>
+</div>
+</div>
+</div>
+<h2 id="_examples">Examples</h2>
+<div class="sectionbody">
+<h3 id="_source_code_paragraphs">Source code paragraphs</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The <tt>source</tt> paragraph style will highlight a paragraph of source
+code. These three code paragraphs:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[source,python]
 if n &lt; 0: print 'Hello World!'
 
 :language: python
@@ -34,29 +423,20 @@ if n &lt; 0: print 'Hello World!'
 
 [source,ruby,numbered]
 [true, false].cycle([0, 1, 2, 3, 4]) do |a, b|
-    puts "#{a.inspect} =&gt; #{b.inspect}"</pre>
-</td></tr></table>
-<p>Render this highlighted source code:</p>
-<!-- Generator: GNU source-highlight 2.4
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><b><font color="#0000FF">if</font></b> n <font color="#990000">&lt;</font> <font color="#993399">0</font><font color="#990000">:</font> <b><font color="#0000FF">print</font></b> <font color="#FF0000">'Hello World!'</font></tt></pre>
-<!-- Generator: GNU source-highlight 2.4
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><b><font color="#0000FF">if</font></b> n <font color="#990000">&lt;</font> <font color="#993399">0</font><font color="#990000">:</font> <b><font color="#0000FF">print</font></b> <font color="#FF0000">'Hello World!'</font></tt></pre>
-<!-- Generator: GNU source-highlight 2.4
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><font color="#000000">00001:</font> <font color="#990000">[</font><b><font color="#0000FF">true</font></b><font color="#990000">,</font> <b><font color="#0000FF">false</font></b><font color="#990000">].</font><b><font color="#000000">cycle</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">2</font><font color="#990000">,</font> <font color="#993399">3</font><font color="#990000">,</font> <font color="#993399">4</font><font color="#990000">])</font> <b><font color="#0000FF">do</font></b> <font color="#990000">|</font>a<font color="#990000">,</font> b<font color="#990000">|</font>
-<font color="#000000">00002:</font>     puts <font color="#FF0000">"#{a.inspect} =&gt; #{b.inspect}"</font></tt></pre>
-<h3><a name="_unnumbered_source_code_listing"></a>Unnumbered source code listing</h3>
-<p>This source-highlight filtered block:</p>
-<table border="0" bgcolor="#e8e8e8" width="100%" cellpadding="10"><tr><td>
-<pre> [source,python]
+    puts "#{a.inspect} =&gt; #{b.inspect}"</tt></pre>
+</div></div>
+<div class="paragraph"><p>Render this highlighted source code:</p></div>
+<div class="exampleblock">
+<div class="exampleblock-content"></div></div>
+<div class="exampleblock">
+<div class="exampleblock-content"></div></div>
+<div class="exampleblock">
+<div class="exampleblock-content"></div></div>
+<h3 id="_unnumbered_source_code_listing">Unnumbered source code listing</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This source-highlight filtered block:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt> [source,python]
  ---------------------------------------------------------------------
  ''' A multi-line
      comment.'''
@@ -67,26 +447,16 @@ http://www.gnu.org/software/src-highlite -->
          return quote + word + quote
      else:
          return word
- ---------------------------------------------------------------------</pre>
-</td></tr></table>
-<p>Renders this highlighted source code:</p>
-<table border="0" bgcolor="#e8e8e8" width="100%" cellpadding="10"><tr><td><!-- Generator: GNU source-highlight 2.4
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><i><font color="#9A1900">''' A multi-line</font></i>
-<i><font color="#9A1900">    comment.'''</font></i>
-<b><font color="#0000FF">def</font></b> <b><font color="#000000">sub_word</font></b><font color="#990000">(</font>mo<font color="#990000">):</font>
-<i><font color="#9A1900">    ''' Single line comment.'''</font></i>
-    word <font color="#990000">=</font> mo<font color="#990000">.</font><b><font color="#000000">group</font></b><font color="#990000">(</font><font color="#FF0000">'word'</font><font color="#990000">)</font>     <i><font color="#9A1900"># Inline comment</font></i>
-    <b><font color="#0000FF">if</font></b> word <b><font color="#0000FF">in</font></b> keywords<font color="#990000">[</font>language<font color="#990000">]:</font>
-        <b><font color="#0000FF">return</font></b> quote <font color="#990000">+</font> word <font color="#990000">+</font> quote
-    <b><font color="#0000FF">else</font></b><font color="#990000">:</font>
-        <b><font color="#0000FF">return</font></b> word</tt></pre></td></tr></table>
-<h3><a name="_numbered_source_code_listing_with_callouts"></a>Numbered source code listing with callouts</h3>
-<p>This source-highlight filtered block:</p>
-<table border="0" bgcolor="#e8e8e8" width="100%" cellpadding="10"><tr><td>
-<pre> [source,ruby,numbered]
+ ---------------------------------------------------------------------</tt></pre>
+</div></div>
+<div class="paragraph"><p>Renders this highlighted source code:</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<h3 id="_numbered_source_code_listing_with_callouts">Numbered source code listing with callouts</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This source-highlight filtered block:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt> [source,ruby,numbered]
  ---------------------------------------------------------------------
  #
  # Useful Ruby base class extensions.
@@ -121,44 +491,12 @@ http://www.gnu.org/software/src-highlite -->
  ---------------------------------------------------------------------
 
  &lt;1&gt; First callout.
- &lt;2&gt; Second callout.</pre>
-</td></tr></table>
-<p>Renders this highlighted source code:</p>
-<table border="0" bgcolor="#e8e8e8" width="100%" cellpadding="10"><tr><td><!-- Generator: GNU source-highlight 2.4
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><font color="#000000">00001:</font> <i><font color="#9A1900">#</font></i>
-<font color="#000000">00002:</font> <i><font color="#9A1900"># Useful Ruby base class extensions.</font></i>
-<font color="#000000">00003:</font> <i><font color="#9A1900">#</font></i>
-<font color="#000000">00004:</font>
-<font color="#000000">00005:</font> <b><font color="#0000FF">class</font></b> Array
-<font color="#000000">00006:</font>
-<font color="#000000">00007:</font>   <i><font color="#9A1900"># Execute a block passing it corresponding items in</font></i>
-<font color="#000000">00008:</font>   <i><font color="#9A1900"># +self+ and +other_array+.</font></i>
-<font color="#000000">00009:</font>   <i><font color="#9A1900"># If self has less items than other_array it is repeated.</font></i>
-<font color="#000000">00010:</font>
-<font color="#000000">00011:</font>   <b><font color="#0000FF">def</font></b> <b><font color="#000000">cycle</font></b><font color="#990000">(</font>other_array<font color="#990000">)</font>  <i><font color="#9A1900"># :yields: item, other_item</font></i>
-<font color="#000000">00012:</font>     other_array<font color="#990000">.</font>each_with_index <b><font color="#0000FF">do</font></b> <font color="#990000">|</font>item<font color="#990000">,</font> index<font color="#990000">|</font>
-<font color="#000000">00013:</font>       <b><font color="#0000FF">yield</font></b><font color="#990000">(</font><b><font color="#0000FF">self</font></b><font color="#990000">[</font>index <font color="#990000">%</font> <b><font color="#0000FF">self</font></b><font color="#990000">.</font>length<font color="#990000">],</font> item<font color="#990000">)</font>
-<font color="#000000">00014:</font>     <b><font color="#0000FF">end</font></b>
-<font color="#000000">00015:</font>   <b><font color="#0000FF">end</font></b>
-<font color="#000000">00016:</font>
-<font color="#000000">00017:</font> <b><font color="#0000FF">end</font></b>
-<font color="#000000">00018:</font>
-<font color="#000000">00019:</font> <b><font color="#0000FF">if</font></b> <font color="#009900">$0</font> <font color="#990000">==</font> <b><font color="#0000FF">__FILE__</font></b>                                 <font color="#FF0000"><b>&lt;1&gt;</b></font>
-<font color="#000000">00020:</font>   <i><font color="#9A1900"># Array#cycle test</font></i>
-<font color="#000000">00021:</font>   <i><font color="#9A1900"># true =&gt; 0</font></i>
-<font color="#000000">00022:</font>   <i><font color="#9A1900"># false =&gt; 1</font></i>
-<font color="#000000">00023:</font>   <i><font color="#9A1900"># true =&gt; 2</font></i>
-<font color="#000000">00024:</font>   <i><font color="#9A1900"># false =&gt; 3</font></i>
-<font color="#000000">00025:</font>   <i><font color="#9A1900"># true =&gt; 4</font></i>
-<font color="#000000">00026:</font>   puts <font color="#FF0000">'Array#cycle test'</font>                         <font color="#FF0000"><b>&lt;2&gt;</b></font>
-<font color="#000000">00027:</font>   <font color="#990000">[</font><b><font color="#0000FF">true</font></b><font color="#990000">,</font> <b><font color="#0000FF">false</font></b><font color="#990000">].</font><b><font color="#000000">cycle</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">2</font><font color="#990000">,</font> <font color="#993399">3</font><font color="#990000">,</font> <font color="#993399">4</font><font color="#990000">])</font> <b><font color="#0000FF">do</font></b> <font color="#990000">|</font>a<font color="#990000">,</font> b<font color="#990000">|</font>
-<font color="#000000">00028:</font>     puts <font color="#FF0000">"#{a.inspect} =&gt; #{b.inspect}"</font>
-<font color="#000000">00029:</font>   <b><font color="#0000FF">end</font></b>
-<font color="#000000">00030:</font> <b><font color="#0000FF">end</font></b></tt></pre></td></tr></table>
-<ol>
+ &lt;2&gt; Second callout.</tt></pre>
+</div></div>
+<div class="paragraph"><p>Renders this highlighted source code:</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="colist arabic"><ol>
 <li>
 <p>
 First callout.
@@ -169,20 +507,21 @@ First callout.
 Second callout.
 </p>
 </li>
-</ol>
-<hr />
-<h2><a name="_installation"></a>Installation</h2>
-<h3><a name="_html"></a>HTML</h3>
-<p>If you want to syntax highlight <em>AsciiDoc</em> HTML outputs (<tt>html4</tt> and
+</ol></div>
+</div>
+<h2 id="_installation">Installation</h2>
+<div class="sectionbody">
+<h3 id="_html">HTML</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If you want to syntax highlight <em>AsciiDoc</em> HTML outputs (<tt>html4</tt> and
 <tt>xhtml11</tt> backends) you need to
 install <a href="http://www.gnu.org/software/src-highlite/">GNU
-source-highlight</a> (most distributions have this package).</p>
-<h3><a name="_docbook"></a>DocBook</h3>
-<p><em>AsciiDoc</em> encloses the source code in a DocBook <em>programlisting</em>
+source-highlight</a> (most distributions have this package).</p></div>
+<h3 id="_docbook">DocBook</h3><div style="clear:left"></div>
+<div class="paragraph"><p><em>AsciiDoc</em> encloses the source code in a DocBook <em>programlisting</em>
 element and leaves source code highlighting to the DocBook toolchain
 (dblatex has a particularly nice programlisting highlighter). The
-DocBook programlisting element is assigned two attributes:</p>
-<ol type="1">
+DocBook programlisting element is assigned two attributes:</p></div>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 The <em>language</em> attribute is set to the <em>AsciiDoc</em> <em>language</em>
@@ -195,20 +534,19 @@ The <em>linenumbering</em> attribute is set to the <em>AsciiDoc</em> <em>src_num
   attribute (<em>numbered</em> or <em>unnumbered</em>).
 </p>
 </li>
-</ol>
-<p>If you use <tt><tt>a2x(1)</tt></tt> to generate PDF you need to include the
-<tt>--no-xmllint</tt> option to suppress <tt>xmllint(1)</tt> checking&#8201;&#8212;&#8201;the
-programlisting <em>language</em> attribute (required by the dblatex source
-highlighter) is not part of the DocBook 4 specification (but it is in
-the newer DocBook 5 specification).</p>
-<h3><a name="_testing"></a>Testing</h3>
-<p>Test the filter by converting the test file to HTML with <em>AsciiDoc</em>:</p>
-<pre>$ asciidoc -v ./filters/source-highlight-filter-test.txt
-$ firefox ./filters/source-highlight-filter-test.html &amp;</pre>
-<p></p>
-<p></p>
-<hr /><p><small>
-Last updated 2009-01-01 12:22:58 NZDT
-</small></p>
+</ol></div>
+<h3 id="_testing">Testing</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Test the filter by converting the test file to HTML with <em>AsciiDoc</em>:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>$ asciidoc -v ./filters/source/source-highlight-filter-test.txt
+$ firefox ./filters/source/source-highlight-filter-test.html &amp;</tt></pre>
+</div></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2009-04-10 17:58:48 NZDT
+</div>
+</div>
 </body>
 </html>

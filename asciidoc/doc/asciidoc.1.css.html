@@ -3,11 +3,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.3.3" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
 <title>ASCIIDOC(1)</title>
 <link rel="stylesheet" href="../stylesheets/xhtml11.css" type="text/css" />
 <link rel="stylesheet" href="../stylesheets/xhtml11-manpage.css" type="text/css" />
 <link rel="stylesheet" href="../stylesheets/xhtml11-quirks.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes();}
+/*]]>*/
+</script>
+<script type="text/javascript" src="./asciidoc-xhtml11.js"></script>
 </head>
 <body>
 <div id="header">
@@ -17,11 +23,12 @@ ASCIIDOC(1) Manual Page
 <h2>NAME</h2>
 <div class="sectionbody">
 <p>asciidoc -
-   converts an AsciiDoc text file to DocBook, HTML or LinuxDoc
+   converts an AsciiDoc text file to HTML or DocBook
 </p>
 </div>
 </div>
-<h2>SYNOPSIS</h2>
+<div id="content">
+<h2 id="_synopsis">SYNOPSIS</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><strong>asciidoc</strong> [<em>OPTIONS</em>] <em>FILE</em></p></div>
 </div>
@@ -46,7 +53,8 @@ input is used.</p></div>
     <em>NAME!</em> (delete the <em>NAME</em> attribute); <em>NAME@</em> (do not override
     document or configuration file attributes).  Values containing
     spaces should be enclosed in double-quote characters. This option
-    may be specified more than once.
+    may be specified more than once.  A special attribute named
+    <em>trace</em> controls the output of diagnostic information.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -66,6 +74,14 @@ input is used.</p></div>
     Use configuration file <em>CONF_FILE</em>.Configuration files processed
     in command-line order (after implicit configuration files).  This
     option may be specified more than once.
+</p>
+</dd>
+<dt class="hdlist1">
+<strong>--doctest</strong>
+</dt>
+<dd>
+<p>
+    Run Python doctests in <em>asciidoc</em> module.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -135,12 +151,13 @@ input is used.</p></div>
 </p>
 </dd>
 <dt class="hdlist1">
-<strong>--unsafe</strong>
+<strong>--safe</strong>
 </dt>
 <dd>
 <p>
-    Disable safe mode. Safe mode is enabled by default, disabling
-    it is potentially dangerous.
+    Enable safe mode. Safe mode is disabled by default.  AsciiDoc
+    <em>safe mode</em> skips potentially dangerous scripted sections in
+    AsciiDoc source files.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -199,13 +216,15 @@ input is used.</p></div>
 </div>
 <h2 id="_copying">COPYING</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Copyright (C) 2002-2008 Stuart Rackham. Free use of this software is
+<div class="paragraph"><p>Copyright (C) 2002-2009 Stuart Rackham. Free use of this software is
 granted under the terms of the GNU General Public License (GPL).</p></div>
 </div>
+</div>
+<div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Version 8.3.3<br />
-Last updated 2009-01-02 12:44:51 NZDT
+Version 8.5.2<br />
+Last updated 2009-11-18 13:43:26 NZDT
 </div>
 </div>
 </body>

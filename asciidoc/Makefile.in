@@ -7,13 +7,14 @@
 INSTALL = @INSTALL@
 INSTALL_PROG = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
-
+PACKAGE_TARNAME = @PACKAGE_TARNAME@
 SED = @SED@
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 bindir = @bindir@
 datadir = @datadir@
+docdir = @docdir@
 sysconfdir = @sysconfdir@
 datarootdir = @datarootdir@
 mandir=@mandir@
@@ -23,7 +24,7 @@ VPATH = @srcdir@
 
 ASCIIDOCCONF = $(sysconfdir)/asciidoc
 
-prog = asciidoc.py a2x
+prog = asciidoc.py a2x.py
 progdir = $(bindir)
 
 vimdir = @sysconfdir@/vim
@@ -73,7 +74,6 @@ icons = $(wildcard images/icons/*.png) images/icons/README
 iconsdir = $(ASCIIDOCCONF)/images/icons
 
 doc = $(wildcard README*) $(wildcard BUGS*) $(wildcard INSTALL*) $(wildcard CHANGELOG*)
-docdir = $(datadir)/doc/asciidoc
 
 DATATARGETS = manp conf docbook dblatex css js callouts icons codefilterconf musicfilterconf sourcefilterconf graphvizfilterconf
 PROGTARGETS = prog codefilter musicfilter graphvizfilter
@@ -116,14 +116,16 @@ docs:
 	( cd examples/website && \
 		cp -R * $(DESTDIR)/$(docdir)/examples/website )
 
-renameprog:
-	(cd $(DESTDIR)/$(progdir); mv asciidoc.py asciidoc)
+progsymlink:
+	(cd $(DESTDIR)/$(progdir); ln -sf asciidoc.py asciidoc)
+	(cd $(DESTDIR)/$(progdir); ln -sf a2x.py a2x)
 
 fixconfpath:
 	@for f in $(prog); do \
 		echo "Fixing CONF_DIR in $$f"; \
-		$(SED) "s#^CONF_DIR = '.*'#CONF_DIR = '$(ASCIIDOCCONF)'#; s#^CONF_DIR=.*#CONF_DIR=$(ASCIIDOCCONF)#" $$f > $$f.out; \
+		$(SED) "s#^CONF_DIR = '.*'#CONF_DIR = '$(ASCIIDOCCONF)'#" $$f > $$f.out; \
 		mv $$f.out $$f; \
+		chmod +x $$f; \
 	done
 
 install-vim:
@@ -147,11 +149,13 @@ uninstall-vim:
 
 build: fixconfpath
 
-install: $(PROGTARGETS) $(DATATARGETS) renameprog install-vim
+install: all $(PROGTARGETS) $(DATATARGETS) progsymlink install-vim
 
 uninstall: uninstall-vim
 	rm -f $(DESTDIR)/$(progdir)/asciidoc
+	rm -f $(DESTDIR)/$(progdir)/asciidoc.py
 	rm -f $(DESTDIR)/$(progdir)/a2x
+	rm -f $(DESTDIR)/$(progdir)/a2x.py
 	rm -f $(DESTDIR)/$(mandir)/asciidoc.1
 	rm -f $(DESTDIR)/$(mandir)/a2x.1
 	rm -rf $(DESTDIR)/$(confdir)

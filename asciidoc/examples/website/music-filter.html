@@ -3,13 +3,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.3.3" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
 <link rel="stylesheet" href="./xhtml11.css" type="text/css" />
 <link rel="stylesheet" href="./xhtml11-quirks.css" type="text/css" />
 <link rel="stylesheet" href="./layout1.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes();}
+/*]]>*/
+</script>
+<script type="text/javascript" src="./asciidoc-xhtml11.js"></script>
 <title>Music Filter</title>
 </head>
-<body>
+<body style="max-width:70em">
 <div id="layout-banner">
   <div id="layout-title">AsciiDoc</div>
   <div id="layout-description">Text based document generation</div>
@@ -20,13 +26,13 @@
   <div>&#187;<a href="index.html">Home</a></div>
   <div>&#187;<a href="manpage.html">Man&nbsp;Page</a></div>
   <div>&#187;<a href="userguide.html">User&nbsp;Guide</a></div>
-  <div>&#187;<a href="http://powerman.name/doc/asciidoc">Cheatsheet</a></div>
-  <div>&#187;<a href="a2x.1.html">a2x</a></div>
-  <div>&#187;<a href="README.html">README</a></div>
-  <div>&#187;<a href="CHANGELOG.html">ChangeLog</a></div>
   <div>&#187;<a href="INSTALL.html">Installation</a></div>
-  <div>&#187;<a href="downloads.html">Downloads</a></div>
   <div>&#187;<a href="faq.html">FAQ</a></div>
+  <div>&#187;<a href="a2x.1.html">a2x</a></div>
+  <div>&#187;<a href="asciidocapi.html">API</a></div>
+  <div>&#187;<a href="http://powerman.name/doc/asciidoc">Cheatsheet</a></div>
+  <div>&#187;<a href="testasciidoc.html">Tests</a></div>
+  <div>&#187;<a href="CHANGELOG.html">ChangeLog</a></div>
   <div>&#187;<a href="support.html">Support</a></div>
   <div id="page-source">&#187;<a href="music-filter.txt">Page&nbsp;Source</a></div>
 </td>
@@ -35,22 +41,23 @@
 <div id="header">
 <h1>Music Filter</h1>
 </div>
+<div id="content">
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph"><p>The <em>AsciiDoc</em> distribution includes a Music Block filter that
+<div class="paragraph"><p>The AsciiDoc distribution includes a Music Block filter that
 translates music in <a href="http://lilypond.org/">LilyPond</a> or
 <a href="http://abcnotation.org.uk/">ABC</a> notation to standard classical
 notation in the form of a trimmed PNG image which is automatically
-inserted into the <em>AsciiDoc</em> output document (see the <a href="#X1">examples below</a>).</p></div>
-<div class="paragraph"><p>Actually the filter (<tt>./filters/music2png.py</tt>) can be used outside
-<em>AsciiDoc</em> to convert LilyPond or ABC music files to PNG images.
+inserted into the AsciiDoc output document (see the <a href="#X1">examples below</a>).</p></div>
+<div class="paragraph"><p>Actually the filter (<tt>./filters/music/music2png.py</tt>) can be used outside
+AsciiDoc to convert LilyPond or ABC music files to PNG images.
 Execute the following command to see how to use it:</p></div>
 <div class="literalblock">
 <div class="content">
-<pre><tt>$ ./filters/music2png.py --help</tt></pre>
+<pre><tt>$ ./filters/music/music2png.py --help</tt></pre>
 </div></div>
 <div class="paragraph"><p>The Music Filter can be used as a model for filters that convert a
-block of text into a file that is linked or embedded into the <em>AsciiDoc</em>
+block of text into a file that is linked or embedded into the AsciiDoc
 output document.</p></div>
 <div class="exampleblock" id="X1">
 <div class="title">Example 1: Music Block containing ABC notation</div>
@@ -75,10 +82,11 @@ output document.</p></div>
  ---------------------------------------------------------------------</tt></pre>
 </div></div>
 <div class="paragraph"><p>Renders:</p></div>
-<div class="musicblock">
+<div class="imageblock">
 <div class="content">
-<img style="border-width: 0;" src="music1.png" alt="music1.png" />
-</div></div>
+<img src="music1.png" alt="music1.png" />
+</div>
+</div>
 </div></div>
 <div class="exampleblock" id="X2">
 <div class="title">Example 2: Music Block containing LilyPond notation</div>
@@ -103,12 +111,13 @@ retained by the <tt>music2png.py</tt> filter when the <tt>-m</tt> option is used
  ---------------------------------------------------------------------</tt></pre>
 </div></div>
 <div class="paragraph"><p>Renders:</p></div>
-<div class="musicblock">
+<div class="imageblock">
 <div class="content">
-<a href="music2.ly">
-<img style="border-width: 0;" src="music2.png" alt="music2.png" />
+<a class="image" href="music2.ly">
+<img src="music2.png" alt="music2.png" />
 </a>
-</div></div>
+</div>
+</div>
 </div></div>
 <div class="admonitionblock">
 <table><tr>
@@ -126,7 +135,7 @@ are using.</td>
 <h2 id="_using_the_filter">Using the Filter</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Insert a delimited Music Block containing valid ABC notation into your
-<em>AsciiDoc</em> document:</p></div>
+AsciiDoc document:</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -152,7 +161,7 @@ The filter invokes <tt>music2png</tt> with the <tt>-m</tt> option so that music
 <p>
 The optional named block attributes <em>link</em>, <em>width</em> and <em>height</em> are
   also available (see <a href="userguide.html#X55">Image macro attributes</a>
-  in the <em>AsciiDoc</em> User Guide).
+  in the AsciiDoc User Guide).
 </p>
 </li>
 </ul></div>
@@ -162,7 +171,7 @@ The optional named block attributes <em>link</em>, <em>width</em> and <em>height
 <div class="ulist"><ul>
 <li>
 <p>
-The <tt><tt>asciidoc(1)</tt></tt> output file cannot be <tt>-</tt> (stdout), you must
+The <tt>asciidoc(1)</tt> output file cannot be <tt>-</tt> (stdout), you must
   output to a named file.
 </p>
 </li>
@@ -170,14 +179,14 @@ The <tt><tt>asciidoc(1)</tt></tt> output file cannot be <tt>-</tt> (stdout), you
 <p>
 If the music image file is linked to the output document then the
   image file name in the Music Block attribute list should be a
-  relative path name relative to the <em>AsciiDoc</em> output file.
+  relative path name relative to the AsciiDoc output file.
 </p>
 </li>
 </ul></div>
 </div>
 <h2 id="_installation">Installation</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>In addition to <em>AsciiDoc</em> you will need to have installed:</p></div>
+<div class="paragraph"><p>In addition to AsciiDoc you will need to have installed:</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -192,11 +201,11 @@ If the music image file is linked to the output document then the
 </p>
 </li>
 </ul></div>
-<div class="paragraph"><p>Test the music filter it by converting the test file to HTML with <em>AsciiDoc</em>:</p></div>
+<div class="paragraph"><p>Test the music filter it by converting the test file to HTML with AsciiDoc:</p></div>
 <div class="literalblock">
 <div class="content">
-<pre><tt>$ asciidoc -v ./filters/music-filter-test.txt
-$ firefox ./filters/music-filter-test.html &amp;</tt></pre>
+<pre><tt>$ asciidoc -v ./filters/music/music-filter-test.txt
+$ firefox ./filters/music/music-filter-test.html &amp;</tt></pre>
 </div></div>
 <div class="paragraph"><p>The filter was developed and tested on Xubuntu Linux using LilyPond
 2.10.5 and ImageMagick 6.2.4.</p></div>
@@ -211,21 +220,23 @@ a problem).</td>
 </tr></table>
 </div>
 </div>
+</div>
+<div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Version 8.3.3<br />
-Last updated 2009-01-02 11:18:53 NZDT
+Version 8.5.2<br />
+Last updated 2009-12-07 17:24:57 NZDT
 </div>
 <div id="footer-badges">
 <a href="http://validator.w3.org/check?uri=referer">
-  <img style="border:none; width:88px; height:31px;"
-       src="http://www.w3.org/Icons/valid-xhtml11"
-       alt="Valid XHTML 1.1!" />
+  <img style="border:0;width:88px;height:31px"
+    src="http://www.w3.org/Icons/valid-xhtml11-blue"
+    alt="Valid XHTML 1.1" height="31" width="88" />
 </a>
-<a href="http://jigsaw.w3.org/css-validator/check/referer">
-  <img style="border:none; width:88px; height:31px;"
-       src="http://jigsaw.w3.org/css-validator/images/vcss"
-       alt="Valid CSS!" />
+<a href="http://jigsaw.w3.org/css-validator/">
+  <img style="border:0;width:88px;height:31px"
+    src="http://jigsaw.w3.org/css-validator/images/vcss-blue"
+    alt="Valid CSS!" />
 </a>
 <a href="http://www.mozilla.org/products/firefox/">
   <img style="border:none; width:110px; height:32px;"

@@ -3,9 +3,539 @@ AsciiDoc ChangeLog
 
 :replacements.\bweb:: http://www.methods.co.nz/asciidoc/
 
+Version 8.5.2 (2009-12-09)
+--------------------------
+.Additions and changes
+- Added Italian language configuration file (contributed by Fabio
+  Inguaggiato).
+- Added 'header' table style. See:
+  http://groups.google.com/group/asciidoc/browse_frm/thread/a23fea28394c8ca9
+- Pass 'icons', 'data-uri', 'imagesdir', 'iconsdir' attributes to
+  'asciidoc' table style filter so that images are rendered in table
+  cells.
+- Pass 'trace' and 'verbose' attributes to 'asciidoc' table style
+  filter so diagnostic information is printed from table cell source.
+- The 'eval' system attribute can be nested inside other system
+  attributes.
+- HTML outputs: Table and figure caption punctuation set to more usual
+  syntax.
+- docbook backend: footnotes can now contain embedded images.  See
+  http://groups.google.com/group/asciidoc/browse_frm/thread/50b28f6941de111a
+- CSS tweaks so that tables processed by DocBook XSL Stylesheets have
+  the default asciidoc xhtml11 backend styling.  See
+  http://groups.google.com/group/asciidoc/browse_frm/thread/dfe5204d5b2c9685
+- Block titles take precedence over section titles to avoid titled
+  delimited blocks being mistaken for two line section titles (see
+  http://groups.google.com/group/asciidoc/browse_frm/thread/f0b6f9989f828c3).
+- Section title trace displays level and title text.
+- FAQ additions.
+- Added `{zwsp}` (zero width space) attribute.
+- Undefined paragraph styles are reported (previously threw a runtime
+  error).
+- Eliminated empty preamble generation.
+- Floating titles now processed in all contexts.
+- Implemented auto-lettered appendix names and updated example
+  documents.
+- Section numbering can be disabled in HTML outputs with a
+  ':numbered!:' AttributeEntry.
+- xhtml11: Nicer default quote block styling.
+- Exclude floating titles from xhtml11 table of contents. Patch
+  submitted by Mark Burton (see
+  http://groups.google.com/group/asciidoc/browse_frm/thread/14aefc1cb6bd85f5).
+- Enhanced `doc/article-docinfo.xml` example docinfo file.
+- Vim syntax highlighter improvements.
+
+.Bug fixes
+- *FIXED*: Absolute 'imagesdir' and 'iconsdir' attribute  path names
+  do not work with the xhtml11 data-uri encoding. See
+  http://groups.google.com/group/asciidoc/browse_frm/thread/cb8b7694bbc82a6
+- *FIXED*: Regression issue with inline data-uri images. See
+  http://groups.google.com/group/asciidoc/browse_frm/thread/cb8b7694bbc82a6
+- *FIXED*: An unexpected error occurred when processing a table
+  containing CSV data if the 'cols' attribute was not explicitly
+  specified. See
+  http://groups.google.com/group/asciidoc/browse_frm/thread/4b0f364b477ec165
+
+
+Version 8.5.1 (2009-10-31)
+--------------------------
+.Additions and changes
+- If an AsciiDoc document file begins with a UTF-8 BOM (byte order
+  mark) then it is passed transparently through to the output file.
+  The BOM is stripped from included files.  See
+  http://groups.google.com/group/asciidoc/browse_frm/thread/e5e61823ff4203cd
+- Added AsciiDoc 'role' attribute to quoted text. Sets 'class'
+  attribute in HTML outputs; 'role' attribute in DocBook outputs. See:
+  http://groups.google.com/group/asciidoc/browse_frm/thread/2aa3e5711d243045
+- Conditional attribute syntax extended: they now accept multiple ORed
+  or ANDed attribute names.
+- The 'xhtml11' backend dynamically processes footnotes using
+  JavaScript.
+- Tidied up and namespaced 'xhtml11' JavaScript.
+- Superceded `javascripts/toc.js` with `javascripts/asciidoc-xhtml11.js`.
+- Added 'disable-javascript' attribute ('xhtml11' backend).
+- Styled HTML footnotes.
+- Added links to HTML footnote refs.
+- Added title attribute to inline image macros to display popup
+  ``tooltip'' (HTML outputs only).
+- Single-quoted attribute values are substituted in block macros (just
+  like the AttributeList element).
+- For consistency changed underscores to dashes in attribute names.
+  Public attributes with underscores retained for compatibility.
+- Added Brazilian Portuguese language configuration file (contributed
+  by Thiago Farina).
+- Added 'leveloffset' attribute to make it easier to combine
+  documents.
+
+.Bug fixes
+- *FIXED:* a2x: `--dblatex-opts` is now processed last so
+  `asciidoc-dblatex.xsl` params can be overridden. Patch submitted by
+  Mark Fernandes (see
+  http://groups.google.com/group/asciidoc/browse_frm/thread/5215c99dcc865e7d).
+- *FIXED:* An error occurred if a directory in current path with same
+  name as executable.
+
+Regression issues
+~~~~~~~~~~~~~~~~~
+There's been quite a bit of tiding up to the xhtml11 JavaScript. The
+most obvious change is that the toc.js script has been superceded by
+asciidoc-xhtml11.js so if you're linking you'll need get a copy of
+the new file from the distribution javascripts directory.
+
+If you use customised xhtml11 configuration file `[header]` and
+`[footer]` sections and you want them to use the new footnotes feature
+then you've got a bit more work to do:
+
+. The onload event expression changed.
+. The new `<div id="content">...</div>` div envelopes document
+  content.
+. You need to add `<div id="footnotes">...</div>` div to the
+  `[footnotes]` section for footnotes to work.
+. Drop the `ifdef::toc[]` macro that surround JavaScript inclusion.
+
+Take a look at the [header] and [footer] changes in the xhtml11.conf
+diff to see what's going on:
+http://hg.sharesource.org/asciidoc/diff/55a5999bfd04/xhtml11.conf
+
+
+Version 8.5.0 (2009-10-04)
+--------------------------
+.Additions and changes
+- Implemented a 'float' attribute for tables and block images (HTML
+  outputs only).
+- Added `unfloat::[]` block macro to cancel floating.
+- Added table 'align' attribute to (HTML outputs only).
+- The image 'align' attribute now works with HTML backends.
+- Renamed table cell 'align' attribute to 'halign' so it doesn't clash
+  with the new table 'align' attribute.
+- Added 'breakable' and 'unbreakable' options to AsciiDoc example and
+  block image elements.
+- `[miscellaneous]` section entries now update properly when set from
+  a document 'AttributeEntry'.
+- `[miscellaneous]` section `pagewidth` entry accepts fractional
+  values.
+- Fractional column widths are now calculated correctly when using
+  fractional 'pageunits' (DocBook tables).
+- Use DocBook XSL table width processing instructions.
+- asciidoc 'KeyboardInterrupt' exits with error code 1.
+- Added 'set' system attribute to  allow attributes to be set from
+  configuration file templates.
+- Allow constrained quotes to be bounded on the left by a colons and
+  semicolons, see
+  http://groups.google.com/group/asciidoc/browse_frm/thread/b276a927fdc87995
+- Titled listing and literal blocks (DocBook outputs) no longer default
+  to examples. See
+  http://groups.google.com/group/asciidoc/browse_frm/thread/f4df7c9eec01a9bd
+- Updated language file table, figure and example captions to
+  accommodate new auto-numbering in html4 and xhtml11 backends.
+- Titled source highlight filter listings generated by docbook backend
+  are now rendered as examples. See
+  http://groups.google.com/group/asciidoc/browse_frm/thread/f4df7c9eec01a9bd
+- Implemented 'counter' system attribute.
+- Use 'counter' system attributes to number titled tables and block
+  images in HTML backends.
+- Added program name suffix to console messages.
+- Added substitution to the 'AttributeEntry' passthrough syntax, this
+  replaces the now unnecessary 'attributeentry-subs' attribute.
+- Allow passthrough inline macro syntax to be used in
+  'AttributeEntrys'.
+- Reinstated 8.4.4 default 'lang' attribute behavior. See
+  http://groups.google.com/group/asciidoc/browse_frm/thread/d29924043e21cb6a.
+- Added 'max-width' attribute to the 'xhtml11' backend to set maximum
+  display width. See
+  http://groups.google.com/group/asciidoc/browse_frm/thread/74d9a542b79ccd50.
+- Added 'a2x.py', a rewritten and much enhanced version of the old
+  'a2x' bash script.
+- The new 'a2x' can output EPUB formatted documents.
+- Added `--safe` option and deprecated `--unsafe` option. Patch
+  submitted by Todd Zullinger. See
+  http://groups.google.com/group/asciidoc/browse_frm/thread/ea3a8ea399ae5d2a
+  and
+  http://groups.google.com/group/asciidoc/browse_frm/thread/69b3183fdab7c6a5
+- Added 'CHECK' and 'TEST' todo highlight words to Vim syntax
+  highlighter.
+- Line breaks, page breaks, and horizontal rulers are now processed by
+  dblatex, thanks to a patch submitted by Mark Fernandes
+  (http://groups.google.com/group/asciidoc/browse_frm/thread/a254cf949ea7c6c5).
+- Allow footnote macros hard up against the preceding word so the
+  rendered footnote mark can be placed against the noted text without
+  an intervening space (patch submitted by Stas Bushuev,
+  http://groups.google.com/group/asciidoc/browse_frm/thread/e1dcb7ee0efc17b5).
+- Normalized path in `safe_filename` function (submitted by Todd
+  Zullinger,
+  http://groups.google.com/group/asciidoc/browse_frm/thread/69b3183fdab7c6a5).
+- The Asciidoc 'numbered' and 'toc' attributes cause DocBook outputs
+  to include `asciidoc-numbered` and `asciidoc-toc` processing
+  instructions, these are used by DocBook XSL to include section
+  numbering and table of contents (like Asciidoc HTML backends). For
+  backward compatibility both 'numbered' and 'toc' attributes are
+  defined by default when the 'docbook' backend is used.  See
+  http://groups.google.com/group/asciidoc/browse_frm/thread/1badad21ff9447ac.
+- 'data-uri' attribute is now evaluated dynamically and can be set in
+  document body (previously could only be set from command-line).
+- Added 'sys3' and 'eval3' system attributes to passthrough generated
+  output, this fixes the data-uri inline image problem:
+  http://groups.google.com/group/asciidoc/browse_frm/thread/a42db6bc54c2c537.
+- Missing language file generates a warning instead of an error.
+- Updated Spanish language file (updates contributed by Gustavo Andrés
+  Gómez Farhat).
+
+.Bug fixes
+- *FIXED:* Options in an 'AttributeList' option attribute are merged
+  with (rather than replace) configuration file options.
+- *FIXED:* Comment blocks and comment block macros no longer consume
+  preceding block titles and attribute lists.
+- *FIXED:* `examples/website/layout1.conf` and
+  `examples/website/layout2.conf` TOC problem.  Submitted by Mark
+  (burtoogle).  See
+  http://groups.google.com/group/asciidoc/browse_frm/thread/b9c63be67dd1d11c
+- *FIXED:* Only the first occurrence of passthrough macro was
+  substituted.  Patch submitted by  Peter Johnson. See
+  http://groups.google.com/group/asciidoc/browse_frm/thread/1269dc2feb1a482c
+- *FIXED:* asciidoc now runs on Jython 2.5.0.
+- *FIXED:* Wordpress margins and pads in a number of block
+  elements
+  (http://groups.google.com/group/asciidoc/browse_frm/thread/36ff073c79cbc20a).
+
+Regression issues
+~~~~~~~~~~~~~~~~~
+- Tables generated by 'dblatex' occupy 100% of the available space
+  regardless of the 'width' attribute setting. To restore width
+  behavior change the 'pageunits' miscellaneous parameter to 'pt'. You
+  can do this from the command-line with the `-a pageunits=pt` option.
+  See web:userguide.html#X89[DocBook table widths].
+
+
+Version 8.4.5 (2009-05-24)
+--------------------------
+.Additions and changes
+- Added manpage 'Name' and 'Synopsis' section title customization to languages
+  configuration files.
+- Synopsis manpage section no longer mandatory.
+- Section markup templates can be specified by setting the title's
+  first positional attribute or 'template' attribute.
+- The article and book document header can now include a revision
+  remark.
+- A 'role' attribute can now be applied to block elements. This adds
+  the 'role' attribute to DocBook elements. Patch submitted by
+  http://groups.google.com/group/asciidoc/browse_thread/thread/62278a054188a038[Noah
+  Slater]).
+- Renamed 'revision' and 'date' attributes to more sensible and consistent
+  'revnumber' and 'revdate' (old names deprecated but still
+  recognized).
+- Moved backend specific attributes to Appendix H in User Guide.
+- Renamed and generalized the docbook backend revision history
+  inclusion mechanism to 'docinfo' to reflect the use of all article
+  or book information elements. The old revision history names still
+  work but have been deprecated.
+- Refactored docbook.conf headers.
+- Moved line break replacement from `[replacements]` to
+  `[replacements2]` so the replacement occurs after the mailto macro.
+  This fixes bug
+  http://groups.google.com/group/asciidoc/browse_thread/thread/4bdcdfb0af773e2
+- The typewriter to punctuation apostrophe replacement can be escaped
+  with a backslash.
+- Graphviz filter outputs images to 'imagesdir' if it is defined.
+- Made the block image macro generic so that it can be used for filter
+  outputs. As a result Music and Graphviz filters:
+  * Have been greatly simplified.
+  * Honor the 'data-uri' attribute.
+  * 'html4' outputs no longer generate W3C validation warning.
+- The 'iconsdir' attribute no longer requires a trailing directory
+  separator character.
+- Removed borders around linked html4 images.
+- Added 'html4' specific HTML output for music filter.
+- 'a2x': Added `--unsafe` option (shortcut for
+  `--asciidoc-opts=--unsafe`).
+- 'a2x': The FOP executable can now be named `fop` (this is the
+  default name in some distributions).
+- Attributes are now substituted in the system macro attribute list.
+- If the output is set to stdout (i.e. no output directory is defined)
+  then Music and Graphviz filters will output included images to the
+  source file directory.
+- Added 'name' directive to 'testasciidoc'.
+- Added lots of 'testasciidoc' new tests.
+- Moved language specific configuration parameters into `lang-en.conf`
+  file.
+- 'lang' attribute entry can be specified in the AsciiDoc source file
+  (preceding the header).
+- Removed cruft from A-A-P scripts and documented them.
+- Added German language config file (`lang-de.conf`) contributed by
+  Michael Wild.
+- Added French language config file (`lang-fr.conf`) contributed by
+  Yves-Alexis Perez.
+- Added Russian language config file (`lang-ru.conf`) contributed by
+  Artem Zolochevskiy.
+- Added Hungarian language config file (`lang-hu.conf`) contributed by
+  Miklos Vajna.
+
+.Bug fixes
+- *FIXED:* Multiple manpage names are now handled correctly when
+  generating DocBook output, each name now generates a separate
+  DocBook `<refname>` element. See
+  http://groups.google.com/group/asciidoc/browse_thread/thread/c93bb4db025225d8
+- *FIXED:* A problem that caused AttributeEntries preceding the header
+  to be overwritten when the language conf file loaded.
+- *FIXED:* Possible inline macro name ambiguity e.g. link matches olink.
+- *FIXED:* The documented macro definition deletion behavior had been
+  broken for a long time.
+- *FIXED:* Email addresses not recognized when followed by a period
+  character.
+- *FIXED:* Hyphens in mailto macros can delimit nested addresses e.g.
+  \bloggs@mail was processed inside
+  \mailto:joe-bloggs@mail-server.com[Mail].
+- *FIXED:* User name in FTP URI generated incorrect FTP link. See
+  http://groups.google.com/group/asciidoc/browse_thread/thread/1d796a9c9ddb2855
+- *FIXED:* Source highlighter now works with Wordpress backend (see
+  http://groups.google.com/group/asciidoc/browse_thread/thread/6d8c716748b109e3).
+
+[[X2]]
+Regression issues
+~~~~~~~~~~~~~~~~~
+. A colon following the date in the AsciiDoc header is treated as a
+  revision remark delimiter -- this could be an issue if you have used
+  a colon in the header date.
+
+
+Version 8.4.4 (2009-04-26)
+--------------------------
+.Additions and changes
+- Added table column and row spanning.
+- Table styles can now be applied per cell.
+- Vertical cell alignment can be applied to columns and individual
+  cells.
+- Added table 'align' attribute to set horizontal alignment for entire
+  table.
+- Included Geoff Eddy's update of the experimental LaTeX backend.
+- A new attribute named 'trace' controls the output of diagnostic
+  information. If the 'trace' attribute is defined then
+  element-by-element diagnostic messages detailing output markup
+  generation are printed to stderr.
+- Added 'literal' paragraph style (allows 'literal' style to be
+  applied to normal paragraphs).
+- Deleted unused `replacements2` from `xhtml11.conf`.
+- Added `replacements2` to default substitutions.
+- 'testasciidoc.py': messages to 'stdout', only diffs to 'stderr'.
+- Added transparency to `smallnew.png` image.
+
+.Bug fixes
+- All combinations of leading comments and attribute entries at the
+  start of a document are now skipped correctly.
+- *FIXED:* `./configure` doesn't support `--docdir` as expected (patch
+  submitted by Artem Zolochevskiy)
+- *FIXED:* Constrained quotes were incorrectly matched across line
+  boundaries e.g. the string `+\nabc+` incorrectly matched a monospace
+  quote.
+
+
+Version 8.4.3 (2009-04-13)
+--------------------------
+.Additions and changes
+- DocBook outputs default to DocBook version 4.5 doctype (previously
+  4.2).
+- Configuration file `[specialsections]` definitions can be undefined
+  by setting their configuration entry values blank.
+- The Makefile 'install' target depends on the 'all' target to ensure
+  pre-install patches are applied.
+- 'testasciidoc.py' now emits user friendly messages if:
+  . the configuration file is missing.
+  . an illegal backend is specified.
+  . an illegal test number is specified.
+
+.Bug fixes
+- Fixed
+  http://groups.google.com/group/asciidoc/browse_thread/thread/fd27add515597c06[missing
+  template section] error.
+- The 'testasciidoc.py' `--force` option no longer deletes test data
+  files that were not specified.
+- Dropped second quotes substitution in table cells -- it had
+  effectively disabled quote escaping in table cells.
+
+
+Version 8.4.2 (2009-03-19)
+--------------------------
+.Additions and changes
+- Added web:testasciidoc.html[testasciidoc], a tool to verify AsciiDoc
+  conformance.
+- A warning is issued if nested inline passthroughs are encountered.
+- 'asciidocapi': setting an attribute value to `None` will undefine
+  (delete) the attribute (this in addition to the `name!` attribute
+  name format that the `asciidoc(1)` command uses).
+
+.Bug fixes
+
+
+Version 8.4.1 (2009-03-10)
+--------------------------
+.Additions and changes
+- AsciiDoc now has a web:asciidocapi.html[Python API].  The following
+  minimal example compiles `mydoc.txt` to `mydoc.html`:
++
+[source,python]
+-------------------------------------------------------------------------------
+from asciidocapi import AsciiDocAPI
+asciidoc = AsciiDocAPI()
+asciidoc.execute('mydoc.txt')
+-------------------------------------------------------------------------------
+
+- Backtick quoting for monospaced text is now implemented as an
+  'inline literal' passthrough.  This makes more sense since monospace
+  text is usually intended to be rendered literally. See
+  <<X2,Regression issues>> below for the impact this may have on
+  existing documents.  Here are some examples that would previously
+  have had to be escaped:
+
+  The `++i` and `++j` auto-increments.
+  Paths `~/.vim` and `~/docs`.
+  The `__init__` method.
+  The `{id}` attribute.
+
+- Added `--doctest` option to `asciidoc(1)` command.
+- Added an optional second argument to 'BlockId' element, this sets
+  the `{reftext}` attribute which in turn is used to set the `xreflabel`
+  attribute in DocBook elements.
+- Added lists to `--help` syntax summary.
+- `{infile}` and `{indir}` attributes reflect the current input file
+  (previously always referred to the root document).
+- `{docfile}` (new) and `{docdir}` (previously deprecated) attributes
+  refer to the root document specified on the `asciidoc(1)`
+  command-line.
+- Vim syntax highlighter improvements.
+- Syntax summary command (`asciidoc -h syntax`) additions.
+- Admonition icons now have transparent backgrounds.
+- Changed yellow W3C badges to blue ones in page footers.
+
+.Bug fixes
+- Dropped `asciidoc(1)` broken undocumented `--profile` option.
+- Em dash replacement now recognized at start of block.
+
+Regression issues
+~~~~~~~~~~~~~~~~~
+Replacing backtick quoting with the 'inline literal' passthrough
+raises two regression scenarios for existing documents:
+
+1. You have escaped the expansion of enclosed inline elements, for
+   example: `\{id}`.  You would need to delete the backslashes: `{id}`
+   (if you don't the backslashes will be printed). Mostly it's just a
+   case of interactively finding and replacing of all occurrences of
+   `\.
+
+2. There are enclosed inline elements, for example: `some *bold*
+   monospaced`.  You would need to switch to plus character monospace
+   quoting: `+some *bold* monospaced+` (if you don't the enclosed
+   elements won't be expanded).
+
+If your existing documents include these cases and you don't want to
+upgrade then use the `-a no-inline-literal` command-line option,
+alternatively put this in `~/.asciidoc/asciidoc.conf`:
+
+  [attributes]
+  no-inline-literal=
+
+
+Version 8.3.5 (2009-02-02)
+--------------------------
+.Additions and changes
+- Cached compiled regular expression delimiters (speed up 'User
+  Manual' compilation by 250%).
+- Created distinct list definitions for each numbered list style to
+  allow nesting of all styles.
+- Roman numbers in numbered lists are followed by a closing
+  parenthesis instead of a period to eliminate 'i', 'v', 'x' item
+  ambiguity with respect to alpha numbered list items.
+- Added `**`, `***`, `****`, `*****`
+  bulleted lists.
+- Added `...`, `....`, `.....` implicit numbered
+  lists.
+- Added `:::`, `::::` labeled lists.
+- Updated User Guide for new list syntaxes.
+- Optimized paragraph and list termination detection with separate
+  precompiled regular expressions for performance and to prevent
+  reaching Python 100 named group limit.
+- Updated Vim syntax highlighter for new list syntaxes.
+- Allow `template::[]` macros in conf file entries sections (not just
+  in template sections).
+- Dropped unused `[listdef-numbered2]` conf file sections.
+- Renamed 'ListBlock' to more appropriate 'OpenBlock'.
+- Implemented single-line versions of `ifdef::[]` and `ifndef::[]`
+  macros.
+- 'html4' backend styling:
+  * Underlined admonition captions.
+  * Added side border to Example Blocks.
+- 'xhtml11' backend styling:
+  * Dropped right hand margin from all but quote and verse blocks.
+  * html4 backend: corrected over-sized width of caption in admonition
+    block.
+
+.Bug fixes
+- Fixed broken numbered list nesting.
+
+Compatibility issues
+~~~~~~~~~~~~~~~~~~~~
+The roman numbered list parenthesis syntax is incompatible with the
+potentially ambiguous roman period syntax introduced in 8.3.2.
+
+
+Version 8.3.4 (2009-01-20)
+--------------------------
+.Additions and changes
+- Implemented a title 'float' style.  A floating title (or bridgehead)
+  is rendered just like a normal section but is not formally
+  associated with a text body and is not part of the regular section
+  hierarchy so the normal ordering rules do not apply.
+- Implemented inline comment macro so comment lines can now appear
+  inside block elements.
+- Comment lines are sent to the output if the 'showcomments' attribute
+  is defined (comment blocks are never sent to the output).
+- Single quoting attribute values in 'AttributeList' elements causes
+  them to be substituted like normal inline text (without single
+  quoting only attribute substitution is performed).
+- Rewrote list item processing (was very crufty). List continuation
+  and list blocks now work as expected. Updated and clarified list
+  documentation in User Guide.
+- The 'revision' attribute now recognizes the RCS $Id$ marker format.
+- An RCS $Id$ marker formatted revision line in the header does not
+  need to be preceded by an author line.
+- If an RCS $Id$ formatted revision is specified and the author name
+  has not already been set then the author name in the $Id$ marker
+  will be used.
+- Updated Gouichi Iisaka's Graphviz filter to version 1.1.3.
+- Added 'autowidth' table attribute option for (X)HTML outputs.
+- DocBook backend now puts 'orgname' optional attribute in DocBook
+  header.
+- Deprecated undocumented 'companyname' attribute in favor of
+  DocBook's 'corpname'.
+- Removed explicit closing backslash from HTML4 self-closing tags to
+  comply with WC3 recommendation.
+
+.Bug fixes
+- Fixed 8.3.3 regression whereby adjacent lists with the same syntax
+  but different list styles were incorrectly treated as a single list.
+
+
 Version 8.3.3 (2009-01-02)
 --------------------------
-This release supercedes 8.3.2.
+This release supersedes 8.3.2.
 
 .Bug fixes
 - The broken and confusing numeration and numeration2 numbered list
@@ -136,8 +666,8 @@ Version 8.3.0 (2008-11-29)
 - Vim syntax highlighter: spaces before/after bullets no longer
   highlighted (which is ugly if using a theme that highlights with
   underlines).  Thanks to Donald Chai for this patch.
-- Added `a2x(1)` `\--fop` option.
-- Added `a2x(1)` `\--no-xmllint` option.
+- Added `a2x(1)` `--fop` option.
+- Added `a2x(1)` `--no-xmllint` option.
 - Highlighted labelled list terms with the navy color in XHTML
   outputs.
 - Use `w3m(1)` as default `a2x(1)` text format generator (fallback to
@@ -263,9 +793,9 @@ Version 8.2.7 (2008-07-04)
   documents). 'scaledwidth' sets the image size as a percent of the
   available page width; 'align' applies 'left', 'center' or 'right'
   horizontal image justification.
-- Added a2x(1) `\--fop-opts=FOP_OPTS` option (patch submitted by Miklos
+- Added a2x(1) `--fop-opts=FOP_OPTS` option (patch submitted by Miklos
   Vajna).
-- Added a2x(1) `\--dblatex-opts=DBLATEX_OPTS` option.
+- Added a2x(1) `--dblatex-opts=DBLATEX_OPTS` option.
 - Added Mikhail Yakshin's FOP 0.95 patch which fixes a long-standing
   `fo.xsl` problem and allows PDF's to be generated with FOP 0.95
   (previously had to use FOP 0.20.5).
@@ -326,7 +856,7 @@ Version 8.2.6 (2008-04-29)
 - Fixed an error generated by the asciidoc `-e` option when there are
   no block definitions -- patch contributed by Alejandro Mery.
 - Handle both `\r\n` (as well as `\n`) line separators that may be
-  returned by `\{sys}` attribute evaluation.
+  returned by `{sys}` attribute evaluation.
 - Numbered attribute names no longer interfere with positional
   attribute list values.
 
@@ -385,7 +915,7 @@ Version 8.2.3 (2007-09-12)
 - Help topic names can be shortened (so long as they are not
   ambiguous). For example `asciidoc -hm` will print the AsciiDoc man
   page.
-- Added `\{two_colons}` and `\{two_semicolons}` attributes for
+- Added `{two_colons}` and `{two_semicolons}` attributes for
   escaping labeled list ambiguity.
 - If quirks mode is disabled the XHTML Mime Type is set to the
   recommended `application/xhtml+xml` (rather than `text/html`).
@@ -403,21 +933,21 @@ Version 8.2.2 (2007-07-22)
 - http://www.maths.nottingham.ac.uk/personal/drw/lm.html[LaTeXMathML]
   capability has been added for users who are more familiar with or
   prefer LaTeX math formulas to the
-  http://www.methods.co.nz/asciidoc/asciimath.html[ASCIIMathML]
+  http://www.methods.co.nz/asciidoc/asciimathml.html[ASCIIMathML]
   notation (thanks to Arthur Sakellariou for the patch).
 - The 'source highlight' and 'code' filters now process embedded
   callouts.
 - Added an `--attribute=ATTRIBUTE` option to `a2x(1)` for passing
   attribute values to asciidoc(1) (a shortcut for `--asciidoc-opts="-a
   ATTRIBUTE"`).
-- Image block and inline macros prepend optional `\{imagesdir}`
+- Image block and inline macros prepend optional `{imagesdir}`
   attribute to image link targets.
 
 
 .Bug fixes
 - Fixed an assertion error that occurred when a configuration file
-  containing an `\include::[]` macro was loaded using the
-  `\--conf-file` option and the configuration file name did not
+  containing an `include::[]` macro was loaded using the
+  `--conf-file` option and the configuration file name did not
   include an explicit directory path -- patch submitted by Dmitry
   Potapov.
 - Asciidoc titles are only converted to lower case if all characters
@@ -537,13 +1067,13 @@ Version 8.1.0 (2006-10-22)
   rather than the asciidoc 8 default unconstrained quoting (patch for
   affected files attached).
 - Moved the source highlight filter from `./examples/` to `./filter/`.
-- Added `\{verbose}` intrinsic attribute (useful for passing verbose
+- Added `{verbose}` intrinsic attribute (useful for passing verbose
   flag to filters).
-- Added `\{outdir}` intrinsic attribute.
-- Renamed `\{docdir}` intrinsic attribute to unambiguous`\{indir}`
-  (`\{docdir}` still works but may be removed in future release).
+- Added `{outdir}` intrinsic attribute.
+- Renamed `{docdir}` intrinsic attribute to unambiguous `{indir}`
+  (`{docdir}` still works but may be removed in future release).
 - If `asciidoc(1)` outputs to stdout then intrinsic attribute
-  `\{docname}` is extracted from the input file name.
+  `{docname}` is extracted from the input file name.
 
 
 Version 8.0.0 (2006-08-27)
@@ -569,7 +1099,7 @@ mailto:srackham@gmail.com['Stuart Rackham']
   confused with punctuation.
 
 - The syntax for index entry macros have have been deprecated from
-  `\+...\+` and `\++...++` to `\((...))` and `\(((...)))` respectively.
+  `+...+` and `++...++` to `((...))` and `(((...)))` respectively.
   Rationale:
   * Bracketing is consistent other with `[[...]]` and `<<...>>`
     reference macros.
@@ -639,9 +1169,9 @@ encoding, which in my case is 'cp936'.''
 - The a2x(1) format option defaults to `xhtml` (previously a format
   had to be specified explicitly).
 - The `-d, \--doctype=DOCTYPE` option has been added to a2x(1) which
-  is a shortcut for `\--asciidoc-options="\--doctype=DOCTYPE"`.
-- Replaced a2x(1) `\--no-icons` and `\--no-copy` options with their
-  negated equivalents: `\--icons` and `\--copy` respectively. The
+  is a shortcut for `--asciidoc-options="--doctype=DOCTYPE"`.
+- Replaced a2x(1) `--no-icons` and `--no-copy` options with their
+  negated equivalents: `--icons` and `--copy` respectively. The
   default behavior has also changed: copying and use of icons is
   disabled by default. Rationale:
   * To make the default behavior more consistent since use of icons
@@ -658,7 +1188,7 @@ encoding, which in my case is 'cp936'.''
 - Attribute replacement is no longer performed twice in Titles and
   AttributeEntrys.
 - a2x(1) skipped asciidoc(1) execution when rerun with different
-  `\--asciidoc-options` options, it now always executes asciidoc(1).
+  `--asciidoc-options` options, it now always executes asciidoc(1).
   The problem was that previously asciidoc(1) was executed only if the
   output file was missing or older than the source file.
 
@@ -673,10 +1203,9 @@ Version 7.1.2 (2006-03-07)
   http://www.methods.co.nz/asciidoc/asciimath.html.
 - You can now prefix quoted text with inline attributes lists.  You
   can use this to set font size and color (XHTML and HTML outputs).
-- Added `\##...\##` quoting -- it does nothing -- it's purpose is to
+- Added `##...##` quoting -- it does nothing -- it's purpose is to
   allow inline attributes to be applied to normal text.
-- An link:userguide.html#X50[inline passthrough] mechanism has been
-  implemented.
+- An 'inline passthrough' mechanism has been implemented.
 - Configuration file comment lines can be escaped with a backslash --
   this is to allows the inclusion of configuration lines that start
   with a hash character.
@@ -687,7 +1216,7 @@ Version 7.1.2 (2006-03-07)
   with the new inline passthrough naming.
 - `a2x(1)` now works with the older `bash(1)` version 2.05b. Patch
   submitted by mailto:francis@daoine.org[Francis Daly].
-- Content included by the `\include1::[]` system macro is no longer
+- Content included by the `include1::[]` system macro is no longer
   subject to attribute substitution so that ambiguities no longer
   arise when used to include CSS or JavaScript files.
 
@@ -762,8 +1291,8 @@ Version 7.0.4 (2005-12-08)
 --------------------------
 .Additions and changes
 - Added ternary conditional attributes
-  `\{<name>@<regexp>:<value1>[:<value2>]}` and
-  `\{<name>$<regexp>:<value1>[:<value2>]}`.
+  `{<name>@<regexp>:<value1>[:<value2>]}` and
+  `{<name>$<regexp>:<value1>[:<value2>]}`.
 - Safety violations now generate errors (they previously generated
   warnings).
 - asciidoc(1) now defaults to safe mode, consequently the
@@ -841,7 +1370,7 @@ Version 7.0.1 (2005-06-24)
   default `./stylesheets` directory).
 - Default charset encoding changed from ISO-8859-1 to UTF-8 -- it's
   less language specific and displays most common languages.
-- `\template::[]` macros now expand in all configuration file sections
+- `template::[]` macros now expand in all configuration file sections
   previously only in markup template sections.
 - Cleaned up example website layout CSS and configuration
   (presentation has not been changed).
@@ -876,7 +1405,7 @@ mailto:srackham@gmail.com['Stuart Rackham']
 - The CSS stylesheets have finally been rewritten.
 - The asciidoc(1) command help now includes user
   link:userguide.html#X36[customizable help] topics. When asciidoc is
-  invoked with the `\--help` option the command argument is
+  invoked with the `--help` option the command argument is
   interpreted as a help topic.
 - The previous example website has been replaced by the actual
   AsciiDoc website (see `./examples/website/`.
@@ -1035,14 +1564,14 @@ NOTE: This version requires Python 2.3 or better to run.
 - A line of three or more apostrophes generates an HTML horizontal
   ruler (`<hr/>` tag). You will get a warning if processed with
   non-HTML backend.
-- An `\{imagesdir}` attribute specifies image file location for images
+- An `{imagesdir}` attribute specifies image file location for images
   referenced in configuration files when generating HTML (the default
   location is `images`).
-- An `\{stylesdir}` attribute specifies the location of CSS
+- An `{stylesdir}` attribute specifies the location of CSS
   stylesheets when generating styled HTML (the default location for
   configured markup is `.`).
 - The use of the (often inappropriately named) `{caption}` attribute
-  list entry has been deprecated, use `\{0}` instead.
+  list entry has been deprecated, use `{0}` instead.
 - New 'ExampleBlock' delimited block along with associated variants
   Note, Tip, Warning, Caution and Important.
 - The `docbook.conf` file now facilitates the optional inclusion of a
@@ -1277,7 +1806,7 @@ Version 5.0.3 (2004-01-23)
   `[miscellaneous]` section.
 - The misspelt `blocktitles` configuration file entry name has been
   corrected (to `blocktitle`).
-- An `\{empty}` glossary entry has been added to the default
+- An `{empty}` glossary entry has been added to the default
   configuration which is useful for outputting trailing blank lines
   from configuration file substitution sections.
 
@@ -1381,7 +1910,7 @@ Version 4.2 (2003-11-26)
   distribution configuration files.
 - The table arguments lines can be continued using the backslash line
   continuation character.
-- Added new calculated glossary reference type `\{<name>%<value>}`.
+- Added new calculated glossary reference type `{<name>%<value>}`.
 - Double-quote characters can now appear in unquoted positional
   arguments.
 
@@ -1389,7 +1918,7 @@ Version 4.2 (2003-11-26)
 Version 4.1 (2003-11-13)
 ------------------------
 - Added DSV (Delimiter Separated Values) tables format.
-- `\{eval:<expr>}` glossary references drop the containing line if
+- `{eval:<expr>}` glossary references drop the containing line if
   `<expr>` evaluates to `None`.
 - Block, Table and Macro arguments can now be positional (quoted or
   unquoted).
@@ -1406,8 +1935,8 @@ Version 4.1 (2003-11-13)
 - Fixed: CSS styled HTML tables are now fully XHTML 1.0 conformant.
 - Fixed: 'tablewidth' was processed incorrectly when passed as table
   argument.
-- Fixed: Glossary references like `\{x=\{y}}` were one character off
-  if \{x] was defined and `\{y}` was not.
+- Fixed: Glossary references like `{x=\{y}}` were one character off
+  if \{x] was defined and `{y}` was not.
 
 
 Version 4.0 (2003-11-08)
@@ -1434,8 +1963,8 @@ you encounter.
   DocBook and LinuxDoc output) using \(()) quoting.
 - The shipped 'html' backend configuration now emits valid 'HTML 4.01
   Transitional'.
-- Added new calculated glossary reference types `\{<name>!<value>}`
-  and `\{<name>#<value>}`.
+- Added new calculated glossary reference types `{<name>!<value>}`
+  and `{<name>#<value>}`.
 - The DelimitedBlock 'params' option has been dropped in favor of the
   new 'block attributes' mechanism. If you have customized block
   params options you may need to adjust source files to use the
@@ -1466,7 +1995,7 @@ Version 3.2.2 (2003-10-26)
 --------------------------
 - Added `-n` option (synonym for `-g section-numbers`).
 - Dropped the processing commentary (hey, this is Unix).
-- Added new calculated glossary reference type `\{<name>?<value>}`.
+- Added new calculated glossary reference type `{<name>?<value>}`.
   `<name>` is the glossary entry name and `<value>` is the text
   substituted if the glossary entry is defined. `<value>` can only
   contain literal text (no glossary references allowed).
@@ -1636,13 +2165,12 @@ Version 2.2 (2003-04-07)
 
 Version 2.1 (2003-03-17)
 ------------------------
-- Added section auto numbering `\{sectnum}` glossary entry
+- Added section auto numbering `{sectnum}` glossary entry
   (auto-numbering function contributed by Ludovico Magnocavallo).
 - asciidoc(1) now correctly returns non-zero exit status if an error
   occurs.
 - An AsciiDoc example website has been included in the AsciiDoc
-  distribution `examples/website` directory (also online at
-  http://www.methods.co.nz/asciidoc/examples/website/).
+  distribution `examples/website` directory.
 - NOTE: The `asciidoc` wrapper script included in the 2.0 distribution
   has been dropped, if you've symlinked or aliased to `asciidoc` you'll
   need to change them to point directly to `asciidoc.py` instead.
@@ -1658,11 +2186,11 @@ Version 2.1 (2003-03-17)
   is not found relative to the current working directory then the
   search is repeated relative to the asciidoc(1) directory. This
   allows global configuration files to be used.
-- Added `\{infile}`, `\{outfile}` predefined glossary entries.
+- Added `{infile}`, `{outfile}` predefined glossary entries.
 - Added `under-construction` macro to HTML article configuration
   files.
-- Deprecated `\{asciidoc_version}` glossary entry in favor of
-  `\{asciidoc-version}` (to it consistent with other entries).
+- Deprecated `{asciidoc_version}` glossary entry in favor of
+  `{asciidoc-version}` (to it consistent with other entries).
 
 Version 2.0 (2003-02-24)
 ------------------------
