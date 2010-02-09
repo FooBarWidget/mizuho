@@ -1,3 +1,4 @@
+require File.expand_path('lib/mizuho')
 require 'rake/gempackagetask'
 
 desc "Run unit tests"
@@ -5,16 +6,9 @@ task :test do
 	ruby "-S spec -f s -c test/*_spec.rb"
 end
 
-desc "Build a gem and install it"
-task :install => :gem do
-	File.read("mizuho.gemspec") =~ /s\.version = \"(.*?)\"/
-	version = $1
-	ruby "-S gem install mizuho-#{version}.gem"
-end
-
 spec = Gem::Specification.new do |s|
 	s.name = "mizuho"
-	s.version = "0.9.6"
+	s.version = Mizuho::VERSION_STRING
 	s.summary = "Mizuho documentation formatting tool"
 	s.email = "hongli@phusion.nl"
 	s.homepage = "http://github.com/FooBarWidget/mizuho/tree/master"
