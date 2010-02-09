@@ -1,9 +1,8 @@
-ROOT_DIR = File.expand_path(File.dirname(__FILE__) + "/..")
-$LOAD_PATH << "#{ROOT_DIR}/lib"
+require File.expand_path(File.dirname(__FILE__) + "/../lib/mizuho")
 require 'digest/md5'
 require 'mizuho/generator'
 
-CACHE_DIR = "#{ROOT_DIR}/test/cache"
+CACHE_DIR = "#{Mizuho::SOURCE_ROOT}/test/cache"
 
 def generate_and_parse(text)
 	Dir.mkdir(CACHE_DIR) if !File.exist?(CACHE_DIR)
@@ -46,6 +45,6 @@ def generate_and_parse(text)
 end
 
 def asciidoc_newer_than?(filename)
-	asciidoc_mtime = File.stat("#{ROOT_DIR}/asciidoc/asciidoc.py").mtime
+	asciidoc_mtime = File.stat("#{Mizuho::SOURCE_ROOT}/asciidoc/asciidoc.py").mtime
 	return asciidoc_mtime > File.stat(filename).mtime
 end

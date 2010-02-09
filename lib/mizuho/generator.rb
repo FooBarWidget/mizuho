@@ -50,12 +50,12 @@ class Generator
 private
 	def locate_template_file(template_name)
 		if template_name.nil?
-			return "#{ROOT}/templates/asciidoc.html.erb"
+			return "#{SOURCE_ROOT}/templates/asciidoc.html.erb"
 		elsif template_name =~ %r{[/.]}
 			# Looks like a filename.
 			return template_name
 		else
-			return "#{ROOT}/templates/#{template_name}.html.erb"
+			return "#{SOURCE_ROOT}/templates/#{template_name}.html.erb"
 		end
 	end
 	
