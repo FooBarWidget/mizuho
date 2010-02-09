@@ -25,7 +25,7 @@ VERSION = '8.5.2'
 
 # AsciiDoc global configuration file directory.
 # NOTE: CONF_DIR is "fixed up" by Makefile -- don't rename or change syntax.
-CONF_DIR = '/etc/asciidoc'
+CONF_DIR = os.path.dirname(PROG)
 
 
 ######################################################################

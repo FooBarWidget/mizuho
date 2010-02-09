@@ -5310,6 +5310,8 @@ def execute(cmd,opts,args):
     APP_FILE = os.path.realpath(cmd)
     global APP_DIR
     APP_DIR = os.path.dirname(APP_FILE)
+    global CONF_DIR
+    CONF_DIR = APP_DIR
     global USER_DIR
     USER_DIR = os.environ.get('HOME')
     if USER_DIR is not None:
