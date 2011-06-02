@@ -1,6 +1,7 @@
 require 'nokogiri'
 require 'mizuho'
 require 'mizuho/source_highlight'
+require 'mizuho/id_map'
 
 module Mizuho
 
@@ -11,14 +12,17 @@ class Generator
 	def initialize(input, options = {})
 		@input_file  = input
 		@output_file = options[:output] || default_output_filename(input)
-		@multi_page  = options[:multi_page]
+		@id_map_file = options[:id_map] || default_id_map_filename(input)
 		@icons_dir   = options[:icons_dir]
 		@conf_file   = options[:conf_file]
 	end
 	
 	def start
+		@id_map = IdMap.new
+		@id_map.load(@id_map_file)
 		#self.class.run_asciidoc(@input_file, @output_file, @icons_dir, @conf_file)
 		transform(@output_file)
+		@id_map.save(@id_map_file)
 	end
 	
 	def self.run_asciidoc(input, output, icons_dir = nil, conf_file = nil)
@@ -56,6 +60,13 @@ private
 			".html"
 	end
 	
+	def default_id_map_filename(input)
+		return File.dirname(input) +
+			"/" +
+			File.basename(input, File.extname(input)) +
+			".idmap.txt"
+	end
+	
 	def transform(filename)
 		File.open(filename, 'r+') do |f|
 			doc = Nokogiri.HTML(f)
@@ -66,6 +77,7 @@ private
 			
 			headers = (doc / "#content h2, #content h3")
 			headers.each do |header|
+				header['data-comment-topic'] = @id_map.associate(header.text)
 				header.add_previous_sibling(comment_container)
 			end
 			
