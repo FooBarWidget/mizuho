@@ -1,22 +1,22 @@
 #!/usr/bin/env python
 """
-asciidoc - converts an AsciiDoc text file to DocBook, HTML or LinuxDoc
+asciidoc - converts an AsciiDoc text file to HTML or DocBook
 
-Copyright (C) 2002-2009 Stuart Rackham. Free use of this software is granted
+Copyright (C) 2002-2010 Stuart Rackham. Free use of this software is granted
 under the terms of the GNU General Public License (GPL).
 """
 
-import sys, os, re, time, traceback, tempfile, subprocess, codecs, locale
+import sys, os, re, time, traceback, tempfile, subprocess, codecs, locale, unicodedata
 
 ### Used by asciidocapi.py ###
-VERSION = '8.5.2'           # See CHANGLOG file for version history.
+VERSION = '8.6.5'           # See CHANGLOG file for version history.
 
 MIN_PYTHON_VERSION = 2.4    # Require this version of Python or better.
 
 #---------------------------------------------------------------------------
 # Program constants.
 #---------------------------------------------------------------------------
-DEFAULT_BACKEND = 'xhtml11'
+DEFAULT_BACKEND = 'html'
 DEFAULT_DOCTYPE = 'article'
 # Allowed substitution options for List, Paragraph and DelimitedBlock
 # definition subs entry.
@@ -29,6 +29,7 @@ SUBS_NORMAL = ('specialcharacters','quotes','attributes',
 SUBS_VERBATIM = ('specialcharacters','callouts')
 
 NAME_RE = r'(?u)[^\W\d][-\w]*'  # Valid section or attribute name.
+OR, AND = ',', '+'              # Attribute list separators.
 
 
 #---------------------------------------------------------------------------
@@ -92,7 +93,7 @@ class AttrDict(dict):
     """
     def __getattr__(self, key):
         try: return self[key]
-        except KeyError, k: return None
+        except KeyError: return None
     def __setattr__(self, key, value):
         self[key] = value
     def __delattr__(self, key):
@@ -104,6 +105,26 @@ class AttrDict(dict):
         return dict(self)
     def __setstate__(self,value):
         for k,v in value.items(): self[k]=v
+
+class InsensitiveDict(dict):
+    """
+    Like a dictionary except key access is case insensitive.
+    Keys are stored in lower case.
+    """
+    def __getitem__(self, key):
+        return dict.__getitem__(self, key.lower())
+    def __setitem__(self, key, value):
+        dict.__setitem__(self, key.lower(), value)
+    def has_key(self, key):
+        return dict.has_key(self,key.lower())
+    def get(self, key, default=None):
+        return dict.get(self, key.lower(), default)
+    def update(self, dict):
+        for k,v in dict.items():
+            self[k] = v
+    def setdefault(self, key, default = None):
+        return dict.setdefault(self, key.lower(), default)
+
 
 class Trace(object):
     """
@@ -121,6 +142,8 @@ class Trace(object):
         """
         Print trace message if tracing is on and the trace 'name' matches the
         document 'trace' attribute (treated as a regexp).
+        'before' is the source text before substitution; 'after' text is the
+        source text after substitutuion.
         The 'before' and 'after' messages are only printed if they differ.
         """
         name_re = document.attributes.get('trace')
@@ -147,8 +170,13 @@ class Message:
     PROG = os.path.basename(os.path.splitext(__file__)[0])
 
     def __init__(self):
-        self.linenos = None     # Used to globally override line numbers.
+        # Set to True or False to globally override line numbers method
+        # argument. Has no effect when set to None.
+        self.linenos = None
         self.messages = []
+
+    def stdout(self,msg):
+        print msg
 
     def stderr(self,msg=''):
         self.messages.append(msg)
@@ -194,6 +222,22 @@ class Message:
     def unsafe(self, msg):
         self.error('unsafe: '+msg)
 
+
+def userdir():
+    """
+    Return user's home directory or None if it is not defined.
+    """
+    result = os.path.expanduser('~')
+    if result == '~':
+        result = None
+    return result
+
+def localapp():
+    """
+    Return True if we are not executing the system wide version
+    i.e. the configuration is in the executable's directory.
+    """
+    return os.path.isfile(os.path.join(APP_DIR, 'asciidoc.conf'))
 
 def file_in(fname, directory):
     """Return True if file fname resides inside directory."""
@@ -449,6 +493,7 @@ def subs_quotes(text):
         else:
             lq = rq = q
         tag = config.quotes[q]
+        if not tag: continue
         # Unconstrained quotes prefix the tag name with a hash.
         if tag[0] == '#':
             tag = tag[1:]
@@ -460,7 +505,7 @@ def subs_quotes(text):
             # The text within constrained quotes must be bounded by white space.
             # Non-word (\W) characters are allowed at boundaries to accomodate
             # enveloping quotes and punctuation e.g. a='x', ('x'), 'x', ['x'].
-            reo = re.compile(r'(?msu)(^|[^\w;:])(\[(?P<attrlist>[^[\]]+?)\])?' \
+            reo = re.compile(r'(?msu)(^|[^\w;:}])(\[(?P<attrlist>[^[\]]+?)\])?' \
                 + r'(?:' + re.escape(lq) + r')' \
                 + r'(?P<content>\S|\S.*?\S)(?:'+re.escape(rq)+r')(?=\W|$)')
         pos = 0
@@ -588,6 +633,27 @@ def update_attrs(attrs,dict):
             raise EAsciiDoc,'illegal attribute name: %s' % k
         attrs[k] = v
 
+def is_attr_defined(attrs,dic):
+    """
+    Check if the sequence of attributes is defined in dictionary 'dic'.
+    Valid 'attrs' sequence syntax:
+    <attr> Return True if single attrbiute is defined.
+    <attr1>,<attr2>,... Return True if one or more attributes are defined.
+    <attr1>+<attr2>+... Return True if all the attributes are defined.
+    """
+    if OR in attrs:
+        for a in attrs.split(OR):
+            if dic.get(a.strip()) is not None:
+                return True
+        else: return False
+    elif AND in attrs:
+        for a in attrs.split(AND):
+            if dic.get(a.strip()) is None:
+                return False
+        else: return True
+    else:
+        return dic.get(attrs.strip()) is not None
+
 def filter_lines(filter_cmd, lines, attrs={}):
     """
     Run 'lines' through the 'filter_cmd' shell command and return the result.
@@ -611,7 +677,8 @@ def filter_lines(filter_cmd, lines, attrs={}):
     # Perform attributes substitution on the filter command.
     s = subs_attrs(filter_cmd, attrs)
     if not s:
-        raise EAsciiDoc,'undefined filter attribute in command: %s' % filter_cmd
+        message.error('undefined filter attribute in command: %s' % filter_cmd)
+        return []
     filter_cmd = s.strip()
     # Parse for quoted and unquoted command and command tail.
     # Double quoted.
@@ -627,12 +694,17 @@ def filter_lines(filter_cmd, lines, attrs={}):
     if not os.path.dirname(cmd):
         # Filter command has no directory path so search filter directories.
         filtername = attrs.get('style')
-        if USER_DIR:
-            found = findfilter(filtername, USER_DIR, cmd)
+        d = document.attributes.get('docdir')
+        if d:
+            found = findfilter(filtername, d, cmd)
         if not found:
-            found = findfilter(filtername, CONF_DIR, cmd)
-        if not found:
-            found = findfilter(filtername, APP_DIR, cmd)
+            if USER_DIR:
+                found = findfilter(filtername, USER_DIR, cmd)
+            if not found:
+                if localapp():
+                    found = findfilter(filtername, APP_DIR, cmd)
+                else:
+                    found = findfilter(filtername, CONF_DIR, cmd)
     else:
         if os.path.isfile(cmd):
             found = cmd
@@ -667,13 +739,13 @@ def filter_lines(filter_cmd, lines, attrs={}):
         message.warning('no output from filter: %s' % filter_cmd)
     return result
 
-def system(name, args, is_macro=False, attrs={}):
+def system(name, args, is_macro=False, attrs=None):
     """
     Evaluate a system attribute ({name:args}) or system block macro
     (name::[args]).
     If is_macro is True then we are processing a system block macro otherwise
     it's a system attribute.
-    The attrs dictionary is updated by the counter system attribute.
+    The attrs dictionary is updated by the counter and set system attributes.
     NOTE: The include1 attribute is used internally by the include1::[] macro
     and is not for public use.
     """
@@ -683,7 +755,7 @@ def system(name, args, is_macro=False, attrs={}):
     else:
         syntax = '{%s:%s}' % (name,args)
         separator = writer.newline
-    if name not in ('eval','eval3','sys','sys2','sys3','include','include1','counter','set'):
+    if name not in ('eval','eval3','sys','sys2','sys3','include','include1','counter','counter2','set','set2','template'):
         if is_macro:
             msg = 'illegal system macro name: %s' % name
         else:
@@ -735,7 +807,7 @@ def system(name, args, is_macro=False, attrs={}):
         finally:
             if os.path.isfile(tmp):
                 os.remove(tmp)
-    elif name == 'counter':
+    elif name in ('counter','counter2'):
         mo = re.match(r'^(?P<attr>[^:]*?)(:(?P<seed>.*))?$', args)
         attr = mo.group('attr')
         seed = mo.group('seed')
@@ -764,8 +836,12 @@ def system(name, args, is_macro=False, attrs={}):
                 result = seed
             else:
                 result = '1'
-        document.attributes[attr] = attrs[attr] = result
-    elif name == 'set':
+        document.attributes[attr] = result
+        if attrs is not None:
+            attrs[attr] = result
+        if name == 'counter2':
+            result = ''
+    elif name in ('set','set2'):
         mo = re.match(r'^(?P<attr>[^:]*?)(:(?P<value>.*))?$', args)
         attr = mo.group('attr')
         value = mo.group('value')
@@ -777,7 +853,10 @@ def system(name, args, is_macro=False, attrs={}):
         if not is_name(attr):
             message.warning('%s: illegal attribute name' % syntax)
         else:
-            document.attributes[attr] = attrs[attr] = value
+            if attrs is not None:
+                attrs[attr] = value
+            if name != 'set2':  # set2 only updates local attributes.
+                document.attributes[attr] = value
         if value is None:
             result = None
         else:
@@ -797,6 +876,16 @@ def system(name, args, is_macro=False, attrs={}):
                 result = ''
     elif name == 'include1':
         result = separator.join(config.include1[args])
+    elif name == 'template':
+        if not args in config.sections:
+            message.warning('%s: template does not exist' % syntax)
+        else:
+            result = []
+            for line in  config.sections[args]:
+                line = subs_attrs(line)
+                if line is not None:
+                    result.append(line)
+            result = '\n'.join(result)
     else:
         assert False
     if result and name in ('eval3','sys3'):
@@ -836,7 +925,6 @@ def subs_attrs(lines, dictionary=None):
         lines = [lines]
     else:
         string_result = False
-        lines = list(lines)
     if dictionary is None:
         attrs = document.attributes
     else:
@@ -847,7 +935,6 @@ def subs_attrs(lines, dictionary=None):
             if not re.match(r'^\d+$', k):
                 attrs[k] = v
         # Substitute attribute references inside dictionary values.
-        dictionary = dictionary.copy()
         for k,v in dictionary.items():
             if v is None:
                 del dictionary[k]
@@ -859,24 +946,24 @@ def subs_attrs(lines, dictionary=None):
                     dictionary[k] = v
         attrs.update(dictionary)
     # Substitute all attributes in all lines.
-    for i in range(len(lines)-1,-1,-1): # Reverse iterate lines.
-        text = lines[i]
+    result = []
+    for line in lines:
         # Make it easier for regular expressions.
-        text = text.replace('\\{','{\\')
-        text = text.replace('\\}','}\\')
+        line = line.replace('\\{','{\\')
+        line = line.replace('\\}','}\\')
         # Expand simple attributes ({name}).
         # Nested attributes not allowed.
         reo = re.compile(r'(?su)\{(?P<name>[^\\\W][-\w]*?)\}(?!\\)')
         pos = 0
         while True:
-            mo = reo.search(text,pos)
+            mo = reo.search(line,pos)
             if not mo: break
             s =  attrs.get(mo.group('name'))
             if s is None:
                 pos = mo.end()
             else:
                 s = str(s)
-                text = text[:mo.start()] + s + text[mo.end():]
+                line = line[:mo.start()] + s + line[mo.end():]
                 pos = mo.start() + len(s)
         # Expand conditional attributes.
         # Single name -- higher precedence.
@@ -884,14 +971,13 @@ def subs_attrs(lines, dictionary=None):
                           r'(?P<op>\=|\?|!|#|%|@|\$)' \
                           r'(?P<value>.*?)\}(?!\\)')
         # Multiple names (n1,n2,... or n1+n2+...) -- lower precedence.
-        OR,AND = ',','+'    # Attribute separators.
         reo2 = re.compile(r'(?su)\{(?P<name>[^\\\W][-\w'+OR+AND+r']*?)' \
                           r'(?P<op>\=|\?|!|#|%|@|\$)' \
                           r'(?P<value>.*?)\}(?!\\)')
         for reo in [reo1,reo2]:
             pos = 0
             while True:
-                mo = reo.search(text,pos)
+                mo = reo.search(line,pos)
                 if not mo: break
                 attr = mo.group()
                 name =  mo.group('name')
@@ -924,16 +1010,17 @@ def subs_attrs(lines, dictionary=None):
                     lval =  attrs.get(name)
                 op = mo.group('op')
                 # mo.end() not good enough because '{x={y}}' matches '{x={y}'.
-                end = end_brace(text,mo.start())
-                rval = text[mo.start('value'):end-1]
+                end = end_brace(line,mo.start())
+                rval = line[mo.start('value'):end-1]
+                UNDEFINED = '{zzzzz}'
                 if lval is None:
                     if op == '=': s = rval
                     elif op == '?': s = ''
                     elif op == '!': s = rval
-                    elif op == '#': s = '{'+name+'}'  # So the line is dropped.
+                    elif op == '#': s = UNDEFINED   # So the line is dropped.
                     elif op == '%': s = rval
                     elif op in ('@','$'):
-                        s = '{'+name+'}'              # So the line is dropped.
+                        s = UNDEFINED               # So the line is dropped.
                     else:
                         assert False, 'illegal attribute: %s' % attr
                 else:
@@ -941,7 +1028,7 @@ def subs_attrs(lines, dictionary=None):
                     elif op == '?': s = rval
                     elif op == '!': s = ''
                     elif op == '#': s = rval
-                    elif op == '%': s = '{zzzzz}'     # So the line is dropped.
+                    elif op == '%': s = UNDEFINED   # So the line is dropped.
                     elif op in ('@','$'):
                         v = re.split(r'(?<!\\):',rval)
                         if len(v) not in (2,3):
@@ -966,23 +1053,23 @@ def subs_attrs(lines, dictionary=None):
                                     if len(v) == 2:   # {<name>$<re>:<v1>}
                                         s = v[1]
                                     elif v[1] == '':  # {<name>$<re>::<v2>}
-                                        s = '{zzzzz}' # So the line is dropped.
+                                        s = UNDEFINED # So the line is dropped.
                                     else:             # {<name>$<re>:<v1>:<v2>}
                                         s = v[1]
                                 else:
                                     if len(v) == 2:   # {<name>$<re>:<v1>}
-                                        s = '{zzzzz}' # So the line is dropped.
+                                        s = UNDEFINED # So the line is dropped.
                                     else:             # {<name>$<re>:<v1>:<v2>}
                                         s = v[2]
                     else:
                         assert False, 'illegal attribute: %s' % attr
                 s = str(s)
-                text = text[:mo.start()] + s + text[end:]
+                line = line[:mo.start()] + s + line[end:]
                 pos = mo.start() + len(s)
         # Drop line if it contains  unsubstituted {name} references.
-        skipped = re.search(r'(?su)\{[^\\\W][-\w]*?\}(?!\\)', text)
+        skipped = re.search(r'(?su)\{[^\\\W][-\w]*?\}(?!\\)', line)
         if skipped:
-            del lines[i]
+            trace('dropped line', line)
             continue;
         # Expand system attributes (eval has precedence).
         reos = [
@@ -991,37 +1078,38 @@ def subs_attrs(lines, dictionary=None):
         ]
         skipped = False
         for reo in reos:
-            if skipped:
-                continue;
             pos = 0
             while True:
-                mo = reo.search(text,pos)
+                mo = reo.search(line,pos)
                 if not mo: break
                 expr = mo.group('expr')
                 action = mo.group('action')
                 expr = expr.replace('{\\','{')
                 expr = expr.replace('}\\','}')
-                s = system(action, expr, attrs=attrs)
+                s = system(action, expr, attrs=dictionary)
+                if dictionary is not None and action in ('counter','counter2','set','set2'):
+                    # These actions create and update attributes.
+                    attrs.update(dictionary)
                 if s is None:
+                    # Drop line if the action returns None.
                     skipped = True
                     break
-                text = text[:mo.start()] + s + text[mo.end():]
+                line = line[:mo.start()] + s + line[mo.end():]
                 pos = mo.start() + len(s)
-            # Drop line if the action returns None.
             if skipped:
-                del lines[i]
-                continue;
+                break
+        if not skipped:
             # Remove backslash from escaped entries.
-            text = text.replace('{\\','{')
-            text = text.replace('}\\','}')
-            lines[i] = text
+            line = line.replace('{\\','{')
+            line = line.replace('}\\','}')
+            result.append(line)
     if string_result:
-        if lines:
-            return '\n'.join(lines)
+        if result:
+            return '\n'.join(result)
         else:
             return None
     else:
-        return tuple(lines)
+        return tuple(result)
 
 def char_encoding():
     encoding = document.attributes.get('encoding')
@@ -1034,6 +1122,26 @@ def char_encoding():
 
 def char_len(s):
     return len(char_decode(s))
+
+east_asian_widths = {'W': 2,   # Wide
+                     'F': 2,   # Full-width (wide)
+                     'Na': 1,  # Narrow
+                     'H': 1,   # Half-width (narrow)
+                     'N': 1,   # Neutral (not East Asian, treated as narrow)
+                     'A': 1}   # Ambiguous (s/b wide in East Asian context,
+                               # narrow otherwise, but that doesn't work)
+"""Mapping of result codes from `unicodedata.east_asian_width()` to character
+column widths."""
+
+def column_width(s):
+    text = char_decode(s)
+    if isinstance(text, unicode):
+        width = 0
+        for c in text:
+            width += east_asian_widths[unicodedata.east_asian_width(c)]
+        return width
+    else:
+        return len(text)
 
 def char_decode(s):
     if char_encoding():
@@ -1055,7 +1163,7 @@ def time_str(t):
     """Convert seconds since the Epoch to formatted local time string."""
     t = time.localtime(t)
     s = time.strftime('%H:%M:%S',t)
-    if time.daylight:
+    if time.daylight and t.tm_isdst == 1:
         result = s + ' ' + time.tzname[1]
     else:
         result = s + ' ' + time.tzname[0]
@@ -1137,6 +1245,8 @@ class Lex:
         """Perform substitution specified in 'options' (in 'options' order)."""
         if not s:
             return s
+        if document.attributes.get('plaintext') is not None:
+            options = ('specialcharacters',)
         result = s
         options = Lex.canonical_subs(options)
         for o in options:
@@ -1203,63 +1313,81 @@ class Lex:
 # Document element classes parse AsciiDoc reader input and write DocBook writer
 # output.
 #---------------------------------------------------------------------------
-class Document:
+class Document(object):
+
+    # doctype property.
+    def getdoctype(self):
+        return self.attributes.get('doctype')
+    def setdoctype(self,doctype):
+        self.attributes['doctype'] = doctype
+    doctype = property(getdoctype,setdoctype)
+
+    # backend property.
+    def getbackend(self):
+        return self.attributes.get('backend')
+    def setbackend(self,backend):
+        if backend:
+            backend = self.attributes.get('backend-alias-' + backend, backend)
+        self.attributes['backend'] = backend
+    backend = property(getbackend,setbackend)
+
     def __init__(self):
-        self.doctype = None     # 'article','manpage' or 'book'.
-        self.backend = None     # -b option argument.
         self.infile = None      # Source file name.
         self.outfile = None     # Output file name.
-        self.attributes = {}
+        self.attributes = InsensitiveDict()
         self.level = 0          # 0 => front matter. 1,2,3 => sect1,2,3.
         self.has_errors = False # Set true if processing errors were flagged.
         self.has_warnings = False # Set true if warnings were flagged.
         self.safe = False       # Default safe mode.
-    def update_attributes(self):
-        # Set implicit attributes.
-        if self.infile and os.path.exists(self.infile):
-            t = os.path.getmtime(self.infile)
-        elif self.infile == '<stdin>':
-            t = time.time()
-        else:
-            t = None
-        if t:
-            self.attributes['doctime'] = time_str(t)
-            self.attributes['docdate'] = date_str(t)
+    def update_attributes(self,attrs=None):
+        """
+        Set implicit attributes and attributes in 'attrs'.
+        """
         t = time.time()
         self.attributes['localtime'] = time_str(t)
         self.attributes['localdate'] = date_str(t)
         self.attributes['asciidoc-version'] = VERSION
-        self.attributes['backend'] = document.backend
-        self.attributes['doctype'] = document.doctype
-        self.attributes['backend-'+document.backend] = ''
-        self.attributes['doctype-'+document.doctype] = ''
-        self.attributes[document.backend+'-'+document.doctype] = ''
         self.attributes['asciidoc-file'] = APP_FILE
         self.attributes['asciidoc-dir'] = APP_DIR
+        self.attributes['asciidoc-confdir'] = CONF_DIR
         self.attributes['user-dir'] = USER_DIR
-        if self.infile != '<stdin>':
-            self.attributes['infile'] = self.infile
-            self.attributes['indir'] = os.path.dirname(self.infile)
-            self.attributes['docfile'] = self.infile
-            self.attributes['docdir'] = os.path.dirname(self.infile)
-            self.attributes['docname'] = os.path.splitext(
-                    os.path.basename(self.infile))[0]
         if config.verbose:
             self.attributes['verbose'] = ''
         # Update with configuration file attributes.
-        self.attributes.update(config.conf_attrs)
+        if attrs:
+            self.attributes.update(attrs)
         # Update with command-line attributes.
         self.attributes.update(config.cmd_attrs)
         # Extract miscellaneous configuration section entries from attributes.
-        config.load_miscellaneous(config.conf_attrs)
+        if attrs:
+            config.load_miscellaneous(attrs)
         config.load_miscellaneous(config.cmd_attrs)
         self.attributes['newline'] = config.newline
+        # File name related attributes can't be overridden.
+        if self.infile is not None:
+            if self.infile and os.path.exists(self.infile):
+                t = os.path.getmtime(self.infile)
+            elif self.infile == '<stdin>':
+                t = time.time()
+            else:
+                t = None
+            if t:
+                self.attributes['doctime'] = time_str(t)
+                self.attributes['docdate'] = date_str(t)
+            if self.infile != '<stdin>':
+                self.attributes['infile'] = self.infile
+                self.attributes['indir'] = os.path.dirname(self.infile)
+                self.attributes['docfile'] = self.infile
+                self.attributes['docdir'] = os.path.dirname(self.infile)
+                self.attributes['docname'] = os.path.splitext(
+                        os.path.basename(self.infile))[0]
         if self.outfile:
             if self.outfile != '<stdout>':
                 self.attributes['outfile'] = self.outfile
                 self.attributes['outdir'] = os.path.dirname(self.outfile)
-                self.attributes['docname'] = os.path.splitext(
-                        os.path.basename(self.outfile))[0]
+                if self.infile == '<stdin>':
+                    self.attributes['docname'] = os.path.splitext(
+                            os.path.basename(self.outfile))[0]
                 ext = os.path.splitext(self.outfile)[1][1:]
             elif config.outfilesuffix:
                 ext = config.outfilesuffix[1:]
@@ -1268,7 +1396,7 @@ class Document:
             if ext:
                 self.attributes['filetype'] = ext
                 self.attributes['filetype-'+ext] = ''
-    def load_lang(self,linenos=False):
+    def load_lang(self):
         """
         Load language configuration file.
         """
@@ -1277,7 +1405,6 @@ class Document:
             filename = 'lang-en.conf'   # Default language file.
         else:
             filename = 'lang-' + lang + '.conf'
-        message.linenos = linenos
         if config.load_from_dirs(filename):
             self.attributes['lang'] = lang  # Reinstate new lang attribute.
         else:
@@ -1286,7 +1413,6 @@ class Document:
                 message.error('missing conf file: %s' % filename, halt=True)
             else:
                 message.warning('missing language conf file: %s' % filename)
-        message.linenos = None  # Restore default line number behavior.
     def set_deprecated_attribute(self,old,new):
         """
         Ensures the 'old' name of an attribute that was renamed to 'new' is
@@ -1297,52 +1423,112 @@ class Document:
                 self.attributes[new] = self.attributes[old]
         else:
             self.attributes[old] = self.attributes[new]
-    def consume_attributes_and_comments(self):
+    def consume_attributes_and_comments(self,comments_only=False,noblanks=False):
+        """
+        Returns True if one or more attributes or comments were consumed.
+        If 'noblanks' is True then consumation halts if a blank line is
+        encountered.
+        """
+        result = False
         finished = False
-        attr_count = 0
         while not finished:
             finished = True
+            if noblanks and not reader.read_next(): return result
             if blocks.isnext() and 'skip' in blocks.current.options:
+                result = True
                 finished = False
                 blocks.current.translate()
+            if noblanks and not reader.read_next(): return result
             if macros.isnext() and macros.current.name == 'comment':
+                result = True
                 finished = False
                 macros.current.translate()
-            if AttributeEntry.isnext():
-                finished = False
-                AttributeEntry.translate()
-                if AttributeEntry.name == 'lang' and 'lang' not in config.cmd_attrs:
-                    self.load_lang(linenos=True)
-                    if attr_count > 0:
-                        message.error('lang attribute should be first entry')
-                attr_count += 1
-            if AttributeList.isnext():
-                finished = False
-                AttributeList.translate()
-    def translate(self):
-        assert self.doctype in ('article','manpage','book'), \
-            'illegal document type'
+            if not comments_only:
+                if AttributeEntry.isnext():
+                    result = True
+                    finished = False
+                    AttributeEntry.translate()
+                if AttributeList.isnext():
+                    result = True
+                    finished = False
+                    AttributeList.translate()
+        return result
+    def parse_header(self,doctype,backend):
+        """
+        Parses header, sets corresponding document attributes and finalizes
+        document doctype and backend properties.
+        Returns False if the document does not have a header.
+        'doctype' and 'backend' are the doctype and backend option values
+        passed on the command-line, None if no command-line option was not
+        specified.
+        """
         assert self.level == 0
-        config.expand_all_templates()
-        self.load_lang()
-        message.verbose('writing: '+writer.fname,False)
-        # Skip leading comments and attribute entries.
+        # Skip comments and attribute entries that preceed the header.
         self.consume_attributes_and_comments()
+        if doctype is not None:
+            # Command-line overrides header.
+            self.doctype = doctype
+        elif self.doctype is None:
+            # Was not set on command-line or in document header.
+            self.doctype = DEFAULT_DOCTYPE
         # Process document header.
-        has_header =  Lex.next() is Title and Title.level == 0
+        has_header = (Title.isnext() and Title.level == 0
+                      and AttributeList.style() != 'float')
         if self.doctype == 'manpage' and not has_header:
-            message.error('manpage document title is mandatory')
+            message.error('manpage document title is mandatory',halt=True)
         if has_header:
-            Header.translate()
-            # Command-line entries override header derived entries.
-            self.attributes.update(config.cmd_attrs)
-            # DEPRECATED: revision renamed to revnumber.
-            self.set_deprecated_attribute('revision','revnumber')
-            # DEPRECATED: date renamed to revdate.
-            self.set_deprecated_attribute('date','revdate')
+            Header.parse()
+        # Command-line entries override header derived entries.
+        self.attributes.update(config.cmd_attrs)
+        # DEPRECATED: revision renamed to revnumber.
+        self.set_deprecated_attribute('revision','revnumber')
+        # DEPRECATED: date renamed to revdate.
+        self.set_deprecated_attribute('date','revdate')
+        if doctype is not None:
+            # Command-line overrides header.
+            self.doctype = doctype
+        if backend is not None:
+            # Command-line overrides header.
+            self.backend = backend
+        elif self.backend is None:
+            # Was not set on command-line or in document header.
+            self.backend = DEFAULT_BACKEND
+        else:
+            # Has been set in document header.
+            self.backend = self.backend # Translate alias in header.
+        assert self.doctype in ('article','manpage','book'), 'illegal document type'
+        return has_header
+    def translate(self,has_header):
+        if self.doctype == 'manpage':
+            # Translate mandatory NAME section.
+            if Lex.next() is not Title:
+                message.error('name section expected')
+            else:
+                Title.translate()
+                if Title.level != 1:
+                    message.error('name section title must be at level 1')
+                if not isinstance(Lex.next(),Paragraph):
+                    message.error('malformed name section body')
+                lines = reader.read_until(r'^$')
+                s = ' '.join(lines)
+                mo = re.match(r'^(?P<manname>.*?)\s+-\s+(?P<manpurpose>.*)$',s)
+                if not mo:
+                    message.error('malformed name section body')
+                self.attributes['manname'] = mo.group('manname').strip()
+                self.attributes['manpurpose'] = mo.group('manpurpose').strip()
+                names = [s.strip() for s in self.attributes['manname'].split(',')]
+                if len(names) > 9:
+                    message.warning('to many manpage names')
+                for i,name in enumerate(names):
+                    self.attributes['manname%d' % (i+1)] = name
+        if has_header:
+            # Do postponed substitutions (backend confs have been loaded).
+            self.attributes['doctitle'] = Title.dosubs(self.attributes['doctitle'])
             if config.header_footer:
                 hdr = config.subs_section('header',{})
                 writer.write(hdr,trace='header')
+            if 'title' in self.attributes:
+                del self.attributes['title']
             self.consume_attributes_and_comments()
             if self.doctype in ('article','book'):
                 # Translate 'preamble' (untitled elements between header
@@ -1352,8 +1538,10 @@ class Document:
                     writer.write(stag,trace='preamble open')
                     Section.translate_body()
                     writer.write(etag,trace='preamble close')
+            elif self.doctype == 'manpage' and 'name' in config.sections:
+                writer.write(config.subs_section('name',{}), trace='name')
         else:
-            document.process_author_names()
+            self.process_author_names()
             if config.header_footer:
                 hdr = config.subs_section('header',{})
                 writer.write(hdr,trace='header')
@@ -1378,8 +1566,10 @@ class Document:
                 '(\s+(?P<name3>[^<>\s]+))?'
                 '(\s+<(?P<email>\S+)>)?$',s)
         if not mo:
-            message.error('malformed author: %s' % s)
-            return False
+            # Names that don't match the formal specification.
+            if s:
+                attrs['firstname'] = s
+            return
         firstname = mo.group('name1')
         if mo.group('name3'):
             middlename = mo.group('name2')
@@ -1401,7 +1591,7 @@ class Document:
             attrs['lastname'] = lastname
         if email:
             attrs['email'] = email
-        return True
+        return
     def process_author_names(self):
         """ Calculate any missing author related attributes."""
         attrs = self.attributes # Alias for readability.
@@ -1411,8 +1601,7 @@ class Document:
         author = attrs.get('author')
         initials = attrs.get('authorinitials')
         if author and not (firstname or middlename or lastname):
-            if not self.parse_author(author):
-                return
+            self.parse_author(author)
             attrs['author'] = author.replace('_',' ')
             self.process_author_names()
             return
@@ -1421,8 +1610,9 @@ class Document:
             author = author.strip()
             author = re.sub(r'\s+',' ', author)
         if not initials:
-            initials = firstname[:1] + middlename[:1] + lastname[:1]
-            initials = initials.upper()
+            initials = (char_decode(firstname)[:1] +
+                       char_decode(middlename)[:1] + char_decode(lastname)[:1])
+            initials = char_encode(initials).upper()
         names = [firstname,middlename,lastname,author,initials]
         for i,v in enumerate(names):
             v = config.subs_specialchars(v)
@@ -1450,42 +1640,33 @@ class Header:
     def __init__(self):
         raise AssertionError,'no class instances allowed'
     @staticmethod
-    def translate():
+    def parse():
         assert Lex.next() is Title and Title.level == 0
-        Title.translate()
         attrs = document.attributes # Alias for readability.
+        # Postpone title subs until backend conf files have been loaded.
+        Title.translate(skipsubs=True)
         attrs['doctitle'] = Title.attributes['title']
-        if document.doctype == 'manpage':
-            # manpage title formatted like mantitle(manvolnum).
-            mo = re.match(r'^(?P<mantitle>.*)\((?P<manvolnum>.*)\)$',
-                          attrs['doctitle'])
-            if not mo:
-                message.error('malformed manpage title')
-            else:
-                mantitle = mo.group('mantitle').strip()
-                # mantitle is lowered only if in ALL CAPS
-                if mantitle == mantitle.upper():
-                    mantitle = mantitle.lower()
-                attrs['mantitle'] = mantitle;
-                attrs['manvolnum'] = mo.group('manvolnum').strip()
-        AttributeEntry.translate_all()
+        document.consume_attributes_and_comments(noblanks=True)
         s = reader.read_next()
         mo = None
         if s:
+            # Process first header line after the title that is not a comment
+            # or an attribute entry.
             s = reader.read()
             mo = re.match(Header.RCS_ID_RE,s)
             if not mo:
                 document.parse_author(s)
-                AttributeEntry.translate_all()
+                document.consume_attributes_and_comments(noblanks=True)
                 if reader.read_next():
-                    # Parse revision line.
+                    # Process second header line after the title that is not a
+                    # comment or an attribute entry.
                     s = reader.read()
                     s = subs_attrs(s)
                     if s:
                         mo = re.match(Header.RCS_ID_RE,s)
                         if not mo:
                             mo = re.match(Header.REV_LINE_RE,s)
-            AttributeEntry.translate_all()
+            document.consume_attributes_and_comments(noblanks=True)
         s = attrs.get('revnumber')
         if s:
             mo = re.match(Header.RCS_ID_RE,s)
@@ -1500,41 +1681,36 @@ class Header:
             if revremark is not None:
                 revremark = [revremark]
                 # Revision remarks can continue on following lines.
-                while reader.read_next() and not AttributeEntry.isnext():
+                while reader.read_next():
+                    if document.consume_attributes_and_comments(noblanks=True):
+                        break
                     revremark.append(reader.read())
                 revremark = Lex.subs(revremark,['normal'])
                 revremark = '\n'.join(revremark).strip()
                 attrs['revremark'] = revremark
-                AttributeEntry.translate_all()
             revdate = mo.group('revdate')
             if revdate:
                 attrs['revdate'] = revdate.strip()
             elif revnumber or revremark:
                 # Set revision date to ensure valid DocBook revision.
                 attrs['revdate'] = attrs['docdate']
-        if document.doctype == 'manpage':
-            # Translate mandatory NAME section.
-            if Lex.next() is not Title:
-                message.error('name section expected')
-            else:
-                Title.translate()
-                if Title.level != 1:
-                    message.error('name section title must be at level 1')
-                if not isinstance(Lex.next(),Paragraph):
-                    message.error('malformed name section body')
-                lines = reader.read_until(r'^$')
-                s = ' '.join(lines)
-                mo = re.match(r'^(?P<manname>.*?)\s+-\s+(?P<manpurpose>.*)$',s)
-                if not mo:
-                    message.error('malformed name section body')
-                attrs['manname'] = mo.group('manname').strip()
-                attrs['manpurpose'] = mo.group('manpurpose').strip()
-                names = [s.strip() for s in attrs['manname'].split(',')]
-                if len(names) > 9:
-                    message.warning('to many manpage names')
-                for i,name in enumerate(names):
-                    attrs['manname%d' % (i+1)] = name
         document.process_author_names()
+        if document.doctype == 'manpage':
+            # manpage title formatted like mantitle(manvolnum).
+            mo = re.match(r'^(?P<mantitle>.*)\((?P<manvolnum>.*)\)$',
+                          attrs['doctitle'])
+            if not mo:
+                message.error('malformed manpage title')
+            else:
+                mantitle = mo.group('mantitle').strip()
+                mantitle = subs_attrs(mantitle)
+                if mantitle is None:
+                    message.error('undefined attribute in manpage title')
+                # mantitle is lowered only if in ALL CAPS
+                if mantitle == mantitle.upper():
+                    mantitle = mantitle.lower()
+                attrs['mantitle'] = mantitle;
+                attrs['manvolnum'] = mo.group('manvolnum').strip()
 
 class AttributeEntry:
     """Static methods and attributes only."""
@@ -1543,6 +1719,7 @@ class AttributeEntry:
     name = None
     name2 = None
     value = None
+    attributes = {}     # Accumulates all the parsed attribute entries.
     def __init__(self):
         raise AssertionError,'no class instances allowed'
     @staticmethod
@@ -1569,25 +1746,36 @@ class AttributeEntry:
         assert Lex.next() is AttributeEntry
         attr = AttributeEntry    # Alias for brevity.
         reader.read()            # Discard attribute entry from reader.
-        if AttributeEntry.name2: # The entry is a conf file entry.
-            section = {}
-            # Some sections can have name! syntax.
-            if attr.name in ('attributes','miscellaneous') and attr.name2[-1] == '!':
-                section[attr.name] = [attr.name2]
+        while attr.value.endswith(' +'):
+            if not reader.read_next(): break
+            attr.value = attr.value[:-1] + reader.read().strip()
+        if attr.name2 is not None:
+            # Configuration file attribute.
+            if attr.name2 != '':
+                # Section entry attribute.
+                section = {}
+                # Some sections can have name! syntax.
+                if attr.name in ('attributes','miscellaneous') and attr.name2[-1] == '!':
+                    section[attr.name] = [attr.name2]
+                else:
+                   section[attr.name] = ['%s=%s' % (attr.name2,attr.value)]
+                config.load_sections(section)
+                config.load_miscellaneous(config.conf_attrs)
             else:
-               section[attr.name] = ['%s=%s' % (attr.name2,attr.value)]
-            config.load_sections(section)
-            config.load_miscellaneous(config.conf_attrs)
-            config.validate()
-        else: # The entry is an attribute.
+                # Markup template section attribute.
+                if attr.name in config.sections:
+                    config.sections[attr.name] = [attr.value]
+                else:
+                    message.warning('missing configuration section: %s' % attr.name)
+        else:
+            # Normal attribute.
             if attr.name[-1] == '!':
                 # Names like name! undefine the attribute.
                 attr.name = attr.name[:-1]
                 attr.value = None
             # Strip white space and illegal name chars.
             attr.name = re.sub(r'(?u)[^\w\-_]', '', attr.name).lower()
-            # Don't override command-line attributes (the exception is the
-            # system 'trace' attribute).
+            # Don't override most command-line attributes.
             if attr.name in config.cmd_attrs \
                     and attr.name not in ('trace','numbered'):
                 return
@@ -1610,11 +1798,7 @@ class AttributeEntry:
                 document.attributes[attr.name] = attr.value
             elif attr.name in document.attributes:
                 del document.attributes[attr.name]
-    @staticmethod
-    def translate_all():
-        """ Process all contiguous attribute lines on reader."""
-        while AttributeEntry.isnext():
-            AttributeEntry.translate()
+            attr.attributes[attr.name] = attr.value
 
 class AttributeList:
     """Static methods and attributes only."""
@@ -1728,7 +1912,7 @@ class Title:
     def __init__(self):
         raise AssertionError,'no class instances allowed'
     @staticmethod
-    def translate():
+    def translate(skipsubs=False):
         """Parse the Title.attributes and Title.level from the reader. The
         real work has already been done by parse()."""
         assert Lex.next() in (Title,FloatingTitle)
@@ -1736,14 +1920,20 @@ class Title:
         for i in range(Title.linecount):
             reader.read()
         Title.setsectname()
-        # Perform title substitutions.
+        if not skipsubs:
+            Title.attributes['title'] = Title.dosubs(Title.attributes['title'])
+    @staticmethod
+    def dosubs(title):
+        """
+        Perform title substitutions.
+        """
         if not Title.subs:
             Title.subs = config.subsnormal
-        s = Lex.subs((Title.attributes['title'],), Title.subs)
-        s = writer.newline.join(s)
-        if not s:
+        title = Lex.subs((title,), Title.subs)
+        title = writer.newline.join(title)
+        if not title:
             message.warning('blank section title')
-        Title.attributes['title'] = s
+        return title
     @staticmethod
     def isnext():
         lines = reader.read_ahead(2)
@@ -1770,13 +1960,16 @@ class Title:
             if not Title.pattern: return False  # Single-line titles only.
             if len(lines) < 2: return False
             title,ul = lines[:2]
-            title_len = char_len(title)
+            title_len = column_width(title)
             ul_len = char_len(ul)
             if ul_len < 2: return False
             # Fast elimination check.
             if ul[:2] not in Title.underlines: return False
             # Length of underline must be within +-3 of title.
-            if not (ul_len-3 < title_len < ul_len+3): return False
+            if not ((ul_len-3 < title_len < ul_len+3)
+                    # Next test for backward compatibility.
+                    or (ul_len-3 < char_len(title) < ul_len+3)):
+                return False
             # Check for valid repetition of underline character pairs.
             s = ul[:2]*((ul_len+1)/2)
             if ul != s[:ul_len]: return False
@@ -1938,7 +2131,10 @@ class Section:
         NCNameStartChar ::=     Letter | '_'
         NameChar        ::=     Letter | Digit | '.' | '-' | '_' | ':'
         """
-        base_ident = re.sub(r'[^a-zA-Z0-9]+', '_', title).strip('_').lower()
+        # Replace non-alpha numeric characters in title with underscores and
+        # convert to lower case.
+        base_ident = char_encode(re.sub(r'(?u)\W+', '_',
+                char_decode(title)).strip('_').lower())
         # Prefix the ID name with idprefix attribute or underscore if not
         # defined. Prefix ensures the ID does not clash with existing IDs.
         idprefix = document.attributes.get('idprefix','_')
@@ -1969,7 +2165,7 @@ class Section:
         if Title.level == 0 and document.doctype != 'book':
             message.error('only book doctypes can contain level 0 sections')
         if Title.level > document.level \
-                and document.backend == 'docbook' \
+                and 'basebackend-docbook' in document.attributes \
                 and prev_sectname in ('colophon','abstract', \
                     'dedication','glossary','bibliography'):
             message.error('%s section cannot contain sub-sections' % prev_sectname)
@@ -1987,7 +2183,10 @@ class Section:
                     % (document.level+1, Title.level))
         Section.set_id()
         Section.setlevel(Title.level)
-        Title.attributes['sectnum'] = Title.getnumber(document.level)
+        if 'numbered' in document.attributes:
+            Title.attributes['sectnum'] = Title.getnumber(document.level)
+        else:
+            Title.attributes['sectnum'] = ''
         AttributeList.consume(Title.attributes)
         stag,etag = config.section2tags(Title.sectname,Title.attributes)
         Section.savetag(Title.level,etag)
@@ -2188,7 +2387,9 @@ class AbstractBlock:
         for k,v in self.styles.items():
             t = v.get('template')
             if t and not t in config.sections:
-                message.warning('missing template section: [%s]' % t)
+                # Defer check if template name contains attributes.
+                if not re.search(r'{.+}',t):
+                    message.warning('missing template section: [%s]' % t)
             if not t:
                 all_styles_have_template = False
         # Check we have a valid template entry or alternatively that all the
@@ -2196,7 +2397,10 @@ class AbstractBlock:
         if self.is_conf_entry('template') and not 'skip' in self.options:
             if self.template:
                 if not self.template in config.sections:
-                    message.warning('missing template section: [%s]' % self.template)
+                    # Defer check if template name contains attributes.
+                    if not re.search(r'{.+}',self.template):
+                        message.warning('missing template section: [%s]'
+                                        % self.template)
             elif not all_styles_have_template:
                 if not isinstance(self,List): # Lists don't have templates.
                     message.warning('missing styles templates: [%s]' % self.name)
@@ -2374,13 +2578,16 @@ class Paragraph(AbstractBlock):
         body = [self.text] + list(body)
         presubs = self.parameters.presubs
         postsubs = self.parameters.postsubs
-        body = Lex.set_margin(body) # Move body to left margin.
+        if document.attributes.get('plaintext') is None:
+            body = Lex.set_margin(body) # Move body to left margin.
         body = Lex.subs(body,presubs)
+        template = self.parameters.template
+        template = subs_attrs(template,attrs)
+        stag = config.section2tags(template, self.attributes,skipend=True)[0]
         if self.parameters.filter:
             body = filter_lines(self.parameters.filter,body,self.attributes)
         body = Lex.subs(body,postsubs)
-        template = self.parameters.template
-        stag,etag = config.section2tags(template, self.attributes)
+        etag = config.section2tags(template, self.attributes,skipstart=True)[1]
         # Write start tag, content, end tag.
         writer.write(dovetail_tags(stag,body,etag),trace='paragraph')
 
@@ -2717,14 +2924,16 @@ class DelimitedBlock(AbstractBlock):
             reader.read_until(self.delimiter,same_file=True)
         else:
             template = self.parameters.template
-            stag,etag = config.section2tags(template,self.attributes)
+            template = subs_attrs(template,attrs)
             name = self.short_name()+' block'
             if 'sectionbody' in options:
                 # The body is treated like a section body.
+                stag,etag = config.section2tags(template,self.attributes)
                 writer.write(stag,trace=name+' open')
                 Section.translate_body(self)
                 writer.write(etag,trace=name+' close')
             else:
+                stag = config.section2tags(template,self.attributes,skipend=True)[0]
                 body = reader.read_until(self.delimiter,same_file=True)
                 presubs = self.parameters.presubs
                 postsubs = self.parameters.postsubs
@@ -2733,6 +2942,7 @@ class DelimitedBlock(AbstractBlock):
                     body = filter_lines(self.parameters.filter,body,self.attributes)
                 body = Lex.subs(body,postsubs)
                 # Write start tag, content, end tag.
+                etag = config.section2tags(template,self.attributes,skipstart=True)[1]
                 writer.write(dovetail_tags(stag,body,etag),trace=name)
             trace(self.short_name()+' block close',etag)
         if reader.eof():
@@ -2944,8 +3154,8 @@ class Table(AbstractBlock):
                     self.error('illegal column spec: %s' % col,self.start)
         # Set column (and indirectly cell) default alignments.
         for col in self.columns:
-            col.halign = col.halign or halign or 'left'
-            col.valign = col.valign or valign or 'top'
+            col.halign = col.halign or halign or document.attributes.get('halign') or 'left'
+            col.valign = col.valign or valign or document.attributes.get('valign') or 'top'
         # Validate widths and calculate missing widths.
         n = 0; percents = 0; props = 0
         for col in self.columns:
@@ -3600,7 +3810,7 @@ class Macro:
             if self.has_passthrough():
                 s = macros.restore_passthroughs(s)
             if s:
-                trace('macro',before,s)
+                trace('macro block',before,s)
                 writer.write(s)
 
     def subs_passthroughs(self, text, passthroughs):
@@ -3711,17 +3921,21 @@ class Reader1:
         self.current_depth = 0  # Current include depth.
         self.max_depth = 5      # Initial maxiumum allowed include depth.
         self.bom = None         # Byte order mark (BOM).
+        self.infile = None      # Saved document 'infile' attribute.
+        self.indir = None       # Saved document 'indir' attribute.
     def open(self,fname):
         self.fname = fname
         message.verbose('reading: '+fname)
         if fname == '<stdin>':
             self.f = sys.stdin
-            document.attributes['infile'] = None
-            document.attributes['indir'] = None
+            self.infile = None
+            self.indir = None
         else:
             self.f = open(fname,'rb')
-            document.attributes['infile'] = fname
-            document.attributes['indir'] = os.path.dirname(fname)
+            self.infile = fname
+            self.indir = os.path.dirname(fname)
+        document.attributes['infile'] = self.infile
+        document.attributes['indir'] = self.indir
         self._lineno = 0            # The last line read from file object f.
         self.next = []
         # Prefill buffer by reading the first line and then pushing it back.
@@ -3824,6 +4038,8 @@ class Reader1:
             if self.parent:
                 self.closefile()
                 assign(self,self.parent)    # Restore parent reader.
+                document.attributes['infile'] = self.infile
+                document.attributes['indir'] = self.indir
                 return Reader1.eof(self)
             else:
                 return True
@@ -3861,49 +4077,65 @@ class Reader(Reader1):
         if result is None:
             return None
         while self.skip:
-            mo = macros.match('+',r'ifdef|ifndef|endif',result)
+            mo = macros.match('+',r'ifdef|ifndef|ifeval|endif',result)
             if mo:
                 name = mo.group('name')
                 target = mo.group('target')
+                attrlist = mo.group('attrlist')
                 if name == 'endif':
-                    self.depth = self.depth-1
+                    self.depth -= 1
                     if self.depth < 0:
                         raise EAsciiDoc,'mismatched macro: %s' % result
                     if self.depth == self.skipto:
                         self.skip = False
                         if target and self.skipname != target:
                             raise EAsciiDoc,'mismatched macro: %s' % result
-                else:   # ifdef or ifndef.
-                    if not target:
-                        raise EAsciiDoc,'missing macro target: %s' % result
-                    attrlist = mo.group('attrlist')
-                    if not attrlist:
-                        self.depth = self.depth+1
+                else:
+                    if name in ('ifdef','ifndef'):
+                        if not target:
+                            raise EAsciiDoc,'missing macro target: %s' % result
+                        if not attrlist:
+                            self.depth += 1
+                    elif name == 'ifeval':
+                        if not attrlist:
+                            raise EAsciiDoc,'missing ifeval condition: %s' % result
+                        self.depth += 1
             result = self.read_super()
             if result is None:
                 return None
-        mo = macros.match('+',r'ifdef|ifndef|endif',result)
+        mo = macros.match('+',r'ifdef|ifndef|ifeval|endif',result)
         if mo:
             name = mo.group('name')
             target = mo.group('target')
+            attrlist = mo.group('attrlist')
             if name == 'endif':
                 self.depth = self.depth-1
-            else:   # ifdef or ifndef.
-                if not target:
+            else:
+                if not target and name in ('ifdef','ifndef'):
                     raise EAsciiDoc,'missing macro target: %s' % result
-                defined = document.attributes.get(target) is not None
-                attrlist = mo.group('attrlist')
+                defined = is_attr_defined(target, document.attributes)
                 if name == 'ifdef':
                     if attrlist:
                         if defined: return attrlist
                     else:
                         self.skip = not defined
-                else:   # ifndef.
+                elif name == 'ifndef':
                     if attrlist:
                         if not defined: return attrlist
                     else:
                         self.skip = defined
-                if not attrlist:
+                elif name == 'ifeval':
+                    if not attrlist:
+                        raise EAsciiDoc,'missing ifeval condition: %s' % result
+                    cond = False
+                    attrlist = subs_attrs(attrlist)
+                    if attrlist:
+                        try:
+                            cond = eval(attrlist)
+                        except Exception,e:
+                            raise EAsciiDoc,'error evaluating ifeval condition: %s: %s' % (result, str(e))
+                    self.skip = not cond
+                if not attrlist or name == 'ifeval':
                     if self.skip:
                         self.skipto = self.depth
                         self.skipname = target
@@ -4002,6 +4234,7 @@ class Writer:
             self.f = sys.stdout
         else:
             self.f = open(fname,'wb+')
+        message.verbose('writing: '+writer.fname,False)
         if bom:
             self.f.write(bom)
         self.lines_out = 0
@@ -4113,10 +4346,35 @@ class Config:
         self.include1 = {}      # Holds include1::[] files for {include1:}.
         self.dumping = False    # True if asciidoc -c option specified.
 
-    def load_file(self,fname,dir=None):
+    def init(self, cmd):
+        """
+        Check Python version and locate the executable and configuration files
+        directory.
+        cmd is the asciidoc command or asciidoc.py path.
+        """
+        if float(sys.version[:3]) < MIN_PYTHON_VERSION:
+            message.stderr('FAILED: Python 2.3 or better required')
+            sys.exit(1)
+        if not os.path.exists(cmd):
+            message.stderr('FAILED: Missing asciidoc command: %s' % cmd)
+            sys.exit(1)
+        global APP_FILE
+        APP_FILE = os.path.realpath(cmd)
+        global APP_DIR
+        APP_DIR = os.path.dirname(APP_FILE)
+        global USER_DIR
+        USER_DIR = userdir()
+        if USER_DIR is not None:
+            USER_DIR = os.path.join(USER_DIR,'.asciidoc')
+            if not os.path.isdir(USER_DIR):
+                USER_DIR = None
+
+    def load_file(self, fname, dir=None, include=[], exclude=[]):
         """
         Loads sections dictionary with sections from file fname.
         Existing sections are overlaid.
+        The 'include' list contains the section names to be loaded.
+        The 'exclude' list contains section names not to be loaded.
         Return False if no file was found in any of the locations.
         """
         if dir:
@@ -4129,7 +4387,9 @@ class Config:
         if os.path.realpath(fname) in self.loaded:
             return True
         rdr = Reader()  # Reader processes system macros.
+        message.linenos = False         # Disable document line numbers.
         rdr.open(fname)
+        message.linenos = None
         self.fname = fname
         reo = re.compile(r'(?u)^\[(?P<section>[^\W\d][\w-]*)\]\s*$')
         sections = OrderedDict()
@@ -4168,16 +4428,26 @@ class Config:
             else:
                 sections[section] = contents
         rdr.close()
-        self.load_sections(sections)
-        self.loaded.append(os.path.realpath(fname))
-        if document.infile is not None:
-            document.update_attributes() # So they are available immediately.
+        if include:
+            for s in set(sections) - set(include):
+                del sections[s]
+        if exclude:
+            for s in set(sections) & set(exclude):
+                del sections[s]
+        attrs = {}
+        self.load_sections(sections,attrs)
+        if not include:
+            # If all sections are loaded mark this file as loaded.
+            self.loaded.append(os.path.realpath(fname))
+        document.update_attributes(attrs) # So they are available immediately.
         return True
 
-    def load_sections(self,sections):
-        '''Loads sections dictionary. Each dictionary entry contains a
+    def load_sections(self,sections,attrs=None):
+        """
+        Loads sections dictionary. Each dictionary entry contains a
         list of lines.
-        '''
+        Updates 'attrs' with parsed [attributes] section entries.
+        """
         # Delete trailing blank lines from sections.
         for k in sections.keys():
             for i in range(len(sections[k])-1,-1,-1):
@@ -4192,11 +4462,11 @@ class Config:
         d = {}
         parse_entries(sections.get('miscellaneous',()), d, unquote=True,
                 allow_name_only=True)
-        update_attrs(self.conf_attrs,d)
-        d = {}
         parse_entries(sections.get('attributes',()), d, unquote=True,
                 allow_name_only=True)
         update_attrs(self.conf_attrs,d)
+        if attrs is not None:
+            attrs.update(d)
         d = {}
         parse_entries(sections.get('titles',()),d)
         Title.load(d)
@@ -4214,18 +4484,19 @@ class Config:
         macros.load(sections.get('macros',()))
 
     def get_load_dirs(self):
-        """Return list of well known paths to search for conf files."""
+        """
+        Return list of well known paths with conf files.
+        """
         result = []
-        # Load global configuration from system configuration directory.
-        result.append(CONF_DIR)
-        # Load global configuration files from folders in asciidoc directory.
-        result.append(APP_DIR)
+        if localapp():
+            # Load from folders in asciidoc executable directory.
+            result.append(APP_DIR)
+        else:
+            # Load from global configuration directory.
+            result.append(CONF_DIR)
         # Load configuration files from ~/.asciidoc if it exists.
         if USER_DIR is not None:
             result.append(USER_DIR)
-        # Load configuration files from document directory.
-        if document.infile not in (None,'<stdin>'):
-            result.append(os.path.dirname(document.infile))
         return result
 
     def find_in_dirs(self, filename, dirs=None):
@@ -4243,7 +4514,7 @@ class Config:
                 result.append(f)
         return result
 
-    def load_from_dirs(self, filename, dirs=None):
+    def load_from_dirs(self, filename, dirs=None, include=[]):
         """
         Load conf file from dirs list.
         If dirs not specified try all the well known locations.
@@ -4251,32 +4522,37 @@ class Config:
         """
         count = 0
         for f in self.find_in_dirs(filename,dirs):
-            if self.load_file(f):
+            if self.load_file(f, include=include):
                 count += 1
         return count != 0
 
-    def load_all(self, dirs=None):
+    def load_backend(self, dirs=None):
         """
-        Load the standard configuration (except the language file)
-        files from dirs list.
+        Load the backend configuration files from dirs list.
         If dirs not specified try all the well known locations.
         """
         if dirs is None:
             dirs = self.get_load_dirs()
         for d in dirs:
-            self.load_file('asciidoc.conf',d)
             conf = document.backend + '.conf'
             self.load_file(conf,d)
             conf = document.backend + '-' + document.doctype + '.conf'
             self.load_file(conf,d)
+
+    def load_filters(self, dirs=None):
+        """
+        Load filter configuration files from 'filters' directory in dirs list.
+        If dirs not specified try all the well known locations.
+        """
+        if dirs is None:
+            dirs = self.get_load_dirs()
+        for d in dirs:
             # Load filter .conf files.
             filtersdir = os.path.join(d,'filters')
             for dirpath,dirnames,filenames in os.walk(filtersdir):
                 for f in filenames:
                     if re.match(r'^.+\.conf$',f):
                         self.load_file(f,dirpath)
-            # English defaults.
-            self.load_file('lang-en.conf',d)
 
     def load_miscellaneous(self,d):
         """Set miscellaneous configuration entries from dictionary 'd'."""
@@ -4309,7 +4585,8 @@ class Config:
     def validate(self):
         """Check the configuration for internal consistancy. Called after all
         configuration files have been loaded."""
-        # Heuristic validate that at least one configuration file was loaded.
+        message.linenos = False     # Disable document line numbers.
+        # Heuristic to validate that at least one configuration file was loaded.
         if not self.specialchars or not self.tags or not lists:
             raise EAsciiDoc,'incomplete configuration files'
         # Check special characters are only one character long.
@@ -4324,7 +4601,7 @@ class Config:
             if not macro in self.sections:
                 message.warning('missing special word macro: [%s]' % macro)
         # Check all text quotes have a corresponding tag.
-        for q in self.quotes.keys():
+        for q in self.quotes.keys()[:]:
             tag = self.quotes[q]
             if not tag:
                 del self.quotes[q]  # Undefine quote.
@@ -4345,6 +4622,7 @@ class Config:
         tables_OLD.validate()
         tables.validate()
         macros.validate()
+        message.linenos = None
 
     def entries_section(self,section_name):
         """
@@ -4437,14 +4715,6 @@ class Config:
         [tags] section. Raise error if not found. If a dictionary 'd' is
         passed then merge with document attributes and perform attribute
         substitution on tags."""
-
-        # TODO: Tags should be stored a single string, not split into start
-        # and end tags since most are going to be substituted anyway (see
-        # subs_tag() for how we should process them. parse_tags() (above)
-        # should only validate i.e. parse_check(). This routine should be renamed
-        # split_tag() and would call subs_tag(). self.tags dictionary values
-        # would be strings not tuples.
-
         if not name in self.tags:
             raise EAsciiDoc, 'missing tag: %s' % name
         stag,etag = self.tags[name]
@@ -4568,6 +4838,7 @@ class Config:
                     result += self.expand_templates(self.sections[s])
                 else:
                     message.warning('missing section: [%s]' % s)
+                    result.append(line)
             else:
                 result.append(line)
         return result
@@ -4576,10 +4847,11 @@ class Config:
         for k,v in self.sections.items():
             self.sections[k] = self.expand_templates(v)
 
-    def section2tags(self, section, d={}):
+    def section2tags(self, section, d={}, skipstart=False, skipend=False):
         """Perform attribute substitution on 'section' using document
         attributes plus 'd' attributes. Return tuple (stag,etag) containing
-        pre and post | placeholder tags."""
+        pre and post | placeholder tags. 'skipstart' and 'skipend' are
+        used to suppress substitution."""
         assert section is not None
         if section in self.sections:
             body = self.sections[section]
@@ -4608,8 +4880,10 @@ class Config:
         title = d.get('title')
         if title:
             d['title'] = chr(0)  # Replace with unused character.
-        stag = subs_attrs(stag, d)
-        etag = subs_attrs(etag, d)
+        if not skipstart:
+            stag = subs_attrs(stag, d)
+        if not skipend:
+            etag = subs_attrs(etag, d)
         # Put the {title} back.
         if title:
             stag = map(lambda x: x.replace(chr(0), title), stag)
@@ -4622,7 +4896,6 @@ class Config:
 # Deprecated old table classes follow.
 # Naming convention is an _OLD name suffix.
 # These will be removed from future versions of AsciiDoc
-#
 
 def join_lines_OLD(lines):
     """Return a list in which lines terminated with the backslash line
@@ -5116,6 +5389,135 @@ class Tables_OLD(AbstractBlocks):
 #---------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------
+# Filter commands.
+#---------------------------------------------------------------------------
+import shutil, zipfile
+
+def die(msg):
+    message.stderr(msg)
+    sys.exit(1)
+
+def unzip(zip_file, destdir):
+    """
+    Unzip Zip file to destination directory.
+    Throws exception if error occurs.
+    """
+    zipo = zipfile.ZipFile(zip_file, 'r')
+    try:
+        for zi in zipo.infolist():
+            outfile = zi.filename
+            if not outfile.endswith('/'):
+                d, outfile = os.path.split(outfile)
+                directory = os.path.normpath(os.path.join(destdir, d))
+                if not os.path.isdir(directory):
+                    os.makedirs(directory)
+                outfile = os.path.join(directory, outfile)
+                perms = (zi.external_attr >> 16) & 0777
+                message.verbose('extracting: %s' % outfile)
+                fh = os.open(outfile, os.O_CREAT | os.O_WRONLY, perms)
+                try:
+                    os.write(fh, zipo.read(zi.filename))
+                finally:
+                    os.close(fh)
+    finally:
+        zipo.close()
+
+class Filter:
+    """
+    --filter option commands.
+    """
+
+    @staticmethod
+    def get_filters_dir():
+        """
+        Return path of .asciidoc/filters in user's home direcory or None if
+        user home not defined.
+        """
+        result = userdir()
+        if result:
+            result = os.path.join(result,'.asciidoc','filters')
+        return result
+
+    @staticmethod
+    def install(args):
+        """
+        Install filter Zip file.
+        args[0] is filter zip file path.
+        args[1] is optional destination filters directory.
+        """
+        if len(args) not in (1,2):
+            die('invalid number of arguments: --filter install %s'
+                    % ' '.join(args))
+        zip_file = args[0]
+        if not os.path.isfile(zip_file):
+            die('file not found: %s' % zip_file)
+        reo = re.match(r'^\w+',os.path.split(zip_file)[1])
+        if not reo:
+            die('filter file name does not start with legal filter name: %s'
+                    % zip_file)
+        filter_name = reo.group()
+        if len(args) == 2:
+            filters_dir = args[1]
+            if not os.path.isdir(filters_dir):
+                die('directory not found: %s' % filters_dir)
+        else:
+            filters_dir = Filter.get_filters_dir()
+            if not filters_dir:
+                die('user home directory is not defined')
+        filter_dir = os.path.join(filters_dir, filter_name)
+        if os.path.exists(filter_dir):
+            die('filter is already installed: %s' % filter_dir)
+        try:
+            os.makedirs(filter_dir)
+        except Exception,e:
+            die('failed to create filter directory: %s' % str(e))
+        try:
+            unzip(zip_file, filter_dir)
+        except Exception,e:
+            die('failed to extract filter: %s' % str(e))
+
+    @staticmethod
+    def remove(args):
+        """
+        Delete filter from .asciidoc/filters/ in user's home directory.
+        args[0] is filter name.
+        args[1] is optional filters directory.
+        """
+        if len(args) not in (1,2):
+            die('invalid number of arguments: --filter remove %s'
+                    % ' '.join(args))
+        filter_name = args[0]
+        if not re.match(r'^\w+$',filter_name):
+            die('illegal filter name: %s' % filter_name)
+        if len(args) == 2:
+            d = args[1]
+            if not os.path.isdir(d):
+                die('directory not found: %s' % d)
+        else:
+            d = Filter.get_filters_dir()
+            if not d:
+                die('user directory is not defined')
+        filter_dir = os.path.join(d, filter_name)
+        if not os.path.isdir(filter_dir):
+            die('cannot find filter: %s' % filter_dir)
+        try:
+            message.verbose('removing: %s' % filter_dir)
+            shutil.rmtree(filter_dir)
+        except Exception,e:
+            die('failed to delete filter: %s' % str(e))
+
+    @staticmethod
+    def list():
+        """
+        List all filter directories (global and local).
+        """
+        for d in [os.path.join(d,'filters') for d in config.get_load_dirs()]:
+            if os.path.isdir(d):
+                for f in os.walk(d).next()[1]:
+                    message.stdout(os.path.join(d,f))
+
+
+#---------------------------------------------------------------------------
 # Application code.
 #---------------------------------------------------------------------------
 # Constants
@@ -5152,65 +5554,126 @@ def asciidoc(backend, doctype, confiles, infile, outfile, options):
     """Convert AsciiDoc document to DocBook document of type doctype
     The AsciiDoc document is read from file object src the translated
     DocBook file written to file object dst."""
+    def load_conffiles(include=[], exclude=[]):
+        # Load conf files specified on the command-line and by the conf-files attribute.
+        files = document.attributes.get('conf-files','')
+        files = [f.strip() for f in files.split('|') if f.strip()]
+        files += confiles
+        if files:
+            for f in files:
+                if os.path.isfile(f):
+                    config.load_file(f, include=include, exclude=exclude)
+                else:
+                    raise EAsciiDoc,'configuration file %s missing' % f
+
     try:
-        if doctype not in ('article','manpage','book'):
+        if doctype not in (None,'article','manpage','book'):
             raise EAsciiDoc,'illegal document type'
-        document.backend = backend
-        f = backend+'.conf'
-        if not config.find_in_dirs(f):
-            message.warning('missing backend conf file: %s' % f, linenos=False)
-        document.doctype = doctype
-        document.infile = infile
-        document.update_attributes()
         # Set processing options.
         for o in options:
             if o == '-c': config.dumping = True
             if o == '-s': config.header_footer = False
             if o == '-v': config.verbose = True
-        # Check the infile exists.
-        if infile != '<stdin>' and not os.path.isfile(infile):
-            raise EAsciiDoc,'input file %s missing' % infile
-        if '-e' not in options:
-            config.load_all()
-        if infile != '<stdin>':
-            # Load implicit document specific configuration files if they exist.
-            config.load_file(os.path.splitext(infile)[0] + '.conf')
-            config.load_file(os.path.splitext(infile)[0] + '-' + backend + '.conf')
-        # If user specified configuration file(s) overlay the defaults.
-        if confiles:
-            for conf in confiles:
-                if os.path.isfile(conf):
-                    config.load_file(conf)
-                else:
-                    raise EAsciiDoc,'configuration file %s missing' % conf
         document.update_attributes()
-        # Check configuration for consistency.
-        config.validate()
-        # Build outfile name now all conf files have been read.
+        if '-e' not in options:
+            # Load asciidoc.conf files in two passes: the first for attributes
+            # the second for everything. This is so that locally set attributes
+            # available are in the global asciidoc.conf
+            if not config.load_from_dirs('asciidoc.conf',include=['attributes']):
+                raise EAsciiDoc,'configuration file asciidoc.conf missing'
+            load_conffiles(include=['attributes'])
+            config.load_from_dirs('asciidoc.conf')
+            if infile != '<stdin>':
+                indir = os.path.dirname(infile)
+                config.load_file('asciidoc.conf', indir,
+                                include=['attributes','titles','specialchars'])
+        else:
+            load_conffiles(include=['attributes','titles','specialchars'])
+        document.update_attributes()
+        # Check the infile exists.
+        if infile != '<stdin>':
+            if not os.path.isfile(infile):
+                raise EAsciiDoc,'input file %s missing' % infile
+        document.infile = infile
+        AttributeList.initialize()
+        # Open input file and parse document header.
+        reader.tabsize = config.tabsize
+        reader.open(infile)
+        has_header = document.parse_header(doctype,backend)
+        # doctype is now finalized.
+        document.attributes['doctype-'+document.doctype] = ''
+        # Load backend configuration files.
+        if '-e' not in options:
+            f = document.backend + '.conf'
+            if not config.find_in_dirs(f):
+                message.warning('missing backend conf file: %s' % f, linenos=False)
+            config.load_backend()
+        # backend is now known.
+        document.attributes['backend-'+document.backend] = ''
+        document.attributes[document.backend+'-'+document.doctype] = ''
+        doc_conffiles = []
+        if '-e' not in options:
+            # Load filters and language file.
+            config.load_filters()
+            document.load_lang()
+            if infile != '<stdin>':
+                # Load local conf files (files in the source file directory).
+                config.load_file('asciidoc.conf', indir)
+                config.load_backend([indir])
+                config.load_filters([indir])
+                # Load document specific configuration files.
+                f = os.path.splitext(infile)[0]
+                doc_conffiles = [
+                        f for f in (f+'.conf', f+'-'+document.backend+'.conf')
+                        if os.path.isfile(f) ]
+                for f in doc_conffiles:
+                    config.load_file(f)
+        load_conffiles()
+        # Build asciidoc-args attribute.
+        args = ''
+        # Add custom conf file arguments.
+        for f in doc_conffiles + confiles:
+            args += ' --conf-file "%s"' % f
+        # Add command-line and header attributes.
+        attrs = {}
+        attrs.update(AttributeEntry.attributes)
+        attrs.update(config.cmd_attrs)
+        if 'title' in attrs:    # Don't pass the header title.
+            del attrs['title']
+        for k,v in attrs.items():
+            if v:
+                args += ' --attribute "%s=%s"' % (k,v)
+            else:
+                args += ' --attribute "%s"' % k
+        document.attributes['asciidoc-args'] = args
+        # Build outfile name.
         if outfile is None:
-            outfile = os.path.splitext(infile)[0] + '.' + backend
+            outfile = os.path.splitext(infile)[0] + '.' + document.backend
             if config.outfilesuffix:
                 # Change file extension.
                 outfile = os.path.splitext(outfile)[0] + config.outfilesuffix
         document.outfile = outfile
+        # Document header attributes override conf file attributes.
+        document.attributes.update(AttributeEntry.attributes)
+        document.update_attributes()
+        # Configuration is fully loaded so can expand templates.
+        config.expand_all_templates()
+        # Check configuration for consistency.
+        config.validate()
+        paragraphs.initialize()
+        lists.initialize()
         if config.dumping:
             config.dump()
         else:
-            reader.tabsize = config.tabsize
-            reader.open(infile)
+            writer.newline = config.newline
             try:
-                writer.newline = config.newline
                 writer.open(outfile, reader.bom)
                 try:
-                    AttributeList.initialize()
-                    paragraphs.initialize()
-                    lists.initialize()
-                    document.update_attributes()   # Add file name related.
-                    document.translate()
+                    document.translate(has_header) # Generate the output.
                 finally:
                     writer.close()
             finally:
-                reader.closefile()  # Keep reader state for postmortem.
+                reader.closefile()
     except KeyboardInterrupt:
         raise
     except Exception,e:
@@ -5263,7 +5726,8 @@ def show_help(topic, f=None):
             n += 1
             lines = config.sections[k]
     if n == 0:
-        message.stderr('help topic not found: [%s] in %s' % (topic, help_file))
+        if topic != 'topics':
+            message.stderr('help topic not found: [%s] in %s' % (topic, help_file))
         message.stderr('available help topics: %s' % ', '.join(config.sections.keys()))
         sys.exit(1)
     elif n > 1:
@@ -5299,30 +5763,12 @@ def execute(cmd,opts,args):
        >>>
 
     """
-    if float(sys.version[:3]) < MIN_PYTHON_VERSION:
-        message.stderr('FAILED: Python 2.3 or better required')
-        sys.exit(1)
-    if not os.path.exists(cmd):
-        message.stderr('FAILED: Missing asciidoc command: %s' % cmd)
-        sys.exit(1)
-    # Locate the executable and configuration files directory.
-    global APP_FILE
-    APP_FILE = os.path.realpath(cmd)
-    global APP_DIR
-    APP_DIR = os.path.dirname(APP_FILE)
-    global CONF_DIR
-    CONF_DIR = APP_DIR
-    global USER_DIR
-    USER_DIR = os.environ.get('HOME')
-    if USER_DIR is not None:
-        USER_DIR = os.path.join(USER_DIR,'.asciidoc')
-        if not os.path.isdir(USER_DIR):
-            USER_DIR = None
+    config.init(cmd)
     if len(args) > 1:
         usage('To many arguments')
         sys.exit(1)
-    backend = DEFAULT_BACKEND
-    doctype = DEFAULT_DOCTYPE
+    backend = None
+    doctype = None
     confiles = []
     outfile = None
     options = []
@@ -5340,10 +5786,12 @@ def execute(cmd,opts,args):
             sys.exit(0)
         if o in ('-b','--backend'):
             backend = v
+#            config.cmd_attrs['backend'] = v
         if o in ('-c','--dump-conf'):
             options.append('-c')
         if o in ('-d','--doctype'):
             doctype = v
+#            config.cmd_attrs['doctype'] = v
         if o in ('-e','--no-conf'):
             options.append('-e')
         if o in ('-f','--conf-file'):
@@ -5380,9 +5828,9 @@ def execute(cmd,opts,args):
     if len(args) == 0:
         usage('No source file specified')
         sys.exit(1)
-    if not backend:
-        usage('No --backend option specified')
-        sys.exit(1)
+#    if not backend:
+#        usage('No --backend option specified')
+#        sys.exit(1)
     stdin,stdout = sys.stdin,sys.stdout
     try:
         infile = args[0]
@@ -5420,7 +5868,7 @@ if __name__ == '__main__':
             ['attribute=','backend=','conf-file=','doctype=','dump-conf',
             'help','no-conf','no-header-footer','out-file=',
             'section-numbers','verbose','version','safe','unsafe',
-            'doctest'])
+            'doctest','filter'])
     except getopt.GetoptError:
         message.stderr('illegal command options')
         sys.exit(1)
@@ -5431,10 +5879,24 @@ if __name__ == '__main__':
         failures,tries = doctest.testmod(optionflags=options)
         if failures == 0:
             message.stderr('All doctests passed')
-            exit(0)
+            sys.exit(0)
         else:
-            exit(1)
+            sys.exit(1)
+    if '--filter' in [opt[0] for opt in opts]:
+        config.init(sys.argv[0])
+        config.verbose = bool(set(['-v','--verbose']) & set([opt[0] for opt in opts]))
+        if not args:
+            die('missing --filter command')
+        elif args[0] == 'install':
+            Filter.install(args[1:])
+        elif args[0] == 'remove':
+            Filter.remove(args[1:])
+        elif args[0] == 'list':
+            Filter.list()
+        else:
+            die('illegal --filter command: %s' % args[0])
+        sys.exit(0)
     try:
         execute(sys.argv[0],opts,args)
     except KeyboardInterrupt:
-        exit(1)
+        sys.exit(1)

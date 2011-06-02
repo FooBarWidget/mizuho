@@ -24,8 +24,8 @@ div.quoteblock-attribution {
   text-align: right;
 }
 
-div.verseblock-content {
-  white-space: pre;
+pre.verseblock-content {
+  font-family: inherit;
 }
 div.verseblock-attribution {
   padding-top: 0.75em;
@@ -36,6 +36,8 @@ div.exampleblock-content {
   border-left: 3px solid #dddddd;
   padding-left: 0.5em;
 }
+
+div.imageblock.latex div.image-title { margin-top: 0.5em; }
 
 /* IE6 sets dynamically generated links as visited. */
 div#toc a:visited { color: blue; }

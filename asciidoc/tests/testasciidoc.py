@@ -25,9 +25,9 @@ import os, sys, re, StringIO, difflib
 import asciidocapi
 
 
-BACKENDS = ('html4','xhtml11','docbook','wordpress')
+BACKENDS = ('html4','xhtml11','docbook','wordpress','html5')    # Default backends.
 BACKEND_EXT = {'html4':'.html', 'xhtml11':'.html', 'docbook':'.xml',
-               'wordpress':'.html'}
+        'wordpress':'.html','slidy':'.html','html5':'.html'}
 
 
 def iif(condition, iftrue, iffalse=None):
@@ -297,7 +297,7 @@ class AsciiDocTests(object):
         """
         self.passed = self.failed = self.skipped = 0
         for test in self.tests:
-            if (not test.disabled or number) and (not number or number == test.number):
+            if (not test.disabled or number) and (not number or number == test.number) and (not backend or backend in test.backends):
                 test.run(backend)
                 self.passed += test.passed
                 self.failed += test.failed

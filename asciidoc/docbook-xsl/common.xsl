@@ -43,9 +43,12 @@
 <xsl:param name="callout.graphics.path" select="'images/icons/callouts/'"/>
 <xsl:param name="callout.list.table" select="'1'"/>
 
-<xsl:param name="chunk.first.sections" select="0"/>
-<xsl:param name="chunk.quietly" select="0"/>
+<!-- This does not seem to work. -->
+<xsl:param name="section.autolabel.max.depth" select="2"/>
+
+<xsl:param name="chunk.first.sections" select="1"/>
 <xsl:param name="chunk.section.depth" select="1"/>
+<xsl:param name="chunk.quietly" select="0"/>
 <xsl:param name="chunk.toc" select="''"/>
 <xsl:param name="chunk.tocs.and.lots" select="0"/>
 
@@ -73,26 +76,30 @@
 -->
 <xsl:param name="generate.toc">
   <xsl:choose>
-    <xsl:when test="/article">
-      <xsl:choose>
-        <xsl:when test="/processing-instruction('asciidoc-toc')">
-/article  toc,title
-        </xsl:when>
-        <xsl:otherwise>
-/article  nop
-        </xsl:otherwise>
-      </xsl:choose>
+    <xsl:when test="/processing-instruction('asciidoc-toc')">
+article toc,title
+book    toc,title,figure,table,example,equation
+      <!-- The only way I could find that suppressed book chapter TOCs -->
+      <xsl:if test="$generate.section.toc.level != 0">
+chapter   toc,title
+part      toc,title
+preface   toc,title
+qandadiv  toc
+qandaset  toc
+reference toc,title
+sect1     toc
+sect2     toc
+sect3     toc
+sect4     toc
+sect5     toc
+section   toc
+set       toc,title
+      </xsl:if>
     </xsl:when>
-    <xsl:when test="/book">
-      <xsl:choose>
-        <xsl:when test="/processing-instruction('asciidoc-toc')">
-/book  toc,title
-        </xsl:when>
-        <xsl:otherwise>
-/book  nop
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:when>
+    <xsl:otherwise>
+article nop
+book    nop
+    </xsl:otherwise>
   </xsl:choose>
 </xsl:param>
 

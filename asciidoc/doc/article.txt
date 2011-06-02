@@ -1,7 +1,7 @@
 The Article Title
 =================
 Author's Name <authors@email.address>
-v1.0, Dec 2003
+v1.0, 2003-12
 
 
 This is the optional preamble (an untitled section body). Useful for
@@ -11,6 +11,7 @@ NOTE: The abstract, preface, appendix, bibliography, glossary and
 index section titles are significant ('specialsections').
 
 
+:numbered!:
 [abstract]
 Example Abstract
 ----------------
@@ -20,6 +21,7 @@ This document is an AsciiDoc article skeleton containing briefly
 annotated element placeholders plus a couple of example index entries
 and footnotes.
 
+:numbered:
 
 The First Section
 -----------------
@@ -51,6 +53,11 @@ Followed by an example table:
 | -a 'USER GROUP' | Add 'USER' to 'GROUP'.
 | -R 'GROUP'      | Disables access to 'GROUP'.
 |==============================================
+
+.An example example
+===============================================
+Lorum ipum...
+===============================================
 
 [[X1]]
 Sub-section with Anchor

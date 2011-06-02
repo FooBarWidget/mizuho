@@ -16,15 +16,19 @@ DESCRIPTION
 OPTIONS
     -f FORMAT
         The INFILE music format. 'abc' for ABC notation, 'ly' for LilyPond
-        notation.
+        notation. Defaults to 'abc' unless source starts with backslash.
 
     -o OUTFILE
         The file name of the output file. If not specified the output file is
         named like INFILE but with a .png file name extension.
 
     -m
-        Skip if the PNG output file is newer that than the INFILE. When
-        INFILE is - (stdin) previously retained input is compared.
+        Skip if the PNG output file is newer that than the INFILE.
+        Compares timestamps on INFILE and OUTFILE. If
+        INFILE is - (stdin) then compares MD5 checksum stored in file
+        named like OUTFILE but with a .md5 file name extension.
+        The .md5 file is created if the -m option is used and the
+        INFILE is - (stdin).
 
     -v
         Verbosely print processing information to stderr.
@@ -46,9 +50,13 @@ COPYING
     granted under the terms of the GNU General Public License (GPL).
 '''
 
-import os, sys
+# Suppress warning: "the md5 module is deprecated; use hashlib instead"
+import warnings
+warnings.simplefilter('ignore',DeprecationWarning)
 
-VERSION = '0.1.0'
+import os, sys, tempfile, md5
+
+VERSION = '0.1.1'
 
 # Globals.
 verbose = False
@@ -65,7 +73,7 @@ def print_verbose(line):
 def run(cmd):
     global verbose
     if not verbose:
-        cmd += ' 2>/dev/null'
+        cmd += ' 2>%s' % os.devnull
     print_verbose('executing: %s' % cmd)
     if os.system(cmd):
         raise EApp, 'failed command: %s' % cmd
@@ -76,41 +84,44 @@ def music2png(format, infile, outfile, modified):
     outdir = os.path.dirname(outfile)
     if not os.path.isdir(outdir):
         raise EApp, 'directory does not exist: %s' % outdir
-    basefile = os.path.splitext(outfile)[0]
-    abc = basefile + '.abc'
-    ly = basefile + '.ly'
-    temps = [ basefile + ext for ext in ('.abc', '.ly', '.ps', '.midi') ]
-    # Don't delete files that already exist.
-    temps = [ f for f in temps if not os.path.exists(f) ]
+    basefile = tempfile.mktemp(dir=os.path.dirname(outfile))
+    temps = [basefile + ext for ext in ('.abc', '.ly', '.ps', '.midi')]
     skip = False
     if infile == '-':
-        lines = sys.stdin.readlines()
-        if format == 'abc':
-            f = abc
-        else:
-            f = ly
+        source = sys.stdin.read()
+        checksum = md5.new(source).digest()
+        f = os.path.splitext(outfile)[0] + '.md5'
         if modified:
-            if f in temps:
-                del temps[temps.index(f)]   # Don't delete previous source.
-            if os.path.isfile(outfile) and os.path.isfile(f):
-                old = open(f, 'r').readlines()
-                skip = lines == old
-        if not skip:
-            open(f, 'w').writelines(lines)
+            if os.path.isfile(f) and os.path.isfile(outfile) and \
+                    checksum == open(f,'rb').read():
+                skip = True
+            open(f,'wb').write(checksum)
     else:
         if not os.path.isfile(infile):
             raise EApp, 'input file does not exist: %s' % infile
-        if modified and os.path.isfile(outfile):
-            skip = os.path.getmtime(infile) <= os.path.getmtime(outfile)
+        if modified and os.path.isfile(outfile) and \
+                os.path.getmtime(infile) <= os.path.getmtime(outfile):
+            skip = True
+        source = open(infile).read()
     if skip:
         print_verbose('skipped: no change: %s' % outfile)
         return
+    if format is None:
+        if source and source.startswith('\\'):  # Guess input format.
+            format = 'ly'
+        else:
+            format = 'abc'
+    open('%s.%s' % (basefile,format), 'w').write(source) # Temp source file.
+    abc = basefile + '.abc'
+    ly = basefile + '.ly'
+    png = basefile + '.png'
     saved_pwd = os.getcwd()
     os.chdir(outdir)
     try:
         if format == 'abc':
-            run('abc2ly --beams=None "%s"' % abc)
-        run('lilypond --png "%s"' % ly)
+            run('abc2ly --beams=None -o "%s" "%s"' % (ly,abc))
+        run('lilypond --png -o "%s" "%s"' % (basefile,ly))
+        os.rename(png, outfile)
     finally:
         os.chdir(saved_pwd)
     # Chop the bottom 75 pixels off to get rid of the page footer.
@@ -160,10 +171,7 @@ def main():
         usage()
         sys.exit(1)
     infile = args[0]
-    if format is None:
-        usage('FORMAT must be specified')
-        sys.exit(1)
-    if format not in ('abc', 'ly'):
+    if format not in (None, 'abc', 'ly'):
         usage('invalid FORMAT')
         sys.exit(1)
     if outfile is None:

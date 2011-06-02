@@ -19,21 +19,24 @@ import sys
 import traceback
 import urlparse
 import zipfile
+import xml.dom.minidom
+import mimetypes
 
 PROG = os.path.basename(os.path.splitext(__file__)[0])
-VERSION = '8.5.2'
+VERSION = '8.6.5'
 
 # AsciiDoc global configuration file directory.
 # NOTE: CONF_DIR is "fixed up" by Makefile -- don't rename or change syntax.
-CONF_DIR = os.path.dirname(PROG)
+CONF_DIR = '/etc/asciidoc'
 
 
 ######################################################################
 # Default configuration file parameters.
 ######################################################################
 
-# Optional environment variable dictionary passed to executing programs.
-# If set to None the existing environment is used.
+# Optional environment variable dictionary passed to
+# executing programs. If set to None the existing
+# environment is used.
 ENV = None
 
 # External executables.
@@ -45,6 +48,11 @@ W3M = 'w3m'                 # text generation.
 LYNX = 'lynx'               # text generation (if no w3m).
 XMLLINT = 'xmllint'         # Set to '' to disable.
 EPUBCHECK = 'epubcheck'     # Set to '' to disable.
+# External executable default options.
+ASCIIDOC_OPTS = ''
+DBLATEX_OPTS = ''
+FOP_OPTS = ''
+XSLTPROC_OPTS = ''
 
 ######################################################################
 # End of configuration file parameters.
@@ -200,7 +208,6 @@ def shell(cmd, raise_error=True):
     popen.wait()
     if popen.returncode != 0 and raise_error:
         die('%s returned non-zero exit status %d' % (cmd, popen.returncode))
-#        raise subprocess.CalledProcessError(popen.returncode, cmd)
     return popen
 
 def find_resources(files, tagname, attrname, filter=None):
@@ -228,17 +235,24 @@ def find_resources(files, tagname, attrname, filter=None):
         files = [files]
     result = []
     for f in files:
-        verbose('find resources in: %s' % f)
+        verbose('finding resources in: %s' % f)
         if OPTIONS.dry_run:
             continue
         parser = FindResources()
-        parser.feed(open(f).read())
+        # HTMLParser has problems with non-ASCII strings.
+        # See http://bugs.python.org/issue3932
+        mo = re.search(r'^<\?xml.* encoding="(.*?)"', open(f).readline())
+        if mo:
+            encoding = mo.group(1)
+            parser.feed(open(f).read().decode(encoding))
+        else:
+            parser.feed(open(f).read())
         parser.close()
     result = list(set(result))   # Drop duplicate values.
     result.sort()
     return result
 
-# Not used.
+# NOT USED.
 def copy_files(files, src_dir, dst_dir):
     '''
     Copy list of relative file names from src_dir to dst_dir.
@@ -276,6 +290,44 @@ def exec_xsltproc(xsl_file, xml_file, dst_dir, opts = ''):
     finally:
         shell_cd(cwd)
 
+def get_source_options(asciidoc_file):
+    '''
+    Look for a2x command options in AsciiDoc source file.
+    Limitation: options cannot contain double-quote characters.
+    '''
+    def parse_options():
+        # Parse options to result sequence.
+        inquotes = False
+        opt = ''
+        for c in options:
+            if c == '"':
+                if inquotes:
+                    result.append(opt)
+                    opt = ''
+                    inquotes = False
+                else:
+                    inquotes = True
+            elif c == ' ':
+                if inquotes:
+                    opt += c
+                elif opt:
+                    result.append(opt)
+                    opt = ''
+            else:
+                opt += c
+        if opt:
+            result.append(opt)
+
+    result = []
+    if os.path.isfile(asciidoc_file):
+        options = ''
+        for line in open(asciidoc_file):
+            mo = re.search(r'^//\s*a2x:', line)
+            if mo:
+                options += ' ' + line[mo.end():].strip()
+        parse_options()
+    return result
+
 
 #####################################################################
 # Application class
@@ -291,7 +343,13 @@ class A2X(AttrDict):
         Process a2x command.
         '''
         self.process_options()
-        self.__getattribute__('to_'+self.format)()  # Execute to_* functions.
+        # Append configuration file options.
+        self.asciidoc_opts += ' ' + ASCIIDOC_OPTS
+        self.dblatex_opts  += ' ' + DBLATEX_OPTS
+        self.fop_opts      += ' ' + FOP_OPTS
+        self.xsltproc_opts += ' ' + XSLTPROC_OPTS
+        # Execute to_* functions.
+        self.__getattribute__('to_'+self.format)()
         if not (self.keep_artifacts or self.format == 'docbook' or self.skip_asciidoc):
             shell_rm(self.dst_path('.xml'))
 
@@ -302,12 +360,20 @@ class A2X(AttrDict):
         '''
         global ASCIIDOC
         CONF_FILE = 'a2x.conf'
+        a2xdir = os.path.dirname(os.path.realpath(__file__))
         conf_files = []
-        # From global conf directory.
-        conf_files.append(os.path.join(CONF_DIR, CONF_FILE))
         # From a2x.py directory.
-        conf_files.append(os.path.join(
-            os.path.dirname(os.path.realpath(__file__)), CONF_FILE))
+        conf_files.append(os.path.join(a2xdir, CONF_FILE))
+        # If the asciidoc executable and conf files are in the a2x directory
+        # then use the local copy of asciidoc and skip the global a2x conf.
+        asciidoc = os.path.join(a2xdir, 'asciidoc.py')
+        asciidoc_conf = os.path.join(a2xdir, 'asciidoc.conf')
+        if os.path.isfile(asciidoc) and os.path.isfile(asciidoc_conf):
+            self.asciidoc = asciidoc
+        else:
+            self.asciidoc = None
+            # From global conf directory.
+            conf_files.append(os.path.join(CONF_DIR, CONF_FILE))
         # From $HOME directory.
         home_dir = os.environ.get('HOME')
         if home_dir is not None:
@@ -317,24 +383,28 @@ class A2X(AttrDict):
             if not os.path.isfile(self.conf_file):
                 die('missing configuration file: %s' % self.conf_file)
             conf_files.append(self.conf_file)
+        # From --xsl-file option.
+        if self.xsl_file is not None:
+            if not os.path.isfile(self.xsl_file):
+                die('missing XSL file: %s' % self.xsl_file)
+            self.xsl_file = os.path.abspath(self.xsl_file)
         # Load ordered files.
         for f in conf_files:
             if os.path.isfile(f):
                 verbose('loading conf file: %s' % f)
                 execfile(f, globals())
-        # If asciidoc can't be found anywhere else look in the a2x directory.
-        if not find_executable(ASCIIDOC):
-            a2xdir = os.path.dirname(os.path.realpath(__file__))
-            asciidoc = os.path.join(a2xdir, 'asciidoc.py')
-            if os.path.isfile(asciidoc):
-                ASCIIDOC = asciidoc
+        # If asciidoc is not local to a2x then search the PATH.
+        if not self.asciidoc:
+            self.asciidoc = find_executable(ASCIIDOC)
+            if not self.asciidoc:
+                die('unable to find asciidoc: %s' % ASCIIDOC)
 
     def process_options(self):
         '''
         Validate and command options and set defaults.
         '''
         if not os.path.isfile(self.asciidoc_file):
-            die('missing input FILE: %s' % self.asciidoc_file)
+            die('missing SOURCE_FILE: %s' % self.asciidoc_file)
         self.asciidoc_file = os.path.abspath(self.asciidoc_file)
         if not self.destination_dir:
             self.destination_dir = os.path.dirname(self.asciidoc_file)
@@ -342,25 +412,49 @@ class A2X(AttrDict):
             if not os.path.isdir(self.destination_dir):
                 die('missing --destination-dir: %s' % self.destination_dir)
             self.destination_dir = os.path.abspath(self.destination_dir)
-        for d in self.resource_dirs:
-            if not os.path.isdir(d):
-                die('missing --resource-dir: %s' % d)
-        if not self.doctype:
-            if self.format == 'manpage':
-                self.doctype = 'manpage'
+        self.resource_dirs = []
+        self.resource_files = []
+        if self.resource_manifest:
+            if not os.path.isfile(self.resource_manifest):
+                die('missing --resource-manifest: %s' % self.resource_manifest)
+            for r in open(self.resource_manifest):
+                self.resources.append(r.strip())
+        for r in self.resources:
+            r = os.path.expanduser(r)
+            r = os.path.expandvars(r)
+            if r.endswith(('/','\\')):
+                if  os.path.isdir(r):
+                    self.resource_dirs.append(r)
+                else:
+                    die('missing resource directory: %s' % r)
+            elif os.path.isdir(r):
+                self.resource_dirs.append(r)
+            elif r.startswith('.') and '=' in r:
+                ext, mimetype = r.split('=')
+                mimetypes.add_type(mimetype, ext)
             else:
-                self.doctype = 'article'
-        self.asciidoc_opts += ' --doctype %s' % self.doctype
+                self.resource_files.append(r)
+        for p in (os.path.dirname(self.asciidoc), CONF_DIR):
+            for d in ('images','stylesheets'):
+                d = os.path.join(p,d)
+                if os.path.isdir(d):
+                    self.resource_dirs.append(d)
+        verbose('resource files: %s' % self.resource_files)
+        verbose('resource directories: %s' % self.resource_dirs)
+        if not self.doctype and self.format == 'manpage':
+            self.doctype = 'manpage'
+        if self.doctype:
+            self.asciidoc_opts += ' --doctype %s' % self.doctype
         for attr in self.attributes:
             self.asciidoc_opts += ' --attribute "%s"' % attr
-        self.xsltproc_opts += ' --nonet'
+#        self.xsltproc_opts += ' --nonet'
         if self.verbose:
             self.asciidoc_opts += ' --verbose'
             self.dblatex_opts += ' -V'
         if self.icons or self.icons_dir:
             params = [
                 'callout.graphics 1',
-                'navig.graphics 0',
+                'navig.graphics 1',
                 'admon.textlabel 0',
                 'admon.graphics 1',
             ]
@@ -378,9 +472,19 @@ class A2X(AttrDict):
                 'admon.graphics 0',
             ]
         if self.stylesheet:
-            params.append('html.stylesheet "%s"' % self.stylesheet)
-        params = ['--stringparam %s' % o for o in params]
-        self.xsltproc_opts += ' ' + ' '.join(params)
+            params += ['html.stylesheet "%s"' % self.stylesheet]
+        if self.format == 'htmlhelp':
+            params += ['htmlhelp.chm "%s"' % self.basename('.chm'),
+                       'htmlhelp.hhp "%s"' % self.basename('.hhp'),
+                       'htmlhelp.hhk "%s"' % self.basename('.hhk'),
+                       'htmlhelp.hhc "%s"' % self.basename('.hhc')]
+        if self.doctype == 'book':
+            params += ['toc.section.depth 1']
+            # Books are chunked at chapter level.
+            params += ['chunk.section.depth 0']
+        for o in params:
+            if o.split()[0]+' ' not in self.xsltproc_opts:
+                self.xsltproc_opts += ' --stringparam ' + o
         if self.fop_opts:
             self.fop = True
         if os.path.splitext(self.asciidoc_file)[1].lower() == '.xml':
@@ -408,21 +512,22 @@ class A2X(AttrDict):
         Search first the directory containing the asciidoc executable then
         the global configuration file directory.
         '''
-        asciidoc = find_executable(ASCIIDOC)
-        if not asciidoc:
-            die('unable to find asciidoc: %s' % ASCIIDOC)
-        f = os.path.join(os.path.dirname(asciidoc), path)
+        f = os.path.join(os.path.dirname(self.asciidoc), path)
         if not os.path.isfile(f):
             f = os.path.join(CONF_DIR, path)
             if not os.path.isfile(f):
                 die('missing configuration file: %s' % f)
         return os.path.normpath(f)
 
-    def xsl_file(self, file_name=None):
+    def xsl_stylesheet(self, file_name=None):
         '''
         Return full path name of file in asciidoc docbook-xsl configuration
         directory.
+        If an XSL file was specified with the --xsl-file option then it is
+        returned.
         '''
+        if self.xsl_file is not None:
+            return self.xsl_file
         if not file_name:
             file_name = self.format + '.xsl'
         return self.asciidoc_conf_file(os.path.join('docbook-xsl', file_name))
@@ -431,38 +536,45 @@ class A2X(AttrDict):
         '''
         Search html_files for images and CSS resource URIs (html_files can be a
         list of file names or a single file name).
-        If the URIs are relative then copy them from the src_dir to the
-        dst_dir.
+        Copy them from the src_dir to the dst_dir.
         If not found in src_dir then recursively search all specified
-        --resource-dir's for the file name.
-        Optional additional resources URIs can be passed in the resources list.
-        Does not copy absolute URIs.
+        resource directories.
+        Optional additional resources files can be passed in the resources list.
         '''
         resources = resources[:]
         resources += find_resources(html_files, 'link', 'href',
                         lambda attrs: attrs.get('type') == 'text/css')
         resources += find_resources(html_files, 'img', 'src')
+        resources += self.resource_files
         resources = list(set(resources))    # Drop duplicates.
         resources.sort()
         for f in resources:
-            f = os.path.normpath(f)
-            if os.path.isabs(f):
-                if not os.path.isfile(f):
-                    warning('missing resource: %s' % f)
-                continue
-            src = os.path.join(src_dir, f)
-            dst = os.path.join(dst_dir, f)
+            if '=' in f:
+                src, dst = f.split('=')
+                if not dst:
+                    dst = src
+            else:
+                src = dst = f
+            src = os.path.normpath(src)
+            dst = os.path.normpath(dst)
+            if os.path.isabs(dst):
+                die('absolute resource file name: %s' % dst)
+            if dst.startswith(os.pardir):
+                die('resource file outside destination directory: %s' % dst)
+            src = os.path.join(src_dir, src)
+            dst = os.path.join(dst_dir, dst)
             if not os.path.isfile(src):
                 for d in self.resource_dirs:
-                    src = find_files(d, os.path.basename(f))
-                    if src:
-                        src = src[0]
+                    d = os.path.join(src_dir, d)
+                    found = find_files(d, os.path.basename(src))
+                    if found:
+                        src = found[0]
                         break
                 else:
                     if not os.path.isfile(dst):
-                        warning('missing resource: %s' % f)
-                    continue    # Continues outer for loop.
-            # Arrive here if relative resource file has been found.
+                        die('missing resource: %s' % src)
+                    continue
+            # Arrive here if resource file has been found.
             if os.path.normpath(src) != os.path.normpath(dst):
                 dstdir = os.path.dirname(dst)
                 shell_makedirs(dstdir)
@@ -479,7 +591,7 @@ class A2X(AttrDict):
                 die('missing docbook file: %s' % docbook_file)
             return
         shell('"%s" --backend docbook %s --out-file "%s" "%s"' %
-             (ASCIIDOC, self.asciidoc_opts, docbook_file, self.asciidoc_file))
+             (self.asciidoc, self.asciidoc_opts, docbook_file, self.asciidoc_file))
         if not self.no_xmllint and XMLLINT:
             shell('"%s" --nonet --noout --valid "%s"' % (XMLLINT, docbook_file))
 
@@ -488,7 +600,7 @@ class A2X(AttrDict):
         docbook_file = self.dst_path('.xml')
         xhtml_file = self.dst_path('.html')
         opts = '%s --output "%s"' % (self.xsltproc_opts, xhtml_file)
-        exec_xsltproc(self.xsl_file(), docbook_file, self.destination_dir, opts)
+        exec_xsltproc(self.xsl_stylesheet(), docbook_file, self.destination_dir, opts)
         src_dir = os.path.dirname(self.asciidoc_file)
         self.copy_resources(xhtml_file, src_dir, self.destination_dir)
 
@@ -496,7 +608,7 @@ class A2X(AttrDict):
         self.to_docbook()
         docbook_file = self.dst_path('.xml')
         opts = self.xsltproc_opts
-        exec_xsltproc(self.xsl_file(), docbook_file, self.destination_dir, opts)
+        exec_xsltproc(self.xsl_stylesheet(), docbook_file, self.destination_dir, opts)
 
     def to_pdf(self):
         if self.fop:
@@ -507,7 +619,7 @@ class A2X(AttrDict):
     def exec_fop(self):
         self.to_docbook()
         docbook_file = self.dst_path('.xml')
-        xsl = self.xsl_file('fo.xsl')
+        xsl = self.xsl_stylesheet('fo.xsl')
         fo = self.dst_path('.fo')
         pdf = self.dst_path('.pdf')
         opts = '%s --output "%s"' % (self.xsltproc_opts, fo)
@@ -540,15 +652,13 @@ class A2X(AttrDict):
         self.to_docbook()
         docbook_file = self.dst_path('.xml')
         opts = self.xsltproc_opts
-        xsl_file = self.xsl_file()
+        xsl_file = self.xsl_stylesheet()
         if self.format == 'chunked':
             dst_dir = self.dst_path('.chunked')
         elif self.format == 'htmlhelp':
             dst_dir = self.dst_path('.htmlhelp')
-            opts += ' --stringparam htmlhelp.chm "%s"' % self.basename('.chm')
-            opts += ' --stringparam htmlhelp.hhc "%s"' % self.basename('.hhc')
-            opts += ' --stringparam htmlhelp.hhp "%s"' % self.basename('.hhp')
-        opts += ' --stringparam base.dir "%s/"' % os.path.basename(dst_dir)
+        if not 'base.dir ' in opts:
+            opts += ' --stringparam base.dir "%s/"' % os.path.basename(dst_dir)
         # Create content.
         shell_rmtree(dst_dir)
         shell_makedirs(dst_dir)
@@ -557,9 +667,48 @@ class A2X(AttrDict):
         src_dir = os.path.dirname(self.asciidoc_file)
         self.copy_resources(html_files, src_dir, dst_dir)
 
+    def update_epub_manifest(self, opf_file):
+        '''
+        Scan the OEBPS directory for any files that have not been registered in
+        the OPF manifest then add them to the manifest.
+        '''
+        opf_dir = os.path.dirname(opf_file)
+        resource_files = []
+        for (p,dirs,files) in os.walk(os.path.dirname(opf_file)):
+            for f in files:
+                f = os.path.join(p,f)
+                if os.path.isfile(f):
+                    assert f.startswith(opf_dir)
+                    f = '.' + f[len(opf_dir):]
+                    f = os.path.normpath(f)
+                    if f not in ['content.opf']:
+                        resource_files.append(f)
+        opf = xml.dom.minidom.parseString(open(opf_file).read())
+        manifest_files = []
+        manifest = opf.getElementsByTagName('manifest')[0]
+        for el in manifest.getElementsByTagName('item'):
+            f = el.getAttribute('href')
+            f = os.path.normpath(f)
+            manifest_files.append(f)
+        count = 0
+        for f in resource_files:
+            if f not in manifest_files:
+                count += 1
+                verbose('adding to manifest: %s' % f)
+                item = opf.createElement('item')
+                item.setAttribute('href', f.replace(os.path.sep, '/'))
+                item.setAttribute('id', 'a2x-%d' % count)
+                mimetype = mimetypes.guess_type(f)[0]
+                if mimetype is None:
+                    die('unknown mimetype: %s' % f)
+                item.setAttribute('media-type', mimetype)
+                manifest.appendChild(item)
+        if count > 0:
+            open(opf_file, 'w').write(opf.toxml())
+
     def to_epub(self):
         self.to_docbook()
-        xsl_file = self.xsl_file()
+        xsl_file = self.xsl_stylesheet()
         docbook_file = self.dst_path('.xml')
         epub_file = self.dst_path('.epub')
         build_dir = epub_file + '.d'
@@ -567,16 +716,17 @@ class A2X(AttrDict):
         shell_makedirs(build_dir)
         # Create content.
         exec_xsltproc(xsl_file, docbook_file, build_dir, self.xsltproc_opts)
-        # Copy OPF file resources.
+        # Copy resources referenced in the OPF and resources referenced by the
+        # generated HTML (in theory DocBook XSL should ensure they are
+        # identical but this is not always the case).
         src_dir = os.path.dirname(self.asciidoc_file)
         dst_dir = os.path.join(build_dir, 'OEBPS')
-        # Get the resources from OPF instead of HTML content to get round this
-        # bug: https://sourceforge.net/tracker/?func=detail&aid=2854080&group_id=21935&atid=373747
-        opf = os.path.join(dst_dir, 'content.opf')
-        resources = find_resources(opf, 'item', 'href')
-#        html_files = find_files(dst_dir, '*.html')
-#        self.copy_resources(html_files, src_dir, dst_dir)
-        self.copy_resources([], src_dir, dst_dir, resources)
+        opf_file = os.path.join(dst_dir, 'content.opf')
+        opf_resources = find_resources(opf_file, 'item', 'href')
+        html_files = find_files(dst_dir, '*.html')
+        self.copy_resources(html_files, src_dir, dst_dir, opf_resources)
+        # Register any unregistered resources.
+        self.update_epub_manifest(opf_file)
         # Build epub archive.
         cwd = os.getcwd()
         shell_cd(build_dir)
@@ -603,14 +753,17 @@ class A2X(AttrDict):
         if not self.keep_artifacts:
             shell_rmtree(build_dir)
         if self.epubcheck and EPUBCHECK:
-            shell('"%s" "%s"' % (EPUBCHECK, epub_file))
+            if not find_executable(EPUBCHECK):
+                warning('epubcheck skipped: unable to find executable: %s' % EPUBCHECK)
+            else:
+                shell('"%s" "%s"' % (EPUBCHECK, epub_file))
 
     def to_text(self):
         text_file = self.dst_path('.text')
         html_file = self.dst_path('.text.html')
         if self.lynx:
             shell('"%s" %s --conf-file "%s" -b html4 -o "%s" "%s"' %
-                 (ASCIIDOC, self.asciidoc_opts, self.asciidoc_conf_file('text.conf'),
+                 (self.asciidoc, self.asciidoc_opts, self.asciidoc_conf_file('text.conf'),
                   html_file, self.asciidoc_file))
             shell('"%s" -dump "%s" > "%s"' %
                  (LYNX, html_file, text_file))
@@ -618,9 +771,8 @@ class A2X(AttrDict):
             # Use w3m(1).
             self.to_docbook()
             docbook_file = self.dst_path('.xml')
-            xhtml_file = self.dst_path('.html')
             opts = '%s --output "%s"' % (self.xsltproc_opts, html_file)
-            exec_xsltproc(self.xsl_file(), docbook_file,
+            exec_xsltproc(self.xsl_stylesheet(), docbook_file,
                     self.destination_dir, opts)
             shell('"%s" -cols 70 -dump -T text/html -no-graph "%s" > "%s"' %
                  (W3M, html_file, text_file))
@@ -635,14 +787,14 @@ class A2X(AttrDict):
 if __name__ == '__main__':
     description = '''A toolchain manager for AsciiDoc (converts Asciidoc text files to other file formats)'''
     from optparse import OptionParser
-    parser = OptionParser(usage='usage: %prog [OPTIONS] FILE',
+    parser = OptionParser(usage='usage: %prog [OPTIONS] SOURCE_FILE',
         version='%s %s' % (PROG,VERSION),
         description=description)
     parser.add_option('-a', '--attribute',
         action='append', dest='attributes', default=[], metavar='ATTRIBUTE',
         help='set asciidoc attribute value')
     parser.add_option('--asciidoc-opts',
-        action='store', dest='asciidoc_opts', default='',
+        action='append', dest='asciidoc_opts', default=[],
         metavar='ASCIIDOC_OPTS', help='asciidoc options')
     #DEPRECATED
     parser.add_option('--copy',
@@ -653,7 +805,7 @@ if __name__ == '__main__':
         help='configuration file')
     parser.add_option('-D', '--destination-dir',
         action='store', dest='destination_dir', default=None, metavar='PATH',
-        help=' output directory (defaults to FILE directory)')
+        help='output directory (defaults to SOURCE_FILE directory)')
     parser.add_option('-d','--doctype',
         action='store', dest='doctype', metavar='DOCTYPE',
         choices=('article','manpage','book'),
@@ -685,10 +837,18 @@ if __name__ == '__main__':
     parser.add_option('-n','--dry-run',
         action='store_true', dest='dry_run', default=False,
         help='just print the commands that would have been executed')
-    parser.add_option('-r','--resource-dir',
-        action='append', dest='resource_dirs', default=[],
+    parser.add_option('-r','--resource',
+        action='append', dest='resources', default=[],
         metavar='PATH',
-        help='directory containing images and stylesheets')
+        help='resource file or directory containing resource files')
+    parser.add_option('-m', '--resource-manifest',
+        action='store', dest='resource_manifest', default=None, metavar='FILE',
+        help='read resources from FILE')
+    #DEPRECATED
+    parser.add_option('--resource-dir',
+        action='append', dest='resources', default=[],
+        metavar='PATH',
+        help='DEPRECATED: use --resource')
     #DEPRECATED
     parser.add_option('-s','--skip-asciidoc',
         action='store_true', dest='skip_asciidoc', default=False,
@@ -696,34 +856,44 @@ if __name__ == '__main__':
     parser.add_option('--stylesheet',
         action='store', dest='stylesheet', default=None,
         metavar='STYLESHEET',
-        help='target HTML CSS stylesheet file name')
+        help='HTML CSS stylesheet file name')
     #DEPRECATED
     parser.add_option('--safe',
         action='store_true', dest='safe', default=False,
         help='DEPRECATED: does nothing')
     parser.add_option('--dblatex-opts',
-        action='store', dest='dblatex_opts', default='',
+        action='append', dest='dblatex_opts', default=[],
         metavar='DBLATEX_OPTS', help='dblatex options')
     parser.add_option('--fop',
         action='store_true', dest='fop', default=False,
         help='use FOP to generate PDF files')
     parser.add_option('--fop-opts',
-        action='store', dest='fop_opts', default='',
+        action='append', dest='fop_opts', default=[],
         metavar='FOP_OPTS', help='options for FOP pdf generation')
     parser.add_option('--xsltproc-opts',
-        action='store', dest='xsltproc_opts', default='',
-        metavar='XSLTPROC_OPTS', help='options for FOP pdf generation')
+        action='append', dest='xsltproc_opts', default=[],
+        metavar='XSLTPROC_OPTS', help='xsltproc options for XSL stylesheets')
+    parser.add_option('--xsl-file',
+        action='store', dest='xsl_file', metavar='XSL_FILE',
+        help='custom XSL stylesheet')
     parser.add_option('-v', '--verbose',
         action='count', dest='verbose', default=0,
         help='increase verbosity')
     if len(sys.argv) == 1:
         parser.parse_args(['--help'])
-    opts, args = parser.parse_args()
+    source_options = get_source_options(sys.argv[-1])
+    argv = source_options + sys.argv[1:] 
+    opts, args = parser.parse_args(argv)
     if len(args) != 1:
         parser.error('incorrect number of arguments')
+    opts.asciidoc_opts = ' '.join(opts.asciidoc_opts)
+    opts.dblatex_opts = ' '.join(opts.dblatex_opts)
+    opts.fop_opts = ' '.join(opts.fop_opts)
+    opts.xsltproc_opts = ' '.join(opts.xsltproc_opts)
     opts = eval(str(opts))  # Convert optparse.Values to dict.
     a2x = A2X(opts)
     OPTIONS = a2x           # verbose and dry_run used by utility functions.
+    verbose('args: %r' % argv)
     a2x.asciidoc_file = args[0]
     try:
         a2x.load_conf()

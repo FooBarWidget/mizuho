@@ -1,33 +1,24 @@
                             Bugs and Known Problems
 
-   version 8.5.2, 7 December 2009
+   version 8.6.5, 20 May 2011
      __________________________________________________________________
 
 1. AsciiDoc
 
+     * Configuration attribute entries are not passed to table asciidoc
+       filters because configuration attribute entries cannot be passed to
+       the --attributes command-line parameter.
      * A benign warning with will become a reserved keyword in Python 2.6
-       sometimes occurs when using Python 2.5 -- it's harmless and will
+       sometimes occurs when using Python 2.5 — it’s harmless and will
        disappear with Python 3.
-     * The toc attribute will be ignored if it's set in a custom user or
-       document configuration file. This is because the default
-       configuration file containing the document [header] is sourced
-       before custom configuration files and the toc attribute is
-       processed using conditional inclusion macros.
      * Reported line numbers in diagnostic messages are sometimes wrong.
-     * Embedding open brace characters { in argument values can cause
-       incorrect argument substitution.
-     * Attribute references in macro attribute lists can't be unescaped
+     * Attribute references in macro attribute lists can’t be unescaped
        (with the exception of attribute list entry {0}).
      * Section numbering is incorrect when outputting HTML from a
        multi-part book type document. This is not a biggy since multi-part
        books are generally processed to DocBook.
      * A row of apostrophes in an inline context throws AsciiDoc into an
-       endless loop.
-     * Multiple comma separated command names in the manpage NAME section
-       translate to a single DocBook refname instead of multiple refname
-       elements.
-     * Escaping quoted text and macros is sometimes tricky owing to some
-       macro and quoting ambiguities.
+       endless loop. The problem seems to be in the input file Reader.
      __________________________________________________________________
 
 2. dblatex
@@ -35,5 +26,5 @@
    See ./dblatex/dblatex-readme.txt.
      __________________________________________________________________
 
-   Version 8.5.2
-   Last updated 2009-03-06 13:43:49 NZDT
+   Version 8.6.5
+   Last updated 2011-05-02 10:15:25 NZST

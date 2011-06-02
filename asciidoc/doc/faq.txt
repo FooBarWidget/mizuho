@@ -2,10 +2,334 @@ AsciiDoc Frequently Asked Questions
 ===================================
 
 
+[NOTE]
+======
+- New FAQs are normally added at the top of this document.
+- The FAQ may be updated between AsciiDoc releases so some of the
+  newer FAQs may apply to the trunk and not the current release.
+======
+
+[[X5]]
+== How can I include embedded fonts in an EPUB document
+This is a two step process:
+
+1. Declare the font files and their use in your document's CSS
+   stylesheet. For example:
++
+[listing]
+.........................................
+@font-face {
+  font-family : LiberationSerif-Regular;
+  font-weight : normal;
+  font-style: normal;
+  src : url(LiberationSerif-Regular.ttf);
+}
+
+body {
+  font-family: LiberationSerif-Regular, serif;
+}
+.........................................
+
+2. Declare the the font file as resource when you use `a2x(1)` to
+   compile the EPUB. For example:
+
+  a2x -f epub -d book --epubcheck --stylesheet epubtest.css --resource .ttf=application/x-font-ttf --resource LiberationSerif-Regular.ttf epubtest.txt
+
+[NOTE]
+======
+- Requires AsciiDoc 8.6.5 or better.
+- The True Type Font mimetype had to be declared explicitly with the
+  `--resource .ttf=application/x-font-ttf` option because it wasn't
+  registered on my Linux system.
+- In the above example the font file is in the same directory as the
+  AsciiDoc source file and is installed to the same relative location
+  in the EPUB archive OEBPS directory -- if your font file resides in
+  a different location you'll need to adjust the `--resource` option
+  accordingly (see the 'RESOURCES' section in the `a2x(1)` man page
+  for details).
+- The URL value of the CSS 'src' property is set to the destination
+  font file relative the the CSS file.
+- The `--resource` option allows you to inject any file (not just font
+  files) into the EPUB output document.
+- Using the CSS '@font-face' rule is a complex subject and is outside
+  the scope of the FAQ.
+- Many EPUB readers do not process embedded fonts.
+======
+
+
+== What's the difference between + quoted text and ` quoted monospaced text?
+`+` (plus) quoted text is implemented as an AsciiDoc 'quotes' whereas
++`+ (grave accent or backtick) quoted text is implemented as an
+AsciiDoc 'inline literal' passthrough macro. The semantics are
+different:
+
+1. Inline passthrough macros are processed before any other inline
+   substitutions e.g. all of the following line will be processed as a
+   single inline passthrough and rendered as monospaced text (which is
+   not the intended result):
++
+--
+  `single quoted text' and `monospaced quoted text`
+
+This line works as expected:
+
+  `single quoted text' and +monospaced quoted text+
+--
+
+2. Backtick quoted text is rendered literally i.e. no substitutions
+   are performed on the enclosed text.  Here are some examples that
+   would have to be escaped if plus quoting were used (<<X4,see
+   also>>):
+
+  The `++i` and `++j` auto-increments.
+  Paths `~/.vim` and `~/docs`.
+  The `__init__` method.
+  The `{id}` attribute.
+
+
+== Why is the generated HTML title element text invalid?
+Probably because your document title contains formatting that has
+generated HTML title markup. You can resolve this by explicitly
+defining the 'title' attribute in your document's header.
+
+
+== AsciiDoc sometimes generates invalid output markup, why?
+AsciiDoc is backend agnostic, the 'asciidoc' command has no knowledge
+of the syntax or structure of the backend format that it generates.
+Output document validation (syntactic and structural) should be
+performed separately by external validation tools. For example,
+AsciiDoc's 'a2x' toolchain command automatically performs validation
+checks using 'xmllint'.
+
+
+== The AsciiDoc toclevels attribute does not work with DocBook outputs, why?
+DocBook has no provision for specifying table of contents levels but
+you can set the TOC level further down the toolchain by passing the
+DocBook XSL Stylesheets
+http://docbook.sourceforge.net/release/xsl/current/doc/html/toc.section.depth.html[toc.section.depth]
+parameter to 'dblatex' (using the `--param` option) or 'xsltproc'
+(using the `--stringparam` option).  For example to show only chapter
+titles in the TOC of a 'book' document set 'toc.section.depth' to '0'.
+Increment the 'toc.section.depth' value to show more sub-section
+titles. If you are using 'a2x' you can set the options in the source
+file, for example:
+
+  // a2x: --xsltproc-opts "--stringparam toc.section.depth 0"
+  // a2x: --dblatex-opts "--param toc.section.depth=0"
+
+If the document is of type 'article' use the value '1' to show only
+top level section titles in the TOC, use the value '2' for two levels
+etc.
+
+
+== How can I include chapter and section tables of contents?
+DocBook outputs processed by DocBook XSL Stylesheets (either manually
+or via 'a2x') can generate additional separate section and chapter
+tables of contents using combinations of the
+http://www.sagehill.net/docbookxsl/TOCcontrol.html[TOC parameters].
+Here are some examples using combinations of the
+`generate.section.toc.level` and `toc.section.depth` DocBook XSL
+Stylesheets parameters:
+
+[cols="2*l,4",width="90%",frame="topbot",options="header"]
+|======================================================
+|generate.section.toc.level |toc.section.depth |
+|1 |
+|Single level book chapter TOCs or article section TOCs
+
+|1 | 3
+|Article section TOCs with two levels
+
+|1 | 2
+|Book chapter TOCs with two levels
+|======================================================
+
+
+== How can I customize the appearance of XHTML and EPUB documents generated by a2x?
+You can customize the appearance of an EPUB document with CSS.  See
+the link:publishing-ebooks-with-asciidoc.html[Sherlock Holmes eBook
+example] on the AsciiDoc website.
+
+
+== DocBook has many elements for document meta-data -- how can I use them from AsciiDoc?
+The 'docinfo', 'docinfo1' and 'docinfo2' attributes allow you include
+link:userguide.html#X97[document information files] containing DocBook
+XML into the header of the output file.
+
+
+== Do element titles automatically generate link captions?
+If you go the DocBook route then yes -- just omit the caption from the
+AsciiDoc 'xref' (`<<...>>`) macro. Both dblatex and DocBook XSL will
+use the target element's title text. Examples:
+
+[listing]
+..................................................................
+[[X1]]
+Section One
+-----------
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas
+ultrices justo porttitor augue. Vestibulum pretium. Donec porta
+
+See also <<X3>> (this link displays the text 'A titled paragraph').
+
+[id="X2",reftext="2nd section"]
+Section Two
+-----------
+See also <<X1>> (this link displays the text 'Section One').
+
+[[X3]]
+.A titled paragraph
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+
+See also <<X2>> (this link displays the text '2nd section').
+..................................................................
+
+The AsciiDoc 'reftext' attribute has been used to explicitly set the
+link text to '2nd section' for 'Section Two'.
+
+
+== Can I define my own table styles?
+In addition to the built-in styles you can define your own. This
+(simplified) example for HTML backends defines a table style called
+'red' which sets the background cell color to red. First put the
+definition in a configuration file:
+
+[listing]
+.........................................
+[tabledef-default]
+red-style=tags="red"
+
+[tabletags-red]
+bodydata=<td style="background-color:red;">|</td>
+.........................................
+
+Now you can use the style name to style cells or columns (in this
+example we use an unambiguous shortened abbreviation 'r'):
+
+[listing]
+.........................................
+|==================================
+|Normal cell      r|Red cell
+|==================================
+.........................................
+
+
+== How can I add highlighted editorial comments to an AsciiDoc document?
+Both block and inline link:userguide.html#X25[comment lines] are
+displayed on the output if the 'showcomments' attribute is defined.
+Example:
+
+[listing]
+.........................................
+:showcomments:
+// A block comment line.
+
+Qui in magna commodo, est labitur dolorum an. Est ne magna primis
+// An inline comment line.
+adolescens.
+.........................................
+
+Is rendered as:
+
+:showcomments:
+// A block comment line.
+
+Qui in magna commodo, est labitur dolorum an. Est ne magna primis
+// An inline comment line.
+adolescens.
+
+NOTE: link:userguide.html#X26[Comment blocks] are never displayed.
+
+
+== What is the preferred file name extension for AsciiDoc files?
+The `.txt` http://en.wikipedia.org/wiki/Text_file[text file] extension
+is preferred, but it's just a convention and it's not enforced by the
+software.
+
+AsciiDoc source files are human readable
+http://en.wikipedia.org/wiki/Plain_text[plain text] files which is
+what the `.txt` extension is for. All text editors recognize and open
+files with a `.txt` extension. The `.txt` extension is universally
+recognized and unambiguous -- you are not left asking questions like
+``What on earth is this file with the funny extension?'', ``How do I
+open it?'' and ``Is it safe to open?''.
+
+
+== How can I generate numbered bibliographic entries?
+If your outputs are DocBook generated then adding the following inline
+macro to a custom configuration file will result in auto-incrementing
+bibliography entry numbers (instead of displaying the bibliographic
+identifiers):
+
+  [anchor3-inlinemacro]
+  <anchor id="{1}" xreflabel="[{counter:bibliography1}]"/>[{counter:bibliography2}]
+
+This FAQ submitted by Bela Hausmann.
+
+
+== How can I include lines of dashes inside a listing block?
+A line of four or more dashes will be mistaken for the ListingBlock
+terminator, one way round this problem is to use a LiteralBlock styled
+as a listing block. For example:
+
+  [listing]
+  ...........................
+  Lorum ipsum
+  -----------
+  ...........................
+
+
+== How can I customize PDF files generated by dblatex?
+
+There are a number of dblatex XSL parameters that can be used to
+customize PDF output. You can set them globally in the AsciiDoc
+`./dblatex/asciidoc-dblatex.xsl` configuration file or you can also
+pass them on the a2x(1) command-line. Here are some examples:
+
+The
+http://dblatex.sourceforge.net/doc/manual/latex.output.revhistory.html[latex.output.revhistory]
+parameter is used to suppress the revision history:
+
+  a2x -f pdf --dblatex-opts "-P latex.output.revhistory=0" doc/article.txt
+
+The
+http://dblatex.sourceforge.net/doc/manual/doc.layout.html[doc.layout]
+parameter is used to include the cover page and document body (i.e. excludes
+table of contents and index), the
+http://dblatex.sourceforge.net/doc/manual/doc.publisher.show.html[doc.publisher.show]
+parameter is used to exclude the cover page logo:
+
+  a2x -f pdf --dblatex-opts " -P doc.layout=\"coverpage mainmatter\" -P doc.publisher.show=0" doc/article.txt
+
+See also the
+http://dblatex.sourceforge.net/doc/manual/sec-params.html[dblatex XSL
+parameter reference].
+
+
+== How can I add lists of figures and tables to PDFs created by dblatex?
+Set the
+http://dblatex.sourceforge.net/doc/sec-custom.html[doc.lot.show XSL
+parameter] -- you can set it using the dblatex `--param` command-line
+option, for example:
+
+  $ a2x --dblatex-opts="--param=doc.lot.show=figure,table" doc/article.txt
+
+
+== How can I stop the document title being displayed?
+You could simply omit the document title, but this will result in a
+blank 'title' element in HTML outputs. If you want the HTML 'title'
+element to contain the document title then define the 'notitle'
+attribute (this will just suppress displaying the title), for example:
+
+  My document title
+  =================
+  :no title:
+
+
 == Why am I having trouble getting nested macros to work?
 The following example expands the 'image' inline macro, but the
 expansion contains double-quote characters which confuses the ensuing
-'footnoteref' macro epansion:
+'footnoteref' macro expansion:
 
   footnoteref:["F1","A footnote, with an image image:smallnew.png[]"]
 
@@ -22,41 +346,24 @@ values using the `&#34;` character entity.
 Not all valid AsciiDoc source generates valid DocBook, for example
 'special sections' (abstract, preface, colophon, dedication,
 bibliography, glossary, appendix, index, synopsis) have different
-DocBook schemas to normal document sections. For example, a paragraph
+DocBook schema's to normal document sections. For example, a paragraph
 is illegal in a bibliography.
 
-Don't forget if your document is a book you need to specify the `-d
-book`, if you don't an article DocBook document will be generated,
-possibly containing book specific sections, leading to validation
-errors.
+Don't forget if your document is a book you need to specify the
+asciidoc `-d book` command option, if you don't an article DocBook
+document will be generated, possibly containing book specific
+sections, resulting in validation errors.
 
 
 == How can I disable special section titles?
 For example, you want to use 'References' as a normal section name but
 AsciiDoc is auto-magically generating a DocBook 'bibliography'
 section. All you need to do is explicitly specify the section template
-name:
+name, for example:
 
   [sect1]
   References
   ----------
-
-
-== Why don't tables generated by dblatex obey the width attribute?
-Tables generated by dblatex will take 100% of the available space
-unless you change the 'pageunits' micellaneous parameter to 'pt'. You
-can do this:
-
-- From the command-line with the `-a pageunits=pt` option
-- Or by setting `pageunits=pt` in a configuration file
-  `[miscellaneous]` section.
-- Or by setting this AttributeEntry in your document:
-
-  :miscellaneous.pageunits: pt
-
-See the
-http://www.methods.co.nz/asciidoc/userguide.html#X89[DocBook table
-widths] sidebar in the 'AsciiDoc User Guide' for an explanation.
 
 
 == How can I insert XML processing instructions into output documents?
@@ -72,6 +379,7 @@ recognized by `dblatex(1)` when it processes the DocBook XML generated
 by Asciidoc).
 
 
+[[X4]]
 == How do I prevent double-quoted text being mistaken for an inline literal?
 Mixing doubled-quoted text with inline literal passthroughs can
 produce undesired results, for example, all of the following line is
@@ -84,7 +392,7 @@ inline literal:
 
   ``XXX'' +YYY+
 
-Use the +\pass:[]+ macro if it's necessary to supress
+Use the +\pass:[]+ macro if it's necessary to suppress
 substitutions in the monospaced text, for example:
 
   ``XXX'' +pass:[don't `quote` me]+
@@ -94,11 +402,11 @@ substitutions in the monospaced text, for example:
 With the advent of Internet Explorer 8 all major web browsers now
 support the
 http://en.wikipedia.org/wiki/Data:_URI_scheme[data URI scheme] for
-embedded images. The AsciiDoc 'xhtml11' backend supports the data URI
-scheme for embedded images and by default it embeds the CSS
-stylesheet. For example the following command will generate a single
-`article.html` file containing embedded images, admonition icons and the CSS
-stylesheet:
+embedded images. The AsciiDoc 'xhtml11' and 'html5' backends supports
+the data URI scheme for embedded images and by default it embeds the
+CSS stylesheet. For example the following command will generate a
+single `article.html` file containing embedded images, admonition
+icons and the CSS stylesheet:
 
   $ asciidoc -a data-uri -a icons article.txt
 
@@ -117,7 +425,7 @@ User Guide].
 This is the response to a question posted on the AsciiDoc discussion
 list, it illustrates a number of useful techniques. The question arose
 because the source highlight filter language identifier for the C++
-language is `c++` when generating PDF's via dblatex (LaTeX listings
+language is `c++` when generating PDFs via dblatex (LaTeX listings
 package) or `cpp` when generating HTML (GNU source-highlight).
 
 Using straight `ifdef::[]` block macros we have:
@@ -213,7 +521,7 @@ public:
 Most likely the passthrough encloses another passthrough with a higher
 precedence. For example trying to render this +\pass:[]+ with this
 +\`\pass:[]`+ results in a blank string because the +\pass:[]+
-passthrough evaluates first, instead use monspaced quoting  and escape
+passthrough evaluates first, instead use monospaced quoting  and escape
 the passthrough i.e. ++ \+\\pass:[]+ ++
 
 
@@ -318,29 +626,28 @@ image::barchart.png[]
   same directory as the output file (`{outdir}`).
 =====================================================================
 
+
 == How can I render indented paragraphs?
 
-To unconditionally indent all paragraphs add the following line to the
-`xhtml11.css` stylesheet (or a custom stylesheet).
+Styling is backend dependent:
 
+[float]
+==== Create an indented paragraph style (xhtml11 and html5 backends)
+. Define an 'indented' paragraph style, for example, by putting this
+  in a custom configuration file:
++
 ---------------------------------------------------------------------
-div.paragraph p {text-indent: 3em;}
----------------------------------------------------------------------
+[paradef-default]
+indented-style=template="indentedparagraph"
 
-This will restyle the entire document by indenting all paragraphs
-which is normally what you want to do (mixed paragraph styles produce
-ugly documents).
-
-To selectively indent paragraphs with the 'indented' style add the
-following line to the `xhtml11.css` stylesheet (or a custom
-stylesheet).
-
----------------------------------------------------------------------
-div.paragraph.indented p {text-indent: 3em;}
+[indentedparagraph]
+<div class="paragraph"{id? id="{id}"} style="text-indent:3em;">{title?<div class="title">{title}</div>}<p>
+|
+</p></div>
 ---------------------------------------------------------------------
 
-Then apply the 'indented' style to normal paragraphs, for example:
-
+. Now apply the 'indented' style to normal paragraphs, for example:
++
 ---------------------------------------------------------------------
 [indented]
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas
@@ -349,29 +656,77 @@ vestibulum mi. Aliquam pede. Aenean lobortis lorem et lacus. Sed
 lacinia. Vivamus at lectus.
 ---------------------------------------------------------------------
 
-NOTE: This FAQ applies to XHTML output not DocBook. To achieve the
-same results with DocBook you would need to customize the DocBook XSL
-stylesheets to indent paragraphs with the `simpara` element
-`role="indented"` attribute.
-
-
-== Is there a way to set default image height and width attributes?
-
-You can set the 'height' and 'width' attributes globally in your
-document with Attribute Entries or from the command-line using the
-`--attribute` option. In the following example images that don't
-explicitly set the 'height' and 'width' values will be 350 by 250
-pixels.
-
+[float]
+==== Use the role attribute (xhtml11 and html5 backends)
+. Add the following line to custom stylesheet:
++
 ---------------------------------------------------------------------
-:height: 250
-:width: 350
-
-image:images/tiger.png[]
+div.paragraph.indented p {text-indent: 3em;}
 ---------------------------------------------------------------------
 
-NOTE: Setting the global 'width' attribute will also set the default
-table width and you will need to explicitly table widths.
+. Apply the 'role' attribute to indented paragraphs, for example:
++
+---------------------------------------------------------------------
+[role="indented"]
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas
+ultrices justo porttitor augue. Vestibulum pretium. Donec porta
+vestibulum mi. Aliquam pede. Aenean lobortis lorem et lacus. Sed
+lacinia. Vivamus at lectus.
+---------------------------------------------------------------------
+
+. Include the custom stylesheet by setting the 'stylesheet' attribute
+  (either from the command-line or with an attribute entry in the
+  document header).
+
+[float]
+==== Use the role attribute (docbook backend)
+. Add the following line to the distributed `docbook-xsl.css`
+  stylesheet or include it in a custom stylesheet:
++
+---------------------------------------------------------------------
+p.indented {text-indent: 3em;}
+---------------------------------------------------------------------
+
+. Apply the 'role' attribute to indented paragraphs, for example:
++
+---------------------------------------------------------------------
+[role="indented"]
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas
+ultrices justo porttitor augue. Vestibulum pretium. Donec porta
+vestibulum mi. Aliquam pede. Aenean lobortis lorem et lacus. Sed
+lacinia. Vivamus at lectus.
+---------------------------------------------------------------------
+
+. If you have included the custom CSS in a separate stylesheet you
+  will need to specify the stylesheet file name (along with the
+  default `docbook-xsl.css` stylesheet file name) with the
+  `html.stylesheet` XSL parameter. If you are using 'a2x(1)' use the
+  `--stylesheet` option (it sets the `html.stylesheet` XSL parameter),
+  for example: `--stylesheet "docbook-xsl.css mycss.css"`.
+
+NOTE: This applies to HTML outputs not PDF. To achieve the same
+results with PDF outputs you will need to customize the DocBook XSL
+Stylesheets to render indented paragraphs from DocBook `simpara`
+elements containing the the `role="indented"` attribute.
+
+
+== Is there a way to set default table grid and frame attributes?
+
+You can set the 'grid' and 'frame' attributes globally in your
+document header with Attribute Entries or from the command-line using
+the `--attribute` option. In the following example tables that don't
+explicitly set the 'grid' and 'frame' values will default to 'all' and
+'topbot' respectively:
+
+---------------------------------------------------------------------
+:grid: all
+:frame: topbot
+---------------------------------------------------------------------
+
+TIP: This technique can be applied to any block element attribute
+(just beware of possible ambiguity, for example, table and image
+blocks both have a 'width' attribute).
+
 
 == How can I place a backslash character in front of an attribute reference without escaping the reference?
 
@@ -407,7 +762,7 @@ There are a number of  exceptions to the usual single backslash rule
 -- mostly relating to URL macros that  have two syntaxes or quoting
 ambiguity.  Here are some non-standard escape examples:
 
-[cols="l,v",width="40%",options="header"]
+[cols="l,v",width="40%",frame="topbot",options="header"]
 |========================================
 |AsciiDoc | Renders
 
@@ -434,6 +789,36 @@ work-around for difficult cases is to side-step the problem using the
 
 NOTE: Escaping is unnecessary inside 'inline literal passthroughs'
 (backtick quoted text).
+
+
+== How can I escape a list?
+Here's how to handle situations where the first line of a paragraph is
+mistaken for a list item.
+
+[float]
+==== Numbered and bulleted lists
+Precede the bullet or index of the first list item with an `{empty}`
+attribute, for example:
+
+  {empty}- Qui in magna commodo est labitur dolorum an.  Est ne magna
+  primis adolescens.
+
+The predefined `{empty}` attribute is replaced by an empty string and
+ensures the first line is not mistaken for a bulleted list item.
+
+[float]
+==== Labeled lists
+Two colons or semicolons in a paragraph may be confused with a labeled
+list entry. Use the predefined `{two-colons}` and `{two-semicolons}`
+attributes to suppress this behavior, for example:
+
+  Qui in magna commodo{two-colons} est labitur dolorum an. Est ne
+  magna primis adolescens.
+
+Will be rendered as:
+
+Qui in magna commodo{two-colons} est labitur dolorum an. Est ne
+magna primis adolescens.
 
 
 == How can I set default list and tables styles?
@@ -486,24 +871,7 @@ from the command-line.
 == Are there any DocBook viewers?
 
 http://live.gnome.org/Yelp[Yelp], the GNOME help viewer, does a
-creditable job of displaying DocBook XML files directly. Just
-run it from the command-line, for example:
-
-  $ yelp file://home/srackham/tmp/book.xml
-
-Note that you have to supply the full path name in URI format, this
-shell script makes interactive use easier:
-
--------------------------------
-#!/bin/sh
-if [ -z "$1" ]; then
-    echo "usage: dbkview FILE"
-    exit 1
-fi
-yelp "file://$(pwd)/$1"
--------------------------------
-
-This tip was submitted by Lionel Orry.
+creditable job of displaying DocBook XML files directly.
 
 
 == Can you create ODF documents using AsciiDoc?
@@ -522,7 +890,7 @@ into OpenOffice Writer.
 This tip was contributed by Bernard Amade.
 
 
-== How can I supress cell separators in included table data files?
+== How can I suppress cell separators in included table data files?
 
 Use the `{include:}` system attribute instead of the `include::[]`
 macro (the former is not expanded until after the table data has been
@@ -542,7 +910,7 @@ consetetur, eu pro everti postulant
 homero verear ea mea, qui.
 ---------------------------------------------------------------------
 
-Alternatively, if you are generating PDF files files, you can use line
+Alternatively, if you are generating PDF files, you can use line
 breaks. For example:
 
 ---------------------------------------------------------------------
@@ -588,29 +956,6 @@ contents, revision history, figure and table captions, admonition
 captions).
 
 
-== Why does AsciiDoc give me a ``malformed author'' error?
-
-This is normally because there are more than three names (up to three
-are expected: first name, middle name and last name). For example,
-this author line would result in an error:
-
-  Vincent Willem van Gogh
-
-You can enter multi-word first, middle and last names in the author
-line using the underscore as a word separator. For example:
-
-  Vincent Willem van_Gogh
-
-You could also resolve the problem by replacing the author line with
-explicit attribute entries:
-
-----------------------
-:First name:  Vincent
-:Middle name: Willem
-:Last name:   Van Gogh
-----------------------
-
-
 == How can I turn off table and image title numbering?
 For HTML outputs set the 'caption' attribute to an empty string,
 either globally:
@@ -647,34 +992,6 @@ create a 'docinfo' file containing a DocBook 'authorgroup' element
 (search the 'User Guide' for 'docinfo' for more details).
 
 
-== How can I escape a list?
-Here's how to handle situations where the first line of a paragraph is
-mistaken for a list item.
-
-=== Numbered and bulleted lists
-Precede the bullet or index of the first list item with an `{empty}`
-attribute, for example:
-
-  {empty}- Qui in magna commodo est labitur dolorum an.  Est ne magna
-  primis adolescens.
-
-The predefined `{empty}` attribute is replaced by an empty string and
-ensures the first line is not mistaken for a bulleted list item.
-
-=== Labeled lists
-Two colons or semicolons in a paragraph may be confused with a labeled
-list entry. Use the predefined `{two-colons}` and `{two-semicolons}`
-attributes to suppress this behavior, for example:
-
-  Qui in magna commodo{two-colons} est labitur dolorum an. Est ne
-  magna primis adolescens.
-
-Will be rendered as:
-
-Qui in magna commodo{two-colons} est labitur dolorum an. Est ne
-magna primis adolescens.
-
-
 == How can I selectively disable a quoted text substitution?
 
 Omitting the tag name will disable quoting. For example, if you don't
@@ -704,50 +1021,21 @@ The default format for the `{localdate}` attribute is the ISO 8601
 the `{localdate}` attribute. For example by setting it using the
 asciidoc(1) `-a` command-line option:
 
-  $ asciidoc -a localdate=`date +%d-%d-%Y` mydoc.txt
+  $ asciidoc -a localdate=`date +%d-%m-%Y` mydoc.txt
 
-You could also set it by adding an Attribute Entry to your souce
+You could also set it by adding an Attribute Entry to your source
 document, for example:
 
   :localdate: {sys: date +%Y-%m-%d}
 
 
-== Why doesn't AsciiDoc support strike through text?
-
-The reason it's not in the distribution is that DocBook does not have
-provision for strike through text and one of the AsciiDoc design goals
-is that AsciiDoc markup should strive to be applicable to all output
-formats.
-
-Strike through is normally used to mark deleted text -- a more
-comprehensive way to manage document revisions is to use a version
-control system such as Subversion. You can also use the AsciiDoc
-'CommentLines' and 'CommentBlocks' to retain revised text in the
-source document.
-
-If you really need strike through text for (X)HTML outputs then adding
-the following to a configuration file will allow you to quote strike
-through text with hyphen characters:
-
----------------------------------------------------------------------
- ifdef::basebackend-html[]
-
- [quotes]
- -=strikethrough
-
- [tags]
- strikethrough=<del>|</del>
-
- endif::basebackend-html[]
----------------------------------------------------------------------
-
-
 == Where can I find examples of commands used to build output documents?
 
-The User Guide has some. You could also look at `./doc/main.aap` in
-the AsciiDoc distribution, it has all the commands used to build the
-AsciiDoc documentation (even if you don't use A-A-P you'll still find
-it useful).
+The User Guide has some. You could also look at `./doc/main.aap` and
+`./examples/website/main.aap` in the AsciiDoc distribution, they have
+all the commands used to build the AsciiDoc documentation and the
+AsciiDoc website (even if you don't use A-A-P you'll still find it
+useful).
 
 
 == Why have you used the DocBook <simpara> element instead of <para>?
@@ -803,18 +1091,6 @@ and set the attribute `depth=1` instead, for example:
 \include::blogpost_media_processing.txt[depth=1]
 ------------------------------------------------
 ................................................
-
-
-== How can I customize PDF files generated by dblatex?
-
-There are a number of dblatex XSL parameters that can be used to
-customize PDF output. You can set them globally in the AsciiDoc
-`./dblatex/asciidoc-dblatex.xsl` configuration file or you can also
-pass them on the a2x(1) command-line, for example:
-
-  a2x -f pdf --dblatex-opts "-P latex.output.revhistory=0" doc/article.txt
-
-See also the http://dblatex.sourceforge.net/[dblatex] documentation.
 
 
 == How can I make the mailto macro work with multiple email addresses?

@@ -29,7 +29,7 @@ progdir = $(bindir)
 
 vimdir = @sysconfdir@/vim
 
-manp = $(wildcard doc/*.1)
+manp = $(patsubst %1.txt,%1,$(wildcard doc/*.1.txt))
 manpdir = $(mandir)/man1
 
 conf = $(wildcard *.conf)
@@ -55,6 +55,11 @@ musicfilterconfdir = $(filtersdir)/music
 sourcefilterconf = filters/source/source-highlight-filter.conf
 sourcefilterconfdir = $(filtersdir)/source
 
+latexfilter = filters/latex/latex2png.py
+latexfilterdir = $(filtersdir)/latex
+latexfilterconf = filters/latex/latex-filter.conf
+latexfilterconfdir = $(filtersdir)/latex
+
 docbook = $(wildcard docbook-xsl/*.xsl)
 docbookdir = $(ASCIIDOCCONF)/docbook-xsl
 
@@ -75,8 +80,8 @@ iconsdir = $(ASCIIDOCCONF)/images/icons
 
 doc = $(wildcard README*) $(wildcard BUGS*) $(wildcard INSTALL*) $(wildcard CHANGELOG*)
 
-DATATARGETS = manp conf docbook dblatex css js callouts icons codefilterconf musicfilterconf sourcefilterconf graphvizfilterconf
-PROGTARGETS = prog codefilter musicfilter graphvizfilter
+DATATARGETS = manp conf docbook dblatex css js callouts icons codefilterconf musicfilterconf sourcefilterconf graphvizfilterconf latexfilterconf
+PROGTARGETS = prog codefilter musicfilter graphvizfilter latexfilter
 TARGETS = $(DATATARGETS) $(PROGTARGETS) doc
 
 INSTDIRS = $(TARGETS:%=%dir)
@@ -94,6 +99,9 @@ $(PROGTARGETS): % : %dir
 
 $(DATATARGETS): % : %dir
 	$(INSTALL_DATA) $($@) $(DESTDIR)/$($<)/
+
+$(manp): %.1 : %.1.txt
+	python a2x.py -f manpage $<
 
 docs:
 	$(INSTALL) -d $(DESTDIR)/$(docdir)
@@ -147,7 +155,8 @@ uninstall-vim:
 	done
 
 
-build: fixconfpath
+build: fixconfpath $(manp)
+
 
 install: all $(PROGTARGETS) $(DATATARGETS) progsymlink install-vim
 
@@ -156,10 +165,13 @@ uninstall: uninstall-vim
 	rm -f $(DESTDIR)/$(progdir)/asciidoc.py
 	rm -f $(DESTDIR)/$(progdir)/a2x
 	rm -f $(DESTDIR)/$(progdir)/a2x.py
-	rm -f $(DESTDIR)/$(mandir)/asciidoc.1
-	rm -f $(DESTDIR)/$(mandir)/a2x.1
+	rm -f $(DESTDIR)/$(manpdir)/asciidoc.1
+	rm -f $(DESTDIR)/$(manpdir)/a2x.1
 	rm -rf $(DESTDIR)/$(confdir)
 	rm -rf $(DESTDIR)/$(docdir)
+
+clean:
+	rm -f $(manp)
 
 test:
 	@echo "Nothing to see here...Move along."

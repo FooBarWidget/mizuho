@@ -1,7 +1,8 @@
 Multi-Part Book Title Goes Here
 ===============================
 Author's Name
-v1.0, Dec 2003
+v1.0, 2003-12
+:doctype: book
 
 
 [dedication]
@@ -36,6 +37,12 @@ documents.
 
 The First Part of the Book
 ==========================
+
+[partintro]
+.Optional part introduction title
+--
+Optional part introduction goes here.
+--
 
 The First Chapter
 -----------------
@@ -74,6 +81,11 @@ Followed by an example table:
 | -a 'USER GROUP' | Add 'USER' to 'GROUP'.
 | -R 'GROUP'      | Disables access to 'GROUP'.
 |==============================================
+
+.An example example
+===============================================
+Lorum ipum...
+===============================================
 
 [[X1]]
 Sub-section with Anchor
