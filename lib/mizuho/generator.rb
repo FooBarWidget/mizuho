@@ -72,6 +72,7 @@ private
 			doc = Nokogiri.HTML(f)
 			head = (doc / "head")[0]
 			body = (doc / "body")[0]
+			preamble = (doc / "#preamble")[0]
 			
 			head.add_child(stylesheet_tag)
 			
@@ -82,6 +83,12 @@ private
 			end
 			
 			body.add_child(javascript_tag)
+			
+			if preamble
+				preamble_copy = (doc / "#header > h1")[0].add_next_sibling(preamble.to_s)[0]
+				preamble_copy['id'] = 'early_preamble'
+				preamble['style'] = 'display: none'
+			end
 			
 			f.rewind
 			f.truncate(0)
@@ -108,6 +115,7 @@ private
 	def javascript_tag
 		content = %Q{<script>}
 		content << File.read("#{TEMPLATES_DIR}/jquery-1.6.1.min.js")
+		content << File.read("#{TEMPLATES_DIR}/jquery.hashchange-1.0.0.js")
 		content << File.read("#{TEMPLATES_DIR}/mizuho.js")
 		content << %Q{</script>}
 		return content
