@@ -71,6 +71,7 @@ function makeMultiPage() {
 	}
 	
 	function setScrollTop(top) {
+		$(document).scrollTop(top);
 		setTimeout(function() {
 			$(document).scrollTop(top);
 		}, 1);
@@ -98,6 +99,8 @@ function makeMultiPage() {
 	if (location.hash == '') {
 		changingHash = true;
 		location.hash = 'frontpage';
+	} else {
+		hashChanged();
 	}
 }
 
