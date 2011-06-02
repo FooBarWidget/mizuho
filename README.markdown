@@ -4,29 +4,24 @@ Mizuho is a documentation formatting tool, best suited for small to
 medium-sized documentation. One writes documentation in plain text
 files, which Mizuho then converts to nicely formatted HTML.
 
-Mizuho supports input files in [Asciidoc](http://www.methods.co.nz/asciidoc/)
-format. Asciidoc is a text formatting tool, used by e.g. Git for its
-documentation. Thanks to Asciidoc, Mizuho supports a large number of formatting
-options.
+Mizuho wraps [Asciidoc](http://www.methods.co.nz/asciidoc/), the text
+formatting tool used by e.g. Git and Phusion Passenger for its manuals.
+Mizuho adds the following functionality on top of Asciidoc:
 
-### Under the hood
+ * Commenting.
+ * Multi-page support.
 
-Mizuho is actually a wrapper around Asciidoc. Asciidoc itself can only
-generate single-page XHTML output. Mizuho extends Asciidoc by providing
-multi-page XHTML output support and support for multiple templates.
-
-## Features and highlights
-
- * You can output the documentation in a single XHTML file, or in multiple
-   XHTML files (one per chapter).
- * Output is fully customizable via ERB templates.
- * Based on Asciidoc and supports all Asciidoc formatting commands.
- * Comes bundled with Asciidoc so you don't have to install it yourself. Mizuho
-   Just Works(tm) out-of-the-box.
+Mizuho bundles Asciidoc so you don't have to install it yourself. Mizuho
+should Just Work(tm) out-of-the-box. Asciidoc uses GNU source-highlight
+for highlighting source code. GNU source-highlight depends on Boost and
+so is notorious for being difficult to install on systems without a
+decent package manager (e.g. OS X). Mizuho comes prebundled with an OS
+X binary for GNU source-highlight so that you don't have to worry about
+that.
 
 ## Requirements
 
- * hpricot (`gem install hpricot`)
+ * Nokogiri (`gem install nokogiri`)
  * Python (because Asciidoc is written in Python)
  * [GNU Source-highlight](http://www.gnu.org/software/src-highlite/), if you
    want syntax highlighting support. If you're on OS X then it's not necessary
@@ -54,9 +49,7 @@ default template:
 This will generate 'input.html'. Or, you can convert it to multiple XHTML files
 that also have a different look:
 
-    mizuho input.txt --template manualsonrails --multi-page
-
-Take a look at the 'templates' directory for available templates.
+    mizuho input.txt --multi-page
 
 ## Credits
 

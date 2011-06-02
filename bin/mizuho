@@ -1,24 +1,23 @@
 #!/usr/bin/env ruby
 require File.expand_path(File.dirname(__FILE__) + "/../lib/mizuho")
 require 'optparse'
+require 'rubygems'
 require 'mizuho/generator'
 
 $KCODE = 'UTF-8'
 options = {}
 parser = OptionParser.new do |opts|
+	nl = "\n" + ' ' * 37
 	opts.banner = "Usage: mizuho [options] INPUT"
 	opts.separator ""
 	
 	opts.separator "Options:"
-	opts.on("-t", "--template FILE", String, "Specify a template file to use.") do |value|
-		options[:template] = value
-	end
 	opts.on("-m", "--multi-page", "Generate one file per chapter.") do |value|
 		options[:multi_page] = value
 	end
-	opts.on("--icons-dir DIR", "Specify the directory in which icons\n" <<
-		"#{' ' * 37}should be searched. Defaults to\n" <<
-		"#{' ' * 37}'images/icons'.") do |value|
+	opts.on("--icons-dir DIR", "Specify the directory in which icons#{nl}" <<
+		"should be searched. Defaults to#{nl}" <<
+		"'images/icons'.") do |value|
 		options[:icons_dir] = value
 	end
 	opts.on("-o", "--output FILE", String, "Specify the output filename.") do |value|

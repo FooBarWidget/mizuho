@@ -1,0 +1,41 @@
+body {
+	margin: 1em 10% 1em 10%;
+}
+
+#content .comments {
+	display: block;
+	background: url('balloon.png');
+	float: left;
+	margin-left: -50px;
+	width: 36px;
+	height: 32px;
+	line-height: 0;
+	color: black;
+	text-decoration: none;
+	border: none;
+}
+
+#content .sect1 .comments {
+	margin-top: 0.5em;
+}
+
+#content .sect2 .comments {
+	margin-top: 1.15em;
+}
+
+#content .comments.empty {
+	opacity: 0.25;
+}
+
+#content .comments.empty:hover,
+#content .comments.nonempty {
+	opacity: 1;
+}
+
+#content .comments .count {
+	display: block;
+	font-size: 80%;
+	padding-top: 12px;
+	text-align: center;
+	text-shadow: 1px 1px 2px white;
+}

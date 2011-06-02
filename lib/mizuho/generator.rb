@@ -1,8 +1,5 @@
-require 'optparse'
-require 'digest/sha1'
+require 'nokogiri'
 require 'mizuho'
-require 'mizuho/parser'
-require 'mizuho/template'
 require 'mizuho/source_highlight'
 
 module Mizuho
@@ -12,24 +9,28 @@ end
 
 class Generator
 	def initialize(input, options = {})
-		@input_file = input
-		@output_name = options[:output]
-		@template = locate_template_file(options[:template])
-		@multi_page = options[:multi_page]
-		@icons_dir = options[:icons_dir]
-		@conf_file = options[:conf_file]
+		@input_file  = input
+		@output_file = options[:output] || default_output_filename(input)
+		@multi_page  = options[:multi_page]
+		@icons_dir   = options[:icons_dir]
+		@conf_file   = options[:conf_file]
 	end
 	
 	def start
-		output_filename = determine_output_filename(@input_file, @output_name)
-		self.class.run_asciidoc(@input_file, output_filename, @icons_dir, @conf_file)
-		if @template
-			apply_template(output_filename, @input_file, @output_name, @template, @multi_page)
-		end
+		#self.class.run_asciidoc(@input_file, @output_file, @icons_dir, @conf_file)
+		transform(@output_file)
 	end
 	
 	def self.run_asciidoc(input, output, icons_dir = nil, conf_file = nil)
-		args = ["python", ASCIIDOC, "-a", "toc", "-a", "icons"]
+		args = [
+			"python", ASCIIDOC,
+			"-b", "html5",
+			"-a", "toc",
+			"-a", "theme=flask",
+			"-a", "toclevels=3",
+			"-a", "icons",
+			"-n"
+		]
 		if icons_dir
 			args << "-a"
 			args << "iconsdir=#{icons_dir}"
@@ -41,93 +42,67 @@ class Generator
 				args << cf
 			end
 		end
-		args += ["-n", "-o", output, input]
+		args += ["-o", output, input]
 		if !system(*args)
 			raise GenerationError, "Asciidoc failed."
 		end
 	end
 
 private
-	def locate_template_file(template_name)
-		if template_name.nil?
-			return "#{SOURCE_ROOT}/templates/asciidoc.html.erb"
-		elsif template_name =~ %r{[/.]}
-			# Looks like a filename.
-			return template_name
-		else
-			return "#{SOURCE_ROOT}/templates/#{template_name}.html.erb"
+	def default_output_filename(input)
+		return File.dirname(input) +
+			"/" +
+			File.basename(input, File.extname(input)) +
+			".html"
+	end
+	
+	def transform(filename)
+		File.open(filename, 'r+') do |f|
+			doc = Nokogiri.HTML(f)
+			head = (doc / "head")[0]
+			body = (doc / "body")[0]
+			
+			head.add_child(stylesheet_tag)
+			
+			headers = (doc / "#content h2, #content h3")
+			headers.each do |header|
+				header.add_previous_sibling(comment_container)
+			end
+			
+			body.add_child(javascript_tag)
+			
+			f.rewind
+			f.truncate(0)
+			f.puts(doc.to_html)
 		end
 	end
 	
-	def determine_output_filename(input, output = nil, chapter_id = nil)
-		if chapter_id
-			if output
-				dirname = File.dirname(output)
-				extname = File.extname(output)
-				basename = File.basename(output, extname)
-				filename = File.join(dirname, "#{basename}-#{chapter_id}#{extname}")
-			else
-				dirname = File.dirname(input)
-				basename = File.basename(input, File.extname(input))
-				filename = File.join(dirname, "#{basename}-#{chapter_id}.html")
+	def stylesheet_tag
+		content = %Q{<style type="text/css">\n}
+		css = File.read("#{TEMPLATES_DIR}/mizuho.css")
+		css.gsub!(/url\('(.*?)\.png'\)/) do
+			data = File.open("#{TEMPLATES_DIR}/#{$1}.png", "rb") do |f|
+				f.read
 			end
-		else
-			if output
-				filename = output
-			else
-				dirname = File.dirname(input)
-				basename = File.basename(input, File.extname(input))
-				filename = File.join(dirname, "#{basename}.html")
-			end
+			data = [data].pack('m')
+			data.gsub!("\n", "")
+			"url('data:image/png;base64,#{data}')"
 		end
-		return File.expand_path(filename)
+		content << css
+		content << %Q{</style>\n}
+		return content
 	end
 	
-	def apply_template(asciidoc_file, input_file, output_name, template_file, multi_page)
-		parser = Parser.new(asciidoc_file)
-		if multi_page
-			File.unlink(asciidoc_file)
-			assign_chapter_filenames_and_heading_basenames(parser.chapters, input_file, output_name)
-			parser.chapters.each_with_index do |chapter, i|
-				template = Template.new(template_file,
-					:multi_page? => true,
-					:title => parser.title,
-					:table_of_contents => parser.table_of_contents,
-					:contents => chapter.contents,
-					:is_preamble? => chapter.heading.nil?,
-					:chapters => parser.chapters,
-					:prev_chapter => (i <= 1) ? nil : parser.chapters[i - 1],
-					:current_chapter => chapter,
-					:next_chapter => parser.chapters[i + 1])
-				template.save(chapter.filename)
-			end
-		else
-			template = Template.new(template_file,
-				:multi_page? => false,
-				:title => parser.title,
-				:table_of_contents => parser.table_of_contents,
-				:contents => parser.contents)
-			template.save(asciidoc_file)
-		end
-	rescue Template::Error => e
-		STDERR.puts("*** #{template_file}:\n#{e}")
-		exit 1
+	def javascript_tag
+		content = %Q{<script>}
+		content << File.read("#{TEMPLATES_DIR}/jquery-1.6.1.min.js")
+		content << File.read("#{TEMPLATES_DIR}/mizuho.js")
+		content << %Q{</script>}
+		return content
 	end
 	
-	def assign_chapter_filenames_and_heading_basenames(chapters, input_file, output_name)
-		chapters.each_with_index do |chapter, i|
-			if chapter.is_preamble?
-				chapter.filename = determine_output_filename(input_file, output_name)
-			else
-				title_sha1 = Digest::SHA1.hexdigest(chapter.title_without_numbers)
-				chapter.filename = determine_output_filename(input_file,
-					output_name, title_sha1.slice(0..7))
-				chapter.heading.basename = File.basename(chapter.filename)
-				chapter.heading.each_descendant do |h|
-					h.basename = File.basename(chapter.filename)
-				end
-			end
-		end
+	def comment_container
+		return %Q{<a href="javascript:void(0)" class="comments empty" title="Add a comment"><span class="count"></span></a>}
 	end
 end
 

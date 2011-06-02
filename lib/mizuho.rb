@@ -1,7 +1,8 @@
 module Mizuho
-	SOURCE_ROOT = File.expand_path(File.dirname(__FILE__) + "/..")
-	LIBDIR      = "#{SOURCE_ROOT}/lib"
-	ASCIIDOC    = "#{SOURCE_ROOT}/asciidoc/asciidoc.py"
+	SOURCE_ROOT   = File.expand_path(File.dirname(__FILE__) + "/..")
+	LIBDIR        = "#{SOURCE_ROOT}/lib"
+	TEMPLATES_DIR = "#{SOURCE_ROOT}/templates"
+	ASCIIDOC      = "#{SOURCE_ROOT}/asciidoc/asciidoc.py"
 	
 	VERSION_STRING = "0.9.8"
 	
