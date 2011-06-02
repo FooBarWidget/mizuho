@@ -14,9 +14,10 @@ class IdMap
 		end
 	end
 	
-	def initialize
+	def initialize(filename)
 		@matcher = JaroWinklerPure.new
 		@entries = {}
+		#@namespace = slug(File.basename(filename, File.extname(filename)))
 	end
 	
 	def load(filename)
@@ -129,13 +130,18 @@ private
 		end
 	end
 	
+	def slug(text)
+		text = text.downcase
+		text.gsub!(/^(\d+\.)+ /, '')
+		text.gsub!(/[^a-z0-9\-\_]/i, '-')
+		text.gsub!('_', '-')
+		text.gsub!(/--+/, '-')
+		return text
+	end
+	
 	def create_unique_id(title)
-		title = title.downcase
-		title.gsub!(/^(\d+\.)+ /, '')
-		title.gsub!(/[\s\t\r\n\.\,\!\?\:\-\_\'\"\`]+/, '-')
-		title.gsub!(/--+/, '-')
 		suffix = URANDOM.read(4).unpack('H*')[0].to_i(16).to_s(36)
-		return "#{title}-#{suffix}"
+		return "#{slug(title)}-#{suffix}"
 	end
 end
 

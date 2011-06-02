@@ -18,7 +18,7 @@ class Generator
 	end
 	
 	def start
-		@id_map = IdMap.new
+		@id_map = IdMap.new(@input_file)
 		@id_map.load(@id_map_file)
 		#self.class.run_asciidoc(@input_file, @output_file, @icons_dir, @conf_file)
 		transform(@output_file)
