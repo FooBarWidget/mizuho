@@ -39,3 +39,46 @@ body {
 	text-align: center;
 	text-shadow: 1px 1px 2px white;
 }
+
+@media print {
+	body {
+		font-size: 18pt;
+	}
+	
+	#header h1 {
+		page-break-after: always;
+		font-size: 500%;
+		vertical-align: middle;
+	}
+	
+	#header {
+		page-break-after: always;
+	}
+	
+	#toctitle {
+		font-size: 200%;
+		margin-bottom: 1em;
+	}
+	
+	div.toclevel1 {
+		font-size: 100%;
+	}
+	
+	div.toclevel2 {
+		font-size: 90%;
+	}
+	
+	div.toclevel3 {
+		font-size: 80%;
+	}
+	
+	#content .comments {
+		display: none;
+	}
+	
+	@page :left {
+		@bottom-left {
+			content: counter(page);
+		}
+	}
+}
