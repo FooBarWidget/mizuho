@@ -121,9 +121,9 @@ function makeMultiPage() {
 // sections.
 function installHashbangLinks() {
 	var $document = $(document);
-	var scrollMemory = window.scrollMemory = {};
-	var changingHash = false;
+	var scrollMemory = {};
 	var activeHash;
+	location.changingHash = false;
 	
 	function lookupHeader(hash) {
 		var id = hash.replace(/^#!\//, '#');
@@ -147,8 +147,8 @@ function installHashbangLinks() {
 	}
 	
 	function hashChanged() {
-		if (changingHash) {
-			changingHash = false;
+		if (location.changingHash) {
+			location.changingHash = false;
 			return;
 		}
 		
@@ -175,7 +175,7 @@ function installHashbangLinks() {
 			header[0].scrollIntoView();
 		}
 		scrollMemory[location.hash] = $document.scrollTop();
-		changingHash = true;
+		location.changingHash = true;
 		activeHash = location.hash = hash;
 	}
 	
@@ -190,7 +190,7 @@ function installHashbangLinks() {
 	
 	$(window).hashchange(hashChanged);
 	if (!location.hash.match(/#!\//)) {
-		changingHash = true;
+		location.changingHash = true;
 		activeHash = location.hash = '#!/';
 	} else {
 		hashChanged();
