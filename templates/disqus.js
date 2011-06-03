@@ -40,9 +40,18 @@ function loadComments() {
 	}
 	
 	function showComments() {
-		var header = $(this).next('#content h2, #content h3, #content h4');
-		var id = header.attr('id');
-		var topic = header.data('comment-topic');
+		var id, topic, title;
+		if ($(this).closest('#toc').length > 0) {
+			id = 'toctitle';
+			topic = 'toctitle';
+			title = $('#header h1').text() + " - " + $('#toctitle').text();
+		} else {
+			var header = $(this).next('#content h2, #content h3, #content h4');
+			id = header.attr('id');
+			topic = header.data('comment-topic');
+			title = $('#header h1').text() + " - " + header.text();
+		}
+		
 		showLightbox(function(element) {
 			element.html(
 				'<div id="comments_notice"><span>Please use <a href="https://gist.github.com/">Gist</a> if you want to post code snippets.</span></div>' +
@@ -68,11 +77,11 @@ function loadComments() {
 			
 			location.changingHash = true;
 			location.hash = '#!/' + id;
-			resetDisqus(topic, $('#header h1').text() + " - " + header.text());
+			resetDisqus(topic, title);
 		});
 	}
 	
-	var commentBalloons = $('#content .comments');
+	var commentBalloons = $('.comments');
 	commentBalloons.click(showComments);
 }
 

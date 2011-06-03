@@ -6,7 +6,7 @@ a.image {
 	border: none;
 }
 
-#content .comments {
+.comments {
 	display: block;
 	background: url('balloon.png') top left no-repeat;
 	float: left;
@@ -15,32 +15,36 @@ a.image {
 	height: 48px;
 	line-height: 0;
 	color: black;
-	text-decoration: none;
-	border: none;
+	text-decoration: none !important;
+	border: none !important;
 }
 
-#content .sect1 .comments {
+#toc .comments {
+	margin-top: 0.25em;
+}
+
+.sect1 .comments {
 	margin-top: 0.5em;
 }
 
-#content .sect2 .comments {
+.sect2 .comments {
 	margin-top: 1.15em;
 }
 
-#content .sect3 .comments {
+.sect3 .comments {
 	margin-top: -1em;
 }
 
-#content .comments.empty {
+.comments.empty {
 	opacity: 0.1;
 }
 
-#content .comments.empty:hover,
-#content .comments.nonempty {
+.comments.empty:hover,
+.comments.nonempty {
 	opacity: 1;
 }
 
-#content .comments .count {
+.comments .count {
 	display: block;
 	font-size: 80%;
 	padding-top: 12px;

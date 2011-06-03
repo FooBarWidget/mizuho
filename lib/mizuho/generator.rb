@@ -87,22 +87,25 @@ private
 			head = (doc / "head")[0]
 			body = (doc / "body")[0]
 			preamble = (doc / "#preamble")[0]
+			toctitle = (doc / "#toctitle")[0]
 			
 			head.add_child(stylesheet_tag)
 			
 			headers = (doc / "#content h2, #content h3, #content h4")
 			headers.each do |header|
 				header['data-comment-topic'] = @id_map.associate(header.text)
-				header.add_previous_sibling(comment_container)
+				header.add_previous_sibling(create_comment_balloon)
 			end
 			
 			body.add_child(javascript_tag)
 			
 			if preamble
+				preamble.remove
 				preamble_copy = (doc / "#header > h1")[0].add_next_sibling(preamble.to_s)[0]
-				preamble_copy['id'] = 'early_preamble'
-				preamble['style'] = 'display: none'
+				preamble_copy['id'] = 'preamble'
 			end
+			
+			toctitle.add_previous_sibling(create_comment_balloon)
 			
 			f.rewind
 			f.truncate(0)
@@ -147,7 +150,7 @@ private
 		return content
 	end
 	
-	def comment_container
+	def create_comment_balloon
 		return %Q{<a href="javascript:void(0)" class="comments empty" title="Add a comment"><span class="count"></span></a>}
 	end
 end
