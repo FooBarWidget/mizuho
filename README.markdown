@@ -8,8 +8,8 @@ Mizuho wraps [Asciidoc](http://www.methods.co.nz/asciidoc/), the text
 formatting tool used by e.g. Git and Phusion Passenger for its manuals.
 Mizuho adds the following functionality on top of Asciidoc:
 
- * Per-subsection commenting via [Disqus](http://www.disqus.com).
- * Multi-page support via Javascript. The output is still a single HTML file.
+ * Commenting via [Disqus](http://www.disqus.com).
+ * Multi-page support. It's pure Javascript, the output is still a single HTML file.
 
 Mizuho bundles Asciidoc so you don't have to install it yourself. Mizuho
 should Just Work(tm) out-of-the-box. Asciidoc uses GNU source-highlight
@@ -41,7 +41,7 @@ http://www.methods.co.nz/asciidoc/userguide.html
 
 Next, write an input file and save it in a .txt file.
 
-Finally, convert the .txt file to a single XHTML file with Mizuho, with the
+Finally, convert the .txt file to a single HTML file with Mizuho, with the
 default template:
 
     mizuho input.txt

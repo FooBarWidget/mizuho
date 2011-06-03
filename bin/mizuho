@@ -12,9 +12,18 @@ parser = OptionParser.new do |opts|
 	opts.separator ""
 	
 	opts.separator "Options:"
-	opts.on("-m", "--multi-page", "Generate one file per chapter.") do |value|
-		options[:multi_page] = value
+	opts.on("-c", "--comments SYSTEM",
+	        "Enable a commenting system. The only#{nl}" +
+	        "supported commenting system right now is#{nl}" +
+	        "'disqus'.") do |value|
+		if value != 'disqus'
+			abort "The only supported commenting system right now is 'disqus'."
+		end
+		options[:commenting_system] = value
 	end
+	#opts.on("-m", "--multi-page", "Generate one file per chapter.") do |value|
+	#	options[:multi_page] = value
+	#end
 	opts.on("--icons-dir DIR", "Specify the directory in which icons#{nl}" <<
 		"should be searched. Defaults to#{nl}" <<
 		"'images/icons'.") do |value|
@@ -27,9 +36,9 @@ end
 begin
 	parser.parse!
 rescue OptionParser::ParseError => e
-	puts e
-	puts
-	puts "Please see '--help' for valid options."
+	STDERR.puts e
+	STDERR.puts
+	STDERR.puts "Please see '--help' for valid options."
 	exit 1
 end
 

@@ -15,23 +15,27 @@ class Generator
 		@id_map_file = options[:id_map] || default_id_map_filename(input)
 		@icons_dir   = options[:icons_dir]
 		@conf_file   = options[:conf_file]
-		@commenting_system = 'disqus'
+		@commenting_system = options[:commenting_system]
 	end
 	
 	def start
-		if !File.exist?(@id_map_file)
-			warn "No ID map file, generating one (#{@id_map_file})..."
+		if @commenting_system
+			if !File.exist?(@id_map_file)
+				warn "No ID map file, generating one (#{@id_map_file})..."
+			end
+			@id_map = IdMap.new(@input_file)
+			@id_map.load(@id_map_file)
 		end
-		@id_map = IdMap.new(@input_file)
-		@id_map.load(@id_map_file)
 		#self.class.run_asciidoc(@input_file, @output_file, @icons_dir, @conf_file)
 		transform(@output_file)
-		@id_map.save(@id_map_file)
-		if @id_map.fuzzy_count > 0
-			warn "Warning: #{@id_map.fuzzy_count} fuzzy ID(s)"
-		end
-		if @id_map.orphaned_count > 0
-			warn "Warning: #{@id_map.orphaned_count} orphaned ID(s)"
+		if @commenting_system
+			@id_map.save(@id_map_file)
+			if @id_map.fuzzy_count > 0
+				warn "Warning: #{@id_map.fuzzy_count} fuzzy ID(s)"
+			end
+			if @id_map.orphaned_count > 0
+				warn "Warning: #{@id_map.orphaned_count} orphaned ID(s)"
+			end
 		end
 	end
 	
@@ -91,10 +95,12 @@ private
 			
 			head.add_child(stylesheet_tag)
 			
-			headers = (doc / "#content h2, #content h3, #content h4")
-			headers.each do |header|
-				header['data-comment-topic'] = @id_map.associate(header.text)
-				header.add_previous_sibling(create_comment_balloon)
+			if @commenting_system
+				headers = (doc / "#content h2, #content h3, #content h4")
+				headers.each do |header|
+					header['data-comment-topic'] = @id_map.associate(header.text)
+					header.add_previous_sibling(create_comment_balloon)
+				end
 			end
 			
 			body.add_child(javascript_tag)
