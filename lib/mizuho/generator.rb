@@ -18,11 +18,20 @@ class Generator
 	end
 	
 	def start
+		if !File.exist?(@id_map_file)
+			warn "No ID map file, generating one (#{@id_map_file})..."
+		end
 		@id_map = IdMap.new(@input_file)
 		@id_map.load(@id_map_file)
 		#self.class.run_asciidoc(@input_file, @output_file, @icons_dir, @conf_file)
 		transform(@output_file)
 		@id_map.save(@id_map_file)
+		if @id_map.fuzzy_count > 0
+			warn "Warning: #{@id_map.fuzzy_count} fuzzy ID(s)"
+		end
+		if @id_map.orphaned_count > 0
+			warn "Warning: #{@id_map.orphaned_count} orphaned ID(s)"
+		end
 	end
 	
 	def self.run_asciidoc(input, output, icons_dir = nil, conf_file = nil)
@@ -65,6 +74,10 @@ private
 			"/" +
 			File.basename(input, File.extname(input)) +
 			".idmap.txt"
+	end
+	
+	def warn(message)
+		STDERR.puts(message)
 	end
 	
 	def transform(filename)
