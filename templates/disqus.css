@@ -25,6 +25,12 @@
 
 .disqus-loaded #comments_notice span {
 	position: absolute;
+	display: block;
 	left: 0;
+	right: 0;
 	top: 0;
+}
+
+.disqus-loaded.align-center #comments_notice span {
+	text-align: center;
 }

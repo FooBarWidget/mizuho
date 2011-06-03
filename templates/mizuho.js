@@ -153,14 +153,14 @@ function installHashbangLinks() {
 		}
 		
 		var header = lookupHeader(location.hash);
-		if (activeHash !== undefined) {
+		if (activeHash) {
 			scrollMemory[activeHash] = $document.scrollTop();
 		}
 		if (scrollMemory[location.hash] !== undefined) {
 			setScrollTop(scrollMemory[location.hash]);
 		} else if (header) {
 			header[0].scrollIntoView();
-		} else if (location.hash == '#!/' || location.hash == '') {
+		} else if (location.hash == '#!/') {
 			setScrollTop(0);
 		}
 		scrollMemory[location.hash] = $document.scrollTop();
