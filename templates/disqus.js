@@ -39,19 +39,23 @@ function loadComments() {
 		}
 	}
 	
-	function showComments() {
-		var id, topic, title;
-		if ($(this).closest('#toc').length > 0) {
-			id = 'toctitle';
-			topic = 'toctitle';
-			title = $('#header h1').text() + " - " + $('#toctitle').text();
+	function getCommentThreadInfo(balloon) {
+		var info = {};
+		if ($(balloon).closest('#toc').length > 0) {
+			info.id = 'toctitle';
+			info.topic = 'toctitle';
+			info.title = $('#header h1').text() + " - " + $('#toctitle').text();
 		} else {
 			var header = $(this).next('#content h2, #content h3, #content h4');
-			id = header.attr('id');
-			topic = header.data('comment-topic');
-			title = $('#header h1').text() + " - " + header.text();
+			info.id = header.attr('id');
+			info.topic = header.data('comment-topic');
+			info.title = $('#header h1').text() + " - " + header.text();
 		}
-		
+		return info;
+	}
+	
+	function showComments() {
+		var info = getCommentThreadInfo(this);
 		showLightbox(function(element) {
 			element.html(
 				'<div id="comments_notice"><span>Please use <a href="https://gist.github.com/">Gist</a> if you want to post code snippets.</span></div>' +
@@ -76,13 +80,28 @@ function loadComments() {
 			timerID = setInterval(monitorDisqusLoaded, 50);
 			
 			location.changingHash = true;
-			location.hash = '#!/' + id;
-			resetDisqus(topic, title);
+			location.hash = '#!/' + info.id;
+			resetDisqus(info.topic, info.title);
 		});
 	}
 	
 	var commentBalloons = $('.comments');
 	commentBalloons.click(showComments);
+	
+	var hiddenContainer = $('<div style="display: none"></div>').appendTo(document.body);
+	var locationWithoutHash = window.location.replace(/#.*/, '');
+	commentBalloons.each(function() {
+		var info = getCommentThreadInfo(this);
+		var link = $('<a></a>').appendTo(hiddenContainer);
+		link.attr('href', locationWithoutHash + '#!/' + info.id);
+		link.attr('data-disqus-identifier', info.topic);
+	});
+	/*
+	var s = document.createElement('script');
+	s.async = true;
+	s.type = 'text/javascript';
+	s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+	(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s); */
 }
 
 $(document).ready(loadComments);
