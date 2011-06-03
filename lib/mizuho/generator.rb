@@ -15,6 +15,7 @@ class Generator
 		@id_map_file = options[:id_map] || default_id_map_filename(input)
 		@icons_dir   = options[:icons_dir]
 		@conf_file   = options[:conf_file]
+		@commenting_system = 'disqus'
 	end
 	
 	def start
@@ -111,6 +112,7 @@ private
 	
 	def stylesheet_tag
 		content = %Q{<style type="text/css">\n}
+		
 		css = File.read("#{TEMPLATES_DIR}/mizuho.css")
 		css.gsub!(/url\('(.*?)\.png'\)/) do
 			data = File.open("#{TEMPLATES_DIR}/#{$1}.png", "rb") do |f|
@@ -120,16 +122,27 @@ private
 			data.gsub!("\n", "")
 			"url('data:image/png;base64,#{data}')"
 		end
-		content << css
+		content << css << "\n"
+		
+		if @commenting_system == 'disqus'
+			content << File.read("#{TEMPLATES_DIR}/disqus.css") << "\n"
+		end
+		
 		content << %Q{</style>\n}
 		return content
 	end
 	
 	def javascript_tag
 		content = %Q{<script>}
-		content << File.read("#{TEMPLATES_DIR}/jquery-1.6.1.min.js")
-		content << File.read("#{TEMPLATES_DIR}/jquery.hashchange-1.0.0.js")
-		content << File.read("#{TEMPLATES_DIR}/mizuho.js")
+		content << File.read("#{TEMPLATES_DIR}/jquery-1.6.1.min.js") << "\n"
+		content << File.read("#{TEMPLATES_DIR}/jquery.hashchange-1.0.0.js") << "\n"
+		content << File.read("#{TEMPLATES_DIR}/mizuho.js") << "\n"
+		if @commenting_system == 'disqus'
+			content << %Q{
+				var disqus_shortname = 'justtestinglocal2';
+			}
+			content << File.read("#{TEMPLATES_DIR}/disqus.js") << "\n"
+		end
 		content << %Q{</script>}
 		return content
 	end
