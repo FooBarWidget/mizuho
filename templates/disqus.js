@@ -46,16 +46,24 @@ function loadComments() {
 			info.topic = 'toctitle';
 			info.title = $('#header h1').text() + " - " + $('#toctitle').text();
 		} else {
-			var header = $(this).next('#content h2, #content h3, #content h4');
-			info.id = header.attr('id');
-			info.topic = header.data('comment-topic');
-			info.title = $('#header h1').text() + " - " + header.text();
+			var header = $(balloon).next('h2, h3, h4');
+			if (header.length > 0) {
+				info.id = header.attr('id');
+				info.topic = header.data('comment-topic');
+				info.title = $('#header h1').text() + " - " + header.text();
+			} else {
+				info = undefined;
+			}
 		}
 		return info;
 	}
 	
 	function showComments() {
 		var info = getCommentThreadInfo(this);
+		if (!info) {
+			return;
+		}
+		
 		showLightbox(function(element) {
 			element.html(
 				'<div id="comments_notice"><span>Please use <a href="https://gist.github.com/">Gist</a> if you want to post code snippets.</span></div>' +
@@ -88,20 +96,48 @@ function loadComments() {
 	var commentBalloons = $('.comments');
 	commentBalloons.click(showComments);
 	
-	var hiddenContainer = $('<div style="display: none"></div>').appendTo(document.body);
-	var locationWithoutHash = window.location.replace(/#.*/, '');
+	var hiddenContainer = $('<div style="height: 0; overflow: hidden"></div>').appendTo(document.body);
+	var locationWithoutHash = window.location.href.replace(/#.*/, '');
+	var checks = window.checks = [];
 	commentBalloons.each(function() {
 		var info = getCommentThreadInfo(this);
-		var link = $('<a></a>').appendTo(hiddenContainer);
-		link.attr('href', locationWithoutHash + '#!/' + info.id);
-		link.attr('data-disqus-identifier', info.topic);
+		if (info) {
+			var link = $('<a></a>').appendTo(hiddenContainer);
+			link.attr('href', locationWithoutHash + '#!/' + info.id + '#disqus_thread');
+			link.attr('data-disqus-identifier', info.topic);
+			
+			var balloon = $(this);
+			function callback(count) {
+				if (count > 0) {
+					$('.count', balloon).text(count);
+					balloon.removeClass('empty');
+					balloon.addClass('nonempty');
+					balloon.attr('title', null);
+				}
+			}
+			
+			checks.push({ element: link[0], callback: callback });
+		}
 	});
-	/*
+	
 	var s = document.createElement('script');
 	s.async = true;
 	s.type = 'text/javascript';
 	s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-	(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s); */
+	(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+	
+	var timerID;
+	timerID = setInterval(function() {
+		for (var i = checks.length - 1; i >= 0; i--) {
+			if (checks[i].element.childNodes.length > 0) {
+				checks[i].callback(parseInt($(checks[i].element).text()));
+				checks.splice(i, 1);
+			}
+		}
+		if (checks.length == 0) {
+			clearInterval(timerID);
+		}
+	}, 100);
 }
 
 $(document).ready(loadComments);
