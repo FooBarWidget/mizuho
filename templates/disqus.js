@@ -24,9 +24,10 @@ function loadComments() {
 		if (window.DISQUS) {
 			window.DISQUS.reset({
 				reload: true,
-				config: function () {  
+				config: function () {
 					this.page.identifier = identifier;
 					this.page.url = location.href;
+					this.page.title = title;
 				}
 			});
 		} else {
@@ -39,7 +40,7 @@ function loadComments() {
 	}
 	
 	function showComments() {
-		var header = $(this).next('h2,h3');
+		var header = $(this).next('#content h2, #content h3, #content h4');
 		var id = header.attr('id');
 		var topic = header.data('comment-topic');
 		showLightbox(function(element) {

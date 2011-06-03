@@ -90,7 +90,7 @@ private
 			
 			head.add_child(stylesheet_tag)
 			
-			headers = (doc / "#content h2, #content h3")
+			headers = (doc / "#content h2, #content h3, #content h4")
 			headers.each do |header|
 				header['data-comment-topic'] = @id_map.associate(header.text)
 				header.add_previous_sibling(comment_container)

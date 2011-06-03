@@ -148,7 +148,7 @@ private
 		best_match = nil
 		@entries.each_value do |entry|
 			next if entry.associated?
-			score = @matcher.getDistance(entry.content.downcase, lower_title)
+			score = MATCHER.getDistance(entry.content.downcase, lower_title)
 			if best_score.nil? || score > best_score
 				best_score = score
 				best_match = entry
