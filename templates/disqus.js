@@ -1,5 +1,6 @@
 var disqus_identifier;
 var disqus_title;
+var disqus_url;
 var disqus_developer = 1;
 
 function loadComments() {
@@ -21,6 +22,7 @@ function loadComments() {
 	function resetDisqus(identifier, title) {
 		disqus_identifier = identifier;
 		disqus_title = title;
+		disqus_url = location.href;
 		if (window.DISQUS) {
 			window.DISQUS.reset({
 				reload: true,
