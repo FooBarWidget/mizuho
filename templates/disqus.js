@@ -4,7 +4,9 @@ var disqus_url;
 var disqus_developer = 1;
 
 function loadComments() {
-	function showLightbox(creationCallback) {
+	var commentBalloons = $('.comments');
+	
+	function showLightbox(creationCallback, closeCallback) {
 		var lightbox = $(
 			'<div id="comments_lightbox">' +
 			'  <div id="comments_lightbox_shadow"></div>' +
@@ -14,6 +16,9 @@ function loadComments() {
 		var contents = $('#comments_lightbox_contents > .shell', lightbox);
 		shadow.click(function() {
 			lightbox.remove();
+			if (closeCallback) {
+				closeCallback();
+			}
 		});
 		lightbox.appendTo(document.body);
 		creationCallback(contents);
@@ -92,54 +97,62 @@ function loadComments() {
 			location.changingHash = true;
 			location.hash = '#!/' + info.id;
 			resetDisqus(info.topic, info.title);
+		}, function() {
+			reloadCommentCount();
 		});
 	}
 	
-	var commentBalloons = $('.comments');
-	commentBalloons.click(showComments);
-	
-	var hiddenContainer = $('<div style="height: 0; overflow: hidden"></div>').appendTo(document.body);
-	var locationWithoutHash = window.location.href.replace(/#.*/, '');
-	var checks = window.checks = [];
-	commentBalloons.each(function() {
-		var info = getCommentThreadInfo(this);
-		if (info) {
-			var link = $('<a></a>').appendTo(hiddenContainer);
-			link.attr('href', locationWithoutHash + '#!/' + info.id + '#disqus_thread');
-			link.attr('data-disqus-identifier', info.topic);
-			
-			var balloon = $(this);
-			function callback(count) {
-				if (count > 0) {
-					$('.count', balloon).text(count);
-					balloon.removeClass('empty');
-					balloon.addClass('nonempty');
-					balloon.attr('title', null);
+	function reloadCommentCount() {
+		var hiddenContainer = $('<div style="height: 0; overflow: hidden"></div>').appendTo(document.body);
+		var locationWithoutHash = window.location.href.replace(/#.*/, '');
+		var checks = [];
+		
+		commentBalloons.each(function() {
+			var info = getCommentThreadInfo(this);
+			if (info) {
+				var link = $('<a></a>').appendTo(hiddenContainer);
+				link.attr('href', locationWithoutHash + '#!/' + info.id + '#disqus_thread');
+				link.attr('data-disqus-identifier', info.topic);
+				
+				var balloon = $(this);
+				function callback(count) {
+					if (count > 0) {
+						$('.count', balloon).text(count);
+						balloon.removeClass('empty');
+						balloon.addClass('nonempty');
+						balloon.attr('title', null);
+					}
+				}
+				
+				checks.push({ element: link[0], callback: callback });
+			}
+		});
+		
+		var s = document.createElement('script');
+		s.async = true;
+		s.type = 'text/javascript';
+		s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+		
+		var timerID;
+		timerID = setInterval(function() {
+			for (var i = checks.length - 1; i >= 0; i--) {
+				if (checks[i].element.childNodes.length > 0) {
+					checks[i].callback(parseInt($(checks[i].element).text()));
+					checks.splice(i, 1);
 				}
 			}
-			
-			checks.push({ element: link[0], callback: callback });
-		}
-	});
-	
-	var s = document.createElement('script');
-	s.async = true;
-	s.type = 'text/javascript';
-	s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-	(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-	
-	var timerID;
-	timerID = setInterval(function() {
-		for (var i = checks.length - 1; i >= 0; i--) {
-			if (checks[i].element.childNodes.length > 0) {
-				checks[i].callback(parseInt($(checks[i].element).text()));
-				checks.splice(i, 1);
+			if (checks.length == 0) {
+				clearInterval(timerID);
+				hiddenContainer.remove();
 			}
-		}
-		if (checks.length == 0) {
-			clearInterval(timerID);
-		}
-	}, 100);
+		}, 100);
+	}
+	
+	window.reloadCommentCount = reloadCommentCount;
+	
+	commentBalloons.click(showComments);
+	reloadCommentCount();
 }
 
 $(document).ready(loadComments);

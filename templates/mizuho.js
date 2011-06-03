@@ -121,7 +121,7 @@ function makeMultiPage() {
 // sections.
 function installHashbangLinks() {
 	var $document = $(document);
-	var scrollMemory = {};
+	var scrollMemory = window.scrollMemory = {};
 	var activeHash;
 	location.changingHash = false;
 	
@@ -144,6 +144,9 @@ function installHashbangLinks() {
 		setTimeout(function() {
 			$document.scrollTop(top);
 		}, 1);
+		setTimeout(function() {
+			$document.scrollTop(top);
+		}, 20);
 	}
 	
 	function hashChanged() {
@@ -171,10 +174,10 @@ function installHashbangLinks() {
 		event.preventDefault();
 		var hash = $(this).attr('href');
 		var header = lookupHeader(hash);
+		scrollMemory[location.hash] = $document.scrollTop();
 		if (header) {
 			header[0].scrollIntoView();
 		}
-		scrollMemory[location.hash] = $document.scrollTop();
 		location.changingHash = true;
 		activeHash = location.hash = hash;
 	}

@@ -148,7 +148,7 @@ private
 		content << File.read("#{TEMPLATES_DIR}/mizuho.js") << "\n"
 		if @commenting_system == 'disqus'
 			content << %Q{
-				var disqus_shortname = 'justtestinglocal2';
+				var disqus_shortname = 'justtestinglocal3';
 			}
 			content << File.read("#{TEMPLATES_DIR}/disqus.js") << "\n"
 		end
