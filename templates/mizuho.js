@@ -30,6 +30,56 @@ var Mizuho = {
 		});
 	},
 	
+	virtualAnimate: function(options) {
+		var options = $.extend({
+			duration: 1000
+		}, options || {});
+		var animation_start = Date.now();
+		var animation_end = Date.now() + options.duration;
+		var interval = animation_end - animation_start;
+		this._virtualAnimate_step(animation_start, animation_end, interval, options);
+	},
+
+	_virtualAnimate_step: function(animation_start, animation_end, interval, options) {
+		var self = this;
+		var now = new Date();
+		var progress = (now - animation_start) / interval;
+		if (progress > 1) {
+			progress = 1;
+		}
+		progress = (1 + Math.sin(-Math.PI / 2 + progress * Math.PI)) / 2;
+		options.step(progress);
+		if (now < animation_end) {
+			setTimeout(function() {
+				self._virtualAnimate_step(animation_start,
+					animation_end, interval, options);
+			}, 15);
+		} else {
+			options.step(1);
+			if (options.finish) {
+				options.finish();
+			}
+		}
+	},
+	
+	scrollToToc: function() {
+		var $document = this.$document;
+		var current = $document.scrollTop();
+		var target = $('#toc').position().top;
+		console.log([current, target]);
+		this.virtualAnimate({
+			duration: 500,
+			step: function(x) {
+				$document.scrollTop(Math.floor(
+					target + (1 - x) * (current - target)
+				));
+			},
+			finish: function() {
+				$document.scrollTop(target);
+			}
+		});
+	},
+	
 	currentSubsection: function() {
 		var $sectionHeaders = this.$sectionHeaders;
 		var scrollTop = this.$document.scrollTop();
@@ -77,6 +127,11 @@ var Mizuho = {
 		}
 	},
 	
+	scrollToHeader: function(header) {
+		$(header)[0].scrollIntoView();
+		this.setScrollTop(this.$document.scrollTop() - 32);
+	},
+	
 	setScrollTop: function(top) {
 		var $document = this.$document;
 		$document.scrollTop(top);
@@ -110,7 +165,7 @@ var Mizuho = {
 			if (scrollMemory[location.hash] !== undefined) {
 				self.setScrollTop(scrollMemory[location.hash]);
 			} else if ($header) {
-				$header[0].scrollIntoView();
+				self.scrollToHeader($header);
 			} else if (location.hash == '#!/') {
 				self.setScrollTop(0);
 			}
@@ -124,7 +179,7 @@ var Mizuho = {
 			var $header = self.lookupHeader(hash);
 			scrollMemory[location.hash] = $document.scrollTop();
 			if ($header) {
-				$header[0].scrollIntoView();
+				self.scrollToHeader($header);
 			}
 			self.changingHash = true;
 			self.activeHash = location.hash = hash;
@@ -133,7 +188,7 @@ var Mizuho = {
 		$('a').each(function() {
 			var $this = $(this);
 			var href = $this.attr('href');
-			if (href[0] == '#') {
+			if (href[0] == '#' && !href.match(/^#\!/)) {
 				$this.attr('href', href.replace(/^#/, '#!/'));
 				$this.click(internalLinkClicked);
 			}

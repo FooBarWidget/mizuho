@@ -5,7 +5,7 @@ require 'rubygems'
 require 'mizuho/generator'
 
 $KCODE = 'UTF-8'
-options = {}
+options = { :topbar => true }
 parser = OptionParser.new do |opts|
 	nl = "\n" + ' ' * 37
 	opts.banner = "Usage: mizuho [options] INPUT"

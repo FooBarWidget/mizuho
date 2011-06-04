@@ -15,6 +15,7 @@ class Generator
 		@id_map_file = options[:id_map] || default_id_map_filename(input)
 		@icons_dir   = options[:icons_dir]
 		@conf_file   = options[:conf_file]
+		@enable_topbar     = options[:topbar]
 		@commenting_system = options[:commenting_system]
 	end
 	
@@ -103,6 +104,9 @@ private
 				end
 			end
 			
+			if @enable_topbar
+				body.children.first.add_previous_sibling(topbar)
+			end
 			body.add_child(javascript_tag)
 			
 			if preamble
@@ -133,6 +137,10 @@ private
 		end
 		content << css << "\n"
 		
+		if @enable_topbar
+			content << File.read("#{TEMPLATES_DIR}/topbar.css") << "\n"
+		end
+		
 		if @commenting_system == 'disqus'
 			content << File.read("#{TEMPLATES_DIR}/disqus.css") << "\n"
 		end
@@ -141,11 +149,18 @@ private
 		return content
 	end
 	
+	def topbar
+		return render_template("topbar.html")
+	end
+	
 	def javascript_tag
 		content = %Q{<script>}
 		content << File.read("#{TEMPLATES_DIR}/jquery-1.6.1.min.js") << "\n"
 		content << File.read("#{TEMPLATES_DIR}/jquery.hashchange-1.0.0.js") << "\n"
 		content << File.read("#{TEMPLATES_DIR}/mizuho.js") << "\n"
+		if @enable_topbar
+			content << File.read("#{TEMPLATES_DIR}/topbar.js") << "\n"
+		end
 		if @commenting_system == 'disqus'
 			content << %Q{
 				var disqus_shortname = 'justtestinglocal3';
@@ -158,6 +173,19 @@ private
 	
 	def create_comment_balloon
 		return %Q{<a href="javascript:void(0)" class="comments empty" title="Add a comment"><span class="count"></span></a>}
+	end
+	
+	def render_template(name)
+		content = File.read("#{TEMPLATES_DIR}/#{name}")
+		content.gsub!(/\{INLINE_IMAGE:(.*?)\.png\}/) do
+			data = File.open("#{TEMPLATES_DIR}/#{$1}.png", "rb") do |f|
+				f.read
+			end
+			data = [data].pack('m')
+			data.gsub!("\n", "")
+			"data:image/png;base64,#{data}"
+		end
+		return content
 	end
 end
 
