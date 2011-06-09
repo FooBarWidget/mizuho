@@ -131,7 +131,7 @@ var Mizuho = {
 	
 	scrollToHeader: function(header) {
 		$(header)[0].scrollIntoView();
-		this.setScrollTop(this.$document.scrollTop() - 32);
+		this.setScrollTop(this.$document.scrollTop() - 50);
 	},
 	
 	setScrollTop: function(top) {
@@ -143,6 +143,18 @@ var Mizuho = {
 		setTimeout(function() {
 			$document.scrollTop(top);
 		}, 20);
+	},
+	
+	internalLinkClicked: function(link, event) {
+		event.preventDefault();
+		var hash = $(link).attr('href');
+		var $header = this.lookupHeader(hash);
+		this.scrollMemory[location.hash] = this.$document.scrollTop();
+		if ($header) {
+			this.scrollToHeader($header);
+		}
+		this.changingHash = true;
+		this.activeHash = location.hash = hash;
 	},
 	
 	// Give internal links the hashbang format so that Google Chrome's
@@ -175,24 +187,14 @@ var Mizuho = {
 			self.activeHash = location.hash;
 		}
 		
-		function internalLinkClicked(event) {
-			event.preventDefault();
-			var hash = $(this).attr('href');
-			var $header = self.lookupHeader(hash);
-			scrollMemory[location.hash] = $document.scrollTop();
-			if ($header) {
-				self.scrollToHeader($header);
-			}
-			self.changingHash = true;
-			self.activeHash = location.hash = hash;
-		}
-		
 		$('a').each(function() {
 			var $this = $(this);
 			var href = $this.attr('href');
 			if (href[0] == '#' && !href.match(/^#\!/)) {
 				$this.attr('href', href.replace(/^#/, '#!/'));
-				$this.click(internalLinkClicked);
+				$this.click(function(event) {
+					self.internalLinkClicked(this, event);
+				});
 			}
 		});
 		
