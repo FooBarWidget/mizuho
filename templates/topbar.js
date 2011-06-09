@@ -10,8 +10,16 @@ Mizuho.initializeTopBar = function() {
 	$floattoc.find('#toctitle').remove();
 	$floattoc.find('.comments').remove();
 	$floattoc.css('visibility', 'hidden');
-	$floattoc.insertAfter(topbar);
+	$floattoc.insertAfter($topbar);
 	var $floattoclinks = $floattoc.find('a');
+	$floattoclinks.each(function() {
+		// Firefox changes '#!' to '#%21' so change that back.
+		var $this = $(this);
+		var href = $this.attr('href');
+		if (href.match(/^#%21/)) {
+			$this.attr('href', href.replace(/^#%21/, '#!'));
+		}
+	});
 	$floattoclinks.click(function(event) {
 		self.internalLinkClicked(this, event);
 	});
