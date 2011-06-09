@@ -1,4 +1,5 @@
 Mizuho.initializeTopBar = $.proxy(function() {
+	var $window = this.$window;
 	var $document = this.$document;
 	var self = this;
 	var $topbar = $('#topbar');
@@ -113,7 +114,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 	}
 	
 	$currentSection.click(showFloatingToc);
-	$document.scroll(scheduleUpdate);
+	$window.scroll(scheduleUpdate);
 }, Mizuho);
 
 $(document).ready(Mizuho.initializeTopBar);
