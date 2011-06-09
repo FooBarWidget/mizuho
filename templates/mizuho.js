@@ -62,22 +62,24 @@ var Mizuho = {
 		}
 	},
 	
-	scrollToToc: function() {
+	smoothlyScrollTo: function(top) {
 		var $document = this.$document;
 		var current = $document.scrollTop();
-		var target = $('#toc').position().top;
-		console.log([current, target]);
 		this.virtualAnimate({
 			duration: 500,
 			step: function(x) {
 				$document.scrollTop(Math.floor(
-					target + (1 - x) * (current - target)
+					top + (1 - x) * (current - top)
 				));
 			},
 			finish: function() {
-				$document.scrollTop(target);
+				$document.scrollTop(top);
 			}
 		});
+	},
+	
+	smoothlyScrollToToc: function() {
+		this.smoothlyScrollTo($('#toc').position().top);
 	},
 	
 	currentSubsection: function() {
