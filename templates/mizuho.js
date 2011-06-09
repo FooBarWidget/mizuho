@@ -1,3 +1,10 @@
+// IE...
+if (!Date.now) {
+	Date.now = function() {
+		return new Date().getTime();
+	}
+}
+
 var Mizuho = {
 	$document: undefined,
 	$window: undefined,
@@ -164,6 +171,20 @@ var Mizuho = {
 		this.activeHash = location.hash = hash;
 	},
 	
+	reinstallInternalLinks: function() {
+		var self = this;
+		$('a').each(function() {
+			var $this = $(this);
+			var href = $this.attr('href');
+			if (href[0] == '#' && !href.match(/^#\!/)) {
+				$this.attr('href', href.replace(/^#/, '#!/'));
+				$this.click(function(event) {
+					self.internalLinkClicked(this, event);
+				});
+			}
+		});
+	},
+	
 	// Give internal links the hashbang format so that Google Chrome's
 	// back button works properly and so that Disqus can uniquely identify
 	// sections.
@@ -194,15 +215,11 @@ var Mizuho = {
 			self.activeHash = location.hash;
 		}
 		
-		$('a').each(function() {
-			var $this = $(this);
-			var href = $this.attr('href');
-			if (href[0] == '#' && !href.match(/^#\!/)) {
-				$this.attr('href', href.replace(/^#/, '#!/'));
-				$this.click(function(event) {
-					self.internalLinkClicked(this, event);
-				});
-			}
+		this.reinstallInternalLinks();
+		$window.one('load', function() {
+			setTimeout(function() {
+				self.reinstallInternalLinks();
+			}, 20);
 		});
 		
 		$window.hashchange(hashChanged);
