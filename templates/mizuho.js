@@ -9,6 +9,7 @@ var Mizuho = {
 	changingHash: false,
 	activeHash: undefined,
 	mode: 'single',
+	smoothScrolling: true,
 	
 	initialize: function() {
 		this.sectionHeadersSelector = '';
@@ -63,10 +64,14 @@ var Mizuho = {
 	},
 	
 	smoothlyScrollTo: function(top) {
+		if (!this.smoothScrolling) {
+			return this.setScrollTop(top);
+		}
+		
 		var $document = this.$document;
 		var current = $document.scrollTop();
 		this.virtualAnimate({
-			duration: 500,
+			duration: 300,
 			step: function(x) {
 				$document.scrollTop(Math.floor(
 					top + (1 - x) * (current - top)
@@ -130,8 +135,9 @@ var Mizuho = {
 	},
 	
 	scrollToHeader: function(header) {
-		$(header)[0].scrollIntoView();
-		this.setScrollTop(this.$document.scrollTop() - 50);
+		//$(header)[0].scrollIntoView();
+		//this.setScrollTop(this.$document.scrollTop() - 50);
+		this.smoothlyScrollTo($(header).offset().top - 50);
 	},
 	
 	setScrollTop: function(top) {
@@ -204,12 +210,16 @@ var Mizuho = {
 			// hash change to '#!/' to its back button history.
 			$window.one('load', function() {
 				setTimeout(function() {
-					this.changingHash = true;
-					this.activeHash = location.hash = '#!/';
+					self.changingHash = true;
+					self.activeHash = location.hash = '#!/';
 				}, 20);
 			});
 		} else {
-			$window.one('load', hashChanged);
+			$window.one('load', function() {
+				self.smoothScrolling = false;
+				hashChanged();
+				self.smoothScrolling = true;
+			});
 		}
 	},
 	
