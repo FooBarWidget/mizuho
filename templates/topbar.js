@@ -32,6 +32,9 @@ Mizuho.initializeTopBar = function() {
 					// afterwards.
 					var origScrollTop = $document.scrollTop();
 					this.scrollIntoView();
+					self.setScrollTop(
+						$floattoc.scrollTop() - $floattoc.height() * 0.45,
+						$floattoc);
 					self.setScrollTop(origScrollTop);
 					
 					return false;

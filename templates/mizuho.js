@@ -140,14 +140,15 @@ var Mizuho = {
 		this.smoothlyScrollTo($(header).offset().top - 50);
 	},
 	
-	setScrollTop: function(top) {
-		var $document = this.$document;
-		$document.scrollTop(top);
+	setScrollTop: function(top, element) {
+		element = element || this.$document;
+		element = $(element);
+		element.scrollTop(top);
 		setTimeout(function() {
-			$document.scrollTop(top);
+			element.scrollTop(top);
 		}, 1);
 		setTimeout(function() {
-			$document.scrollTop(top);
+			element.scrollTop(top);
 		}, 20);
 	},
 	
