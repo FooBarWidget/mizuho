@@ -307,7 +307,7 @@ var Mizuho = {
 
 for (var key in Mizuho) {
 	if (typeof(Mizuho[key]) == 'function') {
-		Mizuho[key] = Mizuho[key].bind(Mizuho);
+		Mizuho[key] = $.proxy(Mizuho[key], Mizuho);
 	}
 }
 $(document).ready(Mizuho.initialize);
