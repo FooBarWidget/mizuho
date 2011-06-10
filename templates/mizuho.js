@@ -75,6 +75,7 @@ var Mizuho = {
 			return this.setScrollTop(top);
 		}
 		
+		var self = this;
 		var $document = this.$document;
 		var current = $document.scrollTop();
 		this.virtualAnimate({
@@ -85,7 +86,7 @@ var Mizuho = {
 				));
 			},
 			finish: function() {
-				$document.scrollTop(top);
+				self.setScrollTop(top);
 			}
 		});
 	},
@@ -142,12 +143,13 @@ var Mizuho = {
 	},
 	
 	scrollToHeader: function(header) {
-		//$(header)[0].scrollIntoView();
-		//this.setScrollTop(this.$document.scrollTop() - 50);
 		this.smoothlyScrollTo($(header).offset().top - 50);
 	},
 	
 	setScrollTop: function(top, element) {
+		// Browsers don't always scroll properly so work around
+		// this with a few timers.
+		var self = this;
 		element = element || this.$document;
 		element = $(element);
 		element.scrollTop(top);
@@ -156,6 +158,7 @@ var Mizuho = {
 		}, 1);
 		setTimeout(function() {
 			element.scrollTop(top);
+			self.$document.trigger('mizuho:updateTopBar');
 		}, 20);
 	},
 	

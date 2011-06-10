@@ -1,3 +1,9 @@
+Mizuho.isMobileDevice = $.proxy(function() {
+	return navigator.userAgent.match(
+		/(IEMobile|Windows CE|NetFront|PlayStation|PLAYSTATION|like Mac OS X|MIDP|UP\.Browser|Symbian|Nintendo|Android)/
+	);
+}, Mizuho);
+
 Mizuho.initializeTopBar = $.proxy(function() {
 	var $window = this.$window;
 	var $document = this.$document;
@@ -5,6 +11,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 	var $topbar = $('#topbar');
 	var $title = $('#header h1');
 	var $currentSection = $('#current_section');
+	var isMobileDevice = this.isMobileDevice();
 	var timerId;
 	
 	var $floattoc = $('<div id="floattoc"></div>').html($('#toc').html());
@@ -26,6 +33,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 	});
 	
 	function showFloatingToc() {
+		// Highlight current TOC entry.
 		var currentSubsection = self.currentSubsection();
 		$floattoclinks.removeClass('current');
 		if (currentSubsection) {
@@ -51,13 +59,21 @@ Mizuho.initializeTopBar = $.proxy(function() {
 			});
 		}
 		
+		// Layout and display floating TOC.
 		var windowWidth = self.$window.width();
 		var maxRight = windowWidth - Math.floor(windowWidth * 0.1);
-		
 		if ($currentSection.offset().left + $floattoc.outerWidth() > maxRight) {
 			$floattoc.css('left', maxRight - $floattoc.outerWidth());
 		} else {
 			$floattoc.css('left', $currentSection.offset().left + 'px');
+		}
+		if (isMobileDevice) {
+			$floattoc.css({
+				top: $currentSection.offset().top +
+					$currentSection.innerHeight() +
+					'px',
+				height: $window.height() * 0.7
+			});
 		}
 		$floattoc.css('visibility', 'visible');
 		
@@ -66,6 +82,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 			$floattoclinks.unbind('click', hideFloatingToc);
 			$document.unbind('mousedown', onMouseDown);
 			$document.unbind('mizuho:hideTopBar', hideFloatingToc)
+			$window.unbind('scroll', hideFloatingToc);
 		}
 		
 		function onMouseDown(event) {
@@ -78,6 +95,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		$floattoclinks.bind('click', hideFloatingToc);
 		$document.mousedown(onMouseDown);
 		$document.bind('mizuho:hideTopBar', hideFloatingToc);
+		$window.bind('scroll', hideFloatingToc);
 	}
 	
 	function update() {
@@ -91,6 +109,13 @@ Mizuho.initializeTopBar = $.proxy(function() {
 				$topbar.slideUp();
 				$document.trigger('mizuho:hideTopBar');
 			}
+		}
+		
+		if (isMobileDevice) {
+			$topbar.css({
+				top: $document.scrollTop() + 'px',
+				width: $window.width() + 'px'
+			});
 		}
 		
 		var header = self.currentSubsection();
@@ -113,8 +138,15 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		}, 100);
 	}
 	
+	if (isMobileDevice) {
+		// Mobile devices don't support position fixed.
+		$topbar.css('position', 'absolute');
+		$floattoc.css('position', 'absolute');
+	}
+	
 	$currentSection.click(showFloatingToc);
 	$window.scroll(scheduleUpdate);
+	$document.bind('mizuho:updateTopBar', update);
 }, Mizuho);
 
 $(document).ready(Mizuho.initializeTopBar);
