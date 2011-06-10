@@ -21,11 +21,12 @@ class Generator
 	
 	def start
 		if @commenting_system
-			if !File.exist?(@id_map_file)
+			@id_map = IdMap.new(@input_file)
+			if File.exist?(@id_map_file)
+				@id_map.load(@id_map_file)
+			else
 				warn "No ID map file, generating one (#{@id_map_file})..."
 			end
-			@id_map = IdMap.new(@input_file)
-			@id_map.load(@id_map_file)
 		end
 		#self.class.run_asciidoc(@input_file, @output_file, @icons_dir, @conf_file)
 		transform(@output_file)
