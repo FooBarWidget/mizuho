@@ -60,8 +60,10 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		}
 		
 		// Layout and display floating TOC.
-		var windowWidth = self.$window.width();
+		var origScrollTop = $document.scrollTop();
+		var windowWidth = $window.width();
 		var maxRight = windowWidth - Math.floor(windowWidth * 0.1);
+		
 		if ($currentSection.offset().left + $floattoc.outerWidth() > maxRight) {
 			$floattoc.css('left', maxRight - $floattoc.outerWidth());
 		} else {
@@ -82,7 +84,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 			$floattoclinks.unbind('click', hideFloatingToc);
 			$document.unbind('mousedown', onMouseDown);
 			$document.unbind('mizuho:hideTopBar', hideFloatingToc)
-			$window.unbind('scroll', hideFloatingToc);
+			$window.unbind('scroll', onScroll);
 		}
 		
 		function onMouseDown(event) {
@@ -92,10 +94,16 @@ Mizuho.initializeTopBar = $.proxy(function() {
 			}
 		}
 		
+		function onScroll(event) {
+			if ($document.scrollTop() != origScrollTop) {
+				hideFloatingToc();
+			}
+		}
+		
 		$floattoclinks.bind('click', hideFloatingToc);
 		$document.mousedown(onMouseDown);
 		$document.bind('mizuho:hideTopBar', hideFloatingToc);
-		$window.bind('scroll', hideFloatingToc);
+		$window.bind('scroll', onScroll);
 	}
 	
 	function update() {
