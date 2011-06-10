@@ -78,8 +78,10 @@ Mizuho.initializeTopBar = $.proxy(function() {
 			});
 		}
 		$floattoc.css('visibility', 'visible');
+		$currentSection.addClass('pressed');
 		
 		function hideFloatingToc() {
+			$currentSection.removeClass('pressed');
 			$floattoc.css('visibility', 'hidden');
 			$floattoclinks.unbind('click', hideFloatingToc);
 			$document.unbind('mousedown', onMouseDown);
