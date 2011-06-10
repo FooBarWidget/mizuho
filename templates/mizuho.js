@@ -36,6 +36,16 @@ var Mizuho = {
 			var off_b = $(b).offset();
 			return off_a.top - off_b.top;
 		});
+		
+		if (this.isMobileDevice()) {
+			$(document.body).addClass('mobile');
+		}
+	},
+	
+	isMobileDevice: function() {
+		return navigator.userAgent.match(
+			/(IEMobile|Windows CE|NetFront|PlayStation|PLAYSTATION|like Mac OS X|MIDP|UP\.Browser|Symbian|Nintendo|Android)/
+		);
 	},
 	
 	virtualAnimate: function(options) {

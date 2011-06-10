@@ -1,9 +1,3 @@
-Mizuho.isMobileDevice = $.proxy(function() {
-	return navigator.userAgent.match(
-		/(IEMobile|Windows CE|NetFront|PlayStation|PLAYSTATION|like Mac OS X|MIDP|UP\.Browser|Symbian|Nintendo|Android)/
-	);
-}, Mizuho);
-
 Mizuho.initializeTopBar = $.proxy(function() {
 	var $window = this.$window;
 	var $document = this.$document;
@@ -33,60 +27,56 @@ Mizuho.initializeTopBar = $.proxy(function() {
 	});
 	
 	function showFloatingToc() {
-		// Highlight current TOC entry.
-		var currentSubsection = self.currentSubsection();
-		$floattoclinks.removeClass('current');
-		if (currentSubsection) {
-			var currentSubsectionTitle = $(currentSubsection).text();
-			$floattoclinks.each(function() {
-				if ($(this).text() == currentSubsectionTitle) {
-					$(this).addClass('current');
-					
-					// scrollIntoView() may change the
-					// document's scrolltop too even though
-					// we only want to scroll the floating
-					// TOC, so restore the scrolltop
-					// afterwards.
-					var origScrollTop = $document.scrollTop();
-					this.scrollIntoView();
+		var scrollUpdateTimerId;
+		
+		function reposition() {
+			if (isMobileDevice) {
+				$floattoc.css({
+					top: $currentSection.offset().top +
+						$currentSection.innerHeight() +
+						'px',
+					height: $window.height() * 0.7 + 'px'
+				});
+			}
+		}
+		
+		function highlightCurrentTocEntry() {
+			var currentSubsection = self.currentSubsection();
+			$floattoclinks.removeClass('current');
+			if (currentSubsection) {
+				var currentSubsectionTitle = $(currentSubsection).text();
+				var $link;
+				
+				$floattoclinks.each(function() {
+					if ($(this).text() == currentSubsectionTitle) {
+						$link = $(this);
+						return false;
+					}
+				});
+				if ($link) {
+					$link.addClass('current');
 					self.setScrollTop(
-						$floattoc.scrollTop() - $floattoc.height() * 0.45,
+						$floattoc.scrollTop() +
+							$link.position().top -
+							$floattoc.height() * 0.45,
 						$floattoc);
-					self.setScrollTop(origScrollTop);
-					
 					return false;
 				}
-			});
+			}
 		}
-		
-		// Layout and display floating TOC.
-		var origScrollTop = $document.scrollTop();
-		var windowWidth = $window.width();
-		var maxRight = windowWidth - Math.floor(windowWidth * 0.1);
-		
-		if ($currentSection.offset().left + $floattoc.outerWidth() > maxRight) {
-			$floattoc.css('left', maxRight - $floattoc.outerWidth());
-		} else {
-			$floattoc.css('left', $currentSection.offset().left + 'px');
-		}
-		if (isMobileDevice) {
-			$floattoc.css({
-				top: $currentSection.offset().top +
-					$currentSection.innerHeight() +
-					'px',
-				height: $window.height() * 0.7
-			});
-		}
-		$floattoc.css('visibility', 'visible');
-		$currentSection.addClass('pressed');
 		
 		function hideFloatingToc() {
 			$currentSection.removeClass('pressed');
 			$floattoc.css('visibility', 'hidden');
 			$floattoclinks.unbind('click', hideFloatingToc);
 			$document.unbind('mousedown', onMouseDown);
-			$document.unbind('mizuho:hideTopBar', hideFloatingToc)
+			$document.unbind('touchdown', onMouseDown);
+			$document.unbind('mizuho:hideTopBar', hideFloatingToc);
 			$window.unbind('scroll', onScroll);
+			if (scrollUpdateTimerId !== undefined) {
+				clearTimeout(scrollUpdateTimerId);
+				scrollUpdateTimerId = undefined;
+			}
 		}
 		
 		function onMouseDown(event) {
@@ -97,13 +87,33 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		}
 		
 		function onScroll(event) {
-			if ($document.scrollTop() != origScrollTop) {
-				hideFloatingToc();
+			if (scrollUpdateTimerId === undefined) {
+				scrollUpdateTimerId = setTimeout(function() {
+					scrollUpdateTimerId = undefined;
+					reposition();
+					highlightCurrentTocEntry();
+				}, 100);
 			}
 		}
 		
+		// Layout and display floating TOC.
+		highlightCurrentTocEntry();
+		var origScrollTop = $document.scrollTop();
+		var windowWidth = $window.width();
+		var maxRight = windowWidth - Math.floor(windowWidth * 0.1);
+		
+		if ($currentSection.offset().left + $floattoc.outerWidth() > maxRight) {
+			$floattoc.css('left', maxRight - $floattoc.outerWidth());
+		} else {
+			$floattoc.css('left', $currentSection.offset().left + 'px');
+		}
+		reposition();
+		$floattoc.css('visibility', 'visible');
+		$currentSection.addClass('pressed');
+		
 		$floattoclinks.bind('click', hideFloatingToc);
-		$document.mousedown(onMouseDown);
+		$document.bind('mousedown', onMouseDown)
+		$document.bind('touchdown', onMouseDown);
 		$document.bind('mizuho:hideTopBar', hideFloatingToc);
 		$window.bind('scroll', onScroll);
 	}
@@ -124,7 +134,10 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		if (isMobileDevice) {
 			$topbar.css({
 				top: $document.scrollTop() + 'px',
-				width: $window.width() + 'px'
+				width: $window.width() -
+					parseInt($topbar.css('padding-left')) -
+					parseInt($topbar.css('padding-right')) +
+					'px'
 			});
 		}
 		

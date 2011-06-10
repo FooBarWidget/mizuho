@@ -9,6 +9,7 @@
 	z-index: 1;
 	background: #880000;
 	overflow: hidden;
+	white-space: nowrap;
 	box-shadow: 0px 3px 6px #555555;
 	-moz-box-shadow: 0px 3px 6px #555555;
 	-webkit-box-shadow: 0px 3px 6px #555555;
@@ -32,12 +33,14 @@
 	border: 0;
 }
 
-#topbar .title:hover img {
+#topbar .title:hover img,
+.mobile #topbar .title img {
 	display: inline-block;
 	margin-left: -17px;
 }
 
-#topbar .title:hover a {
+#topbar .title:hover a,
+.mobile #topbar .title a {
 	color: #ffffdd;
 }
 
@@ -58,12 +61,16 @@
 	border-radius: 6px;
 	-webkit-border-radius: 8px;
 	-webkit-border-top-left-radius: 0;
+	-webkit-border-top-right-radius: 0;
 	-moz-border-radius: 8px;
 	-moz-border-radius-topleft: 0;
+	-moz-border-top-right-radius: 0;
 	-o-border-radius: 8px;
 	-o-border-radius-topleft: 0;
+	-o-border-top-right-radius: 0;
 	border-radius: 8px;
 	border-top-left-radius: 0;
+	border-top-right-radius: 0;
 }
 
 #floattoc a.current {
