@@ -158,7 +158,7 @@ private
 	
 	def javascript_tag
 		content = %Q{<script>}
-		content << File.read("#{TEMPLATES_DIR}/jquery-1.6.1.min.js") << "\n"
+		content << File.read("#{TEMPLATES_DIR}/jquery-1.7.1.min.js") << "\n"
 		content << File.read("#{TEMPLATES_DIR}/jquery.hashchange-1.0.0.js") << "\n"
 		content << File.read("#{TEMPLATES_DIR}/mizuho.js") << "\n"
 		if @enable_topbar

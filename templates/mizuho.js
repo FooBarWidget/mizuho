@@ -6,21 +6,30 @@ if (!Date.now) {
 }
 
 var Mizuho = {
+	/** Cached DOM elements so that we don't have to re-find them over and over. */
 	$document: undefined,
 	$window: undefined,
 	$mainSections: undefined,
 	$sectionHeaders: undefined,
-	maxTocLevel: 3,
+
+	/** Constants */
+	MAX_TOC_LEVEL: 3,
+
 	sectionHeadersSelector: undefined,
 	scrollMemory: {},
 	changingHash: false,
 	activeHash: undefined,
+	/** Whether in single-page or multi-page mode. Either 'single' or 'multi'. */
 	mode: 'single',
+	/** Whether smooth scrolling is enabled. It is always enabled except right
+	 * after page load: when the page is scrolled to the section as pointed to
+	 * by location.hash.
+	 */
 	smoothScrolling: true,
 	
 	initialize: function() {
 		this.sectionHeadersSelector = '';
-		for (var i = 0; i < this.maxTocLevel; i++) {
+		for (var i = 0; i < this.MAX_TOC_LEVEL; i++) {
 			if (i != 0) {
 				this.sectionHeadersSelector += ', ';
 			}
@@ -42,6 +51,9 @@ var Mizuho = {
 		}
 	},
 	
+
+	/********* Generic utility functions *********/
+
 	isMobileDevice: function() {
 		return navigator.userAgent.match(
 			/(IEMobile|Windows CE|NetFront|PlayStation|PLAYSTATION|like Mac OS X|MIDP|UP\.Browser|Symbian|Nintendo|Android)/
@@ -104,7 +116,31 @@ var Mizuho = {
 	smoothlyScrollToToc: function() {
 		this.smoothlyScrollTo($('#toc').position().top);
 	},
+
+	scrollToHeader: function(header) {
+		this.smoothlyScrollTo($(header).offset().top - 50);
+	},
 	
+	setScrollTop: function(top, element) {
+		// Browsers don't always scroll properly so work around
+		// this with a few timers.
+		var self = this;
+		element = element || this.$document;
+		element = $(element);
+		element.scrollTop(top);
+		setTimeout(function() {
+			element.scrollTop(top);
+		}, 1);
+		setTimeout(function() {
+			element.scrollTop(top);
+			self.$document.trigger('mizuho:updateTopBar');
+		}, 20);
+	},
+	
+
+	/********* Mizuho-specific functions *********/
+
+	/** Returns the currently displayed section's header DOM element. */
 	currentSubsection: function() {
 		var $sectionHeaders = this.$sectionHeaders;
 		var scrollTop = this.$document.scrollTop();
@@ -138,6 +174,7 @@ var Mizuho = {
 		}
 	},
 	
+	/** Looks up a section's header DOM element corresponding to a hash name. */
 	lookupHeader: function(hash) {
 		var id = hash.replace(/^#!\//, '#');
 		if (id == '') {
@@ -150,26 +187,6 @@ var Mizuho = {
 				return header;
 			}
 		}
-	},
-	
-	scrollToHeader: function(header) {
-		this.smoothlyScrollTo($(header).offset().top - 50);
-	},
-	
-	setScrollTop: function(top, element) {
-		// Browsers don't always scroll properly so work around
-		// this with a few timers.
-		var self = this;
-		element = element || this.$document;
-		element = $(element);
-		element.scrollTop(top);
-		setTimeout(function() {
-			element.scrollTop(top);
-		}, 1);
-		setTimeout(function() {
-			element.scrollTop(top);
-			self.$document.trigger('mizuho:updateTopBar');
-		}, 20);
 	},
 	
 	internalLinkClicked: function(link, event) {
@@ -198,9 +215,10 @@ var Mizuho = {
 		});
 	},
 	
-	// Give internal links the hashbang format so that Google Chrome's
-	// back button works properly and so that Disqus can uniquely identify
-	// sections.
+	/**
+	 * Give internal links the hashbang format so that Google Chrome's
+	 * back button works properly.
+	 */
 	installHashbangLinks: function() {
 		var self = this;
 		var $document = this.$document;
@@ -341,4 +359,4 @@ for (var key in Mizuho) {
 	}
 }
 $(document).ready(Mizuho.initialize);
-$(document).ready(Mizuho.installHashbangLinks);
+//$(document).ready(Mizuho.installHashbangLinks);
