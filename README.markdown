@@ -8,7 +8,7 @@ Mizuho wraps [Asciidoc](http://www.methods.co.nz/asciidoc/), the text
 formatting tool used by e.g. Git and Phusion Passenger for its manuals.
 Mizuho adds the following functionality on top of Asciidoc:
 
- * Commenting via [Disqus](http://www.disqus.com).
+ * Commenting via [Juvia](https://github.com/FooBarWidget/juvia).
  * Multi-page support. It's pure Javascript, the output is still a single HTML file.
 
 Mizuho bundles Asciidoc so you don't have to install it yourself. Mizuho

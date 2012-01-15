@@ -13,11 +13,11 @@ parser = OptionParser.new do |opts|
 	
 	opts.separator "Options:"
 	opts.on("-c", "--comments SYSTEM",
-	        "Enable a commenting system. The only#{nl}" +
+	        "Use a commenting system. The only#{nl}" +
 	        "supported commenting system right now is#{nl}" +
-	        "'disqus'.") do |value|
-		if value != 'disqus'
-			abort "The only supported commenting system right now is 'disqus'."
+	        "'juvia'.") do |value|
+		if value != 'juvia'
+			abort "The only supported commenting system right now is 'juvia'."
 		end
 		options[:commenting_system] = value
 	end

@@ -144,6 +144,8 @@ private
 		
 		if @commenting_system == 'disqus'
 			content << File.read("#{TEMPLATES_DIR}/disqus.css") << "\n"
+		elsif @commenting_system == 'intensedebate'
+			content << File.read("#{TEMPLATES_DIR}/intensedebate.css") << "\n"
 		end
 		
 		content << %Q{</style>\n}
@@ -162,11 +164,12 @@ private
 		if @enable_topbar
 			content << File.read("#{TEMPLATES_DIR}/topbar.js") << "\n"
 		end
-		if @commenting_system == 'disqus'
+		if @commenting_system == 'juvia'
 			content << %Q{
-				var disqus_shortname = 'justtestinglocal3';
+				var JUVIA_SITE_KEY = '5jpmkyjqlml8rktsfldfpbwth8ig7w9';
+				var JUVIA_URL = 'http://juvia.phusion.nl';
 			}
-			content << File.read("#{TEMPLATES_DIR}/disqus.js") << "\n"
+			content << File.read("#{TEMPLATES_DIR}/juvia.js") << "\n"
 		end
 		content << %Q{</script>}
 		return content
