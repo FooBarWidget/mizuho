@@ -10,6 +10,7 @@ end
 
 class Generator
 	def initialize(input, options = {})
+		@options     = options
 		@input_file  = input
 		@output_file = options[:output] || default_output_filename(input)
 		@id_map_file = options[:id_map] || default_id_map_filename(input)
@@ -17,6 +18,9 @@ class Generator
 		@conf_file   = options[:conf_file]
 		@enable_topbar     = options[:topbar]
 		@commenting_system = options[:commenting_system]
+		if @commenting_system == 'juvia'
+			require_options(options, :juvia_url, :juvia_site_key)
+		end
 	end
 	
 	def start
@@ -28,7 +32,7 @@ class Generator
 				warn "No ID map file, generating one (#{@id_map_file})..."
 			end
 		end
-		#self.class.run_asciidoc(@input_file, @output_file, @icons_dir, @conf_file)
+		self.class.run_asciidoc(@input_file, @output_file, @icons_dir, @conf_file)
 		transform(@output_file)
 		if @commenting_system
 			@id_map.save(@id_map_file)
@@ -166,8 +170,8 @@ private
 		end
 		if @commenting_system == 'juvia'
 			content << %Q{
-				var JUVIA_SITE_KEY = '5jpmkyjqlml8rktsfldfpbwth8ig7w9';
-				var JUVIA_URL = 'http://juvia.phusion.nl';
+				var JUVIA_URL = '#{@options[:juvia_url]}';
+				var JUVIA_SITE_KEY = '#{@options[:juvia_site_key]}';
 			}
 			content << File.read("#{TEMPLATES_DIR}/juvia.js") << "\n"
 		end
@@ -190,6 +194,18 @@ private
 			"data:image/png;base64,#{data}"
 		end
 		return content
+	end
+
+	def require_options(options, *required_keys)
+		fail = false
+		required_keys.each do |key|
+			if !options.has_key?(key)
+				fail = true
+				argument_name = '--' + key.to_s.gsub('_', '-')
+				STDERR.puts "You must also specify #{argument_name}!"
+			end
+		end
+		exit 1 if fail
 	end
 end
 

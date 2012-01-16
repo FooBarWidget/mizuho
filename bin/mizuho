@@ -21,6 +21,14 @@ parser = OptionParser.new do |opts|
 		end
 		options[:commenting_system] = value
 	end
+	opts.on("--juvia-url URL", "When using Juvia as the commenting system,#{nl}" +
+	        "specify the Juvia base URL here.") do |value|
+		options[:juvia_url] = value
+	end
+	opts.on("--juvia-site-key KEY", "When using Juvia as the commenting system,#{nl}" +
+	        "specify the Juvia site key here.") do |value|
+		options[:juvia_site_key] = value
+	end
 	#opts.on("-m", "--multi-page", "Generate one file per chapter.") do |value|
 	#	options[:multi_page] = value
 	#end
