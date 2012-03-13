@@ -96,6 +96,7 @@ private
 			doc = Nokogiri.HTML(f)
 			head = (doc / "head")[0]
 			body = (doc / "body")[0]
+			title = (doc / "title")[0].text
 			preamble = (doc / "#preamble")[0]
 			toctitle = (doc / "#toctitle")[0]
 			
@@ -110,7 +111,7 @@ private
 			end
 			
 			if @enable_topbar
-				body.children.first.add_previous_sibling(topbar)
+				body.children.first.add_previous_sibling(topbar(title))
 			end
 			body.add_child(javascript_tag)
 			
@@ -156,8 +157,10 @@ private
 		return content
 	end
 	
-	def topbar
-		return render_template("topbar.html")
+	def topbar(title)
+		content = render_template("topbar.html")
+		content.gsub!(/\{TITLE\}/, title)
+		return content
 	end
 	
 	def javascript_tag
