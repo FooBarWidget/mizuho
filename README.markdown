@@ -8,6 +8,7 @@ Mizuho wraps [Asciidoc](http://www.methods.co.nz/asciidoc/), the text
 formatting tool used by e.g. Git and Phusion Passenger for its manuals.
 Mizuho adds the following functionality on top of Asciidoc:
 
+ * A top bar that gives quick access to the table of contents.
  * Commenting via [Juvia](https://github.com/FooBarWidget/juvia).
 
 Mizuho bundles Asciidoc so you don't have to install it yourself. Mizuho
@@ -35,8 +36,8 @@ Run the following command as root:
 
 ## Usage
 
-First, read the Asciidoc manual to learn the input file format:
-http://www.methods.co.nz/asciidoc/userguide.html
+First, read [the Asciidoc manual](http://www.methods.co.nz/asciidoc/userguide.html)
+to learn the input file format:
 
 Next, write an input file and save it in a .txt file.
 
@@ -46,6 +47,21 @@ default template:
     mizuho input.txt
 
 This will generate 'input.html'.
+
+### Commenting via Juvia
+
+To enable commenting via Juvia, pass `-c juvia` and the `--juvia-url` and
+`--juvia-site-key` arguments with appropriate values. Mizuho will generate a
+so-called *ID map file* if there isn't already one. This file maps section
+titles to Juvia topic IDs. This way you can preserve a section's comments
+even when you rename that section's title. Note that the section's number is
+considered part of the title, so renaming can happen implicitly.
+
+When a section title has been renamed, Mizuho will look for a Juvia topic ID
+for which the previous title is similar to the new title, and assign that ID
+to the section. The entry in the ID map file is then marked 'fuzzy' in order to
+warn you about this. You have to remove the `# fuzzy` comment in the ID map
+file, or Mizuho will keep complaining about this in subsequent runs.
 
 ## Credits
 
