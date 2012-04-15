@@ -45,7 +45,7 @@ class Generator
 	
 	def start
 		if @commenting_system
-			@id_map = IdMap.new(@input_file)
+			@id_map = IdMap.new
 			if File.exist?(@id_map_file)
 				@id_map.load(@id_map_file)
 			else
