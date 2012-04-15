@@ -1,13 +1,10 @@
                             Bugs and Known Problems
 
-   version 8.6.5, 20 May 2011
+   version 8.6.7, 17 March 2012
      __________________________________________________________________
 
 1. AsciiDoc
 
-     * Configuration attribute entries are not passed to table asciidoc
-       filters because configuration attribute entries cannot be passed to
-       the --attributes command-line parameter.
      * A benign warning with will become a reserved keyword in Python 2.6
        sometimes occurs when using Python 2.5 — it’s harmless and will
        disappear with Python 3.
@@ -26,5 +23,5 @@
    See ./dblatex/dblatex-readme.txt.
      __________________________________________________________________
 
-   Version 8.6.5
-   Last updated 2011-05-02 10:15:25 NZST
+   Version 8.6.7
+   Last updated 2011-11-10 09:23:10 NZDT

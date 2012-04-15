@@ -2,12 +2,12 @@
 .\"     Title: a2x
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 20 May 2011
+.\"      Date: 17 March 2012
 .\"    Manual: \ \&
-.\"    Source: \ \& 8.6.5
+.\"    Source: \ \& 8.6.7
 .\"  Language: English
 .\"
-.TH "A2X" "1" "20 May 2011" "\ \& 8\&.6\&.5" "\ \&"
+.TH "A2X" "1" "17 March 2012" "\ \& 8\&.6\&.7" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -78,6 +78,26 @@ unless the format is
 \fImanpage\fR)\&.
 .RE
 .PP
+\fB\-b, \-\-backend\fR=\fIBACKEND\fR
+.RS 4
+
+\fIBACKEND\fR
+is the name of an installed backend plugin\&. When this option is specified
+\fIa2x\fR
+attempts load a file name
+\fIa2x\-backend\&.py\fR
+from the
+\fIBACKEND\fR
+plugin directory It then converts the
+\fISOURCE_FILE\fR
+to a
+\fIBACKEND\fR
+formatted output file using a global function defined in
+\fIa2x\-backend\&.py\fR
+called
+\fIto_BACKEND\fR\&.
+.RE
+.PP
 \fB\-f, \-\-format\fR=\fIFORMAT\fR
 .RS 4
 Output formats:
@@ -92,7 +112,10 @@ Output formats:
 \fIps\fR,
 \fItex\fR,
 \fItext\fR,
-\fIxhtml\fR\&.
+\fIxhtml\fR\&. The AsciiDoc
+\fIa2x\-format\fR
+attribute value is set to
+\fIFORMAT\fR\&.
 .RE
 .PP
 \fB\-h, \-\-help\fR
@@ -219,6 +242,13 @@ options\&. If this option is specified FOP is used to generate PDFs\&. This opti
 Additional
 \fIdblatex(1)\fR
 options\&. This option may be specified more than once\&.
+.RE
+.PP
+\fB\-\-backend\-opts\fR=\fIBACKEND_OPTS\fR
+.RS 4
+Options for the backend plugin specified by the
+\fI\-\-backend\fR
+option\&. This option may be specified more than once\&.
 .RE
 .sp
 Options can also be set in the AsciiDoc source file\&. If \fISOURCE_FILE\fR contains a comment line beginning with \fB// a2x:\fR then the remainder of the line will be treated as \fIa2x\fR command\-line options\&. For example:

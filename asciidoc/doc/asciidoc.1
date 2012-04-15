@@ -2,12 +2,12 @@
 .\"     Title: asciidoc
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 20 May 2011
+.\"      Date: 17 March 2012
 .\"    Manual: \ \&
-.\"    Source: \ \& 8.6.5
+.\"    Source: \ \& 8.6.7
 .\"  Language: English
 .\"
-.TH "ASCIIDOC" "1" "20 May 2011" "\ \& 8\&.6\&.5" "\ \&"
+.TH "ASCIIDOC" "1" "17 March 2012" "\ \& 8\&.6\&.7" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -63,19 +63,24 @@ Backend output file format:
 \fIdocbook45\fR,
 \fIxhtml11\fR,
 \fIhtml4\fR,
+\fIhtml5\fR,
+\fIslidy\fR,
 \fIwordpress\fR
 or
 \fIlatex\fR
 (the
 \fIlatex\fR
-backend is experimental)\&. You can also the backend alias names
+backend is experimental)\&. You can also use the backend alias names
 \fIhtml\fR
 (aliased to
 \fIxhtml11\fR) or
 \fIdocbook\fR
 (aliased to
 \fIdocbook45\fR)\&. Defaults to
-\fIhtml\fR\&.
+\fIhtml\fR\&. The
+\fB\-\-backend\fR
+option is also used to manage backend plugins (see
+\fBPLUGIN COMMANDS\fR)\&.
 .RE
 .PP
 \fB\-f, \-\-conf\-file\fR=\fICONF_FILE\fR
@@ -110,10 +115,12 @@ backend\&. Default document type is
 Dump configuration to stdout\&.
 .RE
 .PP
-\fB\-\-filter\fR
+\fB\-\-filter\fR=\fIFILTER\fR
 .RS 4
-Manage asciidoc(1) filters (see
-\fBFILTER COMMANDS\fR)\&.
+Specify the name of a filter to be loaded (used to load filters that are not auto\-loaded)\&. This option may be specified more than once\&. The
+\fB\-\-filter\fR
+option is also used to manage filter plugins (see
+\fBPLUGIN COMMANDS\fR)\&.
 .RE
 .PP
 \fB\-h, \-\-help\fR [\fITOPIC\fR]
@@ -157,7 +164,7 @@ then the standard output is used\&.
 \fB\-n, \-\-section\-numbers\fR
 .RS 4
 Auto\-number HTML article section titles\&. Synonym for
-\fB\-a numbered\fR\&.
+\fB\-\-attribute numbered\fR\&.
 .RE
 .PP
 \fB\-\-safe\fR
@@ -165,6 +172,15 @@ Auto\-number HTML article section titles\&. Synonym for
 Enable safe mode\&. Safe mode is disabled by default\&. AsciiDoc
 \fIsafe mode\fR
 skips potentially dangerous scripted sections in AsciiDoc source files\&.
+.RE
+.PP
+\fB\-\-theme\fR=\fITHEME\fR
+.RS 4
+Specify a theme name\&. Synonym for
+\fB\-\-attribute theme\fR=\fITHEME\fR\&. The
+\fB\-\-theme\fR
+option is also used to manage theme plugins (see
+\fBPLUGIN COMMANDS\fR)\&.
 .RE
 .PP
 \fB\-v, \-\-verbose\fR
@@ -176,17 +192,18 @@ Verbosely print processing information and configuration file checks to stderr\&
 .RS 4
 Print program version number\&.
 .RE
-.SH "FILTER COMMANDS"
+.SH "PLUGIN COMMANDS"
 .sp
-The \fB\-\-filter\fR option is used to install, remove and list AsciiDoc filter plugins\&. Filter commands syntax:
+The asciidoc(1) \fB\-\-filter\fR, \fB\-\-backend\fR and \fB\-\-theme\fR options are used to install, remove and list AsciiDoc filter, backend and theme plugins\&. Syntax:
 .sp
 .if n \{\
 .RS 4
 .\}
 .nf
-asciidoc \-\-filter install ZIP_FILE [FILTERS_DIR]
-asciidoc \-\-filter remove FILTER_NAME [FILTERS_DIR]
-asciidoc \-\-filter list
+asciidoc OPTION install ZIP_FILE [PLUGINS_DIR]
+asciidoc OPTION remove PLUGIN_NAME [PLUGINS_DIR]
+asciidoc OPTION list
+asciidoc OPTION build ZIP_FILE PLUGIN_SOURCE
 .fi
 .if n \{\
 .RE
@@ -194,35 +211,54 @@ asciidoc \-\-filter list
 .sp
 Where:
 .PP
-\fBFILTER_NAME\fR
+\fBOPTION\fR
 .RS 4
-A unique filter name containing only alphanumeric or underscore characters\&.
+asciidoc(1)
+\fB\-\-filter\fR,
+\fB\-\-backend\fR
+or
+\fB\-\-theme\fR
+option specifying the type of plugin\&.
+.RE
+.PP
+\fBPLUGIN_NAME\fR
+.RS 4
+A unique plugin name containing only alphanumeric or underscore characters\&.
 .RE
 .PP
 \fBZIP_FILE\fR
 .RS 4
-A Zip file containing filter resources, the name must start with the filter name e\&.g\&.
+A Zip file containing plugin resources, the name must start with the plugin name e\&.g\&.
 my_filter\-1\&.0\&.zip
 packages filter
 my_filter\&.
 .RE
 .PP
-\fBFILTERS_DIR\fR
+\fBPLUGINS_DIR\fR
 .RS 4
-The directory containing installed filters\&. Each filter is contained in its own separate subdirectory which has the same name as the filter\&.
-\fBFILTERS_DIR\fR
+The directory containing installed plugins\&. Each plugin is contained in its own separate subdirectory which has the same name as the plugin\&.
+\fBPLUGINS_DIR\fR
 defaults to the
-\&.asciidoc/filters
-directory in the user\(cqs home directory\&.
+$HOME/\&.asciidoc/filters
+(for filter plugins) or
+$HOME/\&.asciidoc/backends
+(for backend plugins) or
+$HOME/\&.asciidoc/themes
+(for theme plugins)\&.
+.RE
+.PP
+\fBPLUGIN_SOURCE\fR
+.RS 4
+The name of a directory containing the plugin source files or the name of a single source file\&.
 .RE
 .sp
-The filter commands perform as follows:
+The plugin commands perform as follows:
 .PP
 \fBinstall\fR
 .RS 4
 Create a subdirectory in
-\fBFILTERS_DIR\fR
-with the same name as the filter then extract the
+\fBPLUGINS_DIR\fR
+with the same name as the plugin then extract the
 \fBZIP_FILE\fR
 into it\&.
 .RE
@@ -230,14 +266,22 @@ into it\&.
 \fBremove\fR
 .RS 4
 Delete the
-\fBFILTER_NAME\fR
-filter subdirectory and all its contents from the
-\fBFILTERS_DIR\fR\&.
+\fBPLUGIN_NAME\fR
+plugin subdirectory and all its contents from the
+\fBPLUGINS_DIR\fR\&.
 .RE
 .PP
 \fBlist\fR
 .RS 4
-List the names and locations of all installed filters (including standard filters installed in the global configuration directory)\&.
+List the names and locations of all installed filter or theme plugins (including standard plugins installed in the global configuration directory)\&.
+.RE
+.PP
+\fBbuild\fR
+.RS 4
+Create a plugin file named
+\fBZIP_FILE\fR
+containing the files and subdirectories specified by
+\fBPLUGIN_SOURCE\fR\&. File and directory names starting with a period are skipped\&.
 .RE
 .SH "EXIT STATUS"
 .PP

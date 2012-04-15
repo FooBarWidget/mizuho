@@ -82,7 +82,6 @@ ul > li > * { color: black; }
 pre {
   padding: 0;
   margin: 0;
-  overflow: auto;
 }
 
 #author {

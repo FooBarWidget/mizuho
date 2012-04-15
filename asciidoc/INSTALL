@@ -1,6 +1,6 @@
                              AsciiDoc Installation
 
-   version 8.6.5, 20 May 2011
+   version 8.6.7, 17 March 2012
 
    Note
        The current version of AsciiDoc requires Python 2.4 or newer to run. If
@@ -24,9 +24,9 @@
      * Make sure you have [6]Mercurial installed, you can check with:
   $ hg --version
      * Go to the directory you want to install AsciiDoc into and download
-       the repository. This example gets the 8.6.5 tagged release:
+       the repository. This example gets the 8.6.7 tagged release:
   $ cd ~/bin
-  $ hg clone -r 8.6.5 https://asciidoc.googlecode.com/hg/ asciidoc-8.6.5
+  $ hg clone -r 8.6.7 https://asciidoc.googlecode.com/hg/ asciidoc-8.6.7
 
    You now have two choices: you can run asciidoc locally from your
    repository or you can use autoconf(1) and make(1) to perform a
@@ -36,8 +36,8 @@
 
    Create a symlink to the AsciiDoc script in a search PATH directory so
    it’s easy to execute asciidoc from the command-line, for example:
-  $ ln -s ~/bin/asciidoc-8.6.5/asciidoc.py ~/bin/asciidoc
-  $ ln -s ~/bin/asciidoc-8.6.5/a2x.py ~/bin/a2x
+  $ ln -s ~/bin/asciidoc-8.6.7/asciidoc.py ~/bin/asciidoc
+  $ ln -s ~/bin/asciidoc-8.6.7/a2x.py ~/bin/a2x
 
    Use the Mercurial pull command to update your local AsciiDoc
    repository.
@@ -74,8 +74,8 @@
 
    The autoconf(1) generated configure script creates a make file that is
    tailored for your system. To install:
-  $ tar -xzf asciidoc-8.6.5.tar.gz
-  $ cd asciidoc-8.6.5
+  $ tar -xzf asciidoc-8.6.7.tar.gz
+  $ cd asciidoc-8.6.7
   $ ./configure
   $ sudo make install
 
@@ -96,9 +96,9 @@
    AsciiDoc is developed and tested on Linux but there seem to be quite a
    few people using it on Windows. To install AsciiDoc on Windows unzip
    the distribution Zip file contents:
-  $ unzip asciidoc-8.6.5.zip
+  $ unzip asciidoc-8.6.7.zip
 
-   This will create the folder asciidoc-8.6.5 containing the asciidoc.py
+   This will create the folder asciidoc-8.6.7 containing the asciidoc.py
    and a2x.py executables along with configuration files and
    documentation.
 
@@ -202,23 +202,23 @@
    See also [26]Packager Notes in the AsciiDoc User Guide.
      __________________________________________________________________
 
-   Version 8.6.5
+   Version 8.6.7
    Last updated 2010-11-15 08:44:54 NZDT
 
 References
 
    1. http://www.python.org/
-   2. file://localhost/tmp/lynxXXXXrHyhys/README.html
+   2. file://localhost/tmp/lynxXXXXJGiksz/README.html
    3. http://www.selenic.com/mercurial/
    4. http://code.google.com/
    5. http://code.google.com/p/asciidoc/source/browse/
    6. http://www.selenic.com/mercurial/
    7. http://sourceforge.net/projects/asciidoc/
-   8. file://localhost/tmp/lynxXXXXrHyhys/L3934-4626TMP.html#X3
+   8. file://localhost/tmp/lynxXXXXJGiksz/L9199-2434TMP.html#X3
    9. http://blog.rainwebs.net/2010/02/25/how-to-create-handsome-pdf-documents-without-frustration/
   10. http://www.cygwin.com/
   11. http://dblatex.sourceforge.net/
-  12. file://localhost/tmp/lynxXXXXrHyhys/testasciidoc.html
+  12. file://localhost/tmp/lynxXXXXJGiksz/testasciidoc.html
   13. http://www.a-a-p.org/
   14. http://packages.debian.org/asciidoc
   15. mailto:stone@debian.org
@@ -232,4 +232,4 @@ References
   23. http://svn.exactcode.de/t2/trunk/package/textproc/asciidoc/
   24. http://dag.wieers.com/rpm/packages/asciidoc/
   25. http://opencsw.org/packages/asciidoc
-  26. file://localhost/tmp/lynxXXXXrHyhys/userguide.html#X38
+  26. file://localhost/tmp/lynxXXXXJGiksz/userguide.html#X38

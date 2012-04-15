@@ -2,15 +2,84 @@ AsciiDoc Frequently Asked Questions
 ===================================
 
 
-[NOTE]
-======
-- New FAQs are normally added at the top of this document.
-- The FAQ may be updated between AsciiDoc releases so some of the
-  newer FAQs may apply to the trunk and not the current release.
-======
+NOTE: New FAQs are appended to the bottom of this document.
+
+/////////////////////////////////////////////////////////////////
+ADD NEW FAQS TO THE BOTTOM OF THIS DOCUMENT TO MAINTAIN NUMBERING
+/////////////////////////////////////////////////////////////////
+
+== How do you handle spaces in included file names?
+Spaces are not allowed in macro targets so this include macro will not
+be processed:
+
+  include::my document.txt[]
+
+The work-around is to replace the spaces with the `{sp}` (space
+character) attribute, for example:
+
+  include::my{sp}document.txt[]
+
+
+== How do I number all paragraphs?
+Some documents such as specifications and legalese require all
+paragraphs to be sequentially numbered through the document, and to be
+able to reference these numbers.
+
+This can be achieved by using the DocBook toolchain but numbering the
+paragraphs with AsciiDoc using a custom config file containing the
+following (see http://www.methods.co.nz/asciidoc/userguide.html#X27
+for ways to include such a file):
+
+---------------------------------------------------------------------
+[paragraph]
+<formalpara{id? id="{id}"}{role? role="{role}"}{id? xreflabel="{paracounter}"}><title>{title}</title><para>
+{title%}<simpara{id? id="{id}"}{role? role="{role}"}{id? xreflabel="{paracounter}"}>
+{paracounter} |
+{title%}</simpara>
+{title#}</para></formalpara>
+{counter2:paracounter}
+{empty}
+---------------------------------------------------------------------
+
+References to the paragraphs operate in the normal way, you label the
+paragraph:
+
+-----------------------------
+[[some_label_you_understand]]
+paragraph contents
+-----------------------------
+
+and reference it in the normal manner:
+
+-----------------------------
+<<some_label_you_understand>>
+-----------------------------
+
+The text of the reference will be the paragraph number.
+
+For this to work for HTML you have to generate it via the DocBook
+toolchain.
+
+
+== Sources of information on configuring DocBook toolchains
+DocBook is a content and structure markup language, therefore
+AsciiDoc generated DocBook markup is also limited to content and
+structure.  Layout and formatting definition is specific to the
+DocBook toolchain.
+
+The dblatex toolchain can be configured by setting parameters defined
+at http://dblatex.sourceforge.net/doc/manual/sec-params.html or for
+more complex styling by custom Latex stylesheets described at
+http://dblatex.sourceforge.net/doc/manual/sec-custom-latex.html.
+
+Similarly FOP can be configured by parameters described at
+http://sagehill.net/docbookxsl/OptionsPart.html and with custom xsl
+stylesheets generating formatting objects as described at
+http://sagehill.net/docbookxsl/CustomizingPart.html.
+
 
 [[X5]]
-== How can I include embedded fonts in an EPUB document
+== How can I include embedded fonts in an EPUB document?
 This is a two step process:
 
 1. Declare the font files and their use in your document's CSS
@@ -30,7 +99,7 @@ body {
 }
 .........................................
 
-2. Declare the the font file as resource when you use `a2x(1)` to
+2. Declare the font file as resource when you use `a2x(1)` to
    compile the EPUB. For example:
 
   a2x -f epub -d book --epubcheck --stylesheet epubtest.css --resource .ttf=application/x-font-ttf --resource LiberationSerif-Regular.ttf epubtest.txt
@@ -48,11 +117,11 @@ body {
   accordingly (see the 'RESOURCES' section in the `a2x(1)` man page
   for details).
 - The URL value of the CSS 'src' property is set to the destination
-  font file relative the the CSS file.
+  font file relative to the CSS file.
 - The `--resource` option allows you to inject any file (not just font
   files) into the EPUB output document.
 - Using the CSS '@font-face' rule is a complex subject and is outside
-  the scope of the FAQ.
+  the scope of this FAQ.
 - Many EPUB readers do not process embedded fonts.
 ======
 
@@ -312,7 +381,7 @@ http://dblatex.sourceforge.net/doc/sec-custom.html[doc.lot.show XSL
 parameter] -- you can set it using the dblatex `--param` command-line
 option, for example:
 
-  $ a2x --dblatex-opts="--param=doc.lot.show=figure,table" doc/article.txt
+  a2x --dblatex-opts="--param=doc.lot.show=figure,table" doc/article.txt
 
 
 == How can I stop the document title being displayed?
@@ -408,7 +477,7 @@ CSS stylesheet. For example the following command will generate a
 single `article.html` file containing embedded images, admonition
 icons and the CSS stylesheet:
 
-  $ asciidoc -a data-uri -a icons article.txt
+  asciidoc -a data-uri -a icons article.txt
 
 
 == Are there any tools to help me understand what's going on inside AsciiDoc?
@@ -874,20 +943,55 @@ http://live.gnome.org/Yelp[Yelp], the GNOME help viewer, does a
 creditable job of displaying DocBook XML files directly.
 
 
-== Can you create ODF documents using AsciiDoc?
+== Can you create ODF and PDF files using LibreOffice?
 
-The easiest and highest fidelity method I've seen is to generate
-HTML from AsciiDoc then paste it from your browser (we use Firefox)
-into OpenOffice Writer.
+https://www.libreoffice.org/[LibreOffice] can convert HTML produced by
+AsciiDoc to ODF text format and PDF format (I used LibreOffice 3.5 at
+the time of writing, the fidelity is very good but it's not perfect):
 
-- I found that that there is better fidelity pasting HTML generated by
-  the 'html4' backend instead of the default 'xhtml11' backend.
-- Don't paste AsciiDoc tables of contents, OpenOffice Writer (I was
-  using version 2.3) hangs when saving. This may be something to do
-  with the embedded JavaScript but I haven't looked closely at it, I
-  may even be wrong about this.
+. Create the HTML file using AsciiDoc, for example:
 
-This tip was contributed by Bernard Amade.
+  asciidoc -a icons -a numbered -a disable-javascript article.txt
++
+JavaScript is disabled because LibreOffice does not execute
+JavaScript, this means that AsciiDoc table of contents and footnotes
+will not be rendered into ODF (if you want the table of contents and
+footnotes you could manually cut and paste them from a Web browser).
+
+. Convert the HTML file to an ODF text file using LibreOffice:
+
+  lowriter --invisible --convert-to odt article.html
++
+--
+The images imported from an HTML file will be linked, if your document
+contains images you should convert them to embedded images:
+
+[lowerroman]
+. Open the document in LibreOffice Writer.
+. Run the 'Edit->Links...' menu command.
+. Select all links and press the 'Break Link' button.
+
+Some images may also have been resized. To restore an image to its
+original size:
+
+[lowerroman]
+. Right-click on the image and select the 'Picture...' menu item.
+. Click on the 'Crop' tab.
+. Press the 'Original Size' button.
+
+--
+
+. Convert the ODF file to an PDF text file using LibreOffice:
+
+  lowriter --invisible --convert-to pdf article.odt
++
+A PDF index is automatically created using the section headings.
+
+Alternatively you could manually copy-and-paste the entire document
+from a Web browser into a blank ODF document in LibreOffice -- this
+technique will bring through the table of contents and footnotes.
+
+This tip was originally contributed by Bernard Amade.
 
 
 == How can I suppress cell separators in included table data files?
@@ -948,7 +1052,7 @@ characters. If you need spaces encode them as `%20`. For example:
 Set the AsciiDoc 'lang' attribute to the appropriate language code.
 For example:
 
-  $ a2x -a lang=es doc/article.txt
+  a2x -a lang=es doc/article.txt
 
 This will ensure that downstream DocBook processing will generate the
 correct language specific document headings (things like table of
@@ -1021,7 +1125,7 @@ The default format for the `{localdate}` attribute is the ISO 8601
 the `{localdate}` attribute. For example by setting it using the
 asciidoc(1) `-a` command-line option:
 
-  $ asciidoc -a localdate=`date +%d-%m-%Y` mydoc.txt
+  asciidoc -a localdate=`date +%d-%m-%Y` mydoc.txt
 
 You could also set it by adding an Attribute Entry to your source
 document, for example:
@@ -1120,3 +1224,75 @@ If quoting were omitted the equals character (separating the
 entry name `x` from the value `y`) would be escaped.
 
 
+== How can I control page breaks when printing HTML outputs?
+Here are some techniques you can use to control page breaks in HTML
+outputs produced by the 'xhtml11' and 'html5' backends:
+
+- You can generate a page break with the '<<<' block macro. The
+  following example prints the 'Rats and Mice' section on a new page:
++
+----------------
+<<<
+== Rats and Mice
+Lorum ipsum ...
+----------------
+
+- You can use the 'unbreakable' option to instruct the browser not to
+  break a block element. The following image and it's caption will be
+  kept together the printed page:
++
+------------------------------------
+[options="unbreakable"]
+.Tiger block image
+image::images/tiger.png[Tiger image]
+------------------------------------
+
+- You can apply the 'unbreakable' option globally to all block
+  elements by defining the 'unbreakable-option' attribute in your
+  document header.
+
+- Finally, the most powerful technique is to create custom CSS
+  containing paged media properties. For example this asciidoc(1)
+  command:
++
+--
+
+  asciidoc --attribute stylesheet=article.css article.txt
+
+Will include the following `article.css` file in the output document:
+
+-------------------------------------------------
+div#toc, div.sect1 { page-break-before: always; }
+-------------------------------------------------
+
+Which will ensure the table of contents and all top level sections
+start on a new printed page.
+--
+
+
+== Is it possible to reposition the Table of Contents in HTML outputs?
+By default the 'xhtml11' and 'html5' backends auto-position the TOC
+after the header. You can manually position the header by setting the
+'toc-placement' attribute value to 'manual' and then inserting the
+`toc::[]` block macro where you want the TOC to appear. For example,
+put this in the document header:
+
+----------------------
+:toc-placement: manual
+----------------------
+
+and this where you want the TOC to appear:
+
+-------
+toc::[]
+-------
+
+
+== HTML generated by AsciiDoc fills the width of the browser, how can I limit it to a more readable book width?
+You can set the maximum with for outputs generated by 'html5',
+'xhtml11' and 'slidy' backends by assigning the
+link:userguide.html#X103[max-width] attribute (either from the
+command-line or with an attribute entry in the document header). For
+example:
+
+  asciidoc -a max-width=55em article.txt
