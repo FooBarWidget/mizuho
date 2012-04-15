@@ -5,7 +5,7 @@ require 'rubygems'
 require 'mizuho/generator'
 
 $KCODE = 'UTF-8'
-options = { :topbar => true }
+options = { :topbar => true, :attributes => [] }
 parser = OptionParser.new do |opts|
 	nl = "\n" + ' ' * 37
 	opts.banner = "Usage: mizuho [options] INPUT"
@@ -36,6 +36,10 @@ parser = OptionParser.new do |opts|
 		"should be searched. Defaults to#{nl}" <<
 		"'images/icons'.") do |value|
 		options[:icons_dir] = value
+	end
+	opts.on("-a", "--attribute=ATTRIBUTE", "Define or delete document attribute. Uses#{nl}" <<
+		"same syntax as asciidoc's '-a' option.") do |value|
+		options[:attributes] << value
 	end
 	opts.on("-o", "--output FILE", String, "Specify the output filename.") do |value|
 		options[:output] = value

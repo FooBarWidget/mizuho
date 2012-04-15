@@ -36,6 +36,7 @@ class Generator
 		@id_map_file = options[:id_map] || default_id_map_filename(input)
 		@icons_dir   = options[:icons_dir]
 		@conf_file   = options[:conf_file]
+		@attributes  = options[:attributes] || []
 		@enable_topbar     = options[:topbar]
 		@commenting_system = options[:commenting_system]
 		if @commenting_system == 'juvia'
@@ -52,7 +53,7 @@ class Generator
 				warn "No ID map file, generating one (#{@id_map_file})..."
 			end
 		end
-		self.class.run_asciidoc(@input_file, @output_file, @icons_dir, @conf_file)
+		self.class.run_asciidoc(@input_file, @output_file, @icons_dir, @conf_file, @attributes)
 		transform(@output_file)
 		if @commenting_system
 			@id_map.save(@id_map_file)
@@ -66,7 +67,7 @@ class Generator
 		end
 	end
 	
-	def self.run_asciidoc(input, output, icons_dir = nil, conf_file = nil)
+	def self.run_asciidoc(input, output, icons_dir = nil, conf_file = nil, attributes = [])
 		args = [
 			"python", ASCIIDOC,
 			"-b", "html5",
@@ -79,6 +80,10 @@ class Generator
 		if icons_dir
 			args << "-a"
 			args << "iconsdir=#{icons_dir}"
+		end
+		attributes.each do |attribute|
+			args << "-a"
+			args << attribute
 		end
 		if conf_file
 			# With the splat operator we support a string and an array of strings.
