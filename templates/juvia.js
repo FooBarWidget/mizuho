@@ -20,12 +20,19 @@ Mizuho.showLightbox = $.proxy(function(creationCallback, closeCallback) {
 		'</div>');
 	var shadow = $('#comments_lightbox_shadow', lightbox);
 	var contents = $('#comments_lightbox_contents > .shell', lightbox);
-	shadow.click(function() {
-		lightbox.remove();
-		if (closeCallback) {
-			closeCallback();
+	
+	function close() {
+		if (lightbox) {
+			lightbox.remove();
+			lightbox = undefined;
+			if (closeCallback) {
+				closeCallback();
+			}
 		}
-	});
+	}
+
+	shadow.click(close);
+	lightbox.bind('lightbox:close', close);
 	lightbox.appendTo(document.body);
 	creationCallback(contents);
 }, Mizuho);
@@ -90,6 +97,24 @@ Mizuho.showCommentsPopup = $.proxy(function(balloon) {
 	
 	var self = this;
 	this.showLightbox(function(element) {
+		// We install a 'Close' button in the Juvia comment form after it has loaded.
+		function installCloseButton() {
+			if ($('#comments .juvia-form-actions').size() > 0) {
+				// The Juvia form is now loaded. Install the button.
+				var div = $('<div class="juvia-action" style="margin-left: 0.5em"></div>');
+				var button = $('<input type="button" value="Cancel"></div>').appendTo(div);
+				div.insertBefore('#comments .juvia-form-actions .juvia-error');
+				button.click(function() {
+					$(element).trigger('lightbox:close');
+				});
+			} else {
+				// Continue polling.
+				setTimeout(installCloseButton, 50);
+			}
+		}
+		setTimeout(installCloseButton, 50);
+
+		// Now load the Juvia comments form.
 		element.html('<div id="comments">Loading comments...</div>');
 		self.changingHash = true;
 		location.hash = '#!/' + info.id;
