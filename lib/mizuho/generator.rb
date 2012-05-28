@@ -147,7 +147,9 @@ private
 				preamble_copy['id'] = 'preamble'
 			end
 			
-			toctitle.add_previous_sibling(create_comment_balloon)
+			if @commenting_system
+				toctitle.add_previous_sibling(create_comment_balloon)
+			end
 			
 			f.rewind
 			f.truncate(0)
