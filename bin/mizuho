@@ -4,7 +4,8 @@ require 'optparse'
 require 'rubygems'
 require 'mizuho/generator'
 
-$KCODE = 'UTF-8'
+$KCODE = 'UTF-8' if RUBY_VERSION < '1.9'
+
 options = { :topbar => true, :attributes => [] }
 parser = OptionParser.new do |opts|
 	nl = "\n" + ' ' * 37
