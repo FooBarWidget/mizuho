@@ -56,6 +56,39 @@ describe IdMap do
 				end
 			end
 
+			describe "if the same title exists in the map, but with a different section number" do
+				before :each do
+					@entry1 = @id_map.add("1.2. Installation using a tarball", nil, false, false)
+					@entry2 = @id_map.add("5.6. Installation using a tarball", nil, false, false)
+					@entry3 = @id_map.add("6.0. Installation using a tarball", nil, false, false)
+					@id1 = @id_map.associate "5.4. Installation using a tarball"
+					@id2 = @id_map.associate "2.1. Installation using a tarball"
+				end
+
+				it "associates with the title whose section number is closest to the new section number" do
+					@id1.should == @entry2.id
+					@id2.should == @entry1.id
+				end
+
+				it "changes the original entries' titles" do
+					@entry1.title.should == "2.1. Installation using a tarball"
+					@entry2.title.should == "5.4. Installation using a tarball"
+					@entry3.title.should == "6.0. Installation using a tarball"
+				end
+
+				it "marks the corresponding entry as associated" do
+					@entry1.should be_associated
+					@entry2.should be_associated
+					@entry3.should_not be_associated
+				end
+
+				it "doesn't mark the corresponding entry as fuzzy" do
+					@entry1.should_not be_fuzzy
+					@entry2.should_not be_fuzzy
+					@entry3.should_not be_fuzzy
+				end
+			end
+
 			describe "if one or more similar titles exist in the map" do
 				before :each do
 					@entry1 = @id_map.add("Installation using a tarball", nil, false, false)
@@ -125,12 +158,22 @@ describe IdMap do
 		end
 	end
 
+	describe "entries" do
+		specify "are sortable by chapter" do
+			array = []
+			array << IdMap::Entry.new('1. Extra chapter')
+			array << IdMap::Entry.new('10. Under the hood')
+			array << IdMap::Entry.new('2.1. Generic installation instructions')
+			array.sort!
+			array[0].title.should == '1. Extra chapter'
+			array[1].title.should == '2.1. Generic installation instructions'
+			array[2].title.should == '10. Under the hood'
+		end
+	end
+
 	describe "loading" do
 		before :each do
 			@io = StringIO.new
-		end
-
-		it "works" do
 			@io.puts "# This is a comment."
 			@io.puts ""
 			@io.puts "Installation	=>	installation-1"
@@ -138,10 +181,17 @@ describe IdMap do
 			@io.puts "# fuzzy"
 			@io.puts "Troubleshooting	=>	troubleshooting-1"
 			@io.rewind
+		end
+
+		it "marks all entries as 'not associated'" do
+			@id_map.load(@io)
+			@id_map.entries.each_value { |entry| entry.should_not be_associated }
+		end
+
+		it "works" do
 			@id_map.load(@io)
 
 			@id_map.entries.should have(3).items
-			@id_map.entries.each_value { |entry| entry.should_not be_associated }
 			
 			entry = @id_map["Installation"]
 			entry.title.should == "Installation"

@@ -80,26 +80,25 @@ class IdMap
 
 	def save(filename_or_io)
 		normal, orphaned = group_and_sort_entries
-		f = StringIO.new
-		f.write(BANNER)
+		output = ""
+		output << BANNER
 		normal.each do |entry|
-			f.puts "# fuzzy" if entry.fuzzy?
-			f.puts "#{entry.title}	=>	#{entry.id}"
-			f.puts
+			output << "# fuzzy\n" if entry.fuzzy?
+			output << "#{entry.title}	=>	#{entry.id}\n"
+			output << "\n"
 		end
 		if !orphaned.empty?
-			f.puts
-			f.puts "### These sections appear to have been removed. Please check."
-			f.puts
+			output << "\n"
+			output << "### These sections appear to have been removed. Please check.\n"
+			output << "\n"
 			orphaned.each do |entry|
-				f.puts "# fuzzy" if entry.fuzzy?
-				f.puts "#{entry.title}	=>	#{entry.id}"
-				f.puts
+				output << "# fuzzy\n" if entry.fuzzy?
+				output << "#{entry.title}	=>	#{entry.id}\n"
+				output << "\n"
 			end
 		end
-		f.flush
-		open_io(filename_or_io, :write) do |io|
-			io.write(f.string)
+		open_io(filename_or_io, :write) do |f|
+			f.write(output)
 		end
 	end
 	
@@ -111,12 +110,13 @@ class IdMap
 				entry.associated = true
 				id = entry.id
 			end
-		elsif entry = find_similar(title)
+		elsif (moved_entry = find_moved(title)) || (similar_entry = find_similar(title))
+			entry = (moved_entry || similar_entry)
 			@entries.delete(entry.title)
 			@entries[title] = entry
 			entry.title = title
 			entry.associated = true
-			entry.fuzzy = true
+			entry.fuzzy = true if similar_entry
 			id = entry.id
 		else
 			id = create_unique_id(title)
@@ -152,7 +152,64 @@ private
 		alias associated? associated
 		
 		def <=>(other)
-			return title <=> other.title
+			if (a = IdMap.extract_chapter(title)) &&
+			   (b = IdMap.extract_chapter(other.title))
+				# Sort by chapter whenever possible.
+				a[0] = IdMap.chapter_to_int_array(a[0])
+				b[0] = IdMap.chapter_to_int_array(b[0])
+				return a <=> b
+			else
+				return title <=> other.title
+			end
+		end
+	end
+
+	def find_moved(title)
+		orig_chapter, orig_pure_title = extract_chapter(title)
+		return nil if !orig_chapter
+
+		# Find all possible matches.
+		orig_chapter_digits = chapter_to_int_array(orig_chapter)
+		matches = []
+		@entries.each_value do |entry|
+			next if entry.associated?
+			chapter, pure_title = extract_chapter(entry.title)
+			if chapter && orig_pure_title == pure_title
+				matches << {
+					:chapter_digits => chapter_to_int_array(chapter),
+					:pure_title => pure_title,
+					:entry => entry
+				}
+			end
+		end
+
+		# Iterate until we find the best match. We match the chapter
+		# digits from left to right.
+		digit_match_index = 0
+		while matches.size > 1
+			orig_digit = orig_chapter_digits[digit_match_index]
+
+			# Find closest digit in all matches.
+			tmp = matches.min do |a, b|
+				x = a[:chapter_digits][digit_match_index] - orig_digit
+				y = b[:chapter_digits][digit_match_index] - orig_digit
+				x.abs <=> y.abs
+			end
+			closest_digit = tmp[:chapter_digits][digit_match_index]
+
+			# Filter out all matches with this digit.
+			matches = matches.find_all do |m|
+				m[:chapter_digits][digit_match_index] == closest_digit
+			end
+
+			# If a next iteration is necessary, we check the next digit.
+			digit_match_index += 1
+		end
+
+		if matches.empty?
+			return nil
+		else
+			return matches[0][:entry]
 		end
 	end
 	
@@ -174,7 +231,32 @@ private
 			return nil
 		end
 	end
-	
+
+	# Given a title with a chapter number, e.g. "6.1 Installation using tarball",
+	# splits the two up.
+	def self.extract_chapter(title)
+		title =~ /^((\d+\.)*) (.+)$/
+		chapter = $1
+		pure_title = $3
+		if !chapter.nil? && !chapter.empty? && pure_title && !pure_title.empty?
+			return [chapter, pure_title]
+		else
+			return nil
+		end
+	end
+
+	def extract_chapter(title)
+		return IdMap.extract_chapter(title)
+	end
+
+	def self.chapter_to_int_array(chapter)
+		return chapter.split('.').map { |x| x.to_i }
+	end
+
+	def chapter_to_int_array(chapter)
+		return IdMap.chapter_to_int_array(chapter)
+	end
+
 	def slug(text)
 		text = text.downcase
 		text.gsub!(/^(\d+\.)+ /, '')
