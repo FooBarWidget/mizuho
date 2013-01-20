@@ -22,9 +22,11 @@ require File.expand_path(File.dirname(__FILE__) + "/spec_helper")
 require 'stringio'
 require 'mizuho/id_map'
 
-describe Mizuho::IdMap do
+module Mizuho
+
+describe IdMap do
 	before :each do
-		@id_map = Mizuho::IdMap.new
+		@id_map = IdMap.new
 	end
 
 	describe "#associate" do
@@ -118,7 +120,7 @@ describe Mizuho::IdMap do
 		describe "if the given title is in the map and it has been associated before" do
 			it "raises an error" do
 				@entry = @id_map.add("Installation", nil, false, true)
-				lambda { @id_map.associate "Installation" }.should raise_error(Mizuho::IdMap::AlreadyAssociatedError)
+				lambda { @id_map.associate "Installation" }.should raise_error(IdMap::AlreadyAssociatedError)
 			end
 		end
 	end
@@ -172,7 +174,7 @@ describe Mizuho::IdMap do
 		it "saves all entries in alphabetical order, marks fuzzy entries as such and puts unassociated (orphaned) entries at the bottom" do
 			@id_map.save(@io)
 			@io.string.should ==
-				Mizuho::IdMap::BANNER +
+				IdMap::BANNER +
 				"0. Introduction	=>	intro\n\n" +
 				"1. Installation	=>	installation-1\n\n" +
 				"2. Configuration	=>	configuration-2\n\n" +
@@ -186,3 +188,5 @@ describe Mizuho::IdMap do
 		end
 	end
 end
+
+end # module Mizuho

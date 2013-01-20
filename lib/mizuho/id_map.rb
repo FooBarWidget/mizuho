@@ -80,23 +80,26 @@ class IdMap
 
 	def save(filename_or_io)
 		normal, orphaned = group_and_sort_entries
-		open_io(filename_or_io, :write) do |f|
-			f.write(BANNER)
-			normal.each do |entry|
+		f = StringIO.new
+		f.write(BANNER)
+		normal.each do |entry|
+			f.puts "# fuzzy" if entry.fuzzy?
+			f.puts "#{entry.title}	=>	#{entry.id}"
+			f.puts
+		end
+		if !orphaned.empty?
+			f.puts
+			f.puts "### These sections appear to have been removed. Please check."
+			f.puts
+			orphaned.each do |entry|
 				f.puts "# fuzzy" if entry.fuzzy?
 				f.puts "#{entry.title}	=>	#{entry.id}"
 				f.puts
 			end
-			if !orphaned.empty?
-				f.puts
-				f.puts "### These sections appear to have been removed. Please check."
-				f.puts
-				orphaned.each do |entry|
-					f.puts "# fuzzy" if entry.fuzzy?
-					f.puts "#{entry.title}	=>	#{entry.id}"
-					f.puts
-				end
-			end
+		end
+		f.flush
+		open_io(filename_or_io, :write) do |io|
+			io.write(f.string)
 		end
 	end
 	
