@@ -105,7 +105,7 @@ class IdMap
 	def associate(title)
 		if entry = @entries[title]
 			if entry.associated?
-				raise AlreadyAssociatedError, "Cannot associate an already-associated title"
+				raise AlreadyAssociatedError, "Cannot associate an already associated title (#{title.inspect})"
 			else
 				entry.associated = true
 				id = entry.id

@@ -131,8 +131,10 @@ private
 			if @commenting_system
 				headers = (doc / "#content h2, #content h3, #content h4")
 				headers.each do |header|
-					header['data-comment-topic'] = @id_map.associate(header.text)
-					header.add_previous_sibling(create_comment_balloon)
+					if header['class'] !~ /float/
+						header['data-comment-topic'] = @id_map.associate(header.text)
+						header.add_previous_sibling(create_comment_balloon)
+					end
 				end
 			end
 			
