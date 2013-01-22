@@ -8,6 +8,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 	var isMobileDevice = this.isMobileDevice();
 	var timerId;
 	
+	// Create the floating table of contents used in the top bar.
 	var $floattoc = $('<div id="floattoc"></div>').html($('#toc').html());
 	$floattoc.find('#toctitle').remove();
 	$floattoc.find('.comments').remove();
@@ -26,6 +27,8 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		self.internalLinkClicked(this, event);
 	});
 	
+	// Callback for when the user clicks on the Table of Contents
+	// button on the top bar.
 	function showFloatingToc() {
 		var scrollUpdateTimerId;
 		
@@ -118,6 +121,9 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		$window.bind('scroll', onScroll);
 	}
 	
+	// Called whenever the user scrolls. Updates the title of the
+	// Table of Contents button in the top bar to the section that
+	// the user is currently reading.
 	function update() {
 		if ($title.offset().top + $title.height() < $document.scrollTop()) {
 			if (!$topbar.is(':visible')) {
@@ -160,6 +166,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 			update();
 		}, 100);
 	}
+	
 	
 	if (isMobileDevice) {
 		// Mobile devices don't support position fixed.
