@@ -1,5 +1,7 @@
 body {
-	margin: 1em 10% 1em 10%;
+	margin: 1em auto 1em auto;
+	padding: 0 1em 0 1em;
+	max-width: 800px;
 }
 
 a.image {
@@ -76,6 +78,10 @@ a.image {
 
 #comments_lightbox_contents > .shell {
 	margin: 2em;
+}
+
+pre {
+	overflow: auto;
 }
 
 @media print {
