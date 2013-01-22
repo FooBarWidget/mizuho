@@ -1,4 +1,4 @@
-# Copyright (c) 2008-2012 Hongli Lai
+# Copyright (c) 2008-2013 Hongli Lai
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -38,6 +38,7 @@ class Generator
 		@conf_file   = options[:conf_file]
 		@attributes  = options[:attributes] || []
 		@enable_topbar     = options[:topbar]
+		@no_run            = options[:no_run]
 		@commenting_system = options[:commenting_system]
 		if @commenting_system == 'juvia'
 			require_options(options, :juvia_url, :juvia_site_key)
@@ -53,7 +54,10 @@ class Generator
 				warn "No ID map file, generating one (#{@id_map_file})..."
 			end
 		end
-		self.class.run_asciidoc(@input_file, @output_file, @icons_dir, @conf_file, @attributes)
+		if !@no_run
+			self.class.run_asciidoc(@input_file, @output_file, @icons_dir,
+				@conf_file, @attributes)
+		end
 		transform(@output_file)
 		if @commenting_system
 			@id_map.save(@id_map_file)
