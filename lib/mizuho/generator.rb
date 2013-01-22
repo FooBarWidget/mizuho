@@ -170,6 +170,17 @@ private
 					link.content = header.text
 				end
 			end
+
+			if @enable_topbar
+				# Add invisible spans before each header so that anchor jumps
+				# don't hide the header behind the top bar.
+				# http://nicolasgallagher.com/jump-links-and-viewport-positioning/
+				headers.each do |header|
+					span = header.add_previous_sibling('<span class="anchor_helper"></span>')[0]
+					span['id'] = header['data-anchor'] = header['id']
+					header.remove_attribute('id')
+				end
+			end
 			
 			f.rewind
 			f.truncate(0)

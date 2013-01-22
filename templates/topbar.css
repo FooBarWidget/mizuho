@@ -114,3 +114,12 @@
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
 }
+
+/* http://nicolasgallagher.com/jump-links-and-viewport-positioning/ */
+.anchor_helper {
+	position: relative;
+	display: block;
+	top: -50px;
+	width: 1px;
+	height: 1px;
+}
