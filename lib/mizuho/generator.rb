@@ -75,9 +75,7 @@ class Generator
 		args = [
 			"python", ASCIIDOC,
 			"-b", "html5",
-			"-a", "toc",
 			"-a", "theme=flask",
-			"-a", "toclevels=3",
 			"-a", "icons",
 			"-n"
 		]
@@ -123,17 +121,17 @@ private
 	
 	def transform(filename)
 		File.open(filename, 'r+') do |f|
-			doc = Nokogiri.HTML(f)
-			head = (doc / "head")[0]
-			body = (doc / "body")[0]
+			doc   = Nokogiri.HTML(f)
+			head  = (doc / "head")[0]
+			body  = (doc / "body")[0]
 			title = (doc / "title")[0].text
-			preamble = (doc / "#preamble")[0]
-			toctitle = (doc / "#toctitle")[0]
+			header_div = (doc / "#header")[0]
+			headers    = (doc / "#content" / "h1, h2, h3, h4")
 			
 			head.add_child(stylesheet_tag)
 			
+			# Add commenting balloons.
 			if @commenting_system
-				headers = (doc / "#content h2, #content h3, #content h4")
 				headers.each do |header|
 					if header['class'] !~ /float/
 						header['data-comment-topic'] = @id_map.associate(header.text)
@@ -142,19 +140,35 @@ private
 				end
 			end
 			
+			# Add top bar.
 			if @enable_topbar
 				body.children.first.add_previous_sibling(topbar(title))
 			end
+
+			# Add Mizuho Javascript.
 			body.add_child(javascript_tag)
-			
-			if preamble
+
+			# Move preamble from content area to header area.
+			if preamble = (doc / "#preamble")[0]
 				preamble.remove
-				preamble_copy = (doc / "#header > h1")[0].add_next_sibling(preamble.to_s)[0]
-				preamble_copy['id'] = 'preamble'
+				header_div.add_child(preamble)
 			end
 			
+			# Create a TOC after the preamble.
+			toc_div = header_div.add_child(%Q{<div id="toc"></div>})[0]
 			if @commenting_system
-				toctitle.add_previous_sibling(create_comment_balloon)
+				# Add a commenting balloon to the TOC title.
+				toc_div.add_child(create_comment_balloon)
+			end
+			toc_div.add_child(%Q{<div id="toctitle">Table of Contents</div>})
+			headers.each do |header|
+				if header['class'] !~ /float/
+					level = header.name.scan(/\d+/).first
+					div  = toc_div.add_child("<div class=\"foo toclevel#{level}\"></div>")[0]
+					link = div.add_child("<a></a>")[0]
+					link['href'] = '#' + header['id']
+					link.content = header.text
+				end
 			end
 			
 			f.rewind
