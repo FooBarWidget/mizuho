@@ -132,9 +132,17 @@ private
 			
 			# Add commenting balloons.
 			if @commenting_system
+				titles = []
 				headers.each do |header|
 					if header['class'] !~ /float/
-						header['data-comment-topic'] = @id_map.associate(header.text)
+						titles << header.text
+					end
+				end
+				@id_map.generate_associations(titles)
+				headers.each do |header|
+					if header['class'] !~ /float/
+						titles << header.text
+						header['data-comment-topic'] = @id_map.associations[header.text]
 						header.add_previous_sibling(create_comment_balloon)
 					end
 				end

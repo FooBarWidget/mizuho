@@ -29,132 +29,115 @@ describe IdMap do
 		@id_map = IdMap.new
 	end
 
-	describe "#associate" do
-		describe "if the given title is not in the map" do
-			describe "if no similar titles exist in the map" do
-				before :each do
-					@id1 = @id_map.associate "Installation"
-					@id2 = @id_map.associate "Installation on Linux"
-					@id3 = @id_map.associate "Configuration"
-				end
-
-				it "returns a new unique ID" do
-					@id1.should_not == @id2
-					@id1.should_not == @id3
-				end
-
-				it "marks the entry as associated" do
-					@id_map["Installation"].should be_associated
-					@id_map["Installation on Linux"].should be_associated
-					@id_map["Configuration"].should be_associated
-				end
-
-				it "doesn't mark the corresponding entry as fuzzy" do
-					@id_map["Installation"].should_not be_fuzzy
-					@id_map["Installation on Linux"].should_not be_fuzzy
-					@id_map["Configuration"].should_not be_fuzzy
-				end
-			end
-
-			describe "if the same title exists in the map, but with a different section number" do
-				before :each do
-					@entry1 = @id_map.add("1.2. Installation using a tarball", nil, false, false)
-					@entry2 = @id_map.add("5.6. Installation using a tarball", nil, false, false)
-					@entry3 = @id_map.add("6.0. Installation using a tarball", nil, false, false)
-					@id1 = @id_map.associate "5.4. Installation using a tarball"
-					@id2 = @id_map.associate "2.1. Installation using a tarball"
-				end
-
-				it "associates with the title whose section number is closest to the new section number" do
-					@id1.should == @entry2.id
-					@id2.should == @entry1.id
-				end
-
-				it "changes the original entries' titles" do
-					@entry1.title.should == "2.1. Installation using a tarball"
-					@entry2.title.should == "5.4. Installation using a tarball"
-					@entry3.title.should == "6.0. Installation using a tarball"
-				end
-
-				it "marks the corresponding entry as associated" do
-					@entry1.should be_associated
-					@entry2.should be_associated
-					@entry3.should_not be_associated
-				end
-
-				it "doesn't mark the corresponding entry as fuzzy" do
-					@entry1.should_not be_fuzzy
-					@entry2.should_not be_fuzzy
-					@entry3.should_not be_fuzzy
-				end
-			end
-
-			describe "if one or more similar titles exist in the map" do
-				before :each do
-					@entry1 = @id_map.add("Installation using a tarball", nil, false, false)
-					@entry2 = @id_map.add("Installation using a Linux tarball", nil, false, false)
-				end
-
-				it "associates with the most similar title and returns its ID" do
-					@id3 = @id_map.associate "Installation using tarball"
-					@id3.should == @entry1.id
-					@entry1.title.should == "Installation using tarball"
-				end
-
-				it "only associates with a title that hasn't been associated before" do
-					@entry1.associated = true
-					@id3 = @id_map.associate "Installation using tarball"
-					@id3.should == @entry2.id
-				end
-
-				it "marks the corresponding entry as associated" do
-					@id_map.associate "Installation using tarball"
-					@id_map["Installation using tarball"].should be_associated
-				end
-
-				it "marks the corresponding entry as fuzzy" do
-					@id_map.associate "Installation using tarball"
-					@id_map["Installation using tarball"].should be_fuzzy
-				end
-			end
-
-			specify "title matching is case-insensitive" do
-				entry1 = @id_map.add("INSTALLATION USING A TARBALL", nil, false, false)
-				id = @id_map.associate "installation using tarball"
-				id.should == entry1.id
-			end
-		end
-
-		describe "if the given title is in the map and it hasn't been associated before" do
+	describe "#generate_associations" do
+		describe "if no similar titles exist in the map" do
 			before :each do
-				@entry = @id_map.add("Installation", nil, false, false)
+				@id_map.generate_associations(["Installation",
+					"Installation on Linux", "Configuration"])
+				@id1 = @id_map.associations["Installation"]
+				@id2 = @id_map.associations["Installation on Linux"]
+				@id3 = @id_map.associations["Configuration"]
 			end
 
-			it "returns that title's previous ID" do
-				id = @id_map.associate "Installation"
-				id.should == @entry.id
+			it "returns a new unique ID" do
+				@id1.should_not == @id2
+				@id1.should_not == @id3
 			end
 
 			it "marks the entry as associated" do
-				@id_map.associate "Installation"
-				@entry.should be_associated
+				@id_map.entries["Installation"].should be_associated
+				@id_map.entries["Installation on Linux"].should be_associated
+				@id_map.entries["Configuration"].should be_associated
 			end
 
-			it "preserves the entry's fuzziness" do
-				@id_map.associate "Installation"
-				@entry.should_not be_fuzzy
-
-				@entry2 = @id_map.add("Installation 2", nil, true, false)
-				@id_map.associate "Installation 2"
-				@entry2.should be_fuzzy
+			it "doesn't mark the corresponding entry as fuzzy" do
+				@id_map.entries["Installation"].should_not be_fuzzy
+				@id_map.entries["Installation on Linux"].should_not be_fuzzy
+				@id_map.entries["Configuration"].should_not be_fuzzy
 			end
 		end
 
-		describe "if the given title is in the map and it has been associated before" do
-			it "raises an error" do
-				@entry = @id_map.add("Installation", nil, false, true)
-				lambda { @id_map.associate "Installation" }.should raise_error(IdMap::AlreadyAssociatedError)
+		describe "if the same title exists in the map, but with a different section number" do
+			before :each do
+				@entry1 = @id_map.add("1.2. Installation using a tarball", nil, false, false)
+				@entry2 = @id_map.add("5.6. Installation using a tarball", nil, false, false)
+				@entry3 = @id_map.add("6.0. Installation using a tarball", nil, false, false)
+				@id_map.generate_associations(["5.4. Installation using a tarball",
+					"2.1. Installation using a tarball"])
+				@id1 = @id_map.associations["5.4. Installation using a tarball"]
+				@id2 = @id_map.associations["2.1. Installation using a tarball"]
 			end
+
+			it "associates with the title whose section number is closest to the new section number" do
+				@id1.should == @entry2.id
+				@id2.should == @entry1.id
+			end
+
+			it "changes the original entries' titles" do
+				@entry1.title.should == "2.1. Installation using a tarball"
+				@entry2.title.should == "5.4. Installation using a tarball"
+				@entry3.title.should == "6.0. Installation using a tarball"
+			end
+
+			it "marks the corresponding entry as associated" do
+				@entry1.should be_associated
+				@entry2.should be_associated
+				@entry3.should_not be_associated
+			end
+
+			it "doesn't mark the corresponding entry as fuzzy" do
+				@entry1.should_not be_fuzzy
+				@entry2.should_not be_fuzzy
+				@entry3.should_not be_fuzzy
+			end
+		end
+
+		describe "if one or more similar titles exist in the map" do
+			before :each do
+				@entry1 = @id_map.add("Installation using a tarball", nil, false, false)
+				@entry2 = @id_map.add("Installation using a Linux tarball", nil, false, false)
+			end
+
+			it "associates with the most similar title and returns its ID" do
+				@id_map.generate_associations(["Installation using tarball"])
+				@id3 = @id_map.associations["Installation using tarball"]
+				@id3.should == @entry1.id
+				@entry1.title.should == "Installation using tarball"
+			end
+
+			it "only associates with a title that hasn't been associated before" do
+				@entry1.associated = true
+				@id_map.generate_associations(["Installation using tarball"])
+				@id3 = @id_map.associations["Installation using tarball"]
+				@id3.should == @entry2.id
+			end
+
+			it "marks the corresponding entry as associated" do
+				@id_map.generate_associations(["Installation using tarball"])
+				@id_map.entries["Installation using tarball"].should be_associated
+			end
+
+			it "marks the corresponding entry as fuzzy" do
+				@id_map.generate_associations(["Installation using tarball"])
+				@id_map.entries["Installation using tarball"].should be_fuzzy
+			end
+		end
+
+		describe "if a one title has a similar match, but a later title has an exact match" do
+			it "associates the later title with the exact match, then associates the first title with the similar match" do
+				@id_map.add("Hello Dear World", "id-1", false, false)
+				@id_map.add("Hallaa Dear World", "id-2", false, false)
+				@id_map.generate_associations(["Helloo Dear World", "Hello Dear World"])
+				@id_map.associations["Helloo Dear World"].should == "id-2"
+				@id_map.associations["Hello Dear World"].should == "id-1"
+			end
+		end
+
+		specify "title matching is case-insensitive" do
+			entry1 = @id_map.add("INSTALLATION USING A TARBALL", nil, false, false)
+			@id_map.generate_associations(["installation using tarball"])
+			id = @id_map.associations["installation using tarball"]
+			id.should == entry1.id
 		end
 	end
 
@@ -193,17 +176,17 @@ describe IdMap do
 
 			@id_map.entries.should have(3).items
 			
-			entry = @id_map["Installation"]
+			entry = @id_map.entries["Installation"]
 			entry.title.should == "Installation"
 			entry.id.should == "installation-1"
 			entry.should_not be_fuzzy
 
-			entry = @id_map["Configuration"]
+			entry = @id_map.entries["Configuration"]
 			entry.title.should == "Configuration"
 			entry.id.should == "configuration-2"
 			entry.should_not be_fuzzy
 
-			entry = @id_map["Troubleshooting"]
+			entry = @id_map.entries["Troubleshooting"]
 			entry.title.should == "Troubleshooting"
 			entry.id.should == "troubleshooting-1"
 			entry.should be_fuzzy

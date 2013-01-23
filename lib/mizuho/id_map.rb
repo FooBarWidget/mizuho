@@ -43,15 +43,12 @@ class IdMap
 		"# and that Mizuho has found an ID which appears to be associated with that\n" <<
 		"# section. You should check whether it is correct, and if not, fix it.\n\n"
 
-	attr_reader :entries
+	attr_reader :entries, :associations
 
 	def initialize
 		@entries = {}
+		@associations = {}
 		#@namespace = slug(File.basename(filename, File.extname(filename)))
-	end
-
-	def [](title)
-		return @entries[title]
 	end
 
 	def load(filename_or_io)
@@ -101,8 +98,46 @@ class IdMap
 			f.write(output)
 		end
 	end
+
+	def generate_associations(titles)
+		@associations = {}
+
+		# Associate exact matches.
+		titles = titles.reject do |title|
+			if (entry = @entries[title]) && !entry.associated?
+				entry.associated = true
+				@associations[title] = entry.id
+				true
+			else
+				false
+			end
+		end
+
+		# For the remaining titles, associated with moved or similar-looking entry.
+		titles.reject! do |title|
+			if (moved_entry = find_moved(title)) || (similar_entry = find_similar(title))
+				entry = (moved_entry || similar_entry)
+				@entries.delete(entry.title)
+				@entries[title] = entry
+				entry.title = title
+				entry.associated = true
+				entry.fuzzy = true if similar_entry
+				@associations[title] = entry.id
+				true
+			else
+				false
+			end
+		end
+
+		# For the remaining titles, create new entries.
+		titles.each do |title|
+			id = create_unique_id(title)
+			add(title, id, false, true)
+			@associations[title] = id
+		end
+	end
 	
-	def associate(title)
+	def xassociate(title)
 		if entry = @entries[title]
 			if entry.associated?
 				raise AlreadyAssociatedError, "Cannot associate an already associated title (#{title.inspect})"
@@ -111,6 +146,11 @@ class IdMap
 				id = entry.id
 			end
 		elsif (moved_entry = find_moved(title)) || (similar_entry = find_similar(title))
+			if moved_entry
+				puts "moved entry: #{title.inspect} -> #{moved_entry.title.inspect}"
+			elsif similar_entry
+				puts "similar entry: #{title.inspect} -> #{similar_entry.title.inspect}"
+			end
 			entry = (moved_entry || similar_entry)
 			@entries.delete(entry.title)
 			@entries[title] = entry
