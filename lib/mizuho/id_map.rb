@@ -113,15 +113,29 @@ class IdMap
 			end
 		end
 
-		# For the remaining titles, associated with moved or similar-looking entry.
+		# For the remaining titles, associate with moved or similar-looking entry.
 		titles.reject! do |title|
-			if (moved_entry = find_moved(title)) || (similar_entry = find_similar(title))
-				entry = (moved_entry || similar_entry)
+			if entry = find_moved(title)
 				@entries.delete(entry.title)
 				@entries[title] = entry
 				entry.title = title
 				entry.associated = true
-				entry.fuzzy = true if similar_entry
+				entry.fuzzy = false
+				@associations[title] = entry.id
+				true
+			else
+				false
+			end
+		end
+
+		# For the remaining titles, associate with similar-looking entry.
+		titles.reject! do |title|
+			if entry = find_similar(title)
+				@entries.delete(entry.title)
+				@entries[title] = entry
+				entry.title = title
+				entry.associated = true
+				entry.fuzzy = true
 				@associations[title] = entry.id
 				true
 			else
