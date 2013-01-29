@@ -22,6 +22,7 @@ require 'nokogiri'
 require 'mizuho'
 require 'mizuho/source_highlight'
 require 'mizuho/id_map'
+require 'mizuho/utils'
 
 module Mizuho
 
@@ -40,6 +41,8 @@ class Generator
 		@enable_topbar     = options[:topbar]
 		@no_run            = options[:no_run]
 		@commenting_system = options[:commenting_system]
+		@index             = options[:index]
+		@index_filename    = options[:index_filename] || default_index_filename(input)
 		if @commenting_system == 'juvia'
 			require_options(options, :juvia_url, :juvia_site_key)
 		end
@@ -113,6 +116,13 @@ private
 			"/" +
 			File.basename(input, File.extname(input)) +
 			".idmap.txt"
+	end
+
+	def default_index_filename(input)
+		return File.dirname(input) +
+			"/" +
+			File.basename(input, File.extname(input)) +
+			".index.sqlite3"
 	end
 	
 	def warn(message)
@@ -188,6 +198,18 @@ private
 					span['id'] = header['data-anchor'] = header['id']
 					header.remove_attribute('id')
 				end
+			end
+
+			if @index
+				# Add docid attributes to headers.
+				headers.each do |header|
+					next if header['class'] =~ /float/
+					docid = Utils.title_to_docid(header.text)
+					header['data-docid'] = docid.to_s
+					header['class'] = "#{header['class']} docid-#{docid}".strip
+				end
+
+				create_search_index(headers, @index_filename)
 			end
 			
 			f.rewind
@@ -276,6 +298,61 @@ private
 			end
 		end
 		exit 1 if fail
+	end
+
+	def gather_content(header)
+		result = []
+		elem = header
+		while true
+			elem = elem.next_sibling
+			if !elem || elem.name =~ /^h/i
+				break
+			else
+				text = elem.text.strip
+				if !text.empty?
+					text.gsub!(/\r?\n/, " ")
+					result << text
+				end
+			end
+		end
+		return result.join(" ")
+	end
+
+	def create_search_index(headers, filename)
+		require 'sqlite3'
+		db = SQLite3::Database.new("#{filename}.tmp")
+		db.transaction do
+			db.execute(%q{
+				CREATE VIRTUAL TABLE book USING fts4(
+					title TEXT NOT NULL,
+					content TEXT NOT NULL,
+					content="",
+					tokenize=porter
+				)
+			})
+			db.execute(%q{
+				CREATE TABLE version(
+					version INTEGER NOT NULL
+				)
+			})
+			db.execute("INSERT INTO version VALUES(1)")
+			db.prepare("INSERT INTO book(docid, title, content) VALUES(?, ?, ?)") do |stmt|
+				headers.each do |header|
+					next if header['class'] =~ /float/
+					title = header.text.strip
+					docid = Utils.title_to_docid(title)
+					content = gather_content(header)
+					stmt.execute(docid, title, content)
+				end
+			end
+		end
+		db.execute("INSERT INTO book(book) VALUES('optimize')")
+		db.execute("VACUUM")
+		db.close
+		File.rename("#{filename}.tmp", filename)
+	rescue Exception => e
+		File.unlink("#{filename}.tmp") rescue nil
+		raise e
 	end
 end
 

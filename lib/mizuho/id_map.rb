@@ -19,12 +19,15 @@
 # THE SOFTWARE.
 
 require 'mizuho/fuzzystringmatch'
+require 'mizuho/utils'
 
 module Mizuho
 
 class IdMap
 	class AlreadyAssociatedError < StandardError
 	end
+
+	include Utils
 
 	URANDOM = File.open("/dev/urandom", "rb")
 	MATCHER = JaroWinklerPure.new
@@ -206,11 +209,11 @@ private
 		alias associated? associated
 		
 		def <=>(other)
-			if (a = IdMap.extract_chapter(title)) &&
-			   (b = IdMap.extract_chapter(other.title))
+			if (a = Utils.extract_chapter(title)) &&
+			   (b = Utils.extract_chapter(other.title))
 				# Sort by chapter whenever possible.
-				a[0] = IdMap.chapter_to_int_array(a[0])
-				b[0] = IdMap.chapter_to_int_array(b[0])
+				a[0] = Utils.chapter_to_int_array(a[0])
+				b[0] = Utils.chapter_to_int_array(b[0])
 				return a <=> b
 			else
 				return title <=> other.title
@@ -284,31 +287,6 @@ private
 		else
 			return nil
 		end
-	end
-
-	# Given a title with a chapter number, e.g. "6.1 Installation using tarball",
-	# splits the two up.
-	def self.extract_chapter(title)
-		title =~ /^((\d+\.)*) (.+)$/
-		chapter = $1
-		pure_title = $3
-		if !chapter.nil? && !chapter.empty? && pure_title && !pure_title.empty?
-			return [chapter, pure_title]
-		else
-			return nil
-		end
-	end
-
-	def extract_chapter(title)
-		return IdMap.extract_chapter(title)
-	end
-
-	def self.chapter_to_int_array(chapter)
-		return chapter.split('.').map { |x| x.to_i }
-	end
-
-	def chapter_to_int_array(chapter)
-		return IdMap.chapter_to_int_array(chapter)
 	end
 
 	def slug(text)

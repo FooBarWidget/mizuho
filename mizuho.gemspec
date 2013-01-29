@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
 	s.executables = ["mizuho", "mizuho-asciidoc"]
 	s.authors = ["Hongli Lai"]
 	s.add_dependency("nokogiri")
+	s.add_dependency("sqlite3")
 	
 	s.files = Dir[
 		"README.markdown", "LICENSE.txt", "Rakefile",

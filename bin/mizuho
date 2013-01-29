@@ -64,6 +64,9 @@ parser = OptionParser.new do |opts|
 	opts.on("-o", "--output FILE", String, "Specify the output filename.") do |value|
 		options[:output] = value
 	end
+	opts.on("--index", "Generate a full-text index.") do
+		options[:index] = true
+	end
 	opts.on("--no-run", "Do not run Asciidoc. Developer option#{nl}" <<
 		"only, don't use.") do
 		options[:no_run] = true
