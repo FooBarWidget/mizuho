@@ -8,6 +8,7 @@ end
 
 desc "Build, sign & upload gem"
 task 'package:release' do
+	sh "git tag -s release-#{Mizuho::VERSION_STRING}"
 	sh "gem build mizuho.gemspec --sign --key 0x0A212A8C"
 	puts "Proceed with uploading the gem? [y/n]"
 	if STDIN.readline == "y\n"
