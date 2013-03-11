@@ -24,7 +24,7 @@ module Mizuho
 	TEMPLATES_DIR = "#{SOURCE_ROOT}/templates"
 	ASCIIDOC      = "#{SOURCE_ROOT}/asciidoc/asciidoc.py"
 	
-	VERSION_STRING = "0.9.13"
+	VERSION_STRING = "0.9.14"
 	
 	if $LOAD_PATH.first != LIBDIR
 		$LOAD_PATH.unshift(LIBDIR)
