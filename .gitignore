@@ -1,4 +1,4 @@
-*.html
+/*.html
 *.gem
 pkg
 test/cache
