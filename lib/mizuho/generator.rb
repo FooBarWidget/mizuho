@@ -139,6 +139,9 @@ private
 			headers    = (doc / "#content" / "h1, h2, h3, h4")
 			
 			head.add_child(stylesheet_tag)
+
+			# Remove footer with generation timestamp.
+			(doc / "#footer-text").remove
 			
 			# Add commenting balloons.
 			if @commenting_system
