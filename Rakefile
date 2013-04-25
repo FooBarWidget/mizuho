@@ -18,3 +18,8 @@ task 'package:release' do
 		puts "Did not upload the gem."
 	end
 end
+
+desc "Build Debian package"
+task 'package:debian' do
+	sh "dpkg-buildpackage -us -uc"
+end

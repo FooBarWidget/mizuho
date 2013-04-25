@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
 		"README.markdown", "LICENSE.txt", "Rakefile",
 		"bin/*",
 		"lib/**/*",
+		"debian/*",
 		"test/*",
 		"templates/*",
 		"asciidoc/**/*",
