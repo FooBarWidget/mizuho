@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 	s.description = "A documentation formatting tool. Mizuho converts Asciidoc input files into nicely outputted HTML, possibly one file per chapter. Multiple templates are supported, so you can write your own."
 	s.executables = ["mizuho", "mizuho-asciidoc"]
 	s.authors = ["Hongli Lai"]
-	s.add_dependency("nokogiri")
+	s.add_dependency("nokogiri", ">= 1.5.0")
 	s.add_dependency("sqlite3")
 	
 	s.files = Dir[
