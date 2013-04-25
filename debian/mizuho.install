@@ -1,3 +1,0 @@
-bin/mizuho /usr/bin/
-lib/* /usr/lib/ruby/vendor_ruby/
-templates/* /usr/share/mizuho/templates/
