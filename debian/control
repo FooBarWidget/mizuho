@@ -10,7 +10,7 @@ Vcs-Browser: https://github.com/FooBarWidget/mizuho
 XS-Ruby-Versions: all
 
 Package: mizuho
-Architecture: any
+Architecture: all
 XB-Ruby-Versions: ${ruby:Versions}
 Depends: ${shlibs:Depends}, ${misc:Depends}, ruby | ruby-interpreter, source-highlight, asciidoc
 Description: Mizuho documentation formatting tool
