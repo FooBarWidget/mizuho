@@ -18,12 +18,13 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-require File.expand_path(File.dirname(__FILE__) + "/../lib/mizuho")
+$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
 require 'optparse'
 begin
 	require 'rubygems'
 rescue LoadError
 end
+require 'mizuho'
 require 'mizuho/generator'
 
 $KCODE = 'UTF-8' if RUBY_VERSION < '1.9'

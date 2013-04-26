@@ -1,4 +1,4 @@
-# Copyright (c) 2008-2012 Hongli Lai
+# Copyright (c) 2008-2013 Hongli Lai
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -19,4 +19,7 @@
 # THE SOFTWARE.
 
 require 'mizuho'
-ENV['PATH'] += ":" + File.join(Mizuho::SOURCE_ROOT, "source-highlight")
+
+if !Mizuho::NATIVELY_PACKAGED
+	ENV['PATH'] += ":" + File.join(Mizuho::SOURCE_ROOT, "source-highlight")
+end

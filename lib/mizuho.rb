@@ -19,15 +19,23 @@
 # THE SOFTWARE.
 
 module Mizuho
-	SOURCE_ROOT   = File.expand_path(File.dirname(__FILE__) + "/..")
-	LIBDIR        = "#{SOURCE_ROOT}/lib"
-	TEMPLATES_DIR = "#{SOURCE_ROOT}/templates"
-	ASCIIDOC      = "#{SOURCE_ROOT}/asciidoc/asciidoc.py"
-	
-	VERSION_STRING = "0.9.15"
-	
-	if $LOAD_PATH.first != LIBDIR
-		$LOAD_PATH.unshift(LIBDIR)
-		$LOAD_PATH.uniq!
+	# Don't forgot to update debian/changelog too.
+	VERSION_STRING    = "0.9.15"
+	NATIVELY_PACKAGED = false
+
+	if NATIVELY_PACKAGED
+		TEMPLATES_DIR = "/usr/share/mizuho/templates"
+		ASCIIDOC      = "asciidoc"
+	else
+		SOURCE_ROOT   = File.expand_path(File.dirname(__FILE__) + "/..")
+		LIBDIR        = "#{SOURCE_ROOT}/lib"
+		
+		TEMPLATES_DIR = "#{SOURCE_ROOT}/templates"
+		ASCIIDOC      = ["python", "#{SOURCE_ROOT}/asciidoc/asciidoc.py"]
+
+		if $LOAD_PATH.first != LIBDIR
+			$LOAD_PATH.unshift(LIBDIR)
+			$LOAD_PATH.uniq!
+		end
 	end
-end if !defined?(Mizuho::SOURCE_ROOT)
+end if !defined?(Mizuho::VERSION_STRING)

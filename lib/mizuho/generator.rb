@@ -76,12 +76,12 @@ class Generator
 	
 	def self.run_asciidoc(input, output, icons_dir = nil, conf_file = nil, attributes = [])
 		args = [
-			"python", ASCIIDOC,
+			ASCIIDOC,
 			"-b", "html5",
 			"-a", "theme=flask",
 			"-a", "icons",
 			"-n"
-		]
+		].flatten
 		if icons_dir
 			args << "-a"
 			args << "iconsdir=#{icons_dir}"

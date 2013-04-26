@@ -11,6 +11,7 @@ def string_option(name, default_value = nil)
 end
 
 def recursive_copy_files(files, destination_dir)
+	require 'fileutils' if !defined?(FileUtils)
 	files.each_with_index do |filename, i|
 		dir = File.dirname(filename)
 		if !File.exist?("#{destination_dir}/#{dir}")
@@ -22,6 +23,24 @@ def recursive_copy_files(files, destination_dir)
 		printf "\r[%5d/%5d] [%3.0f%%] Copying files...", i + 1, files.size, i * 100.0 / files.size
 		STDOUT.flush
 	end
+	printf "\r[%5d/%5d] [%3.0f%%] Copying files...\n", files.size, files.size, 100
+end
+
+def create_debian_package_dir
+	require 'mizuho/packaging'
+
+	basename = "mizuho_#{Mizuho::VERSION_STRING}~hongli"
+	pkg_dir  = string_option('PKG_DIR', "pkg")
+	sh "rm -rf #{pkg_dir}/#{basename}"
+	sh "mkdir -p #{pkg_dir}/#{basename}"
+	recursive_copy_files(Dir[*MIZUHO_FILES] - Dir[*MIZUHO_DEBIAN_EXCLUDE_FILES],
+		"#{pkg_dir}/#{basename}")
+
+	sh "cd #{pkg_dir} && tar -c #{basename} | gzip --best > #{basename}.orig.tar.gz"
+
+	recursive_copy_files(Dir["debian/**/*"], "#{pkg_dir}/#{basename}")
+	
+	return [basename, pkg_dir]
 end
 
 desc "Run unit tests"
@@ -42,21 +61,12 @@ task 'package:release' do
 	end
 end
 
+task 'package:debian_dir' do
+	create_debian_package_dir
+end
+
 desc "Build Debian package"
 task 'package:debian' do
-	require 'fileutils'
-	require 'mizuho/packaging'
-
-	basename = "mizuho_#{Mizuho::VERSION_STRING}~hongli"
-	sh "rm -rf pkg/#{basename}"
-	sh "mkdir -p pkg/#{basename}"
-	recursive_copy_files(Dir[*MIZUHO_FILES] - Dir[*MIZUHO_DEBIAN_EXCLUDE_FILES],
-		"pkg/#{basename}")
-	puts
-
-	sh "cd pkg && tar -c #{basename} | gzip --best > #{basename}.orig.tar.gz"
-
-	recursive_copy_files(Dir["debian/**/*"], "pkg/#{basename}")
-	puts
-	sh "cd pkg/#{basename} && dpkg-buildpackage -us -uc"
+	basename, pkg_dir = create_debian_package_dir
+	sh "cd #{pkg_dir}/#{basename} && debuild"
 end
