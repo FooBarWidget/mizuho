@@ -1,4 +1,5 @@
 require File.expand_path('lib/mizuho')
+require File.expand_path('lib/mizuho/packaging')
 
 Gem::Specification.new do |s|
 	s.name = "mizuho"
@@ -11,15 +12,5 @@ Gem::Specification.new do |s|
 	s.authors = ["Hongli Lai"]
 	s.add_dependency("nokogiri", ">= 1.5.0")
 	s.add_dependency("sqlite3")
-	
-	s.files = Dir[
-		"README.markdown", "LICENSE.txt", "Rakefile",
-		"bin/*",
-		"lib/**/*",
-		"debian/*",
-		"test/*",
-		"templates/*",
-		"asciidoc/**/*",
-		"source-highlight/**/*"
-	]
+	s.files = Dir[*MIZUHO_FILES]
 end

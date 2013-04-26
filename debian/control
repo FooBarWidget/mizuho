@@ -2,7 +2,7 @@ Source: mizuho
 Section: ruby
 Priority: optional
 Maintainer: Hongli Lai <hongli@phusion.nl>
-Build-Depends: debhelper (>= 7.0.50~), gem2deb (>= 0.3.0~)
+Build-Depends: debhelper (>= 7.0.50~), gem2deb (>= 0.2.0~)
 Standards-Version: 3.9.2
 Homepage: https://github.com/FooBarWidget/mizuho
 Vcs-Git: git://github.com/FooBarWidget/mizuho.git

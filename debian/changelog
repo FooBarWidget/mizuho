@@ -1,0 +1,5 @@
+mizuho (0.9.15~hongli) precise; urgency=low
+
+  * Initial packaging
+
+ -- Hongli Lai <hongli@phusion.nl>  Fri, 26 Apr 2013 16:39:20 +0200
