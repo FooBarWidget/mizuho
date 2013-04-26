@@ -67,6 +67,7 @@ end
 
 desc "Build Debian package"
 task 'package:debian' do
+	sh "dpkg-checkbuilddeps"
 	basename, pkg_dir = create_debian_package_dir
 	sh "cd #{pkg_dir}/#{basename} && debuild"
 end
