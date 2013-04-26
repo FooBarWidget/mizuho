@@ -10,6 +10,15 @@ def string_option(name, default_value = nil)
 	end
 end
 
+def boolean_option(name, default_value = false)
+	value = ENV[name]
+	if value.nil? || value.empty?
+		return default_value
+	else
+		return value == "yes" || value == "on" || value == "true" || value == "1"
+	end
+end
+
 def recursive_copy_files(files, destination_dir)
 	require 'fileutils' if !defined?(FileUtils)
 	files.each_with_index do |filename, i|
@@ -29,13 +38,13 @@ end
 def create_debian_package_dir
 	require 'mizuho/packaging'
 
-	basename = "mizuho_#{Mizuho::VERSION_STRING}~hongli"
+	basename = "mizuho_#{Mizuho::VERSION_STRING}"
 	pkg_dir  = string_option('PKG_DIR', "pkg")
 	sh "rm -rf #{pkg_dir}/#{basename}"
 	sh "mkdir -p #{pkg_dir}/#{basename}"
+
 	recursive_copy_files(Dir[*MIZUHO_FILES] - Dir[*MIZUHO_DEBIAN_EXCLUDE_FILES],
 		"#{pkg_dir}/#{basename}")
-
 	sh "cd #{pkg_dir} && tar -c #{basename} | gzip --best > #{basename}.orig.tar.gz"
 
 	recursive_copy_files(Dir["debian/**/*"], "#{pkg_dir}/#{basename}")
@@ -69,5 +78,6 @@ desc "Build Debian package"
 task 'package:debian' do
 	sh "dpkg-checkbuilddeps"
 	basename, pkg_dir = create_debian_package_dir
-	sh "cd #{pkg_dir}/#{basename} && debuild"
+	sign_options = boolean_option('SIGN') ? "-us -uc" : nil
+	sh "cd #{pkg_dir}/#{basename} && debuild #{sign_options}"
 end

@@ -2,7 +2,7 @@ Source: mizuho
 Section: text
 Priority: optional
 Maintainer: Hongli Lai <hongli@phusion.nl>
-Build-Depends: debhelper (>= 7.0.50~), gem2deb (>= 0.2.0~), sed
+Build-Depends: debhelper (>= 7.0.50~), gem2deb (>= 0.2.0~), sed (>= 1.0.0)
 Standards-Version: 3.9.3
 Homepage: https://github.com/FooBarWidget/mizuho
 Vcs-Git: git://github.com/FooBarWidget/mizuho.git
@@ -13,7 +13,6 @@ Package: mizuho
 Architecture: all
 XB-Ruby-Versions: ${ruby:Versions}
 Depends: ${shlibs:Depends}, ${misc:Depends}, ruby | ruby-interpreter, ruby-nokogiri (>= 1.5.0), source-highlight, asciidoc
-Description: Mizuho documentation formatting tool
-  A documentation formatting tool. Mizuho converts Asciidoc input files into nicely
-  outputted HTML, possibly one file per chapter. Multiple templates are supported,
-  so you can write your own.
+Description: Documentation formatting tool
+ Converts Asciidoc input files into nicely
+ outputted HTML, possibly one file per chapter.
