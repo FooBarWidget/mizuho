@@ -1,5 +1,5 @@
 Source: mizuho
-Section: doc
+Section: text
 Priority: optional
 Maintainer: Hongli Lai <hongli@phusion.nl>
 Build-Depends: debhelper (>= 7.0.50~), gem2deb (>= 0.2.0~), sed
