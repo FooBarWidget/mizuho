@@ -1,8 +1,8 @@
 Source: mizuho
-Section: ruby
+Section: doc
 Priority: optional
 Maintainer: Hongli Lai <hongli@phusion.nl>
-Build-Depends: debhelper (>= 7.0.50~), gem2deb (>= 0.2.0~)
+Build-Depends: debhelper (>= 7.0.50~), gem2deb (>= 0.2.0~), sed
 Standards-Version: 3.9.3
 Homepage: https://github.com/FooBarWidget/mizuho
 Vcs-Git: git://github.com/FooBarWidget/mizuho.git
