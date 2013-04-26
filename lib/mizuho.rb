@@ -19,7 +19,6 @@
 # THE SOFTWARE.
 
 module Mizuho
-	# Don't forgot to update debian/changelog too.
 	VERSION_STRING    = "0.9.15"
 	NATIVELY_PACKAGED = false
 
