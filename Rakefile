@@ -78,6 +78,6 @@ desc "Build Debian package"
 task 'package:debian' do
 	sh "dpkg-checkbuilddeps"
 	basename, pkg_dir = create_debian_package_dir
-	sign_options = boolean_option('SIGN') ? "-us -uc" : nil
+	sign_options = boolean_option('SIGN') ? "-us -uc" : "-k0x0A212A8C"
 	sh "cd #{pkg_dir}/#{basename} && debuild #{sign_options}"
 end
