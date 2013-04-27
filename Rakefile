@@ -70,14 +70,10 @@ task 'package:release' do
 	end
 end
 
-task 'package:debian_dir' do
-	create_debian_package_dir
-end
-
-desc "Build Debian package"
+desc "Build Debian source package"
 task 'package:debian' do
 	sh "dpkg-checkbuilddeps"
 	basename, pkg_dir = create_debian_package_dir
 	sign_options = boolean_option('SIGN') ? "-us -uc" : "-k0x0A212A8C"
-	sh "cd #{pkg_dir}/#{basename} && debuild #{sign_options}"
+	sh "cd #{pkg_dir}/#{basename} && debuild #{sign_options} -S"
 end
