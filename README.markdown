@@ -28,15 +28,35 @@ that.
    to install this yourself; we've bundled a precompiled source-highlight
    binary for OS X for your convenience.
 
-## Installation
+## Installation with RubyGems
 
-Run the following command as root:
+Run:
 
     gem install mizuho
 
 This gem is signed using PGP with the [Phusion Software Signing key](http://www.phusion.nl/about/gpg). That key in turn is signed by [the rubygems-openpgp Certificate Authority](http://www.rubygems-openpgp-ca.org/).
 
 You can verify the authenticity of the gem by following [The Complete Guide to Verifying Gems with rubygems-openpgp](http://www.rubygems-openpgp-ca.org/blog/the-complete-guide-to-verifying-gems-with-rubygems-openpgp.html).
+
+## Installation on Ubuntu
+
+Use our [PPA](https://launchpad.net/~phusion.nl/+archive/misc):
+
+    sudo add-apt-repository ppa:user/ppa-name
+    sudo apt-get update
+    sudo apt-get install mizuho
+
+## Installation on Debian
+
+Our Ubuntu Lucid packages are compatible with Debian 6. Add this to your /etc/sources.list:
+
+    deb http://ppa.launchpad.net/phusion.nl/misc/ubuntu lucid main 
+    deb-src http://ppa.launchpad.net/phusion.nl/misc/ubuntu lucid main 
+
+Then:
+
+    sudo apt-get update
+    sudo apt-get install mizuho
 
 ## Usage
 
