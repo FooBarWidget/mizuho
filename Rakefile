@@ -80,14 +80,7 @@ task 'package:release' do
 	end
 end
 
-# Dev
-#   remake tarball
-#   make package
-# Production
-#   use existing tarball or make new
-#   make package
-
-task 'package:debian:orig_tarball' do
+task 'debian:orig_tarball' do
 	if File.exist?("#{PKG_DIR}/mizuho_#{Mizuho::VERSION_STRING}.orig.tar.gz")
 		puts "Debian orig tarball #{PKG_DIR}/mizuho_#{Mizuho::VERSION_STRING}.orig.tar.gz already exists."
 	else
@@ -102,17 +95,17 @@ task 'package:debian:orig_tarball' do
 end
 
 desc "Build a Debian package for local testing"
-task 'package:debian:dev' do
+task 'debian:dev' do
 	sh "dpkg-checkbuilddeps"
 	sh "rm -f #{PKG_DIR}/mizuho_#{Mizuho::VERSION_STRING}.orig.tar.gz"
-	Rake::Task["package:debian:clean"].invoke
-	Rake::Task["package:debian:orig_tarball"].invoke
+	Rake::Task["debian:clean"].invoke
+	Rake::Task["debian:orig_tarball"].invoke
 	create_debian_package_dir("dev")
-	sh "cd #{PKG_DIR}/dev && debuild -us -uc"
+	sh "cd #{PKG_DIR}/dev && debuild -F -us -uc"
 end
 
 desc "Build Debian multiple source packages to be uploaded to repositories"
-task 'package:debian:production' => 'package:debian:orig_tarball' do
+task 'debian:production' => 'debian:orig_tarball' do
 	sh "dpkg-checkbuilddeps"
 	DISTRIBUTIONS.each do |distribution|
 		create_debian_package_dir(distribution)
@@ -121,7 +114,7 @@ task 'package:debian:production' => 'package:debian:orig_tarball' do
 end
 
 desc "Clean Debian packaging products, except for orig tarball"
-task 'package:debian:clean' do
+task 'debian:clean' do
 	files = Dir["#{PKG_DIR}/*.{changes,build,deb,dsc,upload}"]
 	sh "rm -f #{files.join(' ')}"
 	sh "rm -rf #{PKG_DIR}/dev"
