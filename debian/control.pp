@@ -12,7 +12,11 @@ XS-Ruby-Versions: all
 Package: mizuho
 Architecture: all
 XB-Ruby-Versions: ${ruby:Versions}
-Depends: ${shlibs:Depends}, ${misc:Depends}, ruby | ruby-interpreter, ruby-nokogiri (>= 1.5.0), source-highlight, asciidoc (>= 8.6.0)
+#if is_distribution?('>= precise')
+    Depends: ${shlibs:Depends}, ${misc:Depends}, ruby | ruby-interpreter, ruby-nokogiri (>= 1.4.0), source-highlight, asciidoc (>= 8.6.0)
+#else
+    Depends: ${shlibs:Depends}, ${misc:Depends}, ruby | ruby-interpreter, libnokogiri-ruby (>= 1.4.0), source-highlight
+#endif
 Description: Documentation formatting tool
  Converts Asciidoc input files into nicely
  outputted HTML, possibly one file per chapter.

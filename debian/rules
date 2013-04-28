@@ -7,4 +7,4 @@ export DH_VERBOSE=1
 override_dh_install:
 	dh_install
 	sed -i 's/NATIVELY_PACKAGED = .*/NATIVELY_PACKAGED = true/' debian/mizuho/usr/lib/ruby/vendor_ruby/mizuho.rb
-	sed -i 's/\/usr\/bin\/env ruby/\/usr\/bin\/ruby/'
+	sed -i 's/\/usr\/bin\/env ruby/\/usr\/bin\/ruby/' debian/mizuho/usr/bin/mizuho
