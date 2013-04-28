@@ -138,7 +138,7 @@ private
 			header_div = (doc / "#header")[0]
 			headers    = (doc / "#content" / "h1, h2, h3, h4")
 			
-			head.add_child(stylesheet_tag)
+			head.add_child(make_node(stylesheet_tag, doc))
 
 			# Remove footer with generation timestamp.
 			(doc / "#footer-text").remove
@@ -156,37 +156,37 @@ private
 					if header['class'] !~ /float/
 						titles << header.text
 						header['data-comment-topic'] = @id_map.associations[header.text]
-						header.add_previous_sibling(create_comment_balloon)
+						header.add_previous_sibling(make_node(create_comment_balloon, doc))
 					end
 				end
 			end
 			
 			# Add top bar.
 			if @enable_topbar
-				body.children.first.add_previous_sibling(topbar(title))
+				body.children.first.add_previous_sibling(make_node(topbar(title), doc))
 			end
 
 			# Add Mizuho Javascript.
-			body.add_child(javascript_tag)
+			body.add_child(javascript_tag(doc))
 
 			# Move preamble from content area to header area.
 			if preamble = (doc / "#preamble")[0]
 				preamble.remove
-				header_div.add_child(preamble)
+				header_div.add_child(make_node(preamble, doc))
 			end
 			
 			# Create a TOC after the preamble.
-			toc_div = header_div.add_child(%Q{<div id="toc"></div>})[0]
+			toc_div = add_child_and_get(header_div, %Q{<div id="toc"></div>})
 			if @commenting_system
 				# Add a commenting balloon to the TOC title.
-				toc_div.add_child(create_comment_balloon)
+				toc_div.add_child(make_node(create_comment_balloon, doc))
 			end
-			toc_div.add_child(%Q{<div id="toctitle">Table of Contents</div>})
+			toc_div.add_child(make_node(%Q{<div id="toctitle">Table of Contents</div>}, doc))
 			headers.each do |header|
 				if header['class'] !~ /float/
 					level = header.name.scan(/\d+/).first
-					div  = toc_div.add_child("<div class=\"foo toclevel#{level}\"></div>")[0]
-					link = div.add_child("<a></a>")[0]
+					div  = add_child_and_get(toc_div, "<div class=\"foo toclevel#{level}\"></div>")
+					link = add_child_and_get(div, "<a></a>")
 					link['href'] = '#' + header['id']
 					link.content = header.text
 				end
@@ -197,7 +197,7 @@ private
 				# don't hide the header behind the top bar.
 				# http://nicolasgallagher.com/jump-links-and-viewport-positioning/
 				headers.each do |header|
-					span = header.add_previous_sibling('<span class="anchor_helper"></span>')[0]
+					span = add_previous_sibling_and_get(header, '<span class="anchor_helper"></span>')
 					span['id'] = header['data-anchor'] = header['id']
 					header.remove_attribute('id')
 				end
@@ -255,8 +255,9 @@ private
 		return content
 	end
 	
-	def javascript_tag
-		content = %Q{<script>}
+	def javascript_tag(doc)
+		node = Nokogiri::XML::Node.new('script', doc)
+		content = ""
 		content << File.read("#{TEMPLATES_DIR}/jquery-1.7.1.min.js") << "\n"
 		content << File.read("#{TEMPLATES_DIR}/jquery.hashchange-1.0.0.js") << "\n"
 		content << File.read("#{TEMPLATES_DIR}/mizuho.js") << "\n"
@@ -270,8 +271,8 @@ private
 			}
 			content << File.read("#{TEMPLATES_DIR}/juvia.js") << "\n"
 		end
-		content << %Q{</script>}
-		return content
+		node.content = content
+		return node
 	end
 	
 	def create_comment_balloon
@@ -301,6 +302,27 @@ private
 			end
 		end
 		exit 1 if fail
+	end
+
+	# For Nokogiri 1.4.0 compatibility
+	def make_node(html, doc)
+		result = Nokogiri::XML::Node.new('div', doc)
+		result.inner_html = html
+		return result.children[0]
+	end
+
+	# For Nokogiri 1.4.0 compatibility
+	def add_child_and_get(node, html)
+		result = node.add_child(make_node(html, node.document))
+		result = result[0] if result.is_a?(Array)
+		return result
+	end
+
+	# For Nokogiri 1.4.0 compatibility
+	def add_previous_sibling_and_get(node, html)
+		result = node.add_previous_sibling(make_node(html, node.document))
+		result = result[0] if result.is_a?(Array)
+		return result
 	end
 
 	def gather_content(header)
