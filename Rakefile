@@ -35,22 +35,32 @@ def recursive_copy_files(files, destination_dir)
 	printf "\r[%5d/%5d] [%3.0f%%] Copying files...\n", files.size, files.size, 100
 end
 
-def create_debian_package_dir
+def create_debian_package_dir(distribution)
 	require 'mizuho/packaging'
+	require 'time'
 
-	basename = "mizuho_#{Mizuho::VERSION_STRING}"
-	pkg_dir  = string_option('PKG_DIR', "pkg")
-	sh "rm -rf #{pkg_dir}/#{basename}"
-	sh "mkdir -p #{pkg_dir}/#{basename}"
-
+	sh "rm -rf #{PKG_DIR}/#{distribution}"
+	sh "mkdir -p #{PKG_DIR}/#{distribution}"
 	recursive_copy_files(Dir[*MIZUHO_FILES] - Dir[*MIZUHO_DEBIAN_EXCLUDE_FILES],
-		"#{pkg_dir}/#{basename}")
-	sh "cd #{pkg_dir} && tar -c #{basename} | gzip --best > #{basename}.orig.tar.gz"
-
-	recursive_copy_files(Dir["debian/**/*"], "#{pkg_dir}/#{basename}")
-	
-	return [basename, pkg_dir]
+		"#{PKG_DIR}/#{distribution}")
+	recursive_copy_files(Dir["debian/**/*"], "#{PKG_DIR}/#{distribution}")
+	changelog = File.read("#{PKG_DIR}/#{distribution}/debian/changelog")
+	changelog =
+		"mizuho (#{Mizuho::VERSION_STRING}-1~#{distribution}1) #{distribution}; urgency=low\n" +
+		"\n" +
+		"  * Package built.\n" +
+		"\n" +
+		" -- Hongli Lai <hongli@phusion.nl>  #{Time.now.rfc2822}\n\n" +
+		changelog
+	File.open("#{PKG_DIR}/#{distribution}/debian/changelog", "w") do |f|
+		f.write(changelog)
+	end
 end
+
+PKG_DIR  = string_option('PKG_DIR', "pkg")
+BASENAME = "mizuho_#{Mizuho::VERSION_STRING}"
+DISTRIBUTIONS = ["raring", "precise", "lucid"]
+
 
 desc "Run unit tests"
 task :test do
@@ -70,10 +80,53 @@ task 'package:release' do
 	end
 end
 
-desc "Build Debian source package"
-task 'package:debian' do
+# Dev
+#   remake tarball
+#   make package
+# Production
+#   use existing tarball or make new
+#   make package
+
+task 'package:debian:orig_tarball' do
+	if File.exist?("#{PKG_DIR}/mizuho_#{Mizuho::VERSION_STRING}.orig.tar.gz")
+		puts "Debian orig tarball #{PKG_DIR}/mizuho_#{Mizuho::VERSION_STRING}.orig.tar.gz already exists."
+	else
+		require 'mizuho/packaging'
+
+		sh "rm -rf #{PKG_DIR}/#{BASENAME}"
+		sh "mkdir -p #{PKG_DIR}/#{BASENAME}"
+		recursive_copy_files(Dir[*MIZUHO_FILES] - Dir[*MIZUHO_DEBIAN_EXCLUDE_FILES],
+			"#{PKG_DIR}/#{BASENAME}")
+		sh "cd #{PKG_DIR} && tar -c #{BASENAME} | gzip --best > #{BASENAME}.orig.tar.gz"
+	end
+end
+
+desc "Build a Debian package for local testing"
+task 'package:debian:dev' do
 	sh "dpkg-checkbuilddeps"
-	basename, pkg_dir = create_debian_package_dir
-	sign_options = boolean_option('SIGN') ? "-us -uc" : "-k0x0A212A8C"
-	sh "cd #{pkg_dir}/#{basename} && debuild #{sign_options} -S"
+	sh "rm -f #{PKG_DIR}/mizuho_#{Mizuho::VERSION_STRING}.orig.tar.gz"
+	Rake::Task["package:debian:clean"].invoke
+	Rake::Task["package:debian:orig_tarball"].invoke
+	create_debian_package_dir("dev")
+	sh "cd #{PKG_DIR}/dev && debuild -us -uc"
+end
+
+desc "Build Debian multiple source packages to be uploaded to repositories"
+task 'package:debian:production' => 'package:debian:orig_tarball' do
+	sh "dpkg-checkbuilddeps"
+	DISTRIBUTIONS.each do |distribution|
+		create_debian_package_dir(distribution)
+		sh "cd #{PKG_DIR}/#{distribution} && debuild -S -k0x0A212A8C"
+	end
+end
+
+desc "Clean Debian packaging products, except for orig tarball"
+task 'package:debian:clean' do
+	files = Dir["#{PKG_DIR}/*.{changes,build,deb,dsc,upload}"]
+	sh "rm -f #{files.join(' ')}"
+	sh "rm -rf #{PKG_DIR}/dev"
+	DISTRIBUTIONS.each do |distribution|
+		sh "rm -rf #{PKG_DIR}/#{distribution}"
+	end
+	sh "rm -rf #{PKG_DIR}/*.debian.tar.gz"
 end
