@@ -31,8 +31,6 @@ MIZUHO_FILES = [
 
 MIZUHO_DEBIAN_EXCLUDE_FILES = [
 	"Rakefile",
-	"bin/mizuho-asciidoc",
 	"debian/**/*",
-	"asciidoc/**/*",
 	"source-highlight/**/*",
 ]

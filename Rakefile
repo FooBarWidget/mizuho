@@ -380,10 +380,18 @@ task 'debian:dev' do
 	sh "rm -f #{PKG_DIR}/mizuho_#{Mizuho::VERSION_STRING}.orig.tar.gz"
 	Rake::Task["debian:clean"].invoke
 	Rake::Task["debian:orig_tarball"].invoke
-	distribution = File.read("/etc/lsb-release").scan(/DISTRIB_CODENAME=(.+)/).first.first
-	create_debian_package_dir(distribution)
-	sh "cd #{PKG_DIR}/#{distribution} && dpkg-checkbuilddeps"
-	sh "cd #{PKG_DIR}/#{distribution} && debuild -F -us -uc"
+	if distro = string_option('DISTRO')
+		distributions = [distro]
+	else
+		distributions = DISTRIBUTIONS
+	end
+	distributions.each do |distribution|
+		create_debian_package_dir(distribution)
+		sh "cd #{PKG_DIR}/#{distribution} && dpkg-checkbuilddeps"
+	end
+	distributions.each do |distribution|
+		sh "cd #{PKG_DIR}/#{distribution} && debuild -F -us -uc"
+	end
 end
 
 desc "Build Debian multiple source packages to be uploaded to repositories"

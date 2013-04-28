@@ -23,8 +23,12 @@ module Mizuho
 	NATIVELY_PACKAGED = false
 
 	if NATIVELY_PACKAGED
-		TEMPLATES_DIR = "/usr/share/mizuho/templates"
-		ASCIIDOC      = "asciidoc"
+		TEMPLATES_DIR    = "/usr/share/mizuho/templates"
+		if File.exist?("/usr/share/mizuho/asciidoc")
+			ASCIIDOC = ["/usr/bin/python", "/usr/share/mizuho/asciidoc/asciidoc.py"]
+		else
+			ASCIIDOC = "/usr/bin/asciidoc"
+		end
 	else
 		SOURCE_ROOT   = File.expand_path(File.dirname(__FILE__) + "/..")
 		LIBDIR        = "#{SOURCE_ROOT}/lib"
