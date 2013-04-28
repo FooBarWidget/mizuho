@@ -48,13 +48,11 @@ Use our [PPA](https://launchpad.net/~phusion.nl/+archive/misc):
 
 ## Installation on Debian
 
-Our Ubuntu Lucid packages are compatible with Debian 6. Add this to your /etc/sources.list:
+Our Ubuntu Lucid packages are compatible with Debian 6. Add this to your /etc/apt/sources.list.d/mizuho.list:
 
-    deb http://ppa.launchpad.net/phusion.nl/misc/ubuntu lucid main 
-    deb-src http://ppa.launchpad.net/phusion.nl/misc/ubuntu lucid main 
-
-Then:
-
+    sudo sh -c 'echo deb http://ppa.launchpad.net/phusion.nl/misc/ubuntu lucid main > /etc/apt/sources.list.d/mizuho.list'
+    sudo sh -c 'echo deb-src http://ppa.launchpad.net/phusion.nl/misc/ubuntu lucid main >> /etc/apt/sources.list.d/mizuho.list'
+    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C324F5BB38EEB5A0
     sudo apt-get update
     sudo apt-get install mizuho
 
