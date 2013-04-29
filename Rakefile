@@ -294,8 +294,8 @@ def recursive_copy_files(files, destination_dir, preprocess = false, variables =
 			FileUtils.mkdir_p("#{destination_dir}/#{dir}")
 		end
 		if !File.directory?(filename)
-			if preprocess && filename =~ /\.pp$/
-				real_filename = filename.sub(/\.pp$/, '')
+			if preprocess && filename =~ /\.template$/
+				real_filename = filename.sub(/\.template$/, '')
 				FileUtils.install(filename, "#{destination_dir}/#{real_filename}")
 				Preprocessor.new.start(filename, "#{destination_dir}/#{real_filename}",
 					variables)

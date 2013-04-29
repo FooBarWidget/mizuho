@@ -1,6 +1,6 @@
 Source: mizuho
 Section: text
-Priority: optional
+Priority: extra
 Maintainer: Hongli Lai <hongli@phusion.nl>
 Build-Depends: debhelper (>= 7.0.50~), gem2deb (>= 0.2.0~), sed (>= 1.0.0)
 Standards-Version: 3.9.3
