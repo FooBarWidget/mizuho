@@ -50,7 +50,7 @@ end
 ##### Debian packaging support #####
 
 PKG_DIR         = string_option('PKG_DIR', "pkg")
-DEBIAN_BASENAME = "#{PACKAGE_NAME}_#{PACKAGE_VERSION}"
+DEBIAN_NAME     = PACKAGE_NAME
 ALL_DISTRIBUTIONS  = ["raring", "precise", "lucid"]
 ORIG_TARBALL_FILES = lambda do
 	require 'mizuho/packaging'
@@ -364,7 +364,7 @@ def create_debian_package_dir(distribution)
 	sh "mv #{root}/debian.template #{root}/debian"
 	changelog = File.read("#{root}/debian/changelog")
 	changelog =
-		"#{PACKAGE_NAME} (#{PACKAGE_VERSION}-1~#{distribution}1) #{distribution}; urgency=low\n" +
+		"#{DEBIAN_NAME} (#{PACKAGE_VERSION}-1~#{distribution}1) #{distribution}; urgency=low\n" +
 		"\n" +
 		"  * Package built.\n" +
 		"\n" +
@@ -376,19 +376,19 @@ def create_debian_package_dir(distribution)
 end
 
 task 'debian:orig_tarball' do
-	if File.exist?("#{PKG_DIR}/#{PACKAGE_NAME}_#{PACKAGE_VERSION}.orig.tar.gz")
-		puts "Debian orig tarball #{PKG_DIR}/#{PACKAGE_NAME}_#{PACKAGE_VERSION}.orig.tar.gz already exists."
+	if File.exist?("#{PKG_DIR}/#{DEBIAN_NAME}.orig.tar.gz")
+		puts "Debian orig tarball #{PKG_DIR}/#{DEBIAN_NAME}_#{PACKAGE_VERSION}.orig.tar.gz already exists."
 	else
-		sh "rm -rf #{PKG_DIR}/#{DEBIAN_BASENAME}"
-		sh "mkdir -p #{PKG_DIR}/#{DEBIAN_BASENAME}"
-		recursive_copy_files(ORIG_TARBALL_FILES.call, "#{PKG_DIR}/#{DEBIAN_BASENAME}")
-		sh "cd #{PKG_DIR} && tar -c #{DEBIAN_BASENAME} | gzip --best > #{DEBIAN_BASENAME}.orig.tar.gz"
+		sh "rm -rf #{PKG_DIR}/#{DEBIAN_NAME}_#{PACKAGE_VERSION}"
+		sh "mkdir -p #{PKG_DIR}/#{DEBIAN_NAME}_#{PACKAGE_VERSION}"
+		recursive_copy_files(ORIG_TARBALL_FILES.call, "#{PKG_DIR}/#{DEBIAN_NAME}_#{PACKAGE_VERSION}")
+		sh "cd #{PKG_DIR} && tar -c #{DEBIAN_NAME}_#{PACKAGE_VERSION} | gzip --best > #{DEBIAN_NAME}_#{PACKAGE_VERSION}.orig.tar.gz"
 	end
 end
 
 desc "Build Debian source and binary package(s) for local testing"
 task 'debian:dev' do
-	sh "rm -f #{PKG_DIR}/#{PACKAGE_NAME}_#{PACKAGE_VERSION}.orig.tar.gz"
+	sh "rm -f #{PKG_DIR}/#{DEBIAN_NAME}_#{PACKAGE_VERSION}.orig.tar.gz"
 	Rake::Task["debian:clean"].invoke
 	Rake::Task["debian:orig_tarball"].invoke
 	case distro = string_option('DISTRO', 'current')
