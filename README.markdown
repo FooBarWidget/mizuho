@@ -42,7 +42,7 @@ You can verify the authenticity of the gem by following [The Complete Guide to V
 
 Use our [PPA](https://launchpad.net/~phusion.nl/+archive/misc):
 
-    sudo add-apt-repository ppa:user/ppa-name
+    sudo add-apt-repository ppa:phusion.nl/misc
     sudo apt-get update
     sudo apt-get install mizuho
 
