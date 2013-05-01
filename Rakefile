@@ -1,6 +1,60 @@
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/lib"))
 require 'mizuho'
 
+PACKAGE_NAME    = "mizuho"
+PACKAGE_VERSION = Mizuho::VERSION_STRING
+PACKAGE_SIGNING_KEY = "0x0A212A8C"
+
+desc "Run unit tests"
+task :test do
+	ruby "-S spec -f s -c test/*_spec.rb"
+end
+
+desc "Build, sign & upload gem"
+task 'package:release' do
+	sh "git tag -s release-#{PACKAGE_VERSION}"
+	sh "gem build #{PACKAGE_NAME}.gemspec --sign --key #{PACKAGE_SIGNING_KEY}"
+	puts "Proceed with pushing tag to Github and uploading the gem? [y/n]"
+	if STDIN.readline == "y\n"
+		sh "git push origin release-#{PACKAGE_VERSION}"
+		sh "gem push #{PACKAGE_NAME}-#{PACKAGE_VERSION}.gem"
+	else
+		puts "Did not upload the gem."
+	end
+end
+
+
+##### Utilities #####
+
+def string_option(name, default_value = nil)
+	value = ENV[name]
+	if value.nil? || value.empty?
+		return default_value
+	else
+		return value
+	end
+end
+
+def boolean_option(name, default_value = false)
+	value = ENV[name]
+	if value.nil? || value.empty?
+		return default_value
+	else
+		return value == "yes" || value == "on" || value == "true" || value == "1"
+	end
+end
+
+
+##### Debian packaging support #####
+
+PKG_DIR         = string_option('PKG_DIR', "pkg")
+DEBIAN_BASENAME = "#{PACKAGE_NAME}_#{PACKAGE_VERSION}"
+ALL_DISTRIBUTIONS  = ["raring", "precise", "lucid"]
+ORIG_TARBALL_FILES = lambda do
+	require 'mizuho/packaging'
+	Dir[*MIZUHO_FILES] - Dir[*MIZUHO_DEBIAN_EXCLUDE_FILES]
+end
+
 # Implements a simple preprocessor language:
 # 
 #     Today
@@ -155,6 +209,7 @@ private
 		"saucy"    => "13.10"
 	}
 
+	# Provides the DSL that's accessible within.
 	class Evaluator
 		def _infer_distro_table(name)
 			if UBUNTU_DISTRIBUTIONS.has_key?(name)
@@ -268,24 +323,6 @@ private
 	end
 end
 
-def string_option(name, default_value = nil)
-	value = ENV[name]
-	if value.nil? || value.empty?
-		return default_value
-	else
-		return value
-	end
-end
-
-def boolean_option(name, default_value = false)
-	value = ENV[name]
-	if value.nil? || value.empty?
-		return default_value
-	else
-		return value == "yes" || value == "on" || value == "true" || value == "1"
-	end
-end
-
 def recursive_copy_files(files, destination_dir, preprocess = false, variables = {})
 	require 'fileutils' if !defined?(FileUtils)
 	files.each_with_index do |filename, i|
@@ -310,80 +347,55 @@ def recursive_copy_files(files, destination_dir, preprocess = false, variables =
 end
 
 def create_debian_package_dir(distribution)
-	require 'mizuho/packaging'
 	require 'time'
 
 	variables = {
 		:distribution => distribution
 	}
 
-	sh "rm -rf #{PKG_DIR}/#{distribution}"
-	sh "mkdir -p #{PKG_DIR}/#{distribution}"
-	recursive_copy_files(Dir[*MIZUHO_FILES] - Dir[*MIZUHO_DEBIAN_EXCLUDE_FILES],
-		"#{PKG_DIR}/#{distribution}")
-	recursive_copy_files(Dir["debian/**/*"], "#{PKG_DIR}/#{distribution}",
+	root = "#{PKG_DIR}/#{distribution}"
+	sh "rm -rf #{root}"
+	sh "mkdir -p #{root}"
+	recursive_copy_files(ORIG_TARBALL_FILES.call, root)
+	recursive_copy_files(Dir["debian.template/**/*"], root,
 		true, variables)
-	changelog = File.read("#{PKG_DIR}/#{distribution}/debian/changelog")
+	sh "mv #{root}/debian.template #{root}/debian"
+	changelog = File.read("#{root}/debian/changelog")
 	changelog =
-		"mizuho (#{Mizuho::VERSION_STRING}-1~#{distribution}1) #{distribution}; urgency=low\n" +
+		"#{PACKAGE_NAME} (#{PACKAGE_VERSION}-1~#{distribution}1) #{distribution}; urgency=low\n" +
 		"\n" +
 		"  * Package built.\n" +
 		"\n" +
 		" -- Hongli Lai <hongli@phusion.nl>  #{Time.now.rfc2822}\n\n" +
 		changelog
-	File.open("#{PKG_DIR}/#{distribution}/debian/changelog", "w") do |f|
+	File.open("#{root}/debian/changelog", "w") do |f|
 		f.write(changelog)
 	end
 end
 
-PKG_DIR  = string_option('PKG_DIR', "pkg")
-BASENAME = "mizuho_#{Mizuho::VERSION_STRING}"
-DISTRIBUTIONS = ["raring", "precise", "lucid"]
-
-
-desc "Run unit tests"
-task :test do
-	ruby "-S spec -f s -c test/*_spec.rb"
-end
-
-desc "Build, sign & upload gem"
-task 'package:release' do
-	sh "git tag -s release-#{Mizuho::VERSION_STRING}"
-	sh "gem build mizuho.gemspec --sign --key 0x0A212A8C"
-	puts "Proceed with pushing tag to Github and uploading the gem? [y/n]"
-	if STDIN.readline == "y\n"
-		sh "git push origin release-#{Mizuho::VERSION_STRING}"
-		sh "gem push mizuho-#{Mizuho::VERSION_STRING}.gem"
-	else
-		puts "Did not upload the gem."
-	end
-end
-
 task 'debian:orig_tarball' do
-	if File.exist?("#{PKG_DIR}/mizuho_#{Mizuho::VERSION_STRING}.orig.tar.gz")
-		puts "Debian orig tarball #{PKG_DIR}/mizuho_#{Mizuho::VERSION_STRING}.orig.tar.gz already exists."
+	if File.exist?("#{PKG_DIR}/#{PACKAGE_NAME}_#{PACKAGE_VERSION}.orig.tar.gz")
+		puts "Debian orig tarball #{PKG_DIR}/#{PACKAGE_NAME}_#{PACKAGE_VERSION}.orig.tar.gz already exists."
 	else
-		require 'mizuho/packaging'
-
-		sh "rm -rf #{PKG_DIR}/#{BASENAME}"
-		sh "mkdir -p #{PKG_DIR}/#{BASENAME}"
-		recursive_copy_files(
-			Dir[*MIZUHO_FILES] - Dir[*MIZUHO_DEBIAN_EXCLUDE_FILES],
-			"#{PKG_DIR}/#{BASENAME}"
-		)
-		sh "cd #{PKG_DIR} && tar -c #{BASENAME} | gzip --best > #{BASENAME}.orig.tar.gz"
+		sh "rm -rf #{PKG_DIR}/#{DEBIAN_BASENAME}"
+		sh "mkdir -p #{PKG_DIR}/#{DEBIAN_BASENAME}"
+		recursive_copy_files(ORIG_TARBALL_FILES.call, "#{PKG_DIR}/#{DEBIAN_BASENAME}")
+		sh "cd #{PKG_DIR} && tar -c #{DEBIAN_BASENAME} | gzip --best > #{DEBIAN_BASENAME}.orig.tar.gz"
 	end
 end
 
-desc "Build a Debian package for local testing"
+desc "Build Debian source and binary package(s) for local testing"
 task 'debian:dev' do
-	sh "rm -f #{PKG_DIR}/mizuho_#{Mizuho::VERSION_STRING}.orig.tar.gz"
+	sh "rm -f #{PKG_DIR}/#{PACKAGE_NAME}_#{PACKAGE_VERSION}.orig.tar.gz"
 	Rake::Task["debian:clean"].invoke
 	Rake::Task["debian:orig_tarball"].invoke
-	if distro = string_option('DISTRO')
-		distributions = [distro]
+	case distro = string_option('DISTRO', 'current')
+	when 'current'
+		distributions = [File.read("/etc/lsb-release").scan(/^DISTRIB_CODENAME=(.+)/).first.first]
+	when 'all'
+		distributions = ALL_DISTRIBUTIONS
 	else
-		distributions = DISTRIBUTIONS
+		distributions = distro.split(',')
 	end
 	distributions.each do |distribution|
 		create_debian_package_dir(distribution)
@@ -394,14 +406,14 @@ task 'debian:dev' do
 	end
 end
 
-desc "Build Debian multiple source packages to be uploaded to repositories"
+desc "Build Debian source packages to be uploaded to repositories"
 task 'debian:production' => 'debian:orig_tarball' do
-	DISTRIBUTIONS.each do |distribution|
+	ALL_DISTRIBUTIONS.each do |distribution|
 		create_debian_package_dir(distribution)
 		sh "cd #{PKG_DIR}/#{distribution} && dpkg-checkbuilddeps"
 	end
-	DISTRIBUTIONS.each do |distribution|
-		sh "cd #{PKG_DIR}/#{distribution} && debuild -S -k0x0A212A8C"
+	ALL_DISTRIBUTIONS.each do |distribution|
+		sh "cd #{PKG_DIR}/#{distribution} && debuild -S -k#{PACKAGE_SIGNING_KEY}"
 	end
 end
 
@@ -410,7 +422,7 @@ task 'debian:clean' do
 	files = Dir["#{PKG_DIR}/*.{changes,build,deb,dsc,upload}"]
 	sh "rm -f #{files.join(' ')}"
 	sh "rm -rf #{PKG_DIR}/dev"
-	DISTRIBUTIONS.each do |distribution|
+	ALL_DISTRIBUTIONS.each do |distribution|
 		sh "rm -rf #{PKG_DIR}/#{distribution}"
 	end
 	sh "rm -rf #{PKG_DIR}/*.debian.tar.gz"

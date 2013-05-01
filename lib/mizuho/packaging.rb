@@ -22,7 +22,7 @@ MIZUHO_FILES = [
 	"README.markdown", "LICENSE.txt", "Rakefile",
 	"bin/*",
 	"lib/**/*",
-	"debian/**/*",
+	"debian.template/**/*",
 	"test/*",
 	"templates/*",
 	"asciidoc/**/*",
@@ -31,6 +31,6 @@ MIZUHO_FILES = [
 
 MIZUHO_DEBIAN_EXCLUDE_FILES = [
 	"Rakefile",
-	"debian/**/*",
+	"debian.template/**/*",
 	"source-highlight/**/*",
 ]
