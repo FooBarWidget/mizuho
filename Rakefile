@@ -4,6 +4,8 @@ require 'mizuho'
 PACKAGE_NAME    = "mizuho"
 PACKAGE_VERSION = Mizuho::VERSION_STRING
 PACKAGE_SIGNING_KEY = "0x0A212A8C"
+MAINTAINER_NAME  = "Hongli Lai"
+MAINTAINER_EMAIL = "hongli@phusion.nl"
 
 desc "Run unit tests"
 task :test do
@@ -366,7 +368,7 @@ def create_debian_package_dir(distribution)
 		"\n" +
 		"  * Package built.\n" +
 		"\n" +
-		" -- Hongli Lai <hongli@phusion.nl>  #{Time.now.rfc2822}\n\n" +
+		" -- #{MAINTAINER_NAME} <#{MAINTAINER_EMAIL}>  #{Time.now.rfc2822}\n\n" +
 		changelog
 	File.open("#{root}/debian/changelog", "w") do |f|
 		f.write(changelog)
