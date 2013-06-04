@@ -244,7 +244,7 @@ private
 		# digits from left to right.
 		digit_match_index = 0
 		while matches.size > 1
-			orig_digit = orig_chapter_digits[digit_match_index]
+			orig_digit = orig_chapter_digits[digit_match_index] || 1
 
 			# Find closest digit in all matches.
 			tmp = matches.min do |a, b|

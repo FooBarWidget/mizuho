@@ -2,3 +2,4 @@
 *.gem
 pkg
 test/cache
+.DS_Store

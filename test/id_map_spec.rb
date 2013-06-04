@@ -90,6 +90,15 @@ describe IdMap do
 				@entry2.should_not be_fuzzy
 				@entry3.should_not be_fuzzy
 			end
+
+			specify "bug fix" do
+				@id_map = IdMap.new
+				@entry1 = @id_map.add("2.9.3. Environment variables and sudo", nil, false, false)
+				@entry2 = @id_map.add("2.9.8. Environment variables and sudo", nil, false, false)
+				@id_map.generate_associations(["14.5. Environment variables and sudo"])
+				@id1 = @id_map.associations["14.5. Environment variables and sudo"]
+				@id1.should == @entry1.id
+			end
 		end
 
 		describe "if one or more similar titles exist in the map" do

@@ -9,7 +9,7 @@ MAINTAINER_EMAIL = "hongli@phusion.nl"
 
 desc "Run unit tests"
 task :test do
-	ruby "-S spec -f s -c test/*_spec.rb"
+	ruby "-Ilib -S rspec -f s -c test/*_spec.rb"
 end
 
 desc "Build, sign & upload gem"
