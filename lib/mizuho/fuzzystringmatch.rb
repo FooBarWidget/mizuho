@@ -1,3 +1,4 @@
+# encoding: utf-8
 # Extracted from https://github.com/kiyoka/fuzzy-string-match
 
 #
