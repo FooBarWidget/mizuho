@@ -71,7 +71,6 @@ Our Ubuntu Lucid packages are compatible with Debian 6.
 
  3. Install our package:
 
-        sudo rpm --import https://oss-binaries.phusionpassenger.com/yumgems/phusion-misc/RPM-GPG-KEY.asc
         sudo yum install rubygem-mizuho
 
 ## Usage
