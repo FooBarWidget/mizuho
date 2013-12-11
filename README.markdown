@@ -58,20 +58,21 @@ Our Ubuntu Lucid packages are compatible with Debian 6.
 
 ## Installation on RHEL, CentOS and Amazon Linux
 
-Enable our YUM repository:
+ 1. Enable EPEL: [RHEL](https://fedoraproject.org/wiki/EPEL), [CentOS](http://www.centosblog.com/enable-epel-repo-on-centos-5-and-centos-6/), [Amazon Linux](http://aws.amazon.com/amazon-linux-ami/faqs/#epel).
+ 2. Enable our YUM repository:
 
-    # RHEL 6, CentOS 6
-    curl -L https://oss-binaries.phusionpassenger.com/yumgems/phusion-misc/el.repo | \
-      sudo tee /etc/yum.repos.d/phusion-misc.repo
-    
-    # Amazon Linux
-    curl -L https://oss-binaries.phusionpassenger.com/yumgems/phusion-misc/amazon.repo | \
-      sudo tee /etc/yum.repos.d/phusion-misc.repo
+        # RHEL 6, CentOS 6
+        curl -L https://oss-binaries.phusionpassenger.com/yumgems/phusion-misc/el.repo | \
+          sudo tee /etc/yum.repos.d/phusion-misc.repo
+        
+        # Amazon Linux
+        curl -L https://oss-binaries.phusionpassenger.com/yumgems/phusion-misc/amazon.repo | \
+          sudo tee /etc/yum.repos.d/phusion-misc.repo
 
-Then:
+ 3. Install our package:
 
-    sudo rpm --import https://oss-binaries.phusionpassenger.com/yumgems/phusion-misc/RPM-GPG-KEY.asc
-    sudo yum install rubygem-mizuho
+        sudo rpm --import https://oss-binaries.phusionpassenger.com/yumgems/phusion-misc/RPM-GPG-KEY.asc
+        sudo yum install rubygem-mizuho
 
 ## Usage
 
