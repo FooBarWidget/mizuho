@@ -26,6 +26,7 @@ Requires: ruby(abi) = %{rubyabi}
 Requires: ruby(rubygems)
 Requires: rubygem-nokogiri
 Requires: rubygem-sqlite3-ruby
+Requires: python
 Requires: source-highlight
 
 %if 0%{?fedora} >= 19

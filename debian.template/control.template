@@ -15,7 +15,7 @@ XB-Ruby-Versions: ${ruby:Versions}
 #if is_distribution?('>= precise')
     Depends: ${shlibs:Depends}, ${misc:Depends}, ruby | ruby-interpreter, ruby-nokogiri (>= 1.4.0), source-highlight, asciidoc (>= 8.6.0)
 #else
-    Depends: ${shlibs:Depends}, ${misc:Depends}, ruby | ruby-interpreter, libnokogiri-ruby (>= 1.4.0), source-highlight
+    Depends: ${shlibs:Depends}, ${misc:Depends}, ruby | ruby-interpreter, libnokogiri-ruby (>= 1.4.0), python, source-highlight
 #endif
 Description: Documentation formatting tool
  Converts Asciidoc input files into nicely
