@@ -19,10 +19,11 @@
 # THE SOFTWARE.
 
 MIZUHO_FILES = [
-	"README.markdown", "LICENSE.txt", "Rakefile",
+	"README.markdown", "LICENSE.txt", "Rakefile", "mizuho.gemspec",
 	"bin/*",
 	"lib/**/*",
 	"debian.template/**/*",
+	"rpm/**/*",
 	"test/*",
 	"templates/*",
 	"asciidoc/**/*",
@@ -32,5 +33,6 @@ MIZUHO_FILES = [
 MIZUHO_DEBIAN_EXCLUDE_FILES = [
 	"Rakefile",
 	"debian.template/**/*",
+	"rpm/**/*",
 	"source-highlight/**/*",
 ]
