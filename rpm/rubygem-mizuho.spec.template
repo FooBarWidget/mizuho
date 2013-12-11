@@ -14,6 +14,7 @@ Version:  %{gem_version}
 Release:  1<%= @distribution %>
 Summary:  Documentation formatting tool
 License:  MIT
+Group:    Applications/Text
 URL:      https://github.com/FooBarWidget/mizuho
 Source0:  https://rubygems.org/gems/%{gem_name}-%{gem_version}.gem
 

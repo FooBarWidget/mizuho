@@ -504,7 +504,7 @@ task 'rpm:local' => 'rpm:gem' do
 
 	sh "mkdir -p #{spec_target_dir}"
 	puts "Generating #{spec_target_file}"
-	Preprocessor.new.start("rpm/#{PACKAGE_NAME}.spec.template",
+	Preprocessor.new.start("rpm/#{RPM_NAME}.spec.template",
 		spec_target_file,
 		:distribution => distro_id)
 
@@ -521,7 +521,7 @@ def create_rpm_build_task(distro_id, mock_chroot_name, distro_name)
 
 		sh "mkdir -p #{spec_target_dir}"
 		puts "Generating #{spec_target_file}"
-		Preprocessor.new.start("rpm/#{PACKAGE_NAME}.spec.template",
+		Preprocessor.new.start("rpm/#{RPM_NAME}.spec.template",
 			spec_target_file,
 			:distribution => distro_id)
 
