@@ -41,7 +41,7 @@ BuildRequires: rubygems-devel
 BuildRequires: rubygem-nokogiri
 
 BuildArch: noarch
-Provides: rubygem(crash-watch) = %{gem_version}-%{release}
+Provides: rubygem(%{gem_name}) = %{gem_version}-%{release}
 
 # macros for RHEL6 compatibility:
 %{!?gem_dir: %global gem_dir %(ruby -rubygems -e 'puts Gem::dir' 2>/dev/null)}
