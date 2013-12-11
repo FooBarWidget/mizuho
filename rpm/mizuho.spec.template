@@ -37,6 +37,7 @@ BuildRequires: ruby(rubygems)
 %else
 BuildRequires: rubygems-devel
 %endif
+BuildRequires: rubygem-nokogiri
 
 BuildArch: noarch
 Provides: rubygem(crash-watch) = %{gem_version}-%{release}
