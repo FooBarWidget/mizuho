@@ -559,7 +559,7 @@ task "rpm:publish" do
 		distro_dir = "#{PKG_DIR}/#{distro_id}"
 		repo_dir = "#{PKG_DIR}/yumgems/#{distro_id}"
 		sh "mkdir -p #{repo_dir}"
-		sh "cp #{distro_dir}/*.rpm #{repo_dir}/"
+		sh "cp #{distro_dir}/#{RPM_NAME}*.rpm #{repo_dir}/"
 		sh "createrepo #{repo_dir}"
 	end
 	sh "ssh #{server} 'rm -rf #{remote_dir}/new && cp -dpR #{remote_dir}/latest #{remote_dir}/new'"
