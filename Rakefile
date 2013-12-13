@@ -51,7 +51,8 @@ end
 
 PKG_DIR         = string_option('PKG_DIR', "pkg")
 DEBIAN_NAME     = PACKAGE_NAME
-ALL_DISTRIBUTIONS  = ["raring", "precise", "lucid"]
+DEBIAN_PACKAGE_REVISION = 1
+ALL_DISTRIBUTIONS  = string_option('DEBIAN_DISTROS', 'saucy precise lucid').split(/[ ,]/)
 ORIG_TARBALL_FILES = lambda do
 	require 'mizuho/packaging'
 	Dir[*MIZUHO_FILES] - Dir[*MIZUHO_DEBIAN_EXCLUDE_FILES]
@@ -411,7 +412,7 @@ def create_debian_package_dir(distribution)
 	sh "mv #{root}/debian.template #{root}/debian"
 	changelog = File.read("#{root}/debian/changelog")
 	changelog =
-		"#{DEBIAN_NAME} (#{PACKAGE_VERSION}-1~#{distribution}1) #{distribution}; urgency=low\n" +
+		"#{DEBIAN_NAME} (#{PACKAGE_VERSION}-#{DEBIAN_PACKAGE_REVISION}~#{distribution}1) #{distribution}; urgency=low\n" +
 		"\n" +
 		"  * Package built.\n" +
 		"\n" +
@@ -429,7 +430,8 @@ task 'debian:orig_tarball' do
 		sh "rm -rf #{PKG_DIR}/#{DEBIAN_NAME}_#{PACKAGE_VERSION}"
 		sh "mkdir -p #{PKG_DIR}/#{DEBIAN_NAME}_#{PACKAGE_VERSION}"
 		recursive_copy_files(ORIG_TARBALL_FILES.call, "#{PKG_DIR}/#{DEBIAN_NAME}_#{PACKAGE_VERSION}")
-		sh "cd #{PKG_DIR} && tar -c #{DEBIAN_NAME}_#{PACKAGE_VERSION} | gzip --best > #{DEBIAN_NAME}_#{PACKAGE_VERSION}.orig.tar.gz"
+		sh "cd #{PKG_DIR} && find #{DEBIAN_NAME}_#{PACKAGE_VERSION} -print0 | xargs -0 touch -d '2013-10-27 00:00:00 UTC'"
+		sh "cd #{PKG_DIR} && tar -c #{DEBIAN_NAME}_#{PACKAGE_VERSION} | gzip --no-name --best > #{DEBIAN_NAME}_#{PACKAGE_VERSION}.orig.tar.gz"
 	end
 end
 
@@ -455,8 +457,18 @@ task 'debian:dev' do
 	end
 end
 
-desc "Build Debian source packages to be uploaded to repositories"
-task 'debian:production' => 'debian:orig_tarball' do
+desc "Build Debian source packages"
+task 'debian:source_packages' => 'debian:orig_tarball' do
+	ALL_DISTRIBUTIONS.each do |distribution|
+		create_debian_package_dir(distribution)
+	end
+	ALL_DISTRIBUTIONS.each do |distribution|
+		sh "cd #{PKG_DIR}/#{distribution} && debuild -S -us -uc"
+	end
+end
+
+desc "Build Debian source packages to be uploaded to Launchpad"
+task 'debian:launchpad' => 'debian:orig_tarball' do
 	ALL_DISTRIBUTIONS.each do |distribution|
 		create_debian_package_dir(distribution)
 		sh "cd #{PKG_DIR}/#{distribution} && dpkg-checkbuilddeps"

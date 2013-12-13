@@ -1,0 +1,26 @@
+#!/usr/bin/make -f
+export DH_VERBOSE=1
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	# Do nothing
+
+override_dh_auto_build:
+	# Do nothing
+
+override_dh_install:
+	dh_install
+	sed -i 's/NATIVELY_PACKAGED = .*/NATIVELY_PACKAGED = true/' debian/mizuho/usr/lib/ruby/vendor_ruby/mizuho.rb
+#if is_distribution?(">= precise")
+    	cp debian/ruby-interpreter debian/mizuho/usr/share/mizuho/
+    	sed -i 's/\/usr\/bin\/env ruby/\/usr\/share\/mizuho\/ruby-interpreter/' debian/mizuho/usr/bin/mizuho
+    	sed -i 's/\/usr\/bin\/env ruby/\/usr\/share\/mizuho\/ruby-interpreter/' debian/mizuho/usr/bin/mizuho-asciidoc
+#else
+    	sed -i 's/\/usr\/bin\/env ruby/\/usr\/bin\/ruby/' debian/mizuho/usr/bin/mizuho
+    	sed -i 's/\/usr\/bin\/env ruby/\/usr\/bin\/ruby/' debian/mizuho/usr/bin/mizuho-asciidoc
+#endif
+
+override_dh_auto_clean:
+	# Do nothing

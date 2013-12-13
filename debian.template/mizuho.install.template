@@ -1,3 +1,5 @@
+bin/* usr/bin/
+lib/* usr/lib/ruby/vendor_ruby/
 templates/* usr/share/mizuho/templates
 #if is_distribution?('< precise')
     asciidoc/* usr/share/mizuho/asciidoc

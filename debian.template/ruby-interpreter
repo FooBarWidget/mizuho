@@ -1,0 +1,14 @@
+#!/bin/sh
+if test -e /usr/bin/ruby; then
+	exec /usr/bin/ruby "$@"
+elif test -e /usr/bin/ruby2.0; then
+	exec /usr/bin/ruby2.0 "$@"
+elif test -e /usr/bin/ruby1.9.3; then
+	exec /usr/bin/ruby1.9.3 "$@"
+elif test -e /usr/bin/ruby1.9.1; then
+	exec /usr/bin/ruby1.9.1 "$@"
+elif test -e /usr/bin/ruby1.8; then
+	exec /usr/bin/ruby1.8 "$@"
+else
+	exec ruby "$@"
+fi

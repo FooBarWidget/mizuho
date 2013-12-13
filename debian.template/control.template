@@ -2,20 +2,18 @@ Source: mizuho
 Section: text
 Priority: extra
 Maintainer: Hongli Lai <hongli@phusion.nl>
-Build-Depends: debhelper (>= 7.0.50~), gem2deb (>= 0.2.0~), sed (>= 1.0.0)
+Build-Depends: debhelper (>= 7.0.50~), sed (>= 1.0.0)
 Standards-Version: 3.9.3
 Homepage: https://github.com/FooBarWidget/mizuho
 Vcs-Git: git://github.com/FooBarWidget/mizuho.git
 Vcs-Browser: https://github.com/FooBarWidget/mizuho
-XS-Ruby-Versions: all
 
 Package: mizuho
 Architecture: all
-XB-Ruby-Versions: ${ruby:Versions}
 #if is_distribution?('>= precise')
     Depends: ${shlibs:Depends}, ${misc:Depends}, ruby2.0 | ruby1.9.1 | ruby1.8 | ruby-interpreter, ruby-nokogiri (>= 1.4.0), source-highlight, asciidoc (>= 8.6.0)
 #else
-    Depends: ${shlibs:Depends}, ${misc:Depends}, ruby2.0 | ruby1.9.1 | ruby1.8 | ruby-interpreter, libnokogiri-ruby (>= 1.4.0), python, source-highlight
+    Depends: ${shlibs:Depends}, ${misc:Depends}, ruby, libnokogiri-ruby (>= 1.4.0), python, source-highlight
 #endif
 Breaks: ruby-mizuho
 Replaces: ruby-mizuho
