@@ -13,10 +13,13 @@ Package: mizuho
 Architecture: all
 XB-Ruby-Versions: ${ruby:Versions}
 #if is_distribution?('>= precise')
-    Depends: ${shlibs:Depends}, ${misc:Depends}, ruby | ruby-interpreter, ruby-nokogiri (>= 1.4.0), source-highlight, asciidoc (>= 8.6.0)
+    Depends: ${shlibs:Depends}, ${misc:Depends}, ruby2.0 | ruby1.9.1 | ruby1.8 | ruby-interpreter, ruby-nokogiri (>= 1.4.0), source-highlight, asciidoc (>= 8.6.0)
 #else
-    Depends: ${shlibs:Depends}, ${misc:Depends}, ruby | ruby-interpreter, libnokogiri-ruby (>= 1.4.0), python, source-highlight
+    Depends: ${shlibs:Depends}, ${misc:Depends}, ruby2.0 | ruby1.9.1 | ruby1.8 | ruby-interpreter, libnokogiri-ruby (>= 1.4.0), python, source-highlight
 #endif
+Breaks: ruby-mizuho
+Replaces: ruby-mizuho
+Provides: ruby-mizuho
 Description: Documentation formatting tool
  Converts Asciidoc input files into nicely
  outputted HTML, possibly one file per chapter.
